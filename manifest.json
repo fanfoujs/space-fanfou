@@ -1,0 +1,20 @@
+{
+   "content_scripts": [ {
+      "css": [ "styles.css" ],
+      "js": [ "script.js" ],
+      "matches": [ "http://fanfou.com/*", "http://fanwai.com/*", "https://fanfou.com/*", "http://fanwai.com/*" ]
+   } ],
+   "description": "饭否的辅助脚本。可以通过改良 CSS 来优化饭否页面的显示效果，并添加了回复展开、网页端上传图片等脚本功能。",
+   "name": "太空饭否",
+   "version": "0.3.2",
+   "permissions": [ "http://fanfou.com/*", "http://fanwai.com/*", "tabs", "notifications" ],
+   "icons" : {
+      "48" : "icons/icon-48.png",
+      "128" : "icons/icon-128.png"
+   },
+   "background_page": "background.html",
+   "page_action": {
+      "default_icon": "icon.png",
+      "default_title": "太空饭否"
+   }
+}
