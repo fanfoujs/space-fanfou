@@ -1,3 +1,5 @@
+// 太空饭否脚本页
+
 function addJQuery(callback) {
   var script = document.createElement("script");
   script.setAttribute("src", "http://code.jquery.com/jquery-1.4.4.min.js");
