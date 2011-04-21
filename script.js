@@ -198,7 +198,14 @@ function init() {
     var $message = document.getElementById('message');
     var $h2 = $message.getElementsByTagName('h2')[0];
     var $textarea = $message.getElementsByTagName('textarea')[0];
-    var $action = document.getElementsByName('action')[0];
+    var $inputs = $message.getElementsByTagName('input');
+    var $action;
+    for (var i = 0; i < $inputs.length; ++i) {
+        if ($inputs[i].name == 'action') {
+            $action = $inputs[i];
+            break;
+        }
+    }
     var $button = $c('a');
     $button.href = 'javascript:;';
     $button.id = 'u_button';
