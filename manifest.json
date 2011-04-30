@@ -2,8 +2,29 @@
     "content_scripts": [
         {
             "css": [ "styles.css" ],
-            "js": [ "script.js" ],
             "matches": [ "http://fanfou.com/*", "http://fanwai.com/*" ]
+        },
+        {
+            "css": [ "styles/expanding-replies.css" ],
+            "js": [ "scripts/jquery-1.5.2.min.js", "scripts/expanding-replies.js" ],
+            "matches": [ "http://fanfou.com/*" ],
+            "exclude_globs": [
+                "http://fanfou.com/",
+                "http://fanfou.com/login",
+                "http://fanfou.com/finder",
+                "http://fanfou.com/search",
+                "http://fanfou.com/photo/*",
+                "http://fanfou.com/album/*",
+                "http://fanfou.com/logout/*",
+                "http://fanfou.com/friends/*",
+                "http://fanfou.com/settings",
+                "http://fanfou.com/settings/*",
+                "http://fanfou.com/statuses/*",
+                "http://fanfou.com/followers/*",
+                "http://fanfou.com/privatemsg",
+                "http://fanfou.com/privatemsg/*",
+                "http://fanfou.com/advancedsearch"
+            ]
         }
     ],
     "description": "饭否的辅助脚本。可以通过改良 CSS 来优化饭否页面的显示效果，并添加了回复展开、网页端上传图片等脚本功能。",

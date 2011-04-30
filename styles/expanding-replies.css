@@ -1,0 +1,17 @@
+#stream ol .buffered + li.reply, #stream ol li.reply .share { display: none; }
+#stream ol li.reply { min-height: 38px; padding: 6px 50px 6px 52px; border-left: 3px solid #e5e5e5; font-size: 12px; margin-left: 30px; width: 365px; }
+#stream ol li.reply.last { border-bottom: 1px solid #e5e5e5; }
+#stream ol li.reply a.avatar { margin-left: -44px; }
+#stream ol li.reply a.avatar img { width: 32px; height: 32px; }
+#stream ol li.reply.more { 
+   font-size: 90%; height: 1.5em !important; line-height: 1.5em; margin-left: 70%; margin-top: -1.6em; 
+   background: #eee; color: #666; text-align: center; padding: 0; 
+   width: 20%; min-height: 0; cursor: pointer; text-shadow: 0 1px 0 white; 
+   border-left: none; border-bottom: 1px solid #e5e5e5;
+}
+#stream ol li.reply.more:hover { background: #e5e5e5; color: #666; }
+#stream ol li.reply.waiting {
+   height: 39px !important; min-height: 0; margin-top: 0; 
+   background: url("http://static1.fanfou.com/img/ajax.gif") 
+   no-repeat scroll 50% 50% transparent; border: 0; 
+}
