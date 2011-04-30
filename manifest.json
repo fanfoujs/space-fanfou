@@ -25,6 +25,16 @@
                 "http://fanfou.com/privatemsg/*",
                 "http://fanfou.com/advancedsearch"
             ]
+        },
+        {
+            "css": [ "styles/image-uploading.css" ],
+            "js": [ "scripts/jquery-1.5.2.min.js", "scripts/image-uploading.js" ],
+            "matches": [
+                "http://fanfou.com/home",
+                "http://fanfou.com/replies",
+                "http://fanfou.com/mentions",
+                "http://fanfou.com/favorites/*"
+            ]
         }
     ],
     "description": "饭否的辅助脚本。可以通过改良 CSS 来优化饭否页面的显示效果，并添加了回复展开、网页端上传图片等脚本功能。",
