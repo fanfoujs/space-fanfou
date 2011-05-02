@@ -6,7 +6,7 @@
         },
         {
             "css": [ "styles/expanding-replies.css" ],
-            "js": [ "scripts/jquery-1.5.2.min.js", "scripts/expanding-replies.js" ],
+            "js": [ "scripts/jquery.js", "scripts/expanding-replies.js" ],
             "matches": [ "http://fanfou.com/*" ],
             "exclude_globs": [
                 "http://fanfou.com/",
@@ -28,7 +28,7 @@
         },
         {
             "css": [ "styles/image-uploading.css" ],
-            "js": [ "scripts/jquery-1.5.2.min.js", "scripts/image-uploading.js" ],
+            "js": [ "scripts/jquery.js", "scripts/image-uploading.js" ],
             "matches": [
                 "http://fanfou.com/home",
                 "http://fanfou.com/replies",
