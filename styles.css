@@ -54,9 +54,9 @@
 #savedsearchs li a,#trendtabs li a,#birthday li a{font-size:12px!important;font-weight:normal!important;}
 #trendlist:hover li a:after{content:"\20\2d\20" attr(squery);color:#666;} /* 热门话题后显示具体关键词 */
 #trendlist li{max-width:234px;word-break:break-all;text-overflow:ellipsis;-o-text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
+#sidebar #iconset{opacity:.25;-webkit-transition-property:opacity;-webkit-transition-duration:300ms;}
+#sidebar #iconset:hover{opacity:1;}
 #sidebar .stabs li a .count{font-family:Georgia,"Times New Roman",Times,serif!important;font-weight:normal!important;}
-#sidebar .tags a{-webkit-box-shadow:0 0 1px rgba(0,0,0,.25);}
-#sidebar .tags a:hover{-webkit-box-shadow:0 0 1px rgba(0,0,0,.5);}
 #info #avatar{border:none!important;} /* 头像边框及用户名玻璃效果 */
 #panel{padding:2px 0 0 0!important;}
 #panel h1{font-family:Georgia,"Times New Roman",Times,"Hiragino Sans GB","WenQuanYi Micro Hei","Microsoft Yahei",sans-serif!important;-webkit-background-clip:text;}
