@@ -62,8 +62,8 @@
 #panel h1{font-family:Georgia,"Times New Roman",Times,"Hiragino Sans GB","WenQuanYi Micro Hei","Microsoft Yahei",sans-serif!important;-webkit-background-clip:text;}
 #info h1{font-size:32px;margin-bottom:10px;-webkit-mask-image:-webkit-gradient(linear,left top,left bottom,from(rgba(0,0,0,.7)),color-stop(50%,rgba(0,0,0,.75)),color-stop(51%,rgba(0,0,0,.9)),to(rgba(0,0,0,.95)));}
 .overlay-leavemsg .bg{opacity:.9} /* 给用户留言 */
-.paginator li a{padding:8px 11px!important;border:1px solid #DDD!important;} /* 页码 */
-.paginator li a:hover{padding:9px 12px!important;border:none!important;}
+.paginator li a{padding:5px 8px!important;border:1px solid #DDD!important;} /* 页码 */
+.paginator li a:hover{padding:6px 9px!important;border:none!important;}
 #ZoomImage{-webkit-box-shadow:0 0 15px rgba(0,0,0,.5);} /* 展开照片阴影 */
 
 /* Scripts Styles */
