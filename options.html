@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>太空饭否 | 选项</title>
+<script type="text/javascript" src="scripts/jquery.js"></script>
+<script type="text/javascript">
+    $(function() {
+        var keys = [], items = [];
+        $('[key]').each(function() {
+            keys.push($(this).attr('key'));
+            items.push($(this));
+        });
+        console.log(keys);
+        chrome.extension.sendRequest(
+            { func: 'readData', data: keys },
+            function(data) {
+                console.log(data);
+                for (var i = 0; i < data.length; ++i) {
+                    var $item = items[i];
+                    if ($item.is(':checkbox')) {
+                        $item.attr('checked', data[i]);
+                    } else if ($item.is(':input, :password, ' +
+                                        'textarea, select')) {
+                        $item.val(data[i]);
+                    } // TODO
+                }
+            }
+        );
+        $(document.body).change(function(e) {
+            var $elem = $(e.target);
+            var key = $elem.attr('key');
+            if (key === undefined) return;
+            var val;
+            if ($elem.is(':checkbox')) {
+                val = $elem.is(':checked');
+            } else {
+                val = $elem.val();
+            }
+            data = {};
+            data[key] = val;
+            chrome.extension.sendRequest(
+                { func: 'saveData', data: data });
+        });
+    });
+</script>
+</head>
+<body>
+	<h2>扩展功能</h2>
+    <p><label><input type="checkbox" key="expanding_replies" />回复链展开</label></p>
+    <p><label>每次展开数量：<input type="number" min="1" max="20" step="1" key="expanding_replies.number" /></label></p>
+    <p><label><input type="checkbox" key="image_uploading" />图片上传</label></p>
+</body>
+</html>

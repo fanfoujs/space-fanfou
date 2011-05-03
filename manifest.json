@@ -46,6 +46,7 @@
         "128": "icons/icon-128.png"
     },
     "background_page": "background.html",
+    "options_page": "options.html",
     "page_action": {
         "default_icon": "icon.png",
         "default_title": "太空饭否"
