@@ -4,11 +4,12 @@
 <meta charset="UTF-8">
 <script type="text/javascript">
     // 显示太空饭否Logo
-    function showLogo(tabId, changeInfo, tab) {
-        if (tab.url.indexOf('fanfou.com') > -1)
-            chrome.pageAction.show(tagId);
-    }
-    chrome.tabs.onUpdated.addListener(showLogo);
+	function showLogo(tabId, changeInfo, tab) {
+	    if (tab.url.indexOf('fanfou.com') > -1) {
+	    chrome.pageAction.show(tabId);
+	  }
+	};
+	chrome.tabs.onUpdated.addListener(showLogo);
 
     /* 插件信息 */
 
