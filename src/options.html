@@ -13,12 +13,9 @@
 				keys.push($(this).attr('key'));
 				items.push($(this));
 			});
-			displayVersionNumber();
-			console.log(keys);
 			chrome.extension.sendRequest(
 				{ func: 'readData', data: keys },
 				function(data) {
-					console.log(data);
 					for (var i = 0; i < data.length; ++i) {
 						var $item = items[i];
 						if ($item.is(':checkbox')) {
