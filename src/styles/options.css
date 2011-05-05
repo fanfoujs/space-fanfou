@@ -67,7 +67,7 @@ input, textarea, select {
 body {
 	color: #555;
 	background: #fff url(../images/bg.png) repeat;
-	font: 400 14px/1.5 "Lucida Grande", "HelveticaNeue-Light", "Helvetica Neue Light", Hevetica, Tahoma, "Hiragino Sans GB", "Microsoft Yahei", "Wenquanyi MicroHei", sans-serif;
+	font: 400 12px/1.5 "Lucida Grande", "HelveticaNeue-Light", "Helvetica Neue Light", Hevetica, Tahoma, "Hiragino Sans GB", "Microsoft Yahei", "Wenquanyi MicroHei", sans-serif;
 }
 ::selection, ::-moz-selection { 
 	color: rgba(255,255,255,.75);
@@ -89,28 +89,40 @@ em {
 	font-style: italic;
 }
 h1 {
-	font-size: 24px;
+	font-size: 20px;
 	padding: 5px 8px;
 	background: #ebf3f5;
 	border-radius: 5px;
 }
 h2 {
-	font-size: 18px;
+	font-size: 16px;
 	margin-top: 10px;
 	margin-bottom: 5px;
 	padding: 0 8px;
 	border-bottom: 3px solid #eee;
 }
 h3 {
-	font-size: 14px;
+	font-size: 12px;
 }
 h4 {
-	font-size: 14px;
+	font-size: 12px;
 }
 
 /* Screen */
 #wrapper {
 	width: 400px;
+	max-width: 400px;
+	max-height: 600px;
 	margin: 0 auto;
 	padding: 10px;
+}
+#tip {
+	margin-top: 10px;
+	padding: 5px 8px;
+	background: #ebf3f5;
+	border-radius: 5px;
+}
+#footer {
+	margin-top: 10px;
+	color: #999;
 }
