@@ -23,7 +23,7 @@
             var author_exp = /<h1>(.+?)<\/h1>/g;
             author_exp.lastIndex = data.indexOf('<div id="latest">');
             var author = author_exp.exec(data)[1];
-            var content = /<h2>(.+?)<\/h2>/.exec(data);
+            var content = /<h2>([\s\S]+?)<\/h2>/.exec(data);
             if (! content) {
                 content = '<strong>此消息已删除</strong>';
                 spans = '';
