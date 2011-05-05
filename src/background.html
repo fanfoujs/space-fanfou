@@ -1,9 +1,11 @@
 <!DOCTYPE HTML>
-<html lang="en">
+
+<html lang="zh-CN">
+
 <head>
 <meta charset="UTF-8">
 <script type="text/javascript">
-    // 显示太空饭否Logo
+	// 显示太空饭否 Logo
 	function showLogo(tabId, changeInfo, tab) {
 		if (tab.url.indexOf('fanfou.com') > -1) {
 			chrome.pageAction.show(tabId);
@@ -11,51 +13,52 @@
 	};
 	chrome.tabs.onUpdated.addListener(showLogo);
 
-    /* 插件信息 */
+	/* 插件信息 */
 
-    // 默认值
-    var default_values = {
-        'expanding_replies': true,
-        'expanding_replies.number': 3,
-        'image_uploading': true,
-    };
+	// 默认值
+	var default_values = {
+		'expanding_replies': true,
+		'expanding_replies.number': 3,
+		'image_uploading': true,
+	};
 
-    // 读取插件信息
-    function readData(key) {
-        var readRawData = function(key) {
-            if (localStorage[key] !== undefined)
-                return JSON.parse(localStorage[key]);
-            else
-                return default_values[key];
-        };
-        if (typeof key == 'string') {
-            return readRawData(key);
-        } else {
-            var ret = [];
-            for (var i = 0; i < key.length; ++i)
-                ret.push(readRawData(key[i]));
-            return ret;
-        }
-    }
+	// 读取插件信息
+	function readData(key) {
+		var readRawData = function(key) {
+			if (localStorage[key] !== undefined)
+				return JSON.parse(localStorage[key]);
+			else
+				return default_values[key];
+		};
+		if (typeof key == 'string') {
+			return readRawData(key);
+		} else {
+			var ret = [];
+			for (var i = 0; i < key.length; ++i)
+				ret.push(readRawData(key[i]));
+			return ret;
+		}
+	}
 
-    // 写入插件信息
-    function saveData(data) {
-        var saveRawData = function(key, value) {
-            localStorage[key] = JSON.stringify(value);
-        };
-        for (var key in data) {
-            if (! data.hasOwnProperty(key)) continue;
-            saveRawData(key, data[key]);
-        }
-    }
+	// 写入插件信息
+	function saveData(data) {
+		var saveRawData = function(key, value) {
+			localStorage[key] = JSON.stringify(value);
+		};
+		for (var key in data) {
+			if (! data.hasOwnProperty(key)) continue;
+			saveRawData(key, data[key]);
+		}
+	}
 
-    // 与脚本交互
-    chrome.extension.onRequest.addListener(
-        function(request, sender, sendResponse) {
-            if (typeof window[request.func] == 'function')
-                sendResponse(window[request.func](request.data));
-        }
-    );
+	// 与脚本交互
+	chrome.extension.onRequest.addListener(
+		function(request, sender, sendResponse) {
+			if (typeof window[request.func] == 'function')
+				sendResponse(window[request.func](request.data));
+		}
+	);
 </script>
 </head>
+
 </html>
