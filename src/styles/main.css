@@ -114,7 +114,7 @@
 	left: 385px !important;
 }
 #update .act {
-	padding: 0 0 .6em !important;
+	padding: 0 0 2px !important;
 }
 #stream.message li.last-refresh, #stream.message li.last-more {
 	border-bottom: 3px solid #e5e5e5 !important;
@@ -261,7 +261,7 @@
 #ZoomImage {
 	-webkit-box-shadow: 0 0 15px rgba(0,0,0,.5);
 }
-#sidebar #goodapp, #sidebar #badge-sect, #miibeian {
+#sidebar #goodapp, #sidebar #badge-sect {
 	display: none;
 }
 
