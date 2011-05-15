@@ -61,26 +61,6 @@
 		}
 	);
 
-	/* 样式 */
-
-	var css_switches = [
-		['font_reset', 'font-reset-all.css', 'font-reset-en.css'],
-		['translucent_sidebar', 'translucent-sidebar.css', null]
-	];
-
-	chrome.tabs.onUpdated.addListener(
-		function(tabId, changeInfo, tab) {
-			if (tab.url.substr(0, 18) != 'http://fanfou.com/')
-				return;
-			for (var i = 0; i < css_switches.length; ++i) {
-				var css_file = readData(css_switches[i][0]) ?
-					css_switches[i][1] : css_switches[i][2];
-				if (! css_file) continue;
-				chrome.tabs.insertCSS(tabId, { file: 'styles/' + css_file });
-			}
-		}
-	);
-	
 </script>
 </head>
 
