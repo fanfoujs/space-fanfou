@@ -37,7 +37,7 @@
             ]
         },
         {
-            "js": [ "scripts/jquery.js", "scripts/css.js" ],
+            "js": [ "scripts/css.js" ],
             "matches": [
                 "http://fanfou.com/*"
             ],

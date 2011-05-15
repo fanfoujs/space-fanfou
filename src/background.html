@@ -4,6 +4,7 @@
 
 <head>
 <meta charset="UTF-8">
+<script type="text/javascript" src="scripts/jquery.js"></script>
 <script type="text/javascript">
 	// 显示太空饭否 Logo
 	chrome.tabs.onUpdated.addListener(
@@ -12,6 +13,8 @@
 				chrome.pageAction.show(tabId);
 		}
 	);
+
+	var caches = {};
 
 	/* 插件信息 */
 
@@ -25,13 +28,13 @@
 	};
 
 	// 读取插件信息
+	function readRawData(key) {
+		if (localStorage[key] !== undefined)
+			return JSON.parse(localStorage[key]);
+		else
+			return default_values[key];
+	}
 	function readData(key) {
-		var readRawData = function(key) {
-			if (localStorage[key] !== undefined)
-				return JSON.parse(localStorage[key]);
-			else
-				return default_values[key];
-		};
 		if (typeof key == 'string') {
 			return readRawData(key);
 		} else {
@@ -43,10 +46,11 @@
 	}
 
 	// 写入插件信息
+	function saveRawData(key, value) {
+		caches = {};
+		localStorage[key] = JSON.stringify(value);
+	}
 	function saveData(data) {
-		var saveRawData = function(key, value) {
-			localStorage[key] = JSON.stringify(value);
-		};
 		for (var key in data) {
 			if (! data.hasOwnProperty(key)) continue;
 			saveRawData(key, data[key]);
@@ -60,8 +64,49 @@
 				sendResponse(window[request.func](request.data));
 		}
 	);
+	
+	/* 样式 */
 
+	var css_switches = [
+		['font_reset', 'font-reset-all.css', 'font-reset-en.css'],
+		['translucent_sidebar', 'translucent-sidebar.css', null]
+	];
+
+	// 样式缓存
+	var css_cache = { };
+	function cacheCSS(file) {
+		$.get('styles/' + file,
+				function(data) { css_cache[file] = data; });
+	}
+
+	// 缓存所有样式
+	for (var i = 0; i < css_switches.length; ++i) {
+		var item = css_switches[i];
+		if (item[1]) cacheCSS(item[1]);
+		if (item[2]) cacheCSS(item[2]);
+	}
+
+	// 读取样式
+	function getStyles() {
+		if (caches.styles)
+			return caches.styles;
+		var styles = '';
+		for (var i = 0; i < css_switches.length; ++i) {
+			var item = css_switches[i];
+			if (readRawData(item[0])) {
+				if (item[1] in css_cache)
+					styles += css_cache[item[1]];
+			} else {
+				if (item[2] in css_cache)
+					styles += css_cache[item[2]];
+			}
+		}
+		caches.styles = styles;
+		return styles;
+	}
+	getStyles();
 </script>
 </head>
-
+<body>
+</body>
 </html>
