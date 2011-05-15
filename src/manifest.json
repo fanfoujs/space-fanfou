@@ -46,7 +46,7 @@
     ],
     "description": "饭否的辅助脚本。可以通过改良 CSS 来优化饭否页面的显示效果，并添加了回复展开、网页端上传图片等脚本功能。",
     "name": "太空饭否",
-    "version": "0.3.3.8",
+    "version": "0.3.4.0",
     "permissions": [ "http://fanfou.com/*", "http://fanwai.com/*", "tabs", "notifications" ],
     "icons" : {
         "48": "icons/icon-48.png",
