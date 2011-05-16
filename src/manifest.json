@@ -37,6 +37,22 @@
             ]
         },
         {
+            "css": [ "styles/user-switcher.css" ],
+            "js": [ "scripts/jquery.js", "scripts/user-switcher.js" ],
+            "matches": [
+                "http://fanfou.com/home",
+                "http://fanfou.com/replies",
+                "http://fanfou.com/mentions",
+                "http://fanfou.com/favorites/*"
+            ]
+        },
+        {
+            "js": [ "scripts/jquery.js", "scripts/user-switcher-add.js" ],
+            "matches": [
+                "http://fanfou.com/*"
+            ]
+        },
+        {
             "js": [ "scripts/css.js" ],
             "matches": [
                 "http://fanfou.com/*"
