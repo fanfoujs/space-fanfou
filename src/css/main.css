@@ -116,6 +116,10 @@
 #update .act {
 	padding: 0 0 2px !important;
 }
+.ui-autocomplete {
+	background: rgba(255,255,255,.95) !important;
+	-webkit-animation: fadeIn .2s;
+}
 #stream.message li.last-refresh, #stream.message li.last-more {
 	border-bottom: 3px solid #e5e5e5 !important;
 }
