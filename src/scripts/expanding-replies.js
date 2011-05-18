@@ -1,7 +1,7 @@
-(function() {
+SF.checkAndExec('expanding_replies', ['number'],
+function(replies_number) {
 	var $ol = $('#stream ol');
 	if (! $ol.size()) return;
-	var replies_number = 3;
 	var showWaiting = function($e) {
 		var $wait = $('<li>');
 		$wait.addClass('reply waiting');
@@ -98,19 +98,7 @@
 			});
 		}
 	};
-	var main = function() {
-		$ol.bind('DOMNodeInserted',
-				function(e) { processItem($(e.target)); });
-		$('li', $ol).each(function() { showExpand($(this)); });
-	};
-	chrome.extension.sendRequest(
-		{
-			func: 'readData',
-			data: ['expanding_replies', 'expanding_replies.number']
-		},
-		function(data) {
-			replies_number = data[1];
-			if (data[0]) main();
-		}
-	);
-})();
+    $ol.bind('DOMNodeInserted',
+            function(e) { processItem($(e.target)); });
+    $('li', $ol).each(function() { showExpand($(this)); });
+});
