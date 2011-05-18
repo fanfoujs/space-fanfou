@@ -1,4 +1,4 @@
-(function() {
+SF.checkAndExec('user_switcher', [], function() {
     /* 初始化 Cookie */
     var cookie_strs = document.cookie.split(/\s*;\s*/);
     var cookies = { };
@@ -84,4 +84,4 @@
     var $user_top = $('#user_top');
     $user_top.append($user_list);
     $user_top.addClass('switcher');
-})();
+});
