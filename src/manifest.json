@@ -1,12 +1,12 @@
 {
     "content_scripts": [
         {
-            "css": [ "styles/main.css" ],
+            "css": [ "css/main.css" ],
             "matches": [ "http://fanfou.com/*", "http://fanwai.com/*" ]
         },
         {
-            "css": [ "styles/expanding-replies.css" ],
-            "js": [ "scripts/common.js", "scripts/jquery.js", "scripts/expanding-replies.js" ],
+            "css": [ "css/expanding-replies.css" ],
+            "js": [ "js/common.js", "js/jquery.js", "js/expanding-replies.js" ],
             "matches": [ "http://fanfou.com/*" ],
             "exclude_globs": [
                 "http://fanfou.com/",
@@ -27,8 +27,8 @@
             ]
         },
         {
-            "css": [ "styles/image-uploading.css" ],
-            "js": [ "scripts/common.js", "scripts/jquery.js", "scripts/image-uploading.js" ],
+            "css": [ "css/image-uploading.css" ],
+            "js": [ "js/common.js", "js/jquery.js", "js/image-uploading.js" ],
             "matches": [
                 "http://fanfou.com/home",
                 "http://fanfou.com/replies",
@@ -37,7 +37,7 @@
             ]
         },
         {
-            "js": [ "scripts/css.js" ],
+            "js": [ "js/css.js" ],
             "matches": [
                 "http://fanfou.com/*"
             ],
