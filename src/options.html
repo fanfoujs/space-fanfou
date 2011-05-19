@@ -2,64 +2,80 @@
 <html lang="zh-CN">
 
 <head>
-	<meta charset="UTF-8">
-	<title>太空饭否 - 选项</title>
-	<link rel="stylesheet" href="css/options.css" type="text/css" media="screen" charset="utf-8" />
-	<script type="text/javascript" src="js/jquery.js"></script>
-	<script type="text/javascript">
-		$(function() {
-			var keys = [], items = [];
-			$('[key]').each(function() {
-				keys.push($(this).attr('key'));
-				items.push($(this));
-			});
-			chrome.extension.sendRequest(
-				{ func: 'readData', data: keys },
-				function(data) {
-					for (var i = 0; i < data.length; ++i) {
-						var $item = items[i];
-						if ($item.is(':checkbox')) {
-							$item.attr('checked', data[i]);
-						} else if ($item.is(':input, :password, ' +
-											'textarea, select')) {
-							$item.val(data[i]);
-						} // TODO
-					}
-				}
-			);
-			$(document.body).change(function(e) {
-				var $elem = $(e.target);
-				var key = $elem.attr('key');
-				if (key === undefined) return;
-				var val;
-				if ($elem.is(':checkbox')) {
-					val = $elem.is(':checked');
-				} else {
-					val = $elem.val();
-				}
-				data = {};
-				data[key] = val;
-				chrome.extension.sendRequest(
-					{ func: 'saveData', data: data });
-			});
-		});
-	</script>
+    <meta charset="UTF-8">
+    <title>太空饭否 - 选项</title>
+    <link rel="stylesheet" href="css/options.css" type="text/css" media="screen" charset="utf-8" />
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            var keys = [], items = [];
+            $('[key]').each(function() {
+                keys.push($(this).attr('key'));
+                items.push($(this));
+            });
+            chrome.extension.sendRequest(
+                { func: 'readData', data: keys },
+                function(data) {
+                    for (var i = 0; i < data.length; ++i) {
+                        var $item = items[i];
+                        if ($item.is(':checkbox')) {
+                            $item.attr('checked', data[i]);
+                        } else if ($item.is(':input, :password, ' +
+                                            'textarea, select')) {
+                            $item.val(data[i]);
+                        } // TODO
+                    }
+                }
+            );
+            $(document.body).change(function(e) {
+                var $elem = $(e.target);
+                var key = $elem.attr('key');
+                if (key === undefined) return;
+                var val;
+                if ($elem.is(':checkbox')) {
+                    val = $elem.is(':checked');
+                } else {
+                    val = $elem.val();
+                }
+                data = {};
+                data[key] = val;
+                chrome.extension.sendRequest(
+                    { func: 'saveData', data: data });
+            });
+        });
+    </script>
 </head>
 
 <body>
-	<div id="wrapper">
-		<h1>太空饭否选项</h1>
-		<h2>扩展功能</h2>
-		<p><label><input type="checkbox" key="expanding_replies" />启用展开回复功能</label></p>
-		<p><label>每次展开数量：<input type="number" min="1" max="20" step="1" key="expanding_replies.number" /></label></p>
-		<p><label><input type="checkbox" key="image_uploading" />启用图片上传功能</label></p>
-        <p><label><input type="checkbox" key="user_switcher" />启用多用户切换</label><span class="comment">为避免冲突，请不要同时启用相应 GM 插件。</span></p>
-		<h2>页面样式</h2>
-		<p><label><input type="checkbox" key="font_reset" />启用中文字体美化</label></p>
-		<p><label><input type="checkbox" key="translucent_sidebar" />启用半透明的侧栏</label></p>
-		<div id="tip">关闭此窗口，刷新饭否页面即可使设置生效</div>
-		<div id="footer">&copy; 2011 Kevin, Upsuper.</div>
-	</div>
+    <div id="wrapper">
+        <h1>太空饭否选项</h1>
+        
+        <h2>扩展功能</h2>
+        <p>
+            <label><input type="checkbox" key="expanding_replies" />启用展开回复功能</label>
+        </p>
+        <p>
+            <label>每次展开数量：<input type="number" min="1" max="20" step="1" key="expanding_replies.number" /></label>
+        </p>
+        <p>
+            <label><input type="checkbox" key="image_uploading" />启用图片上传功能</label>
+        </p>
+        <p>
+            <label><input type="checkbox" key="user_switcher" />启用多用户切换</label>
+            <span class="comment">为避免冲突，请不要同时启用相应 GM 插件。</span>
+        </p>
+        
+        <h2>页面样式</h2>
+        <p>
+            <label><input type="checkbox" key="font_reset" />启用中文字体美化</label>
+        </p>
+        <p>
+            <label><input type="checkbox" key="translucent_sidebar" />启用半透明的侧栏</label>
+        </p>
+        
+        <div id="tip">关闭此窗口，刷新饭否页面即可使设置生效</div>
+        <div id="footer">&copy; 2011 Kevin, Upsuper.</div>
+    </div>
 </body>
 
 </html>
