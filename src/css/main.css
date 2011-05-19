@@ -50,7 +50,7 @@
 	border: none !important;
 	text-align: center;
 	z-index: 100;
-	-webkit-box-shadow: 0 0 5px #666;
+	box-shadow: 0 0 5px #666;
 }
 .sysmsg {
 	color: #555 !important;
@@ -75,11 +75,11 @@
 	margin-bottom: 0 !important;
 }
 .input_text, #message textarea, #update textarea, #invite-url, #PopupBox textarea {
-	-webkit-box-shadow: 0 2px 5px rgba(0,0,0,.075) inset;
+	box-shadow: 0 2px 5px rgba(0,0,0,.075) inset;
 	background: rgba(255,255,255,.5);
 	border: 1px solid #b5b5b5 !important;
 	padding: 4px;
-	-webkit-border-radius: 5px;
+	border-radius: 5px;
 	-webkit-transition-property: background;
 	-webkit-transition-duration: 300ms;
 }
@@ -103,8 +103,8 @@
 #PopupBox {
 	border: 3px solid rgba(0,0,0,.5);
 	background: rgba(255,255,255,.9) !important;
-	-webkit-border-radius: 10px;
-	-webkit-box-shadow: 0 0 15px rgba(0,0,0,.5);
+	border-radius: 10px;
+	box-shadow: 0 0 15px rgba(0,0,0,.5);
 	-webkit-animation: fadeIn .1s;
 }
 #PopupUpdate .tip {
@@ -145,7 +145,7 @@
 #timeline-notification, .sysnotice {
 	text-align: center;
 	text-shadow: 0 1px 0 #fff;
-	-webkit-border-radius: 5px;
+	border-radius: 5px;
 }
 #timeline-notification a, .sysnotice {
 	background-color: #ebf3f5 !important;
@@ -199,12 +199,12 @@
 	opacity: 1;
 }
 #searchr-input {
-	-webkit-transition-property: -webkit-box-shadow;
+	-webkit-transition-property: box-shadow;
 	-webkit-transition-duration: 200ms;
 }
 #searchr-input:focus {
 	outline: none;
-	-webkit-box-shadow: 0 0 8px rgba(0,0,0,.15);
+	box-shadow: 0 0 8px rgba(0,0,0,.15);
 }
 #savedsearchs li, #trendtabs li, #birthday li {
 	line-height: 24px !important;
@@ -263,7 +263,7 @@
 	border: none !important;
 }
 #ZoomImage {
-	-webkit-box-shadow: 0 0 15px rgba(0,0,0,.5);
+	box-shadow: 0 0 15px rgba(0,0,0,.5);
 }
 #sidebar #goodapp, #sidebar #badge-sect {
 	display: none;
@@ -278,7 +278,7 @@
 	white-space: nowrap;
 	border: none;
 	border: 1px solid #ccc;
-	-webkit-border-radius: 3px;
+	border-radius: 3px;
 	background: -webkit-gradient(linear,left top,left bottom,from(#f4f4f4),to(#ddd)) !important;
 }
 a.bl-added {

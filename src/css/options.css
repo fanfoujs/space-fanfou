@@ -122,6 +122,13 @@ h4 {
 	background: #ebf3f5;
 	border-radius: 5px;
 }
+.comment {
+	color: #999;
+	margin-left: 5px;
+}
+.comment:before {
+	content: "- ";
+}
 #footer {
 	margin-top: 10px;
 	color: #999;
