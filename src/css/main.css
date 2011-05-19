@@ -270,6 +270,8 @@
 }
 
 /* Badges */
+#navtabs .count, #navigation .count { display: none; }
+#navtabs .newcount, #navigation .newcount { -webkit-animation: fadeIn 500ms; }
 #navigation .newcount {
 	position: absolute;
 	top: -2px;
@@ -287,11 +289,11 @@
 #sidebar .stabs li {
 	position: relative;
 }
-#navigation .count, #navtabs .newcount {
+#navigation .newcount, #navtabs .newcount {
 	font-weight: normal;
 	text-shadow: none;
 }
-#navtabs a[href="/privatemsg"] .newcount, #navtabs a[href="/mentions"] .newcount {
+#navtabs .newcount {
 	position: absolute;
 	top: 0px;
 	background: rgba(230,50,0,.75);

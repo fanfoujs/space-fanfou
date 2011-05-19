@@ -53,6 +53,12 @@
             ]
         },
         {
+            "js": [ "js/jquery.js", "js/newcount-style.js" ],
+            "matches": [
+                "http://fanfou.com/*"
+            ]
+        },
+        {
             "js": [ "js/css.js" ],
             "matches": [
                 "http://fanfou.com/*"
