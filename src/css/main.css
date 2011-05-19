@@ -359,3 +359,18 @@ a.bh {
 #birthday li a:before {
 	content: "\40";
 }
+
+/* Styles for float-message */
+.float-message .lastmsg p:after {
+	background: none;
+}
+.lastmsg, .actpost .formbutton {
+	-webkit-transition-property: opacity;
+	-webkit-transition-duration: 300ms;
+}
+.float-message .actpost .formbutton, .float-message .lastmsg {
+	opacity: 0;
+}
+.float-message:hover .actpost .formbutton, .float-message:hover .lastmsg {
+	opacity: 1;
+}
