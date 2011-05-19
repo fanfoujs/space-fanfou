@@ -269,6 +269,43 @@
 	display: none;
 }
 
+/* Badges */
+#navigation .newcount {
+	position: absolute;
+	top: -2px;
+	background: rgba(230,50,0,.75);
+	color: white;
+	font-size: 12px;
+	margin-left: -5px !important;
+	padding: 0 1px;
+	min-width: 16px;
+	height: 18px;
+	line-height: 18px;
+	-webkit-border-radius: 30px;
+	text-align: center;
+}
+#sidebar .stabs li {
+	position: relative;
+}
+#navigation .count, #navtabs .newcount {
+	font-weight: normal;
+	text-shadow: none;
+}
+#navtabs a[href="/privatemsg"] .newcount, #navtabs a[href="/mentions"] .newcount {
+	position: absolute;
+	top: 0px;
+	background: rgba(230,50,0,.75);
+	color: white;
+	font-size: 12px;
+	margin: 4px !important;
+	padding: 0 1px;
+	min-width: 16px;
+	height: 18px;
+	line-height: 18px;
+	-webkit-border-radius: 30px;
+	text-align: center;
+}
+
 /* Buttons */
 .bl, .bl-long, a.bh, a.bl-added {
 	font-size: 11px;
