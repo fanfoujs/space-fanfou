@@ -270,8 +270,9 @@
 }
 
 /* Badges */
-#navtabs .count, #navigation .count { display: none; }
-#navtabs .newcount, #navigation .newcount { -webkit-animation: fadeIn 500ms; }
+#navtabs .count, #navigation .count {
+	display: none;
+}
 #navigation .newcount {
 	position: absolute;
 	top: -2px;
@@ -292,6 +293,7 @@
 #navigation .newcount, #navtabs .newcount {
 	font-weight: normal;
 	text-shadow: none;
+	-webkit-animation: fadeIn 500ms;
 }
 #navtabs .newcount {
 	position: absolute;
