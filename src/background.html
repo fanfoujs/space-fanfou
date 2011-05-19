@@ -76,8 +76,9 @@
 	// 样式缓存
 	var css_cache = { };
 	function cacheCSS(file) {
-		$.get('styles/' + file,
-				function(data) { css_cache[file] = data; });
+        $.get('css/' + file, function(data) {
+            css_cache[file] = data;
+        });
 	}
 
 	// 缓存所有样式
