@@ -45,7 +45,7 @@
 	margin: 4px;
 }
 #user_top.switcher:hover {
-   border: 1px solid #aaa;
+   /*border: 1px solid #aaa;*/
    box-shadow: 1px 2px 3px rgba(0,0,0,.3);
    background-color: rgba(255,255,255,.95); 
 } 
