@@ -368,6 +368,16 @@ a.bh {
 	-webkit-transition-property: opacity;
 	-webkit-transition-duration: 300ms;
 }
+#update textarea {
+	-webkit-transition-property: height;
+	-webkit-transition-duration: 300ms;
+}
+.float-message textarea {
+	height: 18px !important;
+}
+.float-message textarea:focus {
+	height: 50px !important;
+}
 .float-message .actpost .formbutton, .float-message .lastmsg {
 	opacity: 0;
 }
