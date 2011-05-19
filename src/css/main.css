@@ -361,10 +361,10 @@ a.bh {
 }
 
 /* Styles for float-message */
-.float-message .lastmsg p:after {
-	background: none;
+.float-message .lastmsg {
+	display: none;
 }
-.lastmsg, .actpost .formbutton {
+.actpost .formbutton {
 	-webkit-transition-property: opacity;
 	-webkit-transition-duration: 300ms;
 }
@@ -378,9 +378,9 @@ a.bh {
 .float-message textarea:focus {
 	height: 50px !important;
 }
-.float-message .actpost .formbutton, .float-message .lastmsg {
+.float-message .actpost .formbutton {
 	opacity: 0;
 }
-.float-message:hover .actpost .formbutton, .float-message:hover .lastmsg {
+.float-message:hover .actpost .formbutton {
 	opacity: 1;
 }
