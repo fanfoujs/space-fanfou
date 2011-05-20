@@ -1,4 +1,4 @@
-(function() {
+SF.checkAndExec('float_message', [], function() {
     /* 处理悬浮 */
     var $main = $('#main');
     var $update = $('#update');
