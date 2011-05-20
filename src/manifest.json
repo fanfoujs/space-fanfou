@@ -66,7 +66,7 @@
             "run_at": "document_start"
         },
         {
-            "js": [ "js/float-message.js" ],
+            "js": [ "js/jquery.js", "js/float-message.js" ],
             "matches": [
                 "http://fanfou.com/home",
                 "http://fanfou.com/replies",
