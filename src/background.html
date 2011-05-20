@@ -16,6 +16,29 @@
 
 	var caches = {};
 
+	/* 分享到饭否 */
+
+	var menu_share = 0;
+	function changeShareOption(value) {
+		if (value) {
+			menu_share = chrome.contextMenus.create({
+				title: '分享到饭否',
+				contexts: ['page', 'selection'],
+				onclick: function(info, tab) {
+					var params = $.param({
+						u: tab.url, t: tab.title,
+						d: info.selectionText ? info.selectionText : '', s: 'bm'
+					});
+					window.open('http://fanfou.com/sharer?' + params, 'sharer', 
+								'toolbar=0,status=0,resizable=0,width=600,height=400');
+				}
+			});
+		} else {
+			if (! menu_share) return;
+			chrome.contextMenus.remove(menu_share);
+			menu_share = 0;
+		}
+	}
 	/* 插件信息 */
 
 	// 默认值
@@ -25,7 +48,13 @@
 		'image_uploading': true,
 		'user_switcher': false,
 		'font_reset': false,
-		'translucent_sidebar': true,
+        'translucent_sidebar': true,
+        'share_to_fanfou': true,
+	};
+	
+	// 修改钩子
+	var value_hooks = {
+		'share_to_fanfou': changeShareOption,
 	};
 
 	// 读取插件信息
@@ -50,6 +79,8 @@
 	function saveRawData(key, value) {
 		caches = {};
 		localStorage[key] = JSON.stringify(value);
+		if (value_hooks[key])
+			value_hooks[key](value);
 	}
 	function saveData(data) {
 		for (var key in data) {
@@ -65,6 +96,12 @@
 				sendResponse(window[request.func](request.data));
 		}
 	);
+
+	// 初始化选项钩子
+	for (var key in value_hooks) {
+		if (! value_hooks.hasOwnProperty(key)) continue;
+		value_hooks[key](readRawData(key));
+	}
 	
 	/* 样式 */
 
