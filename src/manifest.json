@@ -71,13 +71,14 @@
     "version": "0.3.6.0",
     "permissions": [ "http://fanfou.com/*", "http://fanwai.com/*", "tabs", "notifications", "contextMenus" ],
     "icons" : {
+        "16": "icons/icon-16.png",
         "48": "icons/icon-48.png",
         "128": "icons/icon-128.png"
     },
     "background_page": "background.html",
     "options_page": "options.html",
     "page_action": {
-        "default_icon": "icon.png",
+        "default_icon": "icons/icon-page.png",
         "default_title": "太空饭否",
         "popup": "options.html"
     }
