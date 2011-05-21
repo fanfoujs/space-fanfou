@@ -120,7 +120,9 @@ SF.checkAndExec('float_message', [], function() {
     });
     $msg = $msg.removeEvents();
     $msg.keypress(function(e) {
-        if (e.ctrlKey && e.keyCode == 10)
+        if (e.ctrlKey && e.keyCode == 10) {
+            $(this).blur();
             $form.submit();
+        }
     });
 }); 
