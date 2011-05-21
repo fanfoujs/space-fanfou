@@ -96,9 +96,18 @@
 	color: #666 !important;
 	letter-spacing: 0 !important;
 	text-shadow: 0 1px 0 #fff;
+	border: 1px solid #ccc !important;
+	border-radius: 5px;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#eee)) !important;
 }
 #update .formbutton:hover, #PopupBox .formbutton:hover {
 	color: #333 !important;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#eee)) !important;
+	border-color: #999 !important;
+	box-shadow: 0 0 3px rgba(0,0,0,.125);
+}
+#update .formbutton:active, #PopupBox .formbutton:active {
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(#fff)) !important;
 }
 #PopupBox {
 	border: 3px solid rgba(0,0,0,.5);
