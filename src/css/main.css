@@ -374,12 +374,13 @@ a.bh {
 }
 .float-message {
 	position: fixed;
-	top: 0; z-index: 100;
+	top: 0;
+	z-index: 100;
 	background: -webkit-gradient(linear, 0 0, 0 100%,
                 from(rgba(255,255,255,1)), 
-                color-stop(50%, rgba(255,255,255,.9)), 
-                color-stop(75%, rgba(255,255,255,.9)), 
-                color-stop(100%, rgba(255,255,255,0)));
+                color-stop(30%, rgba(255,255,255,.9)), 
+                color-stop(60%, rgba(255,255,255,.9)), 
+                color-stop(80%, rgba(255,255,255,0)));
 	border-bottom: none;
 	padding: 10px 0;
 }

@@ -3,13 +3,13 @@ SF.checkAndExec('float_message', [], function() {
     var $main = $('#main');
     var $update = $('#update');
     var $win = $(window);
-    var ud_top = $update.offset().top;
+    var ud_top = $update.offset().top -11;
     var main_padtop = $main.css('padding-top');
     $win.scroll(function() {
         if ($win.scrollTop() > ud_top) {
             $update.addClass('float-message');
             $main.css('padding-top',
-                      ($update.outerHeight() + parseInt(main_padtop)) + 'px');
+                      ($update.outerHeight() + parseInt(main_padtop)) -16 +'px');
         } else {
             $update.removeClass('float-message');
             $main.css('padding-top', main_padtop);
