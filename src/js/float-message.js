@@ -71,4 +71,56 @@ SF.checkAndExec('float_message', [], function() {
         $msg.get(0).setSelectionRange(old_msg.length, old_msg.length);
         $msg.focus();
     });
-})(); 
+
+    $.fn.removeEvents = function() {
+        var $elem = $(this);
+        if ($elem.length > 1) {
+            return $.map($elem,
+                         function($e) { return $(e).removeEvents(); });
+        }
+        var $inner = $elem.children();
+        $inner.detach();
+        var $wrap = $elem.wrap('<div/>').parent();
+        $wrap.children().replaceWith($wrap.html());
+        $elem = $wrap.children();
+        $wrap.replaceWith($elem);
+        $inner.appendTo($elem);
+        return $elem;
+    };
+
+    /* AJAX化提交 */
+    var $form = $('form#message');
+    var $ajax = $('<input>');
+    $ajax.attr('type', 'hidden');
+    $ajax.attr('name', 'ajax');
+    $ajax.val('yes');
+    $form.append($ajax);
+    $form.attr('action', '');
+    $form = $form.removeEvents();
+    var $loading = $('.loading', $form);
+    $form.submit(function(e) {
+        e.preventDefault();
+        $loading.css('visibility', 'visible');
+        var data = $form.serialize();
+        $.post('/home', data, function(data) {
+            var $notice = $('<div>');
+            if (data.status) {
+                $notice.addClass('sysmsg');
+            } else {
+                $notice.addClass('errmsg');
+            }
+            $notice.text(data.msg);
+            $notice.hide();
+            $('#header').append($notice);
+            $notice.fadeIn(500).delay(3500).fadeOut(500,
+                function() { $(this).remove(); });
+            $msg.val('');
+            $loading.css('visibility', 'hidden');
+        }, 'json');
+    });
+    $msg = $msg.removeEvents();
+    $msg.keypress(function(e) {
+        if (e.ctrlKey && e.keyCode == 10)
+            $form.submit();
+    });
+}); 
