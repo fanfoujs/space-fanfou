@@ -89,19 +89,13 @@ SF.checkAndExec('float_message', [], function() {
     };
 
     /* AJAX化提交 */
-    var $form = $('form#message');
-    var $ajax = $('<input>');
-    $ajax.attr('type', 'hidden');
-    $ajax.attr('name', 'ajax');
-    $ajax.val('yes');
-    $form.append($ajax);
-    $form = $form.removeEvents();
+    $form = $('form#message').removeEvents();
     var $loading = $('.loading', $form);
     $form.submit(function(e) {
 		if ($form.attr('target')) return;
         e.preventDefault();
         $loading.css('visibility', 'visible');
-        var data = $form.serialize();
+        var data = $form.serialize() + '&ajax=yes';
         $.post('/home', data, function(data) {
             var $notice = $('<div>');
             if (data.status) {
