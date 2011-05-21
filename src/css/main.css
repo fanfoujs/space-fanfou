@@ -359,3 +359,39 @@ a.bh {
 #birthday li a:before {
 	content: "\40";
 }
+
+/* Styles for float-message */
+.float-message .lastmsg {
+	display: none;
+}
+.actpost .formbutton {
+	-webkit-transition-property: opacity;
+	-webkit-transition-duration: 300ms;
+}
+#update textarea {
+	-webkit-transition-property: height;
+	-webkit-transition-duration: 300ms;
+}
+.float-message {
+	position: fixed;
+	top: 0; z-index: 100;
+	background: -webkit-gradient(linear, 0 0, 0 100%,
+                from(rgba(255,255,255,1)), 
+                color-stop(50%, rgba(255,255,255,.9)), 
+                color-stop(75%, rgba(255,255,255,.9)), 
+                color-stop(100%, rgba(255,255,255,0)));
+	border-bottom: none;
+	padding: 10px 0;
+}
+.float-message textarea {
+	height: 18px !important;
+}
+.float-message textarea:focus {
+	height: 50px !important;
+}
+.float-message .actpost .formbutton {
+	opacity: 0;
+}
+.float-message:hover .actpost .formbutton {
+	opacity: 1;
+}
