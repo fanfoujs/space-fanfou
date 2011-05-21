@@ -393,7 +393,7 @@ a.bh {
 	border-bottom: none;
 	padding: 10px 0;
 }
-.float-message textarea {
+.float-message.msgempty textarea {
 	height: 18px !important;
 }
 .float-message textarea:focus {

@@ -122,7 +122,13 @@ SF.checkAndExec('float_message', [], function() {
     var $tip = $('#update .tip');
     var before_left = 140;
     setInterval(function() {
-        var left = 140 - $msg.val().length;
+        var length = $msg.val().length;
+        if ($update.hasClass('msgempty') && length) {
+            $update.removeClass('msgempty');
+        } else if ($msg.is(':not(:focus)') && ! length) {
+            $update.addClass('msgempty');
+        }
+        var left = 140 - length;
         if (left == before_left) return;
         before_left = left;
         if (left < 0) {
@@ -133,4 +139,5 @@ SF.checkAndExec('float_message', [], function() {
             $tip.removeClass('caution');
         }
     }, 50);
+    $msg.focus(function() { $update.removeClass('msgempty'); });
 }); 
