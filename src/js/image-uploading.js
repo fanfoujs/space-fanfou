@@ -17,6 +17,8 @@ SF.checkAndExec('image_uploading', [], function() {
 	$file.attr('id', 'u_filename');
 	$h2.append($file);
 	$upload.change(function() {
+		var $message = $('#message');
+		var $textarea = $('textarea', $message);
 		$file.text('');
 		$file.text($upload.value);
 		var $iframe = $('<iframe>');

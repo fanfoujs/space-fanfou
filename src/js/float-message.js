@@ -95,10 +95,10 @@ SF.checkAndExec('float_message', [], function() {
     $ajax.attr('name', 'ajax');
     $ajax.val('yes');
     $form.append($ajax);
-    $form.attr('action', '');
     $form = $form.removeEvents();
     var $loading = $('.loading', $form);
     $form.submit(function(e) {
+		if ($form.attr('target')) return;
         e.preventDefault();
         $loading.css('visibility', 'visible');
         var data = $form.serialize();
