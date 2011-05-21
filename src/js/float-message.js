@@ -120,9 +120,23 @@ SF.checkAndExec('float_message', [], function() {
     });
     $msg = $msg.removeEvents();
     $msg.keypress(function(e) {
-        if (e.ctrlKey && e.keyCode == 10) {
+        if (e.ctrlKey && (e.keyCode == 10 || e.keyCode == 13)) {
             $(this).blur();
             $form.submit();
         }
     });
+    var $tip = $('#update .tip');
+    var before_left = 140;
+    setInterval(function() {
+        var left = 140 - $msg.val().length;
+        if (left == before_left) return;
+        before_left = left;
+        if (left < 0) {
+            $tip.html('已经超出 <span class="counter">' + (-left) + '</span> 字');
+            $tip.addClass('caution');
+        } else {
+            $tip.html('可以输入 <span class="counter">' + left + '</span> 字');
+            $tip.removeClass('caution');
+        }
+    }, 50);
 }); 
