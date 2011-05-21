@@ -373,12 +373,12 @@ a.bh {
 .float-message .lastmsg {
 	display: none;
 }
-.actpost .formbutton {
+.actpost .formbutton, #u_button {
 	-webkit-transition-property: opacity;
 	-webkit-transition-duration: 300ms;
 }
 #update textarea {
-	-webkit-transition-property: height;
+	-webkit-transition-property: all;
 	-webkit-transition-duration: 300ms;
 }
 .float-message {
@@ -399,9 +399,9 @@ a.bh {
 .float-message textarea:focus {
 	height: 50px !important;
 }
-.float-message .actpost .formbutton {
+.float-message .actpost .formbutton, .float-message #u_button {
 	opacity: 0;
 }
-.float-message:hover .actpost .formbutton {
+.float-message:hover .actpost .formbutton, .float-message:hover #u_button {
 	opacity: 1;
 }
