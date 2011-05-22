@@ -86,7 +86,7 @@
     ],
     "description": "饭否的辅助脚本。可以给饭否页面添加回复展开、网页端上传图片、多用户切换等功能，并且使饭否页面的变得更美更舒心，符合您的使用习惯。",
     "name": "太空饭否",
-    "version": "0.4.0.0",
+    "version": "0.4.1.0",
     "permissions": [ "http://fanfou.com/*", "http://fanwai.com/*", "tabs", "notifications", "contextMenus" ],
     "icons" : {
         "16": "icons/icon-16.png",
