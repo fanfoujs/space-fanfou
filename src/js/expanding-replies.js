@@ -84,16 +84,35 @@ function(replies_number) {
 		$item.attr('expended', 'expended');
 		var $expand = $('<li>');
 		$expand.attr('href', $('a', $reply).attr('href'));
-		$expand.addClass('reply more');
+		$expand.addClass('reply more first');
 		$expand.text('展开回复原文');
 		$expand.insertAfter($item);
 	};
+    var hideReplyList = function() {
+        var $t = $(this);
+        $t.hide();
+        var $item = $t.prev();
+        $item.removeAttr('expended');
+        showExpand($item);
+        for (var $i = $t.next(); $i.hasClass('reply'); $i = $i.next())
+            $t = $t.add($i);
+        $t.remove();
+    };
 	var processItem = function($item) {
 		if (! $item.attr('href')) {
 			showExpand($item);
 		} else {
 			$item.click(function() {
-				var $before = showWaiting($(this));
+                var $t = $(this);
+				var $before = showWaiting($t);
+                if ($t.hasClass('first')) {
+                    var $hide_replies = $('<li>');
+                    $hide_replies.addClass('reply hide');
+                    $hide_replies.attr('expended', 'expended');
+                    $hide_replies.text('隐藏回复原文');
+                    $hide_replies.insertBefore($before);
+                    $hide_replies.click(hideReplyList);
+                }
 				displayReplyList($item.attr('href'), $before, replies_number);
 			});
 		}

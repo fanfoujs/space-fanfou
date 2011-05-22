@@ -19,7 +19,7 @@
 	width: 32px;
 	height: 32px;
 }
-#stream ol li.reply.more { 
+#stream ol li.reply.more, #stream ol li.reply.hide { 
 	font-size: 90%;
 	height: 1.5em !important;
 	line-height: 1.5em;
@@ -36,7 +36,7 @@
 	border-left: none;
 	border-bottom: 1px solid #e5e5e5;
 }
-#stream ol li.reply.more:hover {
+#stream ol li.reply.more:hover, #stream ol li.reply.hide:hover {
 	background: #e5e5e5;
 	color: #666;
 }
