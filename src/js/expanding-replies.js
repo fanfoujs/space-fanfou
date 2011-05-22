@@ -39,17 +39,19 @@ function(replies_number) {
 					content = content.substring(0, stamp_pos);
 				}
 			}
-            var id = url.split('/')[2].split('?')[0];
+			var id = 'status-' + url.split('/')[2].split('?')[0] +
+					  '-' + Math.random();
 			var $li = $('<li>');
-            $li.attr('id', 'status-' + id);
-            var gete = 'document.getElementById("status-' + id + '")';
+			$li.attr('id', id);
+			var gete = 'document.getElementById("' + id + '")';
 			$li.attr('expended', 'expended');
 			$li.addClass('reply unlight');
 			$li.html(avatar + author +
 				'<span class="content">' + content + '</span>' + spans);
-            location.assign('javascript: FF.app.Stream.attach(' + gete + ')');
-            if (content.indexOf('<img '))
-                location.assign('javascript: FF.app.Zoom.init(' + gete + ')');
+			var scripts = 'FF.app.Stream.attach(' + gete + ');';
+			if (content.indexOf('<img '))
+				scripts += 'FF.app.Zoom.init(' + gete + ');'
+			location.assign('javascript:' + scripts);
 			var $links = $('a', $li);
 			$links.eq(0).addClass('avatar');
 			$links.eq(1).addClass('author');
