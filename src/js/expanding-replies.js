@@ -39,21 +39,17 @@ function(replies_number) {
 					content = content.substring(0, stamp_pos);
 				}
 			}
+            var id = url.split('/')[2].split('?')[0];
 			var $li = $('<li>');
+            $li.attr('id', 'status-' + id);
+            var gete = 'document.getElementById("status-' + id + '")';
 			$li.attr('expended', 'expended');
 			$li.addClass('reply unlight');
 			$li.html(avatar + author +
 				'<span class="content">' + content + '</span>' + spans);
-			$li.bind({
-				mouseover: function() {
-					$(this).removeClass('unlight');
-					$(this).addClass('light');
-				},
-				mouseout: function() {
-					$(this).removeClass('light');
-					$(this).addClass('unlight');
-				}
-			});
+            location.assign('javascript: FF.app.Stream.attach(' + gete + ')');
+            if (content.indexOf('<img '))
+                location.assign('javascript: FF.app.Zoom.init(' + gete + ')');
 			var $links = $('a', $li);
 			$links.eq(0).addClass('avatar');
 			$links.eq(1).addClass('author');
