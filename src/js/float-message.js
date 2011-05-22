@@ -140,4 +140,7 @@ SF.checkAndExec('float_message', [], function() {
         }
     }, 50);
     $msg.focus(function() { $update.removeClass('msgempty'); });
+
+    /* 重新加载部分自带脚本 */
+    $('script[src*="/home-autocomplete.js?"]').removeEvents();
 }); 
