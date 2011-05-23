@@ -84,7 +84,7 @@
             ]
         },
         {
-            "js": [ "js/jquery.js", "js/repost-photo-preview.js" ],
+            "js": [ "js/common.js", "js/jquery.js", "js/repost-photo-preview.js" ],
             "matches": [ "http://fanfou.com/*" ],
             "exclude_globs": [
                 "http://fanfou.com/",

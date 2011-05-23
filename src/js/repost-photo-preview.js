@@ -1,4 +1,4 @@
-(function() {
+SF.checkAndExec('repost_photo_preview', [], function() {
     var $ol = $('#stream ol');
     var r_img = /<img src="(http:\/\/photo\.fanfou\.com\/n[^\.]+\.jpg)"/;
     var processItem = function($item) {
@@ -29,4 +29,4 @@
     $ol.bind('DOMNodeInserted', 
         function(e) { processItem($(e.target)); });
     $('li', $ol).each(function() { processItem($(this)); });
-})();
+});
