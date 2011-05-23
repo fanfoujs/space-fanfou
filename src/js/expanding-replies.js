@@ -97,6 +97,7 @@ function(replies_number) {
         $t.remove();
     };
 	var processItem = function($item) {
+		if (! $item.is('li')) return;
 		if (! $item.attr('href')) {
 			showExpand($item);
 		} else {

@@ -82,6 +82,27 @@
                 "http://fanfou.com/mentions/*",
                 "http://fanfou.com/favorites/*"
             ]
+        },
+        {
+            "js": [ "js/jquery.js", "js/repost-photo-preview.js" ],
+            "matches": [ "http://fanfou.com/*" ],
+            "exclude_globs": [
+                "http://fanfou.com/",
+                "http://fanfou.com/login",
+                "http://fanfou.com/finder",
+                "http://fanfou.com/search",
+                "http://fanfou.com/photo/*",
+                "http://fanfou.com/album/*",
+                "http://fanfou.com/logout/*",
+                "http://fanfou.com/friends/*",
+                "http://fanfou.com/settings",
+                "http://fanfou.com/settings/*",
+                "http://fanfou.com/statuses/*",
+                "http://fanfou.com/followers/*",
+                "http://fanfou.com/privatemsg",
+                "http://fanfou.com/privatemsg/*",
+                "http://fanfou.com/advancedsearch"
+            ]
         }
     ],
     "description": "饭否的辅助脚本。可以给饭否页面添加回复展开、网页端上传图片、多用户切换等功能，并且使饭否页面的变得更美更舒心，符合您的使用习惯。",
