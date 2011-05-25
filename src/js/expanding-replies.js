@@ -115,7 +115,18 @@ function(replies_number) {
 			});
 		}
 	};
+    var removeReplies = function($item) {
+        if (! $item.attr('expended')) return;
+        var $replies = $item.next('.reply');
+        if (! $replies.length) return;
+        for (var $i = $replies.next(); $i.is('.reply'); $i = $i.next())
+            $replies.add($i);
+        $replies.removeAttr('expended');
+        $replies.remove();
+    };
     $ol.bind('DOMNodeInserted',
             function(e) { processItem($(e.target)); });
     $('li', $ol).each(function() { showExpand($(this)); });
+    $ol.bind('DOMNodeRemoved',
+            function(e) { removeReplies($(e.target)); });
 });
