@@ -86,8 +86,8 @@ SF.checkAndExec('user_switcher', [], function() {
     $user_top.addClass('switcher');
 
     /* 调整样式 */
-    var bordercolor = $('#sidebar').css('border-left-color');
-    $user_list.css('border-top-color', bordercolor);
-    $user_top.css('border-color', bordercolor);
-    $another.css('border-top-color', bordercolor);
+    //var bordercolor = $('#sidebar').css('border-left-color');
+    //$user_list.css('border-top-color', bordercolor);
+    //$user_top.css('border-color', bordercolor);
+    //$another.css('border-top-color', bordercolor);
 });
