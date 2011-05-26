@@ -100,6 +100,7 @@ SF.checkAndExec('float_message', [], function() {
             var $notice = $('<div>');
             if (data.status) {
                 $notice.addClass('sysmsg');
+                $msg.val('');
             } else {
                 $notice.addClass('errmsg');
             }
@@ -108,7 +109,6 @@ SF.checkAndExec('float_message', [], function() {
             $('#header').append($notice);
             $notice.fadeIn(500).delay(3500).fadeOut(500,
                 function() { $(this).remove(); });
-            $msg.val('');
             $loading.css('visibility', 'hidden');
         }, 'json');
     });
