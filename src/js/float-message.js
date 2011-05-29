@@ -114,9 +114,15 @@ SF.checkAndExec('float_message', [], function() {
     });
     $msg = $msg.removeEvents();
     $msg.keypress(function(e) {
-        if (e.ctrlKey && (e.keyCode == 10 || e.keyCode == 13)) {
+        if (e.ctrlKey && (e.keyCode == 10 || e.keyCode == 13)) { // Ctrl-Enter
             $(this).blur();
             $form.submit();
+        }
+    });
+    $msg.keyup(function(e) {
+        if (e.keyCode == 27) {
+            $(this).blur();
+            $(this).val('');
         }
     });
     var $tip = $('#update .tip');
