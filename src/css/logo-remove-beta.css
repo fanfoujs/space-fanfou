@@ -1,2 +1,6 @@
-#header h1 a img { visibility: hidden; }
-#header h1 a { background: url(http://static2.fanfou.com/img/fanfou.gif?2.gif) no-repeat 0 0; }
+#header h1 a img {
+	visibility: hidden;
+}
+#header h1 a {
+	background: url(http://static2.fanfou.com/img/fanfou.png) no-repeat 0 0;
+}
