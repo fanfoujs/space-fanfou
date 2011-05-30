@@ -92,9 +92,10 @@ SF.checkAndExec('float_message', [], function() {
     $form = $('form#message').removeEvents();
     var $loading = $('.loading', $form);
     $form.submit(function(e) {
-		if ($form.attr('target')) return;
-        e.preventDefault();
         $loading.css('visibility', 'visible');
+		if ($form.attr('target')) return;
+        if ($update.is(':not(.float-message)')) return;
+        e.preventDefault();
         var data = $form.serialize() + '&ajax=yes';
         $.post('/home', data, function(data) {
             var $notice = $('<div>');
