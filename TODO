@@ -8,6 +8,7 @@
 * 常用图床预览
 * ifanfou 提供增强功能
 * 更新后具有本地更新通知
+* 用户详情功能（注册日期、消息频率、星座等）
 * 类似 Twitter Phoenix UI 的消息详情展开小抽屉功能
 * 桌面通知功能（私信、@ 等）http://code.google.com/chrome/extensions/notifications.html
 ** 取消关注提醒
