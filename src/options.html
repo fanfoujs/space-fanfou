@@ -41,6 +41,7 @@
                 data[key] = val;
                 chrome.extension.sendRequest(
                     { func: 'saveData', data: data });
+                document.all.saved.innerText = "设置已保存，请刷新饭否页面";
             });
         });
     </script>
@@ -64,7 +65,7 @@
             <label><input type="checkbox" key="user_switcher" />启用多用户切换</label>
         </p>
         <p>
-        	<label><input type="checkbox" key="float_message" />启用浮动输入框 (beta)</label>
+        	<label><input type="checkbox" key="float_message" />启用浮动输入框</label>
         	<span class="comment">使用固顶的浮动输入框取代弹出式窗口</span>
         </p>
         <p>
@@ -76,7 +77,8 @@
         
         <h2>页面样式</h2>
         <p>
-            <label><input type="checkbox" key="font_reset" />启用中文字体美化</label>
+            <label><input type="checkbox" key="font_reset" title="TEST" />启用中文字体美化</label>
+            <span class="comment">使用微软雅黑等字体作为默认中文字体</span>
         </p>
         <p>
             <label><input type="checkbox" key="translucent_sidebar" />启用半透明的侧栏</label>
@@ -88,7 +90,7 @@
         	<label><input type="checkbox" key="logo_remove_beta" />去除 Logo 的“测试版”字样</label>
         </p>
         
-        <div id="tip">关闭此窗口，刷新饭否页面即可使设置生效</div>
+        <div id="tip"><a href="http://fanfou.com/home?status=%40Kevin+%40upsuper+%23%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%23+" target="_blank">提交使用反馈</a></span><span id="saved"></span></div>
         <div id="footer">&copy; 2011 Kevin, Upsuper.</div>
     </div>
 </body>

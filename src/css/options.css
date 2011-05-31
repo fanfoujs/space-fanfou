@@ -75,8 +75,8 @@ body {
 	text-shadow: none;
 }
 a {
-	color: #999;
-	text-decoration: none;
+	color: #06c;
+	text-decoration: underline;
 }
 a:link {
 	-webkit-tap-highlight-color: #FF5E99;
@@ -128,6 +128,9 @@ h4 {
 }
 .comment:before {
 	content: "- ";
+}
+#saved {
+	float: right;
 }
 #footer {
 	margin-top: 10px;
