@@ -120,12 +120,12 @@ SF.checkAndExec('float_message', [], function() {
             $form.submit();
         }
     });
-    $msg.keyup(function(e) {
+    /*$msg.keyup(function(e) {
         if (e.keyCode == 27) {
             $(this).blur();
             $(this).val('');
         }
-    });
+    });*/
     var $tip = $('#update .tip');
     var before_left = 140;
     setInterval(function() {
