@@ -235,6 +235,14 @@
 #sidebar #iconset:hover {
 	opacity: 1;
 }
+#sidebar .tags a {
+	border: 1px solid rgba(0,0,0,.2) !important;
+	background: rgba(255,255,255,.4) !important;
+}
+#sidebar .tags a:hover, #sidebar .tags a:active {
+	border: 1px solid rgba(0,0,0,.5) !important;
+	background: rgba(255,255,255,.75) !important;
+}
 #sidebar .stabs li a .count {
 	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", Georgia, "Times New Roman", Times, serif !important;
 	font-weight: normal !important;
@@ -249,6 +257,8 @@
 	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", Helvetica, Tahoma, "Hiragino Sans GB", "WenQuanYi Micro Hei", "Microsoft Yahei", sans-serif !important;
 	font-weight: lighter;
 	font-size: 26px !important;
+	text-shadow: 0 2px 1px white;
+	line-height: 32px !important;
 	margin-right: 5px;
 	-webkit-mask-image: -webkit-gradient(linear,left top,left bottom,from(rgba(0,0,0,.7)),color-stop(50%,rgba(0,0,0,.75)),color-stop(51%,rgba(0,0,0,.9)),to(rgba(0,0,0,.95)));
 	-webkit-font-smoothing: antialiased;
