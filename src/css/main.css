@@ -65,6 +65,9 @@
 	background: rgba(255,51,0,.9) !important;
 	text-shadow: 0 -1px 0 rgba(102,20,0,.75);
 }
+#newsfeed li {
+	border-bottom: 1px solid rgba(0,0,0,.11) !important;
+}
 #update .tip .counter, #PopupBox .tip .counter {
 	font-family: Georgia, "Times New Roman", Times, serif !important;
 }
@@ -80,7 +83,7 @@
 #message textarea {
 	resize: none;
 }
-.input_text, #message textarea, #update textarea, #invite-url, #PopupBox textarea {
+.input_text, #message textarea, #update textarea, #invite-url, #PopupBox textarea, .settings textarea, #finder_emailarea, #sharer textarea {
 	box-shadow: 0 2px 5px rgba(0,0,0,.075) inset;
 	background: rgba(255,255,255,.5);
 	border: 1px solid #b5b5b5 !important;
@@ -89,11 +92,11 @@
 	-webkit-transition-property: background;
 	-webkit-transition-duration: 300ms;
 }
-.input_text:hover, #message textarea:hover, #update textarea:hover, #invite-url:hover, #PopupBox textarea:hover {
+.input_text:hover, #message textarea:hover, #update textarea:hover, #invite-url:hover, #PopupBox textarea:hover, .settings textarea:hover, #finder_emailarea:hover, #sharer textarea:hover {
 	background: rgba(255,255,255,1);
 	border: 1px solid #999 !important;
 }
-.input_text:focus, #message textarea:focus, #update textarea:focus, #invite-url:focus, #PopupBox textarea:focus {
+.input_text:focus, #message textarea:focus, #update textarea:focus, #invite-url:focus, #PopupBox textarea:focus, .settings textarea:focus, #finder_emailarea:focus, #sharer textarea:focus {
 	outline: none;
 }
 #update .formbutton, #PopupBox .formbutton {
@@ -227,6 +230,9 @@
 	outline: none;
 	box-shadow: 0 0 8px rgba(0,0,0,.15);
 }
+#searchr-submit {
+	text-shadow: 0 1px 0 #fff;
+}
 #sidebar #iconset {
 	opacity: .5;
 	-webkit-transition-property: opacity;
@@ -250,6 +256,14 @@
 #info #avatar {
 	border: none !important;
 }
+#profile-protected {
+	border: 1px solid #ccc !important;
+	background: #eee url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAADOklEQVR4Ae1bwWoUQRA1GgRBEAQhIAhCIBDwtODJq2DAi4IXP0DwFAkEAhGC4E0UPXrwJAkKgkdFUPBocE8hByFECHgSAoGAEJDNeysDu+tOVfd0ddPDdsEjM1PVVa+rqmd6ZzdTvV7vxCTLyUmePOc+8QmYdu2Abrfraupidw5Gs8AV4DRwBGwBO8ABYCKdTkf145wA1ZNucBkmd4FbgMSMmX4PbAA/gaiSYgmw0h+AXeAxIE0e6r6edrTnOI6PJjETcAasnwLbwI2GM+A4jqcf+jOXWAk4D6afgCWAazxEOJ5+6I9+TSVGAi6B4TfgminTf/7ol/7NxDoBF8DsMxBr3dIv7wtnAROxTsA6WMWafDXheRy8rE5C/06HOhgYfx/H1wfOtUM+8zeBQ4AVvQq4Jo+P0y/AKyBIrBLAO/SqIxM+49cAbnxGhRujRwD3CprQ7jVwpBlKeqslcA9BLkqBoPsD3AFuA+Mmj8v969TTjvaSMB67LkgsEnAKDFYUFqzSAvBOsavUtLsJ/K0u1PxdxnXGbywWCeBmZUZh8BD6r4rNqJprnEtFEnZB001W369VAiSS3M+/kAwE3RPo9gQ9VT433v9cWSRA2/A8Q9SmNyqOYxIk0eJLY03eB/C5LMlbSemg08bPOfioNQntAK59aa/P9v9dG91NwfH0UyfcQ2j3oLqxwR3AFxuSaOtXGjuo0/xoPAZ9DR2HdoBUfQbiLs9CND8aj1oOoQmoddwWRUlAWyoVi2fpgFiZbYvf0gFtqVQsnhPfAU3eCPEbnur1tPYKizs07YsQl+JqOz1+Hqk2Q/s4lrbOQ/F8E/AcoxeHPMgn/KT2XTYx0b4Z8cKP3w9Gro099VkCrLzP5McGTHSRPMlXFZ8EaO/81GCJDZz4+iQgMf804UoC0uQ53yilA/KtTRpmpQPS5DnfKKUD8q1NGmalA9LkOd8opQPyrU0aZqUD0uQ53yilA/KtTRpmpQPS5DnfKKUD8q1NGmalA9LkOd8opQM8ahP6czePUCamTnx9OuAHaH00oRbfCXmSryq+X47yF9z8cbLT105q9DgGv+DWuVBT5Z+n41ShNV597gGtmZQP0WMSTloxObxIugAAAABJRU5ErkJggg==') no-repeat 30px 20px !important;
+	border-radius: 10px;
+}
+#profile-protected h3 {
+	color: #666 !important;
+}
 #panel {
 	padding: 0 !important;
 }
@@ -264,6 +278,12 @@
 	-webkit-font-smoothing: antialiased;
 	-webkit-background-clip: text;
 }
+/* #panel p.actions {
+	background: rgba(0,0,0,.05);
+	padding: 5px;
+	border-radius: 5px;
+	border: 1px solid rgba(0,0,0,.1);
+} */
 .overlay-leavemsg .bg {
 	opacity:.9
 }
@@ -275,8 +295,39 @@
 	padding: 6px 9px !important;
 	border: none !important;
 }
+.tabs {
+	border-bottom: 1px solid rgba(0,0,0,.15) !important;
+}
+.tabs li a {
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#eee)) !important;
+	border: 1px solid rgba(0,0,0,.11) !important;
+	border-bottom-color: rgba(0,0,0,.15) !important;
+	padding: 3px 12px !important;
+	color: #666 !important;
+	text-shadow: 0 1px 0 #fff;
+}
+.tabs li.current a {
+	background: none !important;
+	border-bottom-color: rgba(255,255,255,1) !important;
+	padding: 5px 12px !important;
+}
+.tabs li a:hover {
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(#ddd)) !important;
+}
+.tabs li.current a:hover {
+	background: transparent !important;
+}
+.tabs li a:active {
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ddd), to(#eee)) !important;
+}
+#pro_bas_detail {
+	height: 150px;
+}
 #ZoomImage {
 	box-shadow: 0 0 15px rgba(0,0,0,.5);
+}
+#sharer:first-child span {
+	margin-top: -24px;
 }
 #sidebar #reminder li, #sidebar #goodapp, #sidebar #badge-sect {
 	display: none;
@@ -326,7 +377,7 @@
 /* Buttons */
 .bl, .bl-long, a.bl-added {
 	font-size: 12px;
-	height: 21px;
+	height: 20px;
 	color: #666 !important;
 	text-shadow: 1px 1px 0 #fff;
 	white-space: nowrap;
@@ -334,14 +385,25 @@
 	border-radius: 3px;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#eee)) !important;
 }
-a.bl-added {
-	height: 20px;
+input.formbutton, #setmobile input[type="submit"] {
+	color: #666 !important;
+	text-shadow: 1px 1px 0 #fff;
+	white-space: nowrap;
+	border: 1px solid #ccc !important;
+	border-radius: 3px;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#eee)) !important;
 }
 .bl:hover, .bl-long:hover {
 	border-color: #999;
 }
+input.formbutton:hover, #setmobile input[type="submit"]:hover {
+	border-color: #999 !important;
+}
 .bl:active, .bl-long:active {
-	background: -webkit-gradient(linear,left top,left bottom,from(#eee),to(#fff)) !important;
+	background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#fff)) !important;
+}
+input.formbutton:active, #setmobile input[type="submit"]:active {
+	background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#fff)) !important;
 }
 a.bh {
 	font-size: 12px;
