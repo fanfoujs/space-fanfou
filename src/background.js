@@ -1,3 +1,21 @@
+/* 文件缓存 */
+
+var cache = { };
+function cacheFile(file) {
+    if (cache[file] === undefined) {
+        var result = null;
+        var req = $.ajax({
+            async: false,
+            url: file,
+            success: function(data) {
+                result = data;
+            }
+        });
+        cache[file] = result;
+    }
+    return cache[file];
+}
+
 /* 初始化插件 */
 
 PLUGINS_DIR = 'plugins/';
@@ -11,27 +29,16 @@ for (var i = 0; i < plugins.length; ++i) {
         type: item.type
     };
     // 同步缓存样式内容
-    if (item.css) {
-        $.ajax({
-            async: false,
-            url: PLUGINS_DIR + item.css,
-            success: function(data) {
-                detail.style = data;
-            }
-        });
-    }
-    if (item.js) {
-        detail.script = PLUGINS_DIR + item.js;
-    }
+    if (item.css)
+        detail.style = cacheFile(PLUGINS_DIR + item.css);
+    if (item.js)
+        detail.script = cacheFile(PLUGINS_DIR + item.js);
     details[item.name] = detail;
 
     // 处理其他类型扩展
     if (detail.type == 'background') {
         var $script = $('<script>');
-        $script.attr('src', detail.script);
-    } else {
-        if (detail.script)
-            detail.script = chrome.extension.getURL(detail.script);
+        $script.html(detail.script);
     }
 }
 
@@ -87,6 +94,10 @@ chrome.extension.onConnect.addListener(function(port) {
     // 向目标发送初始化数据
     port.postMessage({
         type: 'init',
+        common: {
+            style: cacheFile('common/main.css'),
+            script: cacheFile('common/common.js')
+        },
         data: page_cache
     });
 });
