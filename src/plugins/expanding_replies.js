@@ -42,19 +42,14 @@ SF.pl.expanding_replies = (function($) {
                     content = content.substring(0, stamp_pos);
                 }
             }
-            var id = 'status-' + url.split('/')[2].split('?')[0] +
-                      '-' + Math.random();
             var $li = $('<li>');
-            $li.attr('id', id);
-            var gete = 'document.getElementById("' + id + '")';
             $li.attr('expended', 'expended');
             $li.addClass('reply unlight');
             $li.html(avatar + author +
                 '<span class="content">' + content + '</span>' + spans);
-            var scripts = 'FF.app.Stream.attach(' + gete + ');';
+            FF.app.Stream.attach($li[0]);
             if (content.indexOf('<img '))
-                scripts += 'FF.app.Zoom.init(' + gete + ');'
-            location.assign('javascript:' + scripts);
+                FF.app.Zoom.init($li[0]);
             var $links = $('a', $li);
             $links.eq(0).addClass('avatar');
             $links.eq(1).addClass('author');
