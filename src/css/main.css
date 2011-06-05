@@ -604,6 +604,10 @@ a.bh:hover {
 		);
 	border-bottom: none;
 	padding: 10px 0;
+	pointer-events: none;
+}
+.float-message h2, .float-message textarea, .float-message .actpost {
+	pointer-events: auto;
 }
 .float-message.msgempty textarea {
 	height: 18px !important;
