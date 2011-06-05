@@ -34,7 +34,7 @@
 		opacity: 1;
 	}
 }
-@keyframes fadeOut {
+@-webkit-keyframes fadeOut {
 	from {
 		opacity: 1;
 	}
@@ -276,7 +276,7 @@
 #sidebar #iconset:hover {
 	opacity: 1;
 }
-#sidebar .tags a {-webkit-gradient(linear,0 0,0 100%,from(#CCC),to(#AAA))
+#sidebar .tags a {
 	border: 1px solid rgba(0,0,0,.2) !important;
 	background: rgba(255,255,255,.4) !important;
 }
