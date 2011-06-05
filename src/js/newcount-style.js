@@ -6,5 +6,6 @@
         $newcount.addClass('newcount');
         $newcount.text(number);
         $this.after($newcount);
+        $this.css('opacity','0');
     });
 })();
