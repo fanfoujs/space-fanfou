@@ -19,27 +19,41 @@ function insertScript(script, name) {
     docelem.appendChild($script);
 }
 
+function init(msg) {
+    insertStyle(msg.common.style);
+    insertScript(msg.common.script);
+    var load_plugins = [];
+    for (var i = 0; i < msg.data.length; ++i) {
+        var item = msg.data[i];
+        if (item.style) insertStyle(item.style, item.name);
+        if (item.script) {
+            insertScript(item.script, item.name);
+            var plugin = 'SF.pl.' + item.name;
+            if (item.options) {
+                load_plugins.push(
+                    plugin + '.update.apply(' + plugin + ', ' +
+                    JSON.stringify(item.options) + ');');
+            }
+            load_plugins.push(plugin + '.load();');
+        }
+    }
+    insertScript(load_plugins.join('\n'));
+}
+
 var port = chrome.extension.connect();
 port.onMessage.addListener(function(msg) {
     if (msg.type == 'init') {
-        insertStyle(msg.common.style);
-        insertScript(msg.common.script);
-        var load_plugins = [];
-        for (var i = 0; i < msg.data.length; ++i) {
-            var item = msg.data[i];
-            if (item.style) insertStyle(item.style, item.name);
-            if (item.script) {
-                insertScript(item.script, item.name);
-                var prefix = 'SF.pl.' + item.name;
-                if (item.options) {
-                    load_plugins.push(
-                        prefix + '.update.apply(this, ' +
-                        JSON.stringify(item.options) + ');');
+        insertScript(msg.common.probe);
+        function waitForFlag() {
+            setTimeout(function() {
+                if (document.getElementById('sf_flag_libs_ok')) {
+                    init(msg);
+                } else {
+                    waitForFlag();
                 }
-                load_plugins.push(prefix + '.load();');
-            }
+            }, 200);
         }
-        insertScript(load_plugins.join('\n'));
+        waitForFlag();
     } else if (msg.type == 'update') {
     }
 });

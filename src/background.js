@@ -96,7 +96,8 @@ chrome.extension.onConnect.addListener(function(port) {
         type: 'init',
         common: {
             style: cacheFile('common/main.css'),
-            script: cacheFile('common/common.js')
+            script: cacheFile('common/common.js'),
+            probe: cacheFile('common/probe.js')
         },
         data: page_cache
     });
