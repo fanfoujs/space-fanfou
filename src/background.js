@@ -39,6 +39,7 @@ for (var i = 0; i < plugins.length; ++i) {
     if (detail.type == 'background') {
         var $script = $('<script>');
         $script.html(detail.script);
+        $(document.head).append($script);
     }
 }
 
@@ -75,6 +76,27 @@ function buildPageCache() {
 buildPageCache();
 
 /* 加载背景页面扩展 */
+
+function updateBackgroundPlugin(name) {
+    var item = details[name];
+    var plugin = SF.pl[name];
+    var options = [];
+    for (var i = 0; i < item.options.length; ++i)
+        options.push(settings[name + '.' + item.options[i]]);
+    plugin.update.apply(plugin, options);
+}
+
+function enableBackgroundPlugin(name) {
+    if (details[name].options)
+        updateBackgroundPlugin(name);
+    SF.pl[name].load();
+}
+
+for (var name in SF.pl) {
+    if (! SF.pl.hasOwnProperty(name)) continue;
+    if (typeof SF.pl[name].load != 'function') continue;
+    if (settings[name]) enableBackgroundPlugin(name);
+}
 
 /* 与页面交互 */
 
