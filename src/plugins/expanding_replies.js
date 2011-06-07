@@ -118,16 +118,20 @@ SF.pl.expanding_replies = (function($) {
         }
     }
 
+    function onDOMNodeInserted(e) {
+        processItem($(e.target));
+    }
+
     return {
         update: function(number) {
             replies_number = number;
         },
         load: function() {
-            $ol.bind('DOMNodeInserted',
-                     function(e) { processItem($(e.target)); });
+            $ol.bind('DOMNodeInserted', onDOMNodeInserted);
             $('li', $ol).each(function() { showExpand($(this)); });
         },
         unload: function() {
+            $ol.unbind('DOMNodeInserted', onDOMNodeInserted);
             $('li.reply', $ol).fadeOut();
             $('li[expended]', $ol).removeAttr('expended');
         }
