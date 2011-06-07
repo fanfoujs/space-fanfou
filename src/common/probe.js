@@ -1,7 +1,7 @@
 (function() {
     function setWaiting() {
         setTimeout(function() {
-            if (! window.jQuery || ! window.FF) {
+            if (! window.jQuery || ! window.YAHOO || ! window.FF) {
                 setWaiting();
             } else {
                 var $ = jQuery;

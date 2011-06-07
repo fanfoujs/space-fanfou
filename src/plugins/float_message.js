@@ -1,36 +1,36 @@
-SF.checkAndExec('float_message', [], function() {
+SF.pl.float_message = (function($, $Y) {
+    var $update = $('#update');
+    if (! $update.length) return SF.empty_pl;
+
     /* 处理悬浮 */
     var $main = $('#main');
-    var $update = $('#update');
     var $win = $(window);
     var ud_top = $update.offset().top -11;
     var main_padtop = $main.css('padding-top');
-    $win.scroll(function() {
-        if ($win.scrollTop() > ud_top) {
+    function resetFloat() {
+        $update.removeClass('float-message');
+        $main.css('padding-top', main_padtop);
+    }
+    function onWinScroll() {
+        if ($win.scrollTop() <= ud_top) {
+            resetFloat();
+        } else {
             $update.addClass('float-message');
             $main.css('padding-top',
-                      ($update.outerHeight() + parseInt(main_padtop)) -16 +'px');
-        } else {
-            $update.removeClass('float-message');
-            $main.css('padding-top', main_padtop);
+                      ($update.outerHeight() + parseInt(main_padtop)) +
+                       -16 +'px');
         }
-    });
+    }
 
     /* 重载事件 */
-    var $script = $('<script>');
-    $script.html(
-        'var $a = jQuery(">li", ".wa");' +
-        'jQuery(">span.op>a.reply", $a).die("click");' +
-        'jQuery(">span.op>a.repost", $a).die("click");'
-        );
-    $('body').append($script);
     var myurl = $('#navigation li>a').eq(1).attr('href');
     var $ol = $('#stream ol');
+    var $form = $('form#message', $update);
     var $msg = $('textarea', $update);
     var padding = parseInt($msg.css('padding-top'));
     var $in_reply = $('[name=in_reply_to_status_id]', $update);
     var $repost = $('[name=repost_status_id]', $update);
-    $('span.op>a.reply', $ol).live('click', function(e) {
+    function onReplyClick(e) {
         e.preventDefault();
         var $t = $(this);
         $in_reply.val($t.attr('ffid'));
@@ -60,8 +60,8 @@ SF.checkAndExec('float_message', [], function() {
         $msg.val(new_msg.join(' '));
         $msg.get(0).setSelectionRange(ffname.length + 2, select_end);
         $msg.focus();
-    });
-    $('span.op>a.repost', $ol).live('click', function(e) {
+    }
+    function onRepostClick(e) {
         e.preventDefault();
         $in_reply.val('');
         var $t = $(this);
@@ -70,28 +70,20 @@ SF.checkAndExec('float_message', [], function() {
         $msg.val(old_msg + $t.get(0).getAttribute('text'));
         $msg.get(0).setSelectionRange(old_msg.length, old_msg.length);
         $msg.focus();
-    });
+    }
 
-    $.fn.removeEvents = function() {
-        var $elem = $(this);
-        if ($elem.length > 1) {
-            return $.map($elem,
-                         function($e) { return $(e).removeEvents(); });
-        }
-        var $inner = $elem.children();
-        $inner.detach();
-        var $wrap = $elem.wrap('<div/>').parent();
-        $wrap.children().replaceWith($wrap.html());
-        $elem = $wrap.children();
-        $wrap.replaceWith($elem);
-        $inner.appendTo($elem);
-        return $elem;
+    /* 备份相关事件 */
+    var $E = $Y.util.Event;
+    var msg_keyup = $E.getListeners($msg[0], 'keyup');
+    var update_submit = $E.getListeners($form[0], 'submit');
+    var backup = {
+        msg_keyup: msg_keyup ? msg_keyup[0].fn : null,
+        update_submit: update_submit ? update_submit[0].fn : null
     };
 
     /* AJAX化提交 */
-    $form = $('form#message').removeEvents();
     var $loading = $('.loading', $form);
-    $form.submit(function(e) {
+    function onFormSubmit(e) {
 		if ($form.attr('target')) return;
         e.preventDefault();
         $loading.css('visibility', 'visible');
@@ -111,36 +103,80 @@ SF.checkAndExec('float_message', [], function() {
             $msg.val('');
             $loading.css('visibility', 'hidden');
         }, 'json');
-    });
-    $msg = $msg.removeEvents();
-    $msg.keypress(function(e) {
+        return false;
+    }
+    function onMsgKeyup(e) {
         if (e.ctrlKey && (e.keyCode == 10 || e.keyCode == 13)) {
             $(this).blur();
             $form.submit();
+            return false;
         }
-    });
-    var $tip = $('#update .tip');
-    var before_left = 140;
-    setInterval(function() {
+    }
+
+    /* 样式处理 */
+    var interval = 0;
+    function onInterval() {
         var length = $msg.val().length;
         if ($update.hasClass('msgempty') && length) {
             $update.removeClass('msgempty');
         } else if ($msg.is(':not(:focus)') && ! length) {
             $update.addClass('msgempty');
         }
-        var left = 140 - length;
-        if (left == before_left) return;
-        before_left = left;
-        if (left < 0) {
-            $tip.html('已经超出 <span class="counter">' + (-left) + '</span> 字');
-            $tip.addClass('caution');
-        } else {
-            $tip.html('可以输入 <span class="counter">' + left + '</span> 字');
-            $tip.removeClass('caution');
-        }
-    }, 50);
-    $msg.focus(function() { $update.removeClass('msgempty'); });
+    }
+    function onMsgFocus() {
+        $update.removeClass('msgempty');
+    }
 
-    /* 重新加载部分自带脚本 */
-    $('script[src*="/home-autocomplete.js?"]').removeEvents();
-}); 
+    return {
+        load: function() {
+            // 添加悬浮
+            $win.scroll(onWinScroll);
+            // 清理按钮事件
+            var $items = $('>li', '.wa');
+            $('>span.op>a.reply', $items).die('click');
+            $('>span.op>a.repost', $items).die('click');
+            // 重载事件
+            $('>span.op>a.reply', $items).live('click', onReplyClick);
+            $('>span.op>a.repost', $items).live('click', onRepostClick);
+            // 清除原有事件
+            if (backup.msg_keyup)
+                $E.removeListener($msg[0], 'keyup', backup.msg_keyup);
+            if (backup.update_submit)
+                $E.removeListener($form[0], 'submit', backup.update_submit);
+            // AJAX 化提交
+            $form.submit(onFormSubmit);
+            $msg.keyup(onMsgKeyup);
+            // 设置样式调节
+            interval = setInterval(onInterval, 50);
+            $msg.focus(onMsgFocus);
+        },
+        unload: function() {
+            // 取消悬浮
+            $win.unbind('scroll', onWinScroll);
+            resetFloat();
+            // 清除绑定的事件
+            var $items = $('>li', '.wa');
+            $('>span.op>a.reply', $items).die('click');
+            $('>span.op>a.repost', $items).die('click');
+            // 恢复按钮事件
+            $('#PopupClose', '#PopupBox').unbind('click');
+            $('body').unbind('keydown');
+            $('#PopupForm').unbind('keydown');
+            $('#PopupForm').unbind('submit');
+            FF.app.QuickReply();
+            FF.app.Repost();
+            // 回退 AJAX 化提交
+            $form.unbind('submit', onFormSubmit);
+            $msg.unbind('keypress', onMsgKeyup);
+            // 恢复原有事件
+            if (backup.msg_keyup)
+                $E.on($msg[0], 'keyup', backup.msg_keyup);
+            if (backup.update_submit)
+                $E.on($form[0], 'submit', backup.update_submit);
+            // 删除样式调节
+            clearInterval(interval);
+            interval = 0;
+            $msg.unbind('focus', onMsgFocus);
+        }
+    };
+})(jQuery, YAHOO);
