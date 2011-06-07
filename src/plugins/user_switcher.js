@@ -1,4 +1,20 @@
 SF.pl.user_switcher = (function($) {
+    var $login = $('form#login');
+    if ($login.length) {
+        var $al = $('#autologin');
+        return {
+            load: function() {
+                $al.attr('checked', true);
+                $al.parent().contents().not($al).remove();
+                $al.after(' 保存到“多账户切换列表”');
+            },
+            unload: function() {
+                $al.parent().contents().not($al).remove();
+                $al.after(' 下次自动登入');
+            }
+        };
+    }
+
     var $user_top = $('#user_top');
     if (! $user_top.length) return SF.empty_pl;
     
