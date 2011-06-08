@@ -60,6 +60,7 @@
         },
         {
             "js": [ "js/jquery.js", "js/newcount-style.js" ],
+            "run_at": "document_start",
             "matches": [
                 "http://fanfou.com/*"
             ]
