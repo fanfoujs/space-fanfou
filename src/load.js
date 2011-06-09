@@ -1,20 +1,25 @@
+function $i(id) { return document.getElementById(id); }
 function $c(tagname) { return document.createElement(tagname); }
 function $t(text) { return document.createTextNode(text); }
 
 var docelem = document.documentElement;
 
 function insertStyle(style, name) {
+    var id ='sf_style_' + name;
+    if ($i(id)) return;
     var $style = $c('style');
     $style.appendChild($t(style));
-    if (name) $style.id = 'sf_style_' + name;
+    if (name) $style.id = id;
     $style.className = 'space-fanfou';
     docelem.appendChild($style);
 }
 
 function insertScript(script, name) {
+    var id = 'sf_script_' + name;
+    if ($i(id)) return;
     var $script = $c('script');
     $script.appendChild($t(script));
-    if (name) $script.id = 'sf_script_' + name;
+    if (name) $script.id = id;
     $script.className = 'space-fanfou';
     docelem.appendChild($script);
 }
@@ -55,5 +60,39 @@ port.onMessage.addListener(function(msg) {
         }
         waitForFlag();
     } else if (msg.type == 'update') {
+        for (var i = 0; i < msg.data.length; ++i) {
+            var item = msg.data[i];
+            var plugin = 'SF.pl.' + item.name;
+            var updates = [];
+            switch (item.type) {
+                case 'update':
+                    updates.push(
+                            plugin + '.update.apply(' + plugin + ',' +
+                            JSON.stringify(item.options) + ');');
+                    break;
+                case 'enable':
+                    if (item.style)
+                        insertStyle(item.style, item.name);
+                    if (item.script) {
+                        insertScript(item.script, item.name);
+                        if (item.options) {
+                            updates.push(
+                                    plugin + '.update.apply(' + plugin + ',' +
+                                    JSON.stringify(item.options) + ');');
+                        }
+                        updates.push(plugin + '.load();');
+                    }
+                    break;
+                case 'disable':
+                    updates.push('if(' + plugin + ')' + plugin + '.unload();');
+                    updates.push('jQuery(' + 
+                                 '"#sf_script_' + item.name + '").remove();');
+                    updates.push('jQuery(' +
+                                 '"#sf_style_' + item.name + '").remove();');
+                    break;
+            }
+            // 对每个插件单独执行可以防止一个更新错误影响后面的更新
+            location.assign('javascript:' + updates.join(''));
+        }
     }
 });

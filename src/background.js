@@ -43,12 +43,14 @@ for (var i = 0; i < plugins.length; ++i) {
     }
 }
 
-// 读取选项
-var settings = default_settings;
-for (var key in settings) {
-    if (! settings.hasOwnProperty(key)) continue;
-    if (localStorage[key] !== undefined)
-        settings[key] = JSON.parse(localStorage[key]);
+// 获取一个插件的全部选项信息
+function getPluginOptions(name) {
+    var option_names = details[name].options;
+    if (! option_names) return null;
+    var options = [];
+    for (var i = 0; i < option_names.length; ++i)
+        options.push(SF.st.settings[name + '.' + option_names[i]]);
+    return options;
 }
 
 // 建立为页面提供的数据缓存
@@ -58,18 +60,14 @@ function buildPageCache() {
     for (var name in details) {
         if (! details.hasOwnProperty(name)) continue;
         var item = details[name];
-        if (item.type || ! settings[name]) continue;
+        if (item.type || ! SF.st.settings[name]) continue;
         var detail = {
             name: name,
             style: item.style,
             script: item.script,
         };
-        if (item.options) {
-            var options = [];
-            for (var i = 0; i < item.options.length; ++i)
-                options.push(settings[name + '.' + item.options[i]]);
-            detail.options = options;
-        }
+        if (item.options)
+            detail.options = getPluginOptions(name);
         page_cache.push(detail);
     }
 }
@@ -78,12 +76,8 @@ buildPageCache();
 /* 加载背景页面扩展 */
 
 function updateBackgroundPlugin(name) {
-    var item = details[name];
     var plugin = SF.pl[name];
-    var options = [];
-    for (var i = 0; i < item.options.length; ++i)
-        options.push(settings[name + '.' + item.options[i]]);
-    plugin.update.apply(plugin, options);
+    plugin.update.apply(plugin, getPluginOptions(name));
 }
 
 function enableBackgroundPlugin(name) {
@@ -95,7 +89,7 @@ function enableBackgroundPlugin(name) {
 for (var name in SF.pl) {
     if (! SF.pl.hasOwnProperty(name)) continue;
     if (typeof SF.pl[name].load != 'function') continue;
-    if (settings[name]) enableBackgroundPlugin(name);
+    if (SF.st.settings[name]) enableBackgroundPlugin(name);
 }
 
 /* 与页面交互 */
@@ -140,3 +134,91 @@ chrome.tabs.onSelectionChanged.addListener(function(tabId) {
         connectTab(tab);
     });
 });
+
+/* 监听选项变动 */
+
+addEventListener('storage', function(e) {
+    if (e.key != 'settings') return;
+    if (e.oldValue == e.newValue) return;
+
+    // 查找发生变动的选项
+    var old_settings = JSON.parse(e.oldValue);
+    var new_settings = JSON.parse(e.newValue);
+    var changed_keys = [];
+    for (var key in new_settings) {
+        if (! new_settings.hasOwnProperty(key)) continue;
+        if (new_settings[key] != old_settings[key])
+            changed_keys.push(key);
+    }
+    if (! changed_keys) return;
+    
+    var update_info = [];
+    for (var i = 0; i < changed_keys.length; ++i) {
+        var setting_name = changed_keys[i];
+        SF.st.settings[setting_name] = new_settings[setting_name];
+        // 分离选项信息
+        var main_name, option_name;
+        var dot_pos = setting_name.indexOf('.');
+        if (dot_pos > -1) {
+            main_name = setting_name.substr(0, dot_pos);
+            option_name = setting_name.substr(dot_pos + 1);
+        } else {
+            main_name = setting_name;
+        }
+        
+        // 确定处理方式
+        if (details[main_name]) {
+            var detail = details[main_name];
+            if (detail.type == 'background') {
+                // 背景页面扩展
+                if (option_name) {
+                    updateBackgroundPlugin(main_name);
+                } else {
+                    if (SF.st.settings[main_name]) {
+                        enableBackgroundPlugin(main_name);
+                    } else {
+                        SF.pl[main_name].unload();
+                    }
+                }
+            } else {
+                // 页面扩展
+                if (option_name) {
+                    update_info.push({
+                        type: 'update',
+                        name: main_name,
+                        options: getPluginOptions(main_name)
+                    });
+                } else {
+                    if (! SF.st.settings[main_name]) {
+                        update_info.push({
+                            type: 'disable',
+                            name: main_name,
+                        });
+                    } else {
+                        update_info.push({
+                            type: 'enable',
+                            name: main_name,
+                            style: detail.style,
+                            script: detail.script,
+                            options: getPluginOptions(main_name)
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    // 更新缓存
+    if (update_info)
+        buildPageCache();
+
+    // 广播更新
+    for (var name in ports) {
+        if (name.indexOf('port_') !== 0) continue;
+        var port = ports[name];
+        port.postMessage({
+            type: 'update',
+            data: update_info
+        });
+    }
+}, false);

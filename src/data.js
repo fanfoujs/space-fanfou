@@ -50,17 +50,3 @@ var plugins = [
     },
 
 ];
-
-/* 选项默认值 */
-
-var default_settings = {
-    font_reset: false,
-    translucent_sidebar: true,
-    expanding_replies: true,
-    'expanding_replies.number': 3,
-    image_uploading: true,
-    user_switcher: false,
-    float_message: false,
-    repost_photo_preview: true,
-    share_to_fanfou: true,
-};
