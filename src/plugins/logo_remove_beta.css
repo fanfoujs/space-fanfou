@@ -1,0 +1,6 @@
+#header h1 a img {
+	visibility: hidden;
+}
+#header h1 a {
+	background: url(http://static2.fanfou.com/img/fanfou.png) no-repeat 0 0;
+}

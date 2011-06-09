@@ -84,14 +84,16 @@ SF.pl.float_message = (function($, $Y) {
     /* AJAX化提交 */
     var $loading = $('.loading', $form);
     function onFormSubmit(e) {
-		if ($form.attr('target')) return;
-        e.preventDefault();
         $loading.css('visibility', 'visible');
+		if ($form.attr('target')) return;
+        if ($update.is(':not(.float-message)')) return;
+        e.preventDefault();
         var data = $form.serialize() + '&ajax=yes';
         $.post('/home', data, function(data) {
             var $notice = $('<div>');
             if (data.status) {
                 $notice.addClass('sysmsg');
+                $msg.val('');
             } else {
                 $notice.addClass('errmsg');
             }
@@ -100,7 +102,6 @@ SF.pl.float_message = (function($, $Y) {
             $('#header').append($notice);
             $notice.fadeIn(500).delay(3500).fadeOut(500,
                 function() { $(this).remove(); });
-            $msg.val('');
             $loading.css('visibility', 'hidden');
         }, 'json');
         return false;

@@ -25,7 +25,7 @@
 	line-height: 1.5em;
 	margin-left: 70%;
 	margin-top: -1.6em; 
-	background: #eee;
+	background: rgba(235,235,235,1);
 	color: #666;
 	text-align: center;
 	padding: 0; 
@@ -37,7 +37,7 @@
 	border-bottom: 1px solid #e5e5e5;
 }
 #stream ol li.reply.more:hover, #stream ol li.reply.hide:hover {
-	background: #e5e5e5;
+	background: rgba(230,230,230,1);
 	color: #666;
 }
 #stream ol li.reply.waiting {
@@ -48,5 +48,13 @@
 	border: 0; 
 }
 #stream li.reply.more, #stream li.reply.waiting, #u_button {
-	-webkit-animation: fadeIn 1s;
+	-webkit-animation: fadeIn .75s;
+}
+.light .stamp .reply a {
+	background: transparent !important;
+	color: #999 !important;
+	border-bottom: 1px dotted #999 !important;
+}
+.light .stamp .reply a:hover {
+	border-bottom-style: solid !important;
 }

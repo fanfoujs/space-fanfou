@@ -12,6 +12,14 @@ var plugins = [
         name: 'translucent_sidebar',
         css: 'translucent_sidebar.css',
     },
+    {
+        name: 'newstyle_trendlist',
+        css: 'newstyle_trendlist.css'
+    },
+    {
+        name: 'logo_remove_beta',
+        css: 'logo_remove_beta.css'
+    },
 
     /* 页面功能性扩展 */
 

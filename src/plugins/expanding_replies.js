@@ -118,8 +118,22 @@ SF.pl.expanding_replies = (function($) {
         }
     }
 
+    function removeReplies($item) {
+        if (! $item.attr('expended')) return;
+        var $replies = $item.next('.reply');
+        if (! $replies.length) return;
+        for (var $i = $replies.next(); $i.is('.reply'); $i = $i.next())
+            $replies.add($i);
+        $replies.removeAttr('expended');
+        $replies.remove();
+    }
+
     function onDOMNodeInserted(e) {
         processItem($(e.target));
+    }
+
+    function onDOMNodeRemoved(e) {
+        removeReplies($(e.target));
     }
 
     return {
@@ -128,10 +142,12 @@ SF.pl.expanding_replies = (function($) {
         },
         load: function() {
             $ol.bind('DOMNodeInserted', onDOMNodeInserted);
+            $ol.bind('DOMNodeRemoved', onDOMNodeRemoved);
             $('li', $ol).each(function() { showExpand($(this)); });
         },
         unload: function() {
             $ol.unbind('DOMNodeInserted', onDOMNodeInserted);
+            $ol.unbind('DOMNodeRemoved', onDOMNodeRemoved);
             $('li.reply', $ol).fadeOut();
             $('li[expended]', $ol).removeAttr('expended');
         }
