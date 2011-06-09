@@ -1,9 +1,10 @@
 SF.pl.float_message = (function($, $Y) {
     var $update = $('#update');
     if (! $update.length) return SF.empty_pl;
+    var $main = $('#main');
+    if ($main.hasClass('privatemsg')) return SF.empty_pl;
 
     /* 处理悬浮 */
-    var $main = $('#main');
     var $win = $(window);
     var ud_top = $update.offset().top -11;
     var main_padtop = $main.css('padding-top');
