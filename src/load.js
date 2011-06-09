@@ -24,35 +24,36 @@ function insertScript(script, name) {
     docelem.appendChild($script);
 }
 
-function init(msg) {
-    insertStyle(msg.common.style);
-    insertScript(msg.common.script);
-    var load_plugins = [];
-    for (var i = 0; i < msg.data.length; ++i) {
-        var item = msg.data[i];
-        if (item.style) insertStyle(item.style, item.name);
-        if (item.script) {
-            insertScript(item.script, item.name);
-            var plugin = 'SF.pl.' + item.name;
-            if (item.options) {
-                load_plugins.push(
-                    plugin + '.update.apply(' + plugin + ', ' +
-                    JSON.stringify(item.options) + ');');
-            }
-            load_plugins.push(plugin + '.load();');
-        }
-    }
-    insertScript(load_plugins.join('\n'));
-}
-
 var port = chrome.extension.connect();
 port.onMessage.addListener(function(msg) {
     if (msg.type == 'init') {
+        insertStyle(msg.common.style.css);
+        var scripts = [];
+        insertScript(msg.common.style.js);
+        scripts.push([msg.common.script]);
+        var load_plugins = [];
+        for (var i = 0; i < msg.data.length; ++i) {
+            var item = msg.data[i];
+            if (item.style) insertStyle(item.style, item.name);
+            if (item.script) {
+                scripts.push([item.script, item.name]);
+                var plugin = 'SF.pl.' + item.name;
+                if (item.options) {
+                    load_plugins.push(
+                        plugin + '.update.apply(' + plugin + ', ' +
+                        JSON.stringify(item.options) + ');');
+                }
+                load_plugins.push(plugin + '.load();');
+            }
+        }
+        scripts.push([load_plugins.join('\n')]);
         insertScript(msg.common.probe);
         function waitForFlag() {
             setTimeout(function() {
                 if (document.getElementById('sf_flag_libs_ok')) {
-                    init(msg);
+                    for (var i = 0; i < scripts.length; ++i)
+                        insertScript.apply(insertScript, scripts[i]);
+                    delete scripts;
                 } else {
                     waitForFlag();
                 }

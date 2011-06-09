@@ -130,7 +130,7 @@
 	content: "\ff08\8d85\51fa\90e8\5206\5c06\4f1a\88ab\7701\7565\ff09";
 }
 #update h2 {
-	font-size: 18px;
+	font-size: 18px !important;
 }
 #update {
 	margin-bottom: 0 !important;
@@ -296,6 +296,20 @@
 	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", Georgia, "Times New Roman", Times, serif !important;
 	font-weight: normal !important;
 }
+#savedsearchs li, #trendtabs li, #birthday li {
+	line-height: 24px !important;
+}
+#savedsearchs li a, #trendtabs li a, #birthday li a {
+	font-size: 12px !important;
+	font-weight: normal !important;
+}
+#trendlist li {
+	max-width: 234px;
+	word-break: break-all;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
 #info #avatar {
 	border: none !important;
 }
@@ -409,61 +423,40 @@
 }
 
 /* Badges */
-#navigation .count, #navtabs .count {
-	position: absolute;
-	top: 0px;
-	background: rgba(230,50,0,.75);
-	color: transparent;
-	font-size: 12px;
-	text-indent: -9999px;
-	margin: 4px !important;
-	padding: 0 1px;
-	min-width: 16px;
-	height: 18px;
-	line-height: 18px;
-	border-radius: 30px;
-	text-align: center;
-}
 #navigation .count {
-	top: -6px !important;
-	margin-left: -5px !important;
-}
-#navigation .newcount {
 	position: absolute;
 	top: -2px;
 	background: rgba(230,50,0,.75);
-	color: rgba(255,255,255,1);
+	color: white;
 	font-size: 12px;
 	margin-left: -5px !important;
 	padding: 0 1px;
 	min-width: 16px;
 	height: 18px;
 	line-height: 18px;
-	border-radius: 30px;
+	-webkit-border-radius: 30px;
 	text-align: center;
-	-webkit-animation: colorfadeIn .2s;
 }
 #sidebar .stabs li {
 	position: relative;
 }
-#navigation .newcount, #navtabs .newcount {
+#navigation .count, #navtabs .count {
 	font-weight: normal;
 	text-shadow: none;
 }
-#navtabs .newcount {
+#navtabs a[href="/privatemsg"] .count, #navtabs a[href="/mentions"] .count {
 	position: absolute;
 	top: 0px;
 	background: rgba(230,50,0,.75);
-	color: rgba(255,255,255,1);
+	color: white;
 	font-size: 12px;
 	margin: 4px !important;
 	padding: 0 1px;
 	min-width: 16px;
 	height: 18px;
 	line-height: 18px;
-	border-radius: 30px;
+	-webkit-border-radius: 30px;
 	text-align: center;
-	-webkit-animation: colorfadeIn .2s;
 }
 
 /* Buttons */

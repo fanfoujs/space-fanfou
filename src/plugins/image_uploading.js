@@ -18,7 +18,7 @@ SF.pl.image_uploading = (function($) {
         var $iframe = $('<iframe>');
         $iframe.attr('name', 'upload_image');
         $message.append($iframe);
-        $photo = $('<input>');
+        var $photo = $('<input>');
         $photo.attr('type', 'hidden');
         $photo.attr('name', 'photo');
         $message.append($photo);

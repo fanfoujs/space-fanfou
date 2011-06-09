@@ -1,5 +1,4 @@
 $(function() {
-
     function getValue($elem) {
         if ($elem.is(':checkbox'))
             return $elem.is(':checked');

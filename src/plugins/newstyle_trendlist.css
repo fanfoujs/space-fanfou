@@ -1,18 +1,4 @@
-#savedsearchs li, #trendtabs li, #birthday li {
-	line-height: 24px !important;
-}
-#savedsearchs li a, #trendtabs li a, #birthday li a {
-	font-size: 12px !important;
-	font-weight: normal !important;
-}
 #trendlist:hover li a:after {
 	content: "\20\2d\20" attr(squery);
 	color: #666;
-}
-#trendlist li {
-	max-width: 234px;
-	word-break: break-all;
-	text-overflow: ellipsis;
-	overflow: hidden;
-	white-space: nowrap;
 }

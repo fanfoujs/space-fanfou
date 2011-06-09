@@ -1,20 +1,25 @@
 (function() {
-    function onInterval() {
-        $('#navigation .count, #navtabs .count').each(function() {
-            var $this = $(this);
-            if ($this.hasClass('newcount')) return;
-            $this.addClass('newcount');
-            var number = $this.text().slice(1, -1);
-            var $newcount = $('<span>');
-            $newcount.addClass('newcount');
-            $newcount.text(number);
-            $this.after($newcount);
-            $this.css('opacity','0');
-        });
+    function $i(id) { return document.getElementById(id); }
+    function $cn(elem, className) {
+        return elem ? elem.getElementsByClassName(className) : null;
     }
+
+    function removeBrackets(elems) {
+        if (! elems) return;
+        for (var i = 0; i < elems.length; ++i) {
+            if (elems[i].innerHTML[0] != '(') return;
+            elems[i].innerHTML = elems[i].innerHTML.slice(1, -1);
+        }
+    }
+
+    function onInterval() {
+        removeBrackets($cn($i('navigation'), 'count'));
+        removeBrackets($cn($i('navtabs'), 'count'));
+    }
+
     var interval = setInterval(onInterval, 200);
-    $(function() {
+    document.addEventListener('DOMContentLoaded', function() {
         clearInterval(interval);
         onInterval();
-    });
+    }, false);
 })();
