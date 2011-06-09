@@ -1,10 +1,11 @@
 var SF = (function() {
     return {
         pl: { },
-        empty_pl: {
-            update: function() { },
-            load: function() { },
-            unload: function() { }
+        plugin: function(func) {
+            var empty_func = function() { };
+            this.update = func.update ? func.update : empty_func;
+            this.load = func.load ? func.load : empty_func;
+            this.unload = func.unload ? func.unload : empty_func;
         }
     };
 })();

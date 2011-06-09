@@ -1,8 +1,8 @@
 SF.pl.float_message = (function($, $Y) {
     var $update = $('#update');
-    if (! $update.length) return SF.empty_pl;
+    if (! $update.length) return new SF.plugin();
     var $main = $('#main');
-    if ($main.hasClass('privatemsg')) return SF.empty_pl;
+    if ($main.hasClass('privatemsg')) return new SF.plugin();
 
     /* 处理悬浮 */
     var $win = $(window);
@@ -129,7 +129,7 @@ SF.pl.float_message = (function($, $Y) {
         $update.removeClass('msgempty');
     }
 
-    return {
+    return new SF.plugin({
         load: function() {
             // 添加悬浮
             $win.scroll(onWinScroll);
@@ -180,5 +180,5 @@ SF.pl.float_message = (function($, $Y) {
             interval = 0;
             $msg.unbind('focus', onMsgFocus);
         }
-    };
+    });
 })(jQuery, YAHOO);

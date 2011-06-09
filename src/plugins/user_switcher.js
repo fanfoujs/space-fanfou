@@ -2,7 +2,7 @@ SF.pl.user_switcher = (function($) {
     var $login = $('form#login');
     if ($login.length) {
         var $al = $('#autologin');
-        return {
+        return new SF.plugin({
             load: function() {
                 $al.attr('checked', true);
                 $al.parent().contents().not($al).remove();
@@ -12,11 +12,11 @@ SF.pl.user_switcher = (function($) {
                 $al.parent().contents().not($al).remove();
                 $al.after(' 下次自动登入');
             }
-        };
+        });
     }
 
     var $user_top = $('#user_top');
-    if (! $user_top.length) return SF.empty_pl;
+    if (! $user_top.length) return new SF.plugin();
     
     /* 初始化 Cookie */
     var cookie_strs = document.cookie.split(/\s*;\s*/);
@@ -111,7 +111,7 @@ SF.pl.user_switcher = (function($) {
     $another.css('border-top-color', bordercolor);
     $user_top.css('border-color', bordercolor);
     
-    return {
+    return new SF.plugin({
         load: function() {
             // 挂载登出钩子
             $logout.click(onLogoutClick);
@@ -126,5 +126,5 @@ SF.pl.user_switcher = (function($) {
             $user_list.detach();
             $user_top.removeClass('switcher');
         }
-    };
+    });
 })(jQuery);

@@ -1,6 +1,6 @@
 SF.pl.repost_photo_preview = (function($) {
     var $ol = $('#stream ol');
-    if (! $ol.length) return SF.empty_pl;
+    if (! $ol.length) return new SF.plugin();
     var r_img = /<img src="(http:\/\/photo\.fanfou\.com\/n[^\.]+\.jpg)"/;
     var item_list = [];
     function processItem($item) {
@@ -28,7 +28,7 @@ SF.pl.repost_photo_preview = (function($) {
     function onDOMNodeInserted(e) {
         processItem($(e.target));
     }
-    return {
+    return new SF.plugin({
         load: function() {
             $ol.bind('DOMNodeInserted', onDOMNodeInserted);
             $('li', $ol).each(function() { processItem($(this)); });
@@ -41,5 +41,5 @@ SF.pl.repost_photo_preview = (function($) {
             }
             item_list = [];
         }
-    };
+    });
 })(jQuery);

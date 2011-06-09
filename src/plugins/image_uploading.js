@@ -1,6 +1,6 @@
 SF.pl.image_uploading = (function($) {
     var $message = $('#message');
-    if (! $message.length) return SF.empty_pl;
+    if (! $message.length) return new SF.plugin();
 
     var $h2 = $('h2', $message);
     var $textarea = $('textarea', $message);
@@ -34,12 +34,12 @@ SF.pl.image_uploading = (function($) {
         });
     });
 
-    return {
+    return new SF.plugin({
         load: function() {
             $h2.append($button);
         },
         unload: function() {
             $button.detach();
         }
-    };
+    });
 })(jQuery);

@@ -1,6 +1,6 @@
 SF.pl.expanding_replies = (function($) {
     var $ol = $('#stream ol');
-    if (! $ol.length) return SF.empty_pl;
+    if (! $ol.length) return new SF.plugin();
 
     var replies_number;
 
@@ -136,7 +136,7 @@ SF.pl.expanding_replies = (function($) {
         removeReplies($(e.target));
     }
 
-    return {
+    return new SF.plugin({
         update: function(number) {
             replies_number = number;
         },
@@ -151,5 +151,5 @@ SF.pl.expanding_replies = (function($) {
             $('li.reply', $ol).fadeOut();
             $('li[expended]', $ol).removeAttr('expended');
         }
-    };
+    });
 })(jQuery);
