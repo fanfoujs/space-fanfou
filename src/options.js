@@ -28,4 +28,8 @@ $(function() {
         });
         localStorage['settings'] = JSON.stringify(SF.st.settings);
     });
+
+    $(window).unload(function() {
+        $('#btn_apply').click();
+    });
 });
