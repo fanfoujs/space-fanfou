@@ -24,6 +24,7 @@ SF.pl.float_message = (function($, $Y) {
     }
 
     /* 重载事件 */
+    var $popup = $('#PopupBox');
     var myurl = $('#navigation li>a').eq(1).attr('href');
     var $ol = $('#stream ol');
     var $form = $('form#message', $update);
@@ -137,6 +138,7 @@ SF.pl.float_message = (function($, $Y) {
             var $items = $('>li', '.wa');
             $('>span.op>a.reply', $items).die('click');
             $('>span.op>a.repost', $items).die('click');
+            $popup.detach();
             // 重载事件
             $('>span.op>a.reply', $items).live('click', onReplyClick);
             $('>span.op>a.repost', $items).live('click', onRepostClick);
@@ -161,10 +163,11 @@ SF.pl.float_message = (function($, $Y) {
             $('>span.op>a.reply', $items).die('click');
             $('>span.op>a.repost', $items).die('click');
             // 恢复按钮事件
-            $('#PopupClose', '#PopupBox').unbind('click');
             $('body').unbind('keydown');
+            $('#PopupClose', '#PopupBox').unbind('click');
             $('#PopupForm').unbind('keydown');
             $('#PopupForm').unbind('submit');
+            $popup.appendTo('body');
             FF.app.QuickReply();
             FF.app.Repost();
             // 回退 AJAX 化提交
