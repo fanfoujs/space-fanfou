@@ -54,11 +54,11 @@ SF.pl.expanding_replies = (function($) {
             $links.eq(0).addClass('avatar');
             $links.eq(1).addClass('author');
             var $stamp = $('.stamp', $li);
-            if (! $stamp.size()) {
+            if (! $stamp.length) {
                 url = '';
             } else {
                 var $reply = $('.reply', $stamp);
-                if ($reply.size() == 0) {
+                if ($reply.length == 0) {
                     url = '';
                 } else {
                     url = $('a', $reply).attr('href');
@@ -77,7 +77,7 @@ SF.pl.expanding_replies = (function($) {
     function showExpand($item) {
         if ($item.attr('expended')) return;
         var $reply = $('.stamp .reply', $item);
-        if (! $reply.size()) return;
+        if (! $reply.length) return;
         $item.attr('expended', 'expended');
         var $expand = $('<li>');
         $expand.attr('href', $('a', $reply).attr('href'));
@@ -99,7 +99,9 @@ SF.pl.expanding_replies = (function($) {
 
     function processItem($item) {
         if (! $item.is('li')) return;
-        if (! $item.attr('href')) {
+        if ($item.hasClass('reply hide')) {
+            $item.click(hideReplyList);
+        } else if (! $item.attr('href')) {
             showExpand($item);
         } else {
             $item.click(function() {
@@ -111,7 +113,6 @@ SF.pl.expanding_replies = (function($) {
                     $hide_replies.attr('expended', 'expended');
                     $hide_replies.text('隐藏回复原文');
                     $hide_replies.insertBefore($before);
-                    $hide_replies.click(hideReplyList);
                 }
                 displayReplyList($item.attr('href'), $before, replies_number);
             });
