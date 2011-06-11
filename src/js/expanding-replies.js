@@ -78,7 +78,7 @@ function(replies_number) {
 	var showExpand = function($item) {
 		if ($item.attr('expended')) return;
 		var $reply = $('.stamp .reply', $item);
-		if (! $reply.size()) return;
+		if (! $reply.length) return;
 		$item.attr('expended', 'expended');
 		var $expand = $('<li>');
 		$expand.attr('href', $('a', $reply).attr('href'));
@@ -98,7 +98,9 @@ function(replies_number) {
     };
 	var processItem = function($item) {
 		if (! $item.is('li')) return;
-		if (! $item.attr('href')) {
+        if ($item.hasClass('reply hide')) {
+            $item.click(hideReplyList);
+        } else if (! $item.attr('href')) {
 			showExpand($item);
 		} else {
 			$item.click(function() {
@@ -110,7 +112,6 @@ function(replies_number) {
                     $hide_replies.attr('expended', 'expended');
                     $hide_replies.text('隐藏回复原文');
                     $hide_replies.insertBefore($before);
-                    $hide_replies.click(hideReplyList);
                 }
 				displayReplyList($item.attr('href'), $before, replies_number);
 			});
