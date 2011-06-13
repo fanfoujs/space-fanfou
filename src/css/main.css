@@ -169,6 +169,7 @@
 }
 #update .act {
 	padding: 0 0 2px !important;
+	min-height: 37px;
 }
 .ui-autocomplete {
 	background: rgba(255,255,255,.95) !important;
