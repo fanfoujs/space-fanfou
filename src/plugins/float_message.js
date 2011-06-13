@@ -1,8 +1,8 @@
 SF.pl.float_message = (function($, $Y) {
-    var $update = $('#update');
-    if (! $update.length) return new SF.plugin();
     var $main = $('#main');
     if ($main.hasClass('privatemsg')) return new SF.plugin();
+    var $update = $('>#update', $main);
+    if (! $update.length) return new SF.plugin();
 
     /* 处理悬浮 */
     var $win = $(window);
@@ -62,6 +62,7 @@ SF.pl.float_message = (function($, $Y) {
         $msg.val(new_msg.join(' '));
         $msg.get(0).setSelectionRange(ffname.length + 2, select_end);
         $msg.focus();
+        return false;
     }
     function onRepostClick(e) {
         e.preventDefault();
@@ -72,6 +73,7 @@ SF.pl.float_message = (function($, $Y) {
         $msg.val(old_msg + $t.get(0).getAttribute('text'));
         $msg.get(0).setSelectionRange(old_msg.length, old_msg.length);
         $msg.focus();
+        return false;
     }
 
     /* 备份相关事件 */
