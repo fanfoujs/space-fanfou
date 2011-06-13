@@ -37,6 +37,7 @@ function(replies_number) {
 				} else {
 					spans = content.substring(stamp_pos);
 					content = content.substring(0, stamp_pos);
+					spans = spans.replace('redirect="/home" ', '');
 				}
 			}
 			var id = 'status-' + url.split('/')[2].split('?')[0] +
