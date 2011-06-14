@@ -127,11 +127,11 @@ function connectTab(tab) {
     if (! tab) return;
     if (tab.url.substr(0, 18) != 'http://fanfou.com/')
         return;
-    chrome.tabs.executeScript(tab.id, { file: 'extensions.js' });
+    chrome.tabs.executeScript(tab.id, { file: 'load.js' });
 }
 chrome.tabs.getCurrent(connectTab);
 chrome.tabs.onSelectionChanged.addListener(function(tabId) {
-    if (ports['port_' + tabId] === undefined)
+    if (ports['port_' + tabId] !== undefined)
         return;
     chrome.tabs.get(tabId, function(tab) {
         connectTab(tab);

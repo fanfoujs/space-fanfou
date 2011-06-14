@@ -15,22 +15,26 @@ function insertStyle(style, name) {
 }
 
 function insertScript(script, name) {
-    var id = 'sf_script_' + name;
-    if ($i(id)) return;
-    var $script = $c('script');
-    $script.appendChild($t(script));
-    if (name) $script.id = id;
-    $script.className = 'space-fanfou';
-    docelem.appendChild($script);
+    if (! name) {
+        location.assign('javascript:' + script);
+    } else {
+        var id = 'sf_script_' + name;
+        if ($i(id)) return;
+        var $script = $c('script');
+        $script.appendChild($t(script));
+        if (name) $script.id = id;
+        $script.className = 'space-fanfou';
+        docelem.appendChild($script);
+    }
 }
 
 var port = chrome.extension.connect();
 port.onMessage.addListener(function(msg) {
     if (msg.type == 'init') {
-        insertStyle(msg.common.style.css);
+        insertStyle(msg.common.style.css, 'common');
         var scripts = [];
-        insertScript(msg.common.style.js);
-        scripts.push([msg.common.script]);
+        insertScript(msg.common.style.js, 'style');
+        scripts.push([msg.common.script, 'common']);
         var load_plugins = [];
         for (var i = 0; i < msg.data.length; ++i) {
             var item = msg.data[i];
