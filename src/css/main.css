@@ -357,6 +357,26 @@
 	padding: 6px 9px !important;
 	border: none !important;
 }
+#pagination-totop {
+	position: fixed;
+	bottom: 9px;
+	margin-left: 762px;
+	width: 20px;
+	height: auto;
+	color: #fff !important;
+	background: rgba(0,0,0,.25) !important;
+	border: none !important;
+	font-size: 12px;
+	line-height: 1.2;
+	-webkit-transition-property: background;
+	-webkit-transition-duration: 300ms;
+}
+#pagination-totop:hover {
+	background: rgba(0,0,0,.5) !important;
+}
+.pagination .more-left {
+	width: 100% !important;
+}
 .tabs {
 	border-bottom: 1px solid rgba(0,0,0,.15) !important;
 }
