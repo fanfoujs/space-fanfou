@@ -1,7 +1,7 @@
 SF.checkAndExec('expanding_replies', ['number'],
 function(replies_number) {
-	var $ol = $('#stream ol');
-	if (! $ol.size()) return;
+	var $stream = $('#stream');
+	if (! $stream.length) return;
 	var showWaiting = function($e) {
 		var $wait = $('<li>');
 		$wait.addClass('reply waiting');
@@ -127,9 +127,14 @@ function(replies_number) {
         $replies.removeAttr('expended');
         $replies.remove();
     };
-    $ol.bind('DOMNodeInserted',
-            function(e) { processItem($(e.target)); });
-    $('li', $ol).each(function() { showExpand($(this)); });
-    $ol.bind('DOMNodeRemoved',
-            function(e) { removeReplies($(e.target)); });
+    var processStream = function($ol) {
+        $ol.bind('DOMNodeInserted',
+                function(e) { processItem($(e.target)); });
+        $('li', $ol).each(function() { showExpand($(this)); });
+        $ol.bind('DOMNodeRemoved',
+                function(e) { removeReplies($(e.target)); });
+    };
+    $stream.bind('DOMNodeInserted',
+            function(e) { processStream($(e.target)); });
+    processStream($('>ol', $stream));
 });
