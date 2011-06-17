@@ -60,9 +60,13 @@ SF.checkAndExec('user_switcher', [], function() {
         var $item = $('<li>');
         var $link = $('<a>');
         $link.attr('href', 'javascript:void 0');
-        $link.click((function(al) {
-            return function() { setLogin(al); };
-        })(user.auto_login));
+        $link.click((function(id, al) {
+            return function() {
+                setLogin(al);
+                data[id] = undefined;
+                localStorage.switcher = JSON.stringify(data);
+            };
+        })(id, user.auto_login));
         var $image = $('<img>');
         $image.attr('src', user.image);
         $image.attr('alt', user.nickname);
@@ -71,7 +75,7 @@ SF.checkAndExec('user_switcher', [], function() {
         $name.text(user.nickname);
         $link.append($name);
         $item.append($link);
-        $user_list.append($item);
+        $user_list.prepend($item);
     }
     var $another = $('<li>');
     $another.addClass('addnew');
