@@ -1,0 +1,4 @@
+#trendlist:hover li a:after {
+	content: "\20\2d\20" attr(squery);
+	color: #666;
+}

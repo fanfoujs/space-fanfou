@@ -1,7 +1,9 @@
-SF.checkAndExec('repost_photo_preview', [], function() {
+SF.pl.repost_photo_preview = (function($) {
     var $ol = $('#stream ol');
+    if (! $ol.length) return new SF.plugin();
     var r_img = /<img src="(http:\/\/photo\.fanfou\.com\/n[^\.]+\.jpg)"/;
-    var processItem = function($item) {
+    var item_list = [];
+    function processItem($item) {
         var $content = $('>.content', $item);
         if ($('>a.photo', $content).length) return;
         var $image = $('a[href^="http://fanfou.com/photo/"]', $content);
@@ -19,14 +21,25 @@ SF.checkAndExec('repost_photo_preview', [], function() {
             $a.append($img);
             $a.append($('<span>'));
             $content.prepend($a);
-            if (! $item.attr('id'))
-                $item.attr('id', 'status-' + Math.random());
-            location.assign('javascript: FF.app.Zoom.init(' + 
-                            'document.getElementById("' +
-                            $item.attr('id') + '"));');
+            FF.app.Zoom.init($item[0]);
+            item_list.push($item);
         });
-    };
-    $ol.bind('DOMNodeInserted', 
-        function(e) { processItem($(e.target)); });
-    $('li', $ol).each(function() { processItem($(this)); });
-});
+    }
+    function onDOMNodeInserted(e) {
+        processItem($(e.target));
+    }
+    return new SF.plugin({
+        load: function() {
+            $ol.bind('DOMNodeInserted', onDOMNodeInserted);
+            $('li', $ol).each(function() { processItem($(this)); });
+        },
+        unload: function() {
+            $ol.unbind('DOMNodeInserted', onDOMNodeInserted);
+            for (var i = 0; i < item_list.length; ++i) {
+                var $item = item_list[i];
+                $('.photo.zoom', $item).remove();
+            }
+            item_list = [];
+        }
+    });
+})(jQuery);

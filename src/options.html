@@ -1,52 +1,14 @@
 <!DOCTYPE HTML>
-<html lang="zh-CN">
-
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>太空饭否 - 选项</title>
-    <link rel="stylesheet" href="css/options.css" type="text/css" media="screen" charset="utf-8" />
-    <script type="text/javascript" src="js/jquery.js"></script>
-    <script type="text/javascript">
-        $(function() {
-            var keys = [], items = [];
-            $('[key]').each(function() {
-                keys.push($(this).attr('key'));
-                items.push($(this));
-            });
-            chrome.extension.sendRequest(
-                { func: 'readData', data: keys },
-                function(data) {
-                    for (var i = 0; i < data.length; ++i) {
-                        var $item = items[i];
-                        if ($item.is(':checkbox')) {
-                            $item.attr('checked', data[i]);
-                        } else if ($item.is(':input, :password, ' +
-                                            'textarea, select')) {
-                            $item.val(data[i]);
-                        } // TODO
-                    }
-                }
-            );
-            $(document.body).change(function(e) {
-                var $elem = $(e.target);
-                var key = $elem.attr('key');
-                if (key === undefined) return;
-                var val;
-                if ($elem.is(':checkbox')) {
-                    val = $elem.is(':checked');
-                } else {
-                    val = $elem.val();
-                }
-                data = {};
-                data[key] = val;
-                chrome.extension.sendRequest(
-                    { func: 'saveData', data: data });
-                document.all.saved.innerText = "设置已保存，请刷新饭否页面";
-            });
-        });
-    </script>
+	<meta charset="UTF-8">
+	<title>太空饭否 - 选项</title>
+    <link rel="stylesheet" href="options.css" />
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="common/common.js"></script>
+    <script type="text/javascript" src="settings.js"></script>
+    <script type="text/javascript" src="options.js"></script>
 </head>
-
 <body>
     <div id="wrapper">
         <h1>太空饭否选项</h1>
@@ -89,10 +51,12 @@
         <p>
         	<label><input type="checkbox" key="logo_remove_beta" />去除 Logo 的“测试版”字样</label>
         </p>
-        
-        <div id="tip"><a href="http://fanfou.com/home?status=%40Kevin+%40upsuper+%23%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%23+&amp;in_reply_to_status_id=HzyNhx51baA" target="_blank">提交使用反馈</a></span><span id="saved"></span></div>
+
+        <div id="tip">
+            <a href="http://fanfou.com/home?status=%40Kevin+%40upsuper+%23%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%23+&amp;in_reply_to_status_id=HzyNhx51baA" target="_blank">提交使用反馈</a>
+            <button id="btn_apply">应用</button>
+        </div>
         <div id="footer">&copy; 2011 Kevin, Upsuper.</div>
     </div>
 </body>
-
 </html>

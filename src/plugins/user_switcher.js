@@ -1,4 +1,23 @@
-SF.checkAndExec('user_switcher', [], function() {
+SF.pl.user_switcher = (function($) {
+    var $login = $('form#login');
+    if ($login.length) {
+        var $al = $('#autologin');
+        return new SF.plugin({
+            load: function() {
+                $al.attr('checked', true);
+                $al.parent().contents().not($al).remove();
+                $al.after(' 保存到“多账户切换列表”');
+            },
+            unload: function() {
+                $al.parent().contents().not($al).remove();
+                $al.after(' 下次自动登入');
+            }
+        });
+    }
+
+    var $user_top = $('#user_top');
+    if (! $user_top.length) return new SF.plugin();
+    
     /* 初始化 Cookie */
     var cookie_strs = document.cookie.split(/\s*;\s*/);
     var cookies = { };
@@ -8,9 +27,11 @@ SF.checkAndExec('user_switcher', [], function() {
         if (pos < 0) continue;
         cookies[cookie.substr(0, pos)] = cookie.substr(pos + 1);
     }
+
     /* 初始化数据 */
     var data = localStorage.switcher;
     data = data ? JSON.parse(data) : { };
+
     /* Cookie 操作函数 */
     var deleteCookie = function(name) {
         document.cookie = name + '=;domain=.fanfou.com;' +
@@ -29,9 +50,9 @@ SF.checkAndExec('user_switcher', [], function() {
             location.href = '/login';
         }
     };
+
     /* 获取当前用户的信息 */
     var user_id = cookies.u;
-    var $user_top = $('#user_top');
     var nickname = $('h3', $user_top).text();
     var image = $('img', $user_top).attr('src');
     var auto_login = cookies.al;
@@ -44,12 +65,14 @@ SF.checkAndExec('user_switcher', [], function() {
         };
         localStorage.switcher = JSON.stringify(data);
     }
+
     /* 登出钩子 */
     var $logout = $('#navigation a[href*="/logout/"]');
-    $logout.click(function() {
+    function onLogoutClick() {
         data[user_id] = undefined;
         localStorage.switcher = JSON.stringify(data);
-    });
+    }
+
     /* 创建用户列表 */
     var $user_list = $('<ul>');
     $user_list.attr('id', 'user_switcher');
@@ -85,13 +108,27 @@ SF.checkAndExec('user_switcher', [], function() {
     $link.text('登入另一个...');
     $another.append($link);
     $user_list.append($another);
-    var $user_top = $('#user_top');
-    $user_top.append($user_list);
-    $user_top.addClass('switcher');
 
     /* 调整样式 */
-    //var bordercolor = $('#sidebar').css('border-left-color');
-    //$user_list.css('border-top-color', bordercolor);
-    //$user_top.css('border-color', bordercolor);
-    //$another.css('border-top-color', bordercolor);
-});
+    var bordercolor = $('#sidebar').css('border-left-color');
+    $user_list.css('border-top-color', bordercolor);
+    $another.css('border-top-color', bordercolor);
+    $user_top.css('border-color', bordercolor);
+    
+    return new SF.plugin({
+        load: function() {
+            // 挂载登出钩子
+            $logout.click(onLogoutClick);
+            // 添加选择框
+            $user_top.append($user_list);
+            $user_top.addClass('switcher');
+        },
+        unload: function() {
+            // 消除登出钩子
+            $logout.unbind('click', onLogoutClick);
+            // 删除选择框
+            $user_list.detach();
+            $user_top.removeClass('switcher');
+        }
+    });
+})(jQuery);
