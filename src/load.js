@@ -51,7 +51,7 @@ port.onMessage.addListener(function(msg) {
             }
         }
         scripts.push([load_plugins.join('\n')]);
-        insertScript(msg.common.probe);
+        insertScript(msg.common.probe, 'probe');
         function waitForFlag() {
             setTimeout(function() {
                 if (document.getElementById('sf_flag_libs_ok')) {
