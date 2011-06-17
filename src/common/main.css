@@ -373,20 +373,20 @@
 }
 #pagination-totop {
 	position: fixed;
-	bottom: 9px;
+	bottom: 0;
 	margin-left: 762px;
-	width: 20px;
-	height: auto;
-	color: #fff !important;
-	background: rgba(0,0,0,.25) !important;
+	width: 35px;
+	height: 35px;
+	padding: 5px !important;
+	opacity: .5;
+	border-radius: 50px;
+	color: transparent !important;
+	background: rgba(0,0,0,.5) url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAYAAACN1PRVAAABsElEQVRIDe2VPS8EQRjH9zjhJIiX4CRCoVP4ogofQIW4iEJJecTbhYhPIBGFUGiUivX7D7OZ3Z2d3T0uUXiS/94zz9tvd25uL4rjOOpDm/S06/bVBTUA7CNZD82gyjMqFzJUoA5yrRawKmwEwoFLcfwb/CVUOqu0gCEC7aGQnZOcR8F5wSTNAu2iKlYKDMFaEMqeKHsTFwRWkHeuN0jxKKoLosXYJdcFlJudC1AkUNWto9Rr2tIcMAvT1v0UZOkCLqOEkTgEm6joeJPqy27pmkWGY2EC2TdDX1MDTdfk5lAk2DgaFIjRxgRsC7b1tQ5eT8mqwWfPBI99iUzsSDC9vbuZhLu8YjGNTtyg479+53ecWNZ9ILAumDSFfMAecfsF+/Kk4zek/mHUQVkTaA2Z78wCJwnouFo7w7Eg1YRg5gBQo4O2jaw94RgQnymYBuqHqFfOHVpE9kaqwlQ3hg7RI9pAyYzEcYIC+v4yusR9pm20T2bnTRBbRXZtPptR3l7yodqRdzqklA2lVgNe/MN+ZYP/7DaOFjxei3ijIJcK+45+qsBZ3OP7dkJH/MOpK3Q/ARYYBlVTqp9PAAAAAElFTkSuQmCC') no-repeat center center !important;
 	border: none !important;
-	font-size: 12px;
-	line-height: 1.2;
-	-webkit-transition-property: background;
-	-webkit-transition-duration: 300ms;
+	text-indent: -9999px;
 }
 #pagination-totop:hover {
-	background: rgba(0,0,0,.5) !important;
+	background: rgba(0,0,0,1) url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAYAAACN1PRVAAABsElEQVRIDe2VPS8EQRjH9zjhJIiX4CRCoVP4ogofQIW4iEJJecTbhYhPIBGFUGiUivX7D7OZ3Z2d3T0uUXiS/94zz9tvd25uL4rjOOpDm/S06/bVBTUA7CNZD82gyjMqFzJUoA5yrRawKmwEwoFLcfwb/CVUOqu0gCEC7aGQnZOcR8F5wSTNAu2iKlYKDMFaEMqeKHsTFwRWkHeuN0jxKKoLosXYJdcFlJudC1AkUNWto9Rr2tIcMAvT1v0UZOkCLqOEkTgEm6joeJPqy27pmkWGY2EC2TdDX1MDTdfk5lAk2DgaFIjRxgRsC7b1tQ5eT8mqwWfPBI99iUzsSDC9vbuZhLu8YjGNTtyg479+53ecWNZ9ILAumDSFfMAecfsF+/Kk4zek/mHUQVkTaA2Z78wCJwnouFo7w7Eg1YRg5gBQo4O2jaw94RgQnymYBuqHqFfOHVpE9kaqwlQ3hg7RI9pAyYzEcYIC+v4yusR9pm20T2bnTRBbRXZtPptR3l7yodqRdzqklA2lVgNe/MN+ZYP/7DaOFjxei3ijIJcK+45+qsBZ3OP7dkJH/MOpK3Q/ARYYBlVTqp9PAAAAAElFTkSuQmCC') no-repeat center center !important;
 }
 .pagination .more-left {
 	width: 100% !important;
