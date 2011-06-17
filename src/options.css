@@ -149,9 +149,6 @@ h4 {
 .comment:before {
 	content: "- ";
 }
-#feedback {
-	float: right;
-}
 #btn_apply {
 	font-size: 12px;
 	height: 25px;
