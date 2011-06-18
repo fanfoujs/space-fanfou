@@ -1,6 +1,6 @@
 /* Global */
 * {
-	font-family: "Lucida Grande", "HelveticaNeue-Light", "Helvetica Neue Light", Helvetica, Tahoma, sans-serif !important;
+	font-family: "Lucida Grande", Helvetica, Tahoma, sans-serif !important;
 }
 ::selection {
 	background: rgba(82,168,236,.25);
@@ -130,7 +130,7 @@
 	content: "\ff08\8d85\51fa\90e8\5206\5c06\4f1a\88ab\7701\7565\ff09";
 }
 #update h2 {
-	font-size: 18px !important;
+	font-size: 16px !important;
 }
 #update {
 	margin-bottom: 0 !important;
@@ -301,7 +301,7 @@
 	background: rgba(255,255,255,.75) !important;
 }
 #sidebar .stabs li a .count {
-	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", Georgia, "Times New Roman", Times, serif !important;
+	font-family: "Lucida Grande", "HelveticaNeue-Light", "Helvetica Neue Light", Helvetica, Tahoma, sans-serif !important;
 	font-weight: normal !important;
 }
 #savedsearchs li, #trendtabs li, #birthday li {
