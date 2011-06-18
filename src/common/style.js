@@ -17,7 +17,7 @@
         removeBrackets($cn($i('navtabs'), 'count'));
     }
 
-    var interval = setInterval(onInterval, 200);
+    var interval = setInterval(onInterval, 40);
     document.addEventListener('DOMContentLoaded', function() {
         clearInterval(interval);
         onInterval();
