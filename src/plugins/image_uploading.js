@@ -16,6 +16,10 @@ SF.pl.image_uploading = (function($) {
     $button.append($upload);
 
     $upload.change(function() {
+        var filename = $upload.val();
+        filename = filename.split(/[\/\\]/);
+        filename = filename[filename.length - 1];
+        $upload.attr('title', '已选定文件 ' + filename);
         var $iframe = $('<iframe>');
         $iframe.attr('name', 'upload_image');
         $message.append($iframe);
