@@ -111,11 +111,11 @@ chrome.extension.onConnect.addListener(function(port) {
     port.postMessage({
         type: 'init',
         common: {
+            namespace: cacheFile('namespace.js'),
             style: {
                 css: cacheFile('common/main.css'),
                 js: cacheFile('common/style.js')
             },
-            script: cacheFile('common/common.js'),
             probe: cacheFile('common/probe.js')
         },
         data: page_cache

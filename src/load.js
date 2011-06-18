@@ -34,7 +34,7 @@ port.onMessage.addListener(function(msg) {
         insertStyle(msg.common.style.css, 'common');
         var scripts = [];
         insertScript(msg.common.style.js, 'style');
-        scripts.push([msg.common.script, 'common']);
+        scripts.push([msg.common.namespace, 'namespace']);
         var load_plugins = [];
         for (var i = 0; i < msg.data.length; ++i) {
             var item = msg.data[i];

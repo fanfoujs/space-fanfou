@@ -89,7 +89,7 @@ SF.pl.float_message = (function($, $Y) {
     var $loading = $('.loading', $form);
     function onFormSubmit(e) {
         $loading.css('visibility', 'visible');
-		if ($form.attr('target')) return;
+        if ($form.attr('target')) return;
         if ($update.is(':not(.float-message)')) return;
         e.preventDefault();
         var data = $form.serialize() + '&ajax=yes';
