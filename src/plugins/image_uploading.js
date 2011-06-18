@@ -12,6 +12,7 @@ SF.pl.image_uploading = (function($) {
     $upload.attr('type', 'file');
     $upload.attr('name', 'picture');
     $upload.attr('size', '1');
+    $upload.attr('title', '上传图片');
     $button.append($upload);
 
     $upload.change(function() {
