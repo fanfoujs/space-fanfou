@@ -96,6 +96,12 @@ for (var name in SF.pl) {
 
 var ports = {};
 
+function checkURL(url) {
+    if (typeof url != 'string') return false;
+    return url.substr(0, 18) == 'http://fanfou.com/' ||
+           url.substr(0, 18) == 'http://fanwai.com/';
+}
+
 // 等待页面连接
 chrome.extension.onConnect.addListener(function(port) {
     var tabId = port.sender.tab.id;
@@ -122,11 +128,15 @@ chrome.extension.onConnect.addListener(function(port) {
     });
 });
 
+// 维持太空饭否图标
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    if (checkURL(changeInfo.url))
+        chrome.pageAction.show(tabId);
+});
+
 // 连接已打开的页面
 function connectTab(tab) {
-    if (! tab) return;
-    if (tab.url.substr(0, 18) == 'http://fanfou.com/' ||
-        tab.url.substr(0, 18) == 'http://fanwai.com/')
+    if (tab && checkURL(tab.url))
         chrome.tabs.executeScript(tab.id, { file: 'load.js' });
 }
 chrome.tabs.getCurrent(connectTab);

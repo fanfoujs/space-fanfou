@@ -12,6 +12,7 @@ SF.st.default_settings = {
     image_uploading: true,
     user_switcher: false,
     float_message: false,
+    'float_message.noajaxattop': false,
     repost_photo_preview: true,
     share_to_fanfou: true,
 };

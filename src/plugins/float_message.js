@@ -3,6 +3,7 @@ SF.pl.float_message = (function($, $Y) {
     if ($main.hasClass('privatemsg')) return new SF.plugin();
     var $update = $('>#update', $main);
     if (! $update.length) return new SF.plugin();
+    var noajaxattop = false;
 
     /* 处理悬浮 */
     var $win = $(window);
@@ -62,6 +63,10 @@ SF.pl.float_message = (function($, $Y) {
         $msg.val(new_msg.join(' '));
         $msg.get(0).setSelectionRange(ffname.length + 2, select_end);
         $msg.focus();
+        history.replaceState({ msg: $msg.val(), reply: $in_reply.val() }, null,
+                location.pathname +
+                '?status=' + encodeURIComponent($msg.val()) +
+                '&in_reply_to_status_id=' + $in_reply.val());
         return false;
     }
     function onRepostClick(e) {
@@ -73,24 +78,31 @@ SF.pl.float_message = (function($, $Y) {
         $msg.val(old_msg + $t.get(0).getAttribute('text'));
         $msg.get(0).setSelectionRange(old_msg.length, old_msg.length);
         $msg.focus();
+        history.replaceState({ msg: $msg.val(), repost: $repost.val() }, null,
+                location.pathname +
+                '?status=' + encodeURIComponent($msg.val()) +
+                '&repost_status_id=' + $repost.val());
         return false;
     }
 
     /* 备份相关事件 */
     var $E = $Y.util.Event;
-    var msg_keyup = $E.getListeners($msg[0], 'keyup');
-    var update_submit = $E.getListeners($form[0], 'submit');
-    var backup = {
-        msg_keyup: msg_keyup ? msg_keyup[0].fn : null,
-        update_submit: update_submit ? update_submit[0].fn : null
-    };
+    var backup = { };
+    $(function() {
+        backup.msg_keyup = $E.getListeners($msg[0], 'keyup')[0].fn;
+        backup.update_submit = $E.getListeners($form[0], 'submit')[0].fn;
+    });
+    function cleanOldEvents() {
+        $E.removeListener($msg[0], 'keyup', backup.msg_keyup);
+        $E.removeListener($form[0], 'submit', backup.update_submit);
+    }
 
     /* AJAX化提交 */
     var $loading = $('.loading', $form);
     function onFormSubmit(e) {
         $loading.css('visibility', 'visible');
         if ($form.attr('target')) return;
-        if ($update.is(':not(.float-message)')) return;
+        if (noajaxattop && $update.is(':not(.float-message)')) return;
         e.preventDefault();
         var data = $form.serialize() + '&ajax=yes';
         $.post('/home', data, function(data) {
@@ -107,6 +119,25 @@ SF.pl.float_message = (function($, $Y) {
             $notice.fadeIn(500).delay(3500).fadeOut(500,
                 function() { $(this).remove(); });
             $loading.css('visibility', 'hidden');
+
+            // 清理网址后面不必要的残余部分
+            if (data.status && location.search) {
+                var q = location.search;
+                var match = q.match(/\bstatus=([^&]+)/);
+                if (match) {
+                    var text = decodeURIComponent(match[1]);
+                    match = text.match(/^(转?)(@[^\+]+)/);
+                    var state = { msg: text };
+                    if (match[1]) {
+                        state['repost'] = q.match(/\brepost_status_id=([^&]+)/)[1].replace('+', ' ');
+                    } else {
+                        state['reply'] = q.match(/\bin_reply_to_status_id=([^&]+)/)[1].replace('+', ' ');
+                    }
+                    q = q.replace(/\b(status|in_reply_to_status_id|repost_status_id)=[^&]+&?/g, '');
+                    if (q == '?') q = '';
+                    history.pushState(state, null, location.pathname + q);
+                }
+            }
         }, 'json');
         return false;
     }
@@ -117,6 +148,21 @@ SF.pl.float_message = (function($, $Y) {
             return false;
         }
     }
+
+    /* 历史记录 */
+    // 历史记录不在禁用时关闭是为了已经加入的历史可以被正确处理
+    window.onpopstate = function(e) {
+        var state = e.state;
+        if (! state) return;
+        $msg.val(state.msg);
+        $in_reply.val('');
+        $repost.val('');
+        if (state.reply) {
+            $in_reply.val(state.reply);
+        } else if (state.repost) {
+            $repost.val(state.repost);
+        }
+    };
 
     /* 样式处理 */
     var interval = 0;
@@ -133,6 +179,9 @@ SF.pl.float_message = (function($, $Y) {
     }
 
     return new SF.plugin({
+        update: function(is_noajaxattop) {
+            noajaxattop = is_noajaxattop;
+        },
         load: function() {
             // 添加悬浮
             $win.scroll(onWinScroll);
@@ -145,10 +194,10 @@ SF.pl.float_message = (function($, $Y) {
             $('>span.op>a.reply', $items).live('click', onReplyClick);
             $('>span.op>a.repost', $items).live('click', onRepostClick);
             // 清除原有事件
-            if (backup.msg_keyup)
-                $E.removeListener($msg[0], 'keyup', backup.msg_keyup);
-            if (backup.update_submit)
-                $E.removeListener($form[0], 'submit', backup.update_submit);
+            if (backup)
+                cleanOldEvents();
+            else
+                $(cleanOldEvents);
             // AJAX 化提交
             $form.submit(onFormSubmit);
             $msg.keyup(onMsgKeyup);
