@@ -33,14 +33,15 @@ port.onMessage.addListener(function(msg) {
     if (msg.type == 'init') {
         insertStyle(msg.common.style.css, 'common');
         var scripts = [];
+        insertScript(msg.common.namespace, 'namespace');
+        insertScript(msg.common.functions, 'functions');
         insertScript(msg.common.style.js, 'style');
-        scripts.push([msg.common.namespace, 'namespace']);
         var load_plugins = [];
         for (var i = 0; i < msg.data.length; ++i) {
             var item = msg.data[i];
             if (item.style) insertStyle(item.style, item.name);
             if (item.script) {
-                scripts.push([item.script, item.name]);
+                scripts.push([item.script, 'plugin_' + item.name]);
                 load_plugins.push('setTimeout(function() {');
                 var plugin = 'SF.pl.' + item.name;
                 if (item.options) {
@@ -54,18 +55,13 @@ port.onMessage.addListener(function(msg) {
         }
         scripts.push([load_plugins.join('\n')]);
         insertScript(msg.common.probe, 'probe');
-        function waitForFlag() {
-            setTimeout(function() {
-                if (document.getElementById('sf_flag_libs_ok')) {
-                    for (var i = 0; i < scripts.length; ++i)
-                        insertScript.apply(insertScript, scripts[i]);
-                    delete scripts;
-                } else {
-                    waitForFlag();
-                }
-            }, 200);
-        }
-        waitForFlag();
+        SF.fn.waitFor(function() {
+            return $i('sf_flag_libs_ok');
+        }, function() {
+            for (var i = 0; i < scripts.length; ++i)
+                insertScript.apply(insertScript, scripts[i]);
+            delete scripts;
+        });
     } else if (msg.type == 'update') {
         for (var i = 0; i < msg.data.length; ++i) {
             var item = msg.data[i];

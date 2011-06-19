@@ -18,6 +18,7 @@ var SF = (function() {
     }
 
     return {
+        fn: { },
         pl: { },
         plugin: function(func) {
             if (! func) func = { };

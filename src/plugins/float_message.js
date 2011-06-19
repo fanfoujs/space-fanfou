@@ -88,14 +88,15 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
     /* 备份相关事件 */
     var $E = $Y.util.Event;
     var backup = { };
-    $(function() {
-        backup.msg_keyup = $E.getListeners($msg[0], 'keyup')[0].fn;
-        backup.update_submit = $E.getListeners($form[0], 'submit')[0].fn;
+    var msg_keyup, update_submit;
+    SF.fn.waitFor(function() {
+        msg_keyup = $E.getListeners($msg[0], 'keyup');
+        update_submit = $E.getListeners($form[0], 'submit');
+        return msg_keyup && update_submit;
+    }, function() {
+        backup.msg_keyup = msg_keyup[0].fn;
+        backup.update_submit = update_submit[0].fn;
     });
-    function cleanOldEvents() {
-        $E.removeListener($msg[0], 'keyup', backup.msg_keyup);
-        $E.removeListener($form[0], 'submit', backup.update_submit);
-    }
 
     /* AJAX化提交 */
     var $loading = $('.loading', $form);
@@ -194,10 +195,12 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
             $('>span.op>a.reply', $items).live('click', onReplyClick);
             $('>span.op>a.repost', $items).live('click', onRepostClick);
             // 清除原有事件
-            if (backup)
-                cleanOldEvents();
-            else
-                $(cleanOldEvents);
+            SF.fn.waitFor(function() {
+                return backup.msg_keyup && backup.update_submit;
+            }, function() {
+                $E.removeListener($msg[0], 'keyup', backup.msg_keyup);
+                $E.removeListener($form[0], 'submit', backup.update_submit);
+            });
             // AJAX 化提交
             $form.submit(onFormSubmit);
             $msg.keyup(onMsgKeyup);

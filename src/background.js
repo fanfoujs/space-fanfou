@@ -118,6 +118,7 @@ chrome.extension.onConnect.addListener(function(port) {
         type: 'init',
         common: {
             namespace: cacheFile('namespace.js'),
+            functions: cacheFile('functions.js'),
             style: {
                 css: cacheFile('common/main.css'),
                 js: cacheFile('common/style.js')

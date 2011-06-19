@@ -17,7 +17,7 @@
     },
     "content_scripts": [
         {
-            "js": [ "load.js" ],
+            "js": [ "namespace.js", "functions.js", "load.js" ],
             "css": [ "common/main.css" ],
             "matches": [ "http://fanfou.com/*", "http://fanwai.com/*" ],
             "run_at": "document_start"
