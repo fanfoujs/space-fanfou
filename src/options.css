@@ -149,6 +149,9 @@ h4 {
 .comment:before {
 	content: "- ";
 }
+.sublabel {
+	margin-left: 18px;
+}
 #btn_apply {
 	font-size: 12px;
 	height: 25px;
