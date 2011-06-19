@@ -128,11 +128,13 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
                 if (match) {
                     var text = decodeURIComponent(match[1]);
                     match = text.match(/^(转?)(@[^\+]+)/);
-                    var state = { msg: text };
+                    var state = { msg: text.replace('+', ' ') };
                     if (match[1]) {
-                        state['repost'] = q.match(/\brepost_status_id=([^&]+)/)[1].replace('+', ' ');
+                        var repost = q.match(/\brepost_status_id=([^&]+)/);
+                        if (repost) state['repost'] = repost[1];
                     } else {
-                        state['reply'] = q.match(/\bin_reply_to_status_id=([^&]+)/)[1].replace('+', ' ');
+                        var reply = q.match(/\bin_reply_to_status_id=([^&]+)/);
+                        if (reply) state['reply'] = reply[1];
                     }
                     q = q.replace(/\b(status|in_reply_to_status_id|repost_status_id)=[^&]+&?/g, '');
                     if (q == '?') q = '';
