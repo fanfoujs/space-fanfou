@@ -373,6 +373,7 @@
 }
 #pagination-totop {
 	position: fixed;
+	visibility: hidden;
 	bottom: 0;
 	margin-left: 762px;
 	width: 35px;

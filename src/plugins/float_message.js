@@ -7,20 +7,23 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 
     /* 处理悬浮 */
     var $win = $(window);
-    var ud_top = $update.offset().top -11;
+    var ud_top = $update.offset().top - 11;
     var main_padtop = $main.css('padding-top');
     function resetFloat() {
         $update.removeClass('float-message');
         $main.css('padding-top', main_padtop);
     }
     function onWinScroll() {
-        if ($win.scrollTop() <= ud_top) {
-            resetFloat();
+        if ($update.hasClass('float-message')) {
+            if ($win.scrollTop() <= ud_top)
+                resetFloat();
         } else {
-            $update.addClass('float-message');
-            $main.css('padding-top',
-                      ($update.outerHeight() + parseInt(main_padtop)) +
-                       -16 +'px');
+            if ($win.scrollTop() > ud_top) {
+                $update.addClass('float-message');
+                $main.css('padding-top',
+                          $update.outerHeight() + parseInt(main_padtop) +
+                           -16 +'px');
+            }
         }
     }
 

@@ -30,11 +30,30 @@
     });
 
     SF.fn.waitFor(function() {
-        return $i('pagination-totop') && jQuery;
+        return $i('pagination-totop');
     }, function() {
-        $i('pagination-totop').addEventListener('click', function(e) {
+        var totop = $i('pagination-totop');
+        totop.addEventListener('click', function(e) {
             e.preventDefault();
             jQuery('body').animate({ scrollTop: 0 }, 500);
         }, false);
+        SF.fn.waitFor(function() {
+            return window.jQuery;
+        }, function() {
+            var $ = jQuery;
+            var $totop = $(totop), $win = $(window);
+            var main_top = $('#main').offset().top;
+            $totop.hide();
+            $totop.css('visibility', 'visible');
+            $win.scroll(function() {
+                if ($totop.is(':visible')) {
+                    if ($win.scrollTop() < main_top)
+                        $totop.fadeOut();
+                } else {
+                    if ($win.scrollTop() > main_top)
+                        $totop.fadeIn();
+                }
+            });
+        });
     });
 })();
