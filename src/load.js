@@ -41,6 +41,7 @@ port.onMessage.addListener(function(msg) {
             if (item.style) insertStyle(item.style, item.name);
             if (item.script) {
                 scripts.push([item.script, item.name]);
+                load_plugins.push('setTimeout(function() {');
                 var plugin = 'SF.pl.' + item.name;
                 if (item.options) {
                     load_plugins.push(
@@ -48,6 +49,7 @@ port.onMessage.addListener(function(msg) {
                         JSON.stringify(item.options) + ');');
                 }
                 load_plugins.push(plugin + '.load();');
+                load_plugins.push('}, 0);');
             }
         }
         scripts.push([load_plugins.join('\n')]);
