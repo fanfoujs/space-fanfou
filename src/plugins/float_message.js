@@ -1,8 +1,8 @@
-SF.pl.float_message = (function($, $Y) {
+SF.pl.float_message = new SF.plugin((function($, $Y) {
     var $main = $('#main');
-    if ($main.hasClass('privatemsg')) return new SF.plugin();
+    if ($main.hasClass('privatemsg')) return;
     var $update = $('>#update', $main);
-    if (! $update.length) return new SF.plugin();
+    if (! $update.length) return;
     var noajaxattop = false;
 
     /* 处理悬浮 */
@@ -178,7 +178,7 @@ SF.pl.float_message = (function($, $Y) {
         $update.removeClass('msgempty');
     }
 
-    return new SF.plugin({
+    return {
         update: function(is_noajaxattop) {
             noajaxattop = is_noajaxattop;
         },
@@ -234,5 +234,5 @@ SF.pl.float_message = (function($, $Y) {
             interval = 0;
             $msg.unbind('focus', onMsgFocus);
         }
-    });
-})(jQuery, YAHOO);
+    };
+})(jQuery, YAHOO));

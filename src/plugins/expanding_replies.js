@@ -1,6 +1,6 @@
-SF.pl.expanding_replies = (function($) {
+SF.pl.expanding_replies = new SF.plugin((function($) {
 	var $stream = $('#stream');
-	if (! $stream.length) return new SF.plugin();
+	if (! $stream.length) return;
 
     var replies_number;
 
@@ -148,7 +148,7 @@ SF.pl.expanding_replies = (function($) {
         processStream($(e.target));
     }
 
-    return new SF.plugin({
+    return {
         update: function(number) {
             replies_number = number;
         },
@@ -165,5 +165,5 @@ SF.pl.expanding_replies = (function($) {
             $('li.reply', $ol).fadeOut();
             $('li[expended]', $ol).removeAttr('expended');
         }
-    });
-})(jQuery);
+    };
+})(jQuery));

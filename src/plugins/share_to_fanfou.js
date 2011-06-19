@@ -1,8 +1,8 @@
-SF.pl.share_to_fanfou = (function($) {
+SF.pl.share_to_fanfou = new SF.plugin((function($) {
     var menu_share = null;
     var window_param =
         'toolbar=0,status=0,resizable=0,width=600,height=400';
-    return new SF.plugin({
+    return {
         load: function() {
             menu_share = chrome.contextMenus.create({
                 title: '分享到饭否',
@@ -22,5 +22,5 @@ SF.pl.share_to_fanfou = (function($) {
             chrome.contextMenus.remove(menu_share);
             menu_share = null;
         }
-    });
-})(jQuery);
+    };
+})(jQuery));
