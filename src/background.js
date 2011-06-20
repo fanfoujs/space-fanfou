@@ -3,15 +3,10 @@
 var cache = { };
 function cacheFile(file) {
     if (cache[file] === undefined) {
-        var result = null;
-        var req = $.ajax({
-            async: false,
-            url: file,
-            success: function(data) {
-                result = data;
-            }
-        });
-        cache[file] = result;
+        var req = new XMLHttpRequest();
+        req.open('GET', file, false);
+        req.send();
+        cache[file] = req.responseText;
     }
     return cache[file];
 }
@@ -37,9 +32,9 @@ for (var i = 0; i < plugins.length; ++i) {
 
     // 处理其他类型扩展
     if (detail.type == 'background') {
-        var $script = $('<script>');
-        $script.html(detail.script);
-        $(document.head).append($script);
+        var script = document.createElement('script');
+        script.innerHTML = detail.script;
+        document.head.appendChild(script);
     }
 }
 
@@ -75,21 +70,30 @@ buildPageCache();
 
 /* 加载背景页面扩展 */
 
-function updateBackgroundPlugin(name) {
+function updateBgPlugin(name) {
     var plugin = SF.pl[name];
-    plugin.update.apply(plugin, getPluginOptions(name));
+    setTimeout(function() {
+        plugin.update.apply(plugin, getPluginOptions(name));
+    }, 0);
 }
 
-function enableBackgroundPlugin(name) {
-    if (details[name].options)
-        updateBackgroundPlugin(name);
-    SF.pl[name].load();
+function loadBgPlugin(name) {
+    setTimeout(function() {
+        if (details[name].options)
+            updateBgPlugin(name);
+        SF.pl[name].load();
+    }, 0);
+}
+
+function unloadBgPlugin(name) {
+    setTimeout(function() {
+        SF.pl[name].unload();
+    }, 0);
 }
 
 for (var name in SF.pl) {
     if (! SF.pl.hasOwnProperty(name)) continue;
-    if (typeof SF.pl[name].load != 'function') continue;
-    if (SF.st.settings[name]) enableBackgroundPlugin(name);
+    if (SF.st.settings[name]) loadBgPlugin(name);
 }
 
 /* 与页面交互 */
@@ -186,12 +190,12 @@ addEventListener('storage', function(e) {
             if (detail.type == 'background') {
                 // 背景页面扩展
                 if (option_name) {
-                    updateBackgroundPlugin(main_name);
+                    updateBgPlugin(main_name);
                 } else {
                     if (SF.st.settings[main_name]) {
-                        enableBackgroundPlugin(main_name);
+                        loadBgPlugin(main_name);
                     } else {
-                        SF.pl[main_name].unload();
+                        unloadBgPlugin(main_name);
                     }
                 }
             } else {

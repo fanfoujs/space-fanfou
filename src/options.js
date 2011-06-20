@@ -8,7 +8,7 @@ $(function() {
 
     function setValue($elem, value) {
         if ($elem.is(':checkbox'))
-            $elem.prop('checked', value);
+            $elem.attr('checked', value);
         else
             $elem.val(value);
     }
