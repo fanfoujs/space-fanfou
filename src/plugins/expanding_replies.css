@@ -1,7 +1,8 @@
-#stream ol .buffered + li.reply, #stream ol li.reply .share {
+#stream>ol>.buffered+li.reply,
+#stream>ol>li.reply .share {
 	display: none;
 }
-#stream ol li.reply {
+#stream>ol>li.reply {
 	min-height: 38px;
 	padding: 6px 50px 6px 52px;
 	border-left: 3px solid #e5e5e5;
@@ -9,46 +10,63 @@
 	margin-left: 30px;
 	width: 365px;
 }
-#stream ol li.reply.last {
+#stream>ol>li.reply.last {
 	border-bottom: 1px solid #e5e5e5;
 }
-#stream ol li.reply a.avatar {
+#stream>ol>li.reply a.avatar {
 	margin-left: -44px;
 }
-#stream ol li.reply a.avatar img {
+#stream>ol>li.reply a.avatar img {
 	width: 32px;
 	height: 32px;
 }
-#stream ol li.reply.more, #stream ol li.reply.hide { 
+#stream>ol>li.reply.more,
+#stream>ol>li.reply.hide,
+#stream>ol>li.reply.waiting,
+#stream>ol>li.reply.notavail { 
 	font-size: 90%;
 	height: 1.5em !important;
 	line-height: 1.5em;
 	margin-left: 70%;
 	margin-top: -1.6em; 
-	background: rgba(235,235,235,1);
-	color: #666;
 	text-align: center;
 	padding: 0; 
 	width: 20%;
 	min-height: 0;
-	cursor: pointer;
-	text-shadow: 0 1px 0 white; 
 	border-left: none;
 	border-bottom: 1px solid #e5e5e5;
 }
-#stream ol li.reply.more:hover, #stream ol li.reply.hide:hover {
+#stream>ol>li.reply.more,
+#stream>ol>li.reply.hide,
+#stream>ol>li.reply.waiting {
+	background: rgba(235,235,235,1);
+	color: #666;
+	text-shadow: 0 1px 0 white; 
+	cursor: pointer;
+}
+#stream>ol>li.reply.notavail {
+	background: #b22222;
+	color: white;
+	text-shadow: 0 1px 0 #8b0000;
+	cursor: not-allowed;
+}
+#stream>ol>li.reply.more:hover,
+#stream>ol>li.reply.hide:hover {
 	background: rgba(230,230,230,1);
 	color: #666;
 }
-#stream ol li.reply.waiting {
-	height: 39px !important;
-	min-height: 0;
-	margin-top: 0; 
-	background: url("http://static1.fanfou.com/img/ajax.gif") no-repeat scroll 50% 50% transparent;
-	border: 0; 
+#stream>ol>li.reply.waiting {
+	background-image: url("http://static1.fanfou.com/img/ajax.gif");
+    background-repeat: no-repeat;
+    background-position: center center;
+	cursor: progress;
 }
-#stream li.reply.more, #stream li.reply.waiting, #u_button {
+#stream>ol>li.reply:not(.waiting):not(.hide), #u_button {
 	-webkit-animation: fadeIn .75s;
+}
+#stream.message li.last-refresh + li.reply {
+	border-bottom: 3px solid #e5e5e5;
+	margin-top: -1.75em;
 }
 .light .stamp .reply a {
 	background: transparent !important;
