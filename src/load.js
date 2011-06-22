@@ -36,6 +36,7 @@ port.onMessage.addListener(function(msg) {
         insertScript(msg.common.namespace, 'namespace');
         insertScript(msg.common.functions, 'functions');
         insertScript(msg.common.style.js, 'style');
+        scripts.push([msg.common.common, 'common']);
         var load_plugins = [];
         for (var i = 0; i < msg.data.length; ++i) {
             var item = msg.data[i];
