@@ -35,7 +35,7 @@ SF.st.default_settings = {
             var key = setting_names[i];
             if (localStorage[key] !== undefined) {
                 settings[key] = JSON.parse(localStorage[key]);
-                //localStorage.removeItem(key);
+                localStorage.removeItem(key);
             }
         }
         localStorage['settings'] = JSON.stringify(settings);
