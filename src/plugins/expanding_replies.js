@@ -3,6 +3,9 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
     if (! $stream.length) return;
 
     var replies_number;
+
+    var MSG_DELETED = '原消息已删除';
+    var MSG_NOPUBLIC = '原消息不公开';
     
     function showWaiting($e) {
         var $wait = $('<li>');
@@ -33,14 +36,14 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
             var content = /<h2>([\s\S]+?)<\/h2>/.exec(data);
             var avail = false;
             if (! content) {
-                content = '原消息已删除';
+                content = MSG_DELETED;
                 spans = '';
             } else {
                 content = content[1];
                 var stamp_pos = content.indexOf('<span class="stamp">');
                 var spans;
                 if (stamp_pos == -1) {
-                    content = '原消息不公开';
+                    content = MSG_NOPUBLIC;
                     spans = '';
                 } else {
                     spans = content.substring(stamp_pos);
@@ -136,12 +139,37 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 
     function removeReplies($item) {
         if (! $item.attr('expended')) return;
-        var $replies = $item.next('.reply');
-        if (! $replies.length) return;
-        for (var $i = $replies.next(); $i.is('.reply'); $i = $i.next())
-            $replies.add($i);
-        $replies.removeAttr('expended');
-        $replies.remove();
+        var $replies = [];
+        for (var $i = $item.next('.reply'); $i.is('.reply'); $i = $i.next())
+            $replies.push($i);
+        var $prev;
+        if ($item.hasClass('reply')) {
+            $prev = $item.prev();
+            if ($prev.hasClass('hide'))
+                $prev.fadeOut();
+        }
+        function fadeOut() {
+            if (! $replies.length) {
+                if ($prev) {
+                    var $deleted = $('<li>');
+                    $deleted.addClass('reply notavail');
+                    $deleted.text(MSG_DELETED);
+                    if ($prev.hasClass('hide')) {
+                        $prev.replaceWith($deleted);
+                    } else {
+                        $prev.after($deleted);
+                    }
+                }
+                return;
+            }
+            var $i = $replies.shift();
+            $i.fadeOut(function() {
+                fadeOut();
+                $i.removeAttr('expended');
+                $item.remove();
+            });
+        }
+        fadeOut();
     }
 
     function onDOMNodeInserted(e) {
