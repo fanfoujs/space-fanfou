@@ -118,6 +118,7 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
         showExpand($item);
         for (var $i = $t.next(); $i.hasClass('reply'); $i = $i.next())
             $t = $t.add($i);
+        $t.removeAttr('expended');
         $t.remove();
     }
 
