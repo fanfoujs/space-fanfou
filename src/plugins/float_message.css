@@ -30,6 +30,15 @@
 .float-message h2, .float-message textarea, .float-message .actpost {
 	pointer-events: auto;
 }
+.float-message::before {
+	content: " ";
+	width: 500px;
+	height: 65px;
+	position: absolute;
+	margin-top: -10px;
+	background: transparent;
+	pointer-events: auto;
+}
 .float-message.msgempty textarea {
 	height: 18px !important;
 }
