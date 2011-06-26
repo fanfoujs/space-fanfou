@@ -8,7 +8,6 @@
     if ($msg.length && location.search.match(/\bstatus=/)) {
         var text = $msg.val();
         var msg = $msg[0];
-        $msg.focus();
         if (text[0] == '转') {
             msg.setSelectionRange(0, 0);
         } else if (text[0] != '@') {

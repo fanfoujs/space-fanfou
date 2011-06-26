@@ -6,6 +6,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
     var noajaxattop = false;
 
     /* 处理悬浮 */
+    var $msg = $('textarea', $update);
     var $win = $(window);
     var ud_top = $update.offset().top - 11;
     var main_padtop = $main.css('padding-top');
@@ -15,14 +16,21 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
     }
     function onWinScroll() {
         if ($update.hasClass('float-message')) {
-            if ($win.scrollTop() <= ud_top)
+            if ($win.scrollTop() <= ud_top) {
                 resetFloat();
+                if ($msg.not(':focus') && $(':focus').is(':not(:input)'))
+                    $msg.focus();
+            }
         } else {
             if ($win.scrollTop() > ud_top) {
                 $update.addClass('float-message');
                 $main.css('padding-top',
                           $update.outerHeight() + parseInt(main_padtop) +
                            -16 +'px');
+                if ($msg.val().length == 0 && $msg.is(':focus')) {
+                    $msg.blur();
+                    $update.addClass('msgempty');
+                }
             }
         }
     }
@@ -32,7 +40,6 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
     var myurl = $('#navigation li>a').eq(1).attr('href');
     var $ol = $('#stream ol');
     var $form = $('form#message', $update);
-    var $msg = $('textarea', $update);
     var padding = parseInt($msg.css('padding-top'));
     var $in_reply = $('[name=in_reply_to_status_id]', $update);
     var $repost = $('[name=repost_status_id]', $update);
