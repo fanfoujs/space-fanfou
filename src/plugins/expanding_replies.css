@@ -9,6 +9,7 @@
 	font-size: 12px;
 	margin-left: 30px;
 	width: 365px;
+	-webkit-user-select: none;
 }
 #stream>ol>li.reply.last {
 	border-bottom: 1px solid #e5e5e5;
@@ -31,7 +32,7 @@
 	margin-top: -1.6em; 
 	text-align: center;
 	padding: 0; 
-	width: 20%;
+	width: 90px;
 	min-height: 0;
 	border-left: none;
 	border-bottom: 1px solid #e5e5e5;
@@ -45,9 +46,10 @@
 	cursor: pointer;
 }
 #stream>ol>li.reply.notavail {
-	background: #b22222;
-	color: white;
-	text-shadow: 0 1px 0 #8b0000;
+	background: rgba(235,235,235,1);
+	color: #666;
+	text-shadow: 0 1px 0 white;
+	text-decoration: line-through;
 	cursor: not-allowed;
 }
 #stream>ol>li.reply.more:hover,
