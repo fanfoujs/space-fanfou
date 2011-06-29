@@ -43,11 +43,23 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
     var padding = parseInt($msg.css('padding-top'));
     var $in_reply = $('[name=in_reply_to_status_id]', $update);
     var $repost = $('[name=repost_status_id]', $update);
+    function pushState(newstate, url) {
+        var state = { sf: true, msg: $msg.val() };
+        if ($in_reply.val()) {
+            state.reply = $in_reply.val();
+        } else if ($repost.val()) {
+            state.repost = $repost.val();
+        }
+        history.replaceState(state, null);
+        if (newstate) {
+            newstate.sf = true;
+            history.pushState(newstate, null, url);
+        }
+    }
     function onReplyClick(e) {
         e.preventDefault();
         var $t = $(this);
-        $in_reply.val($t.attr('ffid'));
-        $repost.val('');
+        var ffid = $t.attr('ffid');
         var ffname = $t.attr('ffname');
         var msg = '@' + ffname + ' ';
         $('.content a.former', $t.parents('li')).each(function() {
@@ -70,28 +82,33 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
                 at_ed[msg[i]] = true;
             }
         }
-        $msg.val(new_msg.join(' '));
+        msg = new_msg.join(' ');
+        pushState({ msg: msg, reply: ffid }, 
+                location.pathname +
+                '?status=' + encodeURIComponent(msg) +
+                '&in_reply_to_status_id=' + ffid);
+        $msg.val(msg);
         $msg.get(0).setSelectionRange(ffname.length + 2, select_end);
         $msg.focus();
-        history.replaceState({ msg: $msg.val(), reply: $in_reply.val() }, null,
-                location.pathname +
-                '?status=' + encodeURIComponent($msg.val()) +
-                '&in_reply_to_status_id=' + $in_reply.val());
+        $in_reply.val(ffid);
+        $repost.val('');
         return false;
     }
     function onRepostClick(e) {
         e.preventDefault();
-        $in_reply.val('');
         var $t = $(this);
-        $repost.val($t.attr('ffid'));
+        var ffid = $t.attr('ffid');
         var old_msg = $msg.val();
-        $msg.val(old_msg + $t.get(0).getAttribute('text'));
+        var msg = old_msg + $t.get(0).getAttribute('text');
+        pushState({ msg: msg, repost: ffid },
+                location.pathname +
+                '?status=' + encodeURIComponent(msg) +
+                '&repost_status_id=' + ffid);
+        $in_reply.val('');
+        $repost.val(ffid);
+        $msg.val(msg);
         $msg.get(0).setSelectionRange(old_msg.length, old_msg.length);
         $msg.focus();
-        history.replaceState({ msg: $msg.val(), repost: $repost.val() }, null,
-                location.pathname +
-                '?status=' + encodeURIComponent($msg.val()) +
-                '&repost_status_id=' + $repost.val());
         return false;
     }
 
@@ -117,40 +134,25 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
         e.preventDefault();
         var data = $form.serialize() + '&ajax=yes';
         $.post('/home', data, function(data) {
+            $loading.css('visibility', 'hidden');
             var $notice = $('<div>');
-            if (data.status) {
-                $notice.addClass('sysmsg');
-                $msg.val('');
-            } else {
+            if (! data.status) {
                 $notice.addClass('errmsg');
+            } else {
+                $notice.addClass('sysmsg');
+                var q = location.search;
+                q = q.replace(/\b(status|in_reply_to_status_id|repost_status_id)=[^&]+&?/g, '');
+                if (q == '?') q = '';
+                pushState({ msg: '' }, location.pathname + q);
+                $msg.val('');
+                $in_reply.val('');
+                $repost.val('');
             }
             $notice.text(data.msg);
             $notice.hide();
             $('#header').append($notice);
             $notice.fadeIn(500).delay(3500).fadeOut(500,
                 function() { $(this).remove(); });
-            $loading.css('visibility', 'hidden');
-
-            // 清理网址后面不必要的残余部分
-            if (data.status && location.search) {
-                var q = location.search;
-                var match = q.match(/\bstatus=([^&]+)/);
-                if (match) {
-                    var text = decodeURIComponent(match[1]);
-                    match = text.match(/^(转?)(@[^\+]+)/);
-                    var state = { msg: text.replace('+', ' ') };
-                    if (match[1]) {
-                        var repost = q.match(/\brepost_status_id=([^&]+)/);
-                        if (repost) state['repost'] = repost[1];
-                    } else {
-                        var reply = q.match(/\bin_reply_to_status_id=([^&]+)/);
-                        if (reply) state['reply'] = reply[1];
-                    }
-                    q = q.replace(/\b(status|in_reply_to_status_id|repost_status_id)=[^&]+&?/g, '');
-                    if (q == '?') q = '';
-                    history.pushState(state, null, location.pathname + q);
-                }
-            }
         }, 'json');
         return false;
     }
@@ -166,7 +168,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
     // 历史记录不在禁用时关闭是为了已经加入的历史可以被正确处理
     window.onpopstate = function(e) {
         var state = e.state;
-        if (! state) return;
+        if (! state || ! state.sf) return;
         $msg.val(state.msg);
         $in_reply.val('');
         $repost.val('');
@@ -219,6 +221,8 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
             // 设置样式调节
             interval = setInterval(onInterval, 50);
             $msg.focus(onMsgFocus);
+            // 设置初始状态
+            pushState();
         },
         unload: function() {
             // 取消悬浮
