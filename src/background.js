@@ -136,7 +136,7 @@ chrome.extension.onConnect.addListener(function(port) {
 
 // 维持太空饭否图标
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    if (checkURL(changeInfo.url))
+    if (checkURL(tab.url))
         chrome.pageAction.show(tabId);
 });
 
