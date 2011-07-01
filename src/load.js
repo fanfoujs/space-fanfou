@@ -15,17 +15,13 @@ function insertStyle(style, name) {
 }
 
 function insertScript(script, name) {
-    if (! name) {
-        location.assign('javascript:' + script);
-    } else {
-        var id = 'sf_script_' + name;
-        if ($i(id)) return;
-        var $script = $c('script');
-        $script.appendChild($t(script));
-        if (name) $script.id = id;
-        $script.className = 'space-fanfou';
-        docelem.appendChild($script);
-    }
+    var id = 'sf_script_' + name;
+    if ($i(id)) return;
+    var $script = $c('script');
+    $script.appendChild($t(script));
+    if (name) $script.id = id;
+    $script.className = 'space-fanfou';
+    docelem.appendChild($script);
 }
 
 var port = chrome.extension.connect();
