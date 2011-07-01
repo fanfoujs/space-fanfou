@@ -2,6 +2,7 @@ SF.pl.image_uploading = new SF.plugin((function($) {
     var $message = $('#message');
     if (! $message.length) return;
 
+    var domain = document.domain;
     var $h2 = $('h2', $message);
     var $textarea = $('textarea', $message);
     var $action = $('input[name=action]', $message);
@@ -30,7 +31,7 @@ SF.pl.image_uploading = new SF.plugin((function($) {
         $textarea.attr('name', 'desc');
         $action.val('photo.upload');
         $message.attr('enctype', 'multipart/form-data');
-        $message.attr('action', 'http://m.fanfou.com/home');
+        $message.attr('action', 'http://m.' + domain + '/home');
         $message.attr('target', 'upload_image');
         $message.submit(function() {
             $iframe.load(function() {

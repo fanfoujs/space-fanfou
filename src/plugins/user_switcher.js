@@ -19,6 +19,7 @@ SF.pl.user_switcher = new SF.plugin((function($) {
     if (! $user_top.length) return;
     
     /* 初始化 Cookie */
+    var domain = document.domain;
     var cookie_strs = document.cookie.split(/\s*;\s*/);
     var cookies = { };
     for (var i = 0; i < cookie_strs.length; ++i) {
@@ -33,23 +34,23 @@ SF.pl.user_switcher = new SF.plugin((function($) {
     data = data ? JSON.parse(data) : { };
 
     /* Cookie 操作函数 */
-    var deleteCookie = function(name) {
-        document.cookie = name + '=;domain=.fanfou.com;' +
+    function deleteCookie(name) {
+        document.cookie = name + '=;domain=.' + domain + ';' +
                           'expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    };
-    var setLogin = function(al) {
+    }
+    function setLogin(al) {
         deleteCookie('al');
         deleteCookie('u');
         deleteCookie('m');
         deleteCookie('uuid');
         deleteCookie('SID');
         if (al) {
-            document.cookie = 'al=' + al + ';domain=.fanfou.com';
+            document.cookie = 'al=' + al + ';domain=.' + domain;
             location.href = '/home';
         } else {
             location.href = '/login';
         }
-    };
+    }
 
     /* 获取当前用户的信息 */
     var user_id = cookies.u;
@@ -85,9 +86,9 @@ SF.pl.user_switcher = new SF.plugin((function($) {
         $link.attr('href', 'javascript:void 0');
         $link.click((function(id, al) {
             return function() {
-                setLogin(al);
                 data[id] = undefined;
                 localStorage.switcher = JSON.stringify(data);
+                setLogin(al);
             };
         })(id, user.auto_login));
         var $image = $('<img>');
