@@ -3,6 +3,7 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
     if (! $stream.length) return;
 
     var replies_number;
+    var auto_expand;
 
     var MSG_DELETED = '原消息已删除';
     var MSG_NOPUBLIC = '原消息不公开';
@@ -108,6 +109,10 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
         $expand.addClass('reply more first');
         $expand.text('展开回复原文');
         $expand.insertAfter($item);
+        if (auto_expand) {
+            displayReplyList($expand.attr('href'),
+                showWaiting($expand), 1, true);
+        }
     }
 
     function hideReplyList() {
@@ -192,8 +197,9 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
     }
 
     return {
-        update: function(number) {
+        update: function(number, is_auto_expand) {
             replies_number = number;
+            auto_expand = is_auto_expand;
         },
         load: function() {
             $stream.bind('DOMNodeInserted', onStreamInserted);

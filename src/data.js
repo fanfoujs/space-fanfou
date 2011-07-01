@@ -25,7 +25,7 @@ var plugins = [
 
     {
         name: 'expanding_replies',
-        options: ['number'],
+        options: ['number', 'auto_expand'],
         js: 'expanding_replies.js',
         css: 'expanding_replies.css',
     },
