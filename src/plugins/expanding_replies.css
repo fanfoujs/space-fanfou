@@ -9,7 +9,6 @@
 	font-size: 12px;
 	margin-left: 30px;
 	width: 365px;
-	-webkit-user-select: none;
 }
 #stream>ol>li.reply.last {
 	border-bottom: 1px solid #e5e5e5;
