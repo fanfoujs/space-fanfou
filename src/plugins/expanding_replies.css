@@ -1,4 +1,6 @@
 #stream>ol>.buffered+li.reply,
+#stream>ol>.buffered+li.reply+li.reply,
+#stream>ol>.buffered+li.reply+li.reply+li.reply,
 #stream>ol>li.reply .share {
 	display: none;
 }
