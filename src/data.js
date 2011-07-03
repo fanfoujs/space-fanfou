@@ -49,6 +49,10 @@ var plugins = [
         name: 'repost_photo_preview',
         js: 'repost_photo_preview.js',
     },
+    {
+        name: 'disable_autocomplete',
+        js: 'disable_autocomplete.js',
+    },
 
     /* 其他扩展 */
 
