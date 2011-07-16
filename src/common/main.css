@@ -135,6 +135,9 @@
 #update {
 	margin-bottom: 0 !important;
 }
+#message textarea {
+	resize: vertical;
+}
 .input_text, #message textarea, #update textarea, #invite-url, #PopupBox textarea, .settings textarea, #finder_emailarea, #sharer textarea {
 	box-shadow: 0 2px 5px rgba(0,0,0,.075) inset;
 	background: rgba(255,255,255,.5);
