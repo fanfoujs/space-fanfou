@@ -50,6 +50,19 @@
 		color: rgba(255,255,255,1);
 	}
 }
+@-webkit-keyframes popIn {
+	from {
+		opacity: 0;
+		-webkit-transform: scale(0.8) translateY(5px);
+	}
+	90% {
+		opacity: 1;
+		-webkit-transform: scale(1.01);
+	}
+	to {
+		-webkit-transform: scale(1);
+	}
+}
 @-webkit-keyframes bl-blinking {
 	from {
 		box-shadow: 

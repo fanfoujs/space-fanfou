@@ -64,7 +64,7 @@
     background-position: center center;
 	cursor: progress;
 }
-#stream>ol>li.reply:not(.waiting):not(.hide), #u_button {
+#stream>ol>li.reply:not(.waiting):not(.hide) {
 	-webkit-animation: fadeIn .75s;
 }
 #stream.message li.last-refresh + li.reply {
