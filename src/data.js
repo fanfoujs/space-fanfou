@@ -20,6 +20,10 @@ var plugins = [
         name: 'logo_remove_beta',
         css: 'logo_remove_beta.css'
     },
+    {
+        name: 'remove_app_recom',
+        css: 'remove_app_recom.css'
+    },
 
     /* 页面功能性扩展 */
 

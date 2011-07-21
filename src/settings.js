@@ -7,6 +7,7 @@ SF.st.default_settings = {
     translucent_sidebar: true,
     newstyle_trendlist: true,
     logo_remove_beta: true,
+    remove_app_recom: true,
     expanding_replies: true,
     'expanding_replies.number': 3,
     'expanding_replies.auto_expand': false,

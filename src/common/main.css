@@ -463,7 +463,7 @@
 #sharer:first-child span {
 	margin-top: -24px;
 }
-#sidebar #reminder li, #sidebar #goodapp, #sidebar #badge-sect {
+#sidebar #reminder li {
 	display: none;
 }
 .newfeature::after {
