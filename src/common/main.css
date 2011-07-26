@@ -235,12 +235,11 @@
 #timeline-notification a, .sysnotice {
 	background-color: #ebf3f5 !important;
 	border: 1px solid #d3e7eb !important;
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 }
 #timeline-notification a:hover, .sysnotice:hover {
 	background-color: #daeaed !important;
 	border: 1px solid #b4d5db !important;
-	margin-bottom: 5px;
 }
 .sysnotice:hover {
 	margin-bottom: 10px !important;
