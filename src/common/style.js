@@ -6,6 +6,7 @@
     function $cn(elem, className) {
         return elem ? elem.getElementsByClassName(className) : null;
     }
+    function $c(tagname) { return document.createElement(tagname); }
 
     function removeBrackets(elems) {
         if (! elems) return;
@@ -30,9 +31,28 @@
     });
 
     SF.fn.waitFor(function() {
-        return $i('pagination-totop');
+        return $i('pagination-totop') || $i('footer');
     }, function() {
         var totop = $i('pagination-totop');
+        if (! totop) {
+            var pagination = $cn(document, 'pagination')[0];
+            if (! pagination) {
+                pagination = $c('div');
+                pagination.className = 'pagination';
+                pagination.style = 'display: none;';
+                if ($i('content')) {
+                    $i('content').appendChild(pagination);
+                } else if ($i('stream')) {
+                    $i('stream').parentNode.appendChild(pagination);
+                }
+            }
+            totop = $c('a');
+            totop.id = 'pagination-totop';
+            totop.className = 'more more-right';
+            totop.href = '#';
+            totop.innerHTML = '返回顶部';
+            pagination.appendChild(totop);
+        }
         totop.addEventListener('click', function(e) {
             e.preventDefault();
             jQuery('body').animate({ scrollTop: 0 }, 500);
@@ -42,7 +62,7 @@
         }, function() {
             var $ = jQuery;
             var $totop = $(totop), $win = $(window);
-            var main_top = $('#main').offset().top;
+            var main_top = 66;
             $totop.hide();
             $totop.css('visibility', 'visible');
             $win.scroll(function() {
