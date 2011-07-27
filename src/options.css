@@ -66,7 +66,7 @@ input, textarea, select {
 /* Private */
 body {
 	color: #555;
-	background: #fff url(../images/bg.png) repeat;
+	/*background: #fff url(../images/bg.png) repeat;*/
 	font: 400 12px/1.5 "Lucida Grande", "HelveticaNeue-Light", "Helvetica Neue Light", Hevetica, Tahoma, "Hiragino Sans GB", "Microsoft Yahei", "Wenquanyi MicroHei", sans-serif;
 }
 ::selection, ::-moz-selection { 

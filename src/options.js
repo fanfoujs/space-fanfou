@@ -13,10 +13,21 @@ $(function() {
             $elem.val(value);
     }
 
+    $('[key]').change(function() {
+        var $t = $(this);
+        var $opts = $('[key^="' + $t.attr('key') + '."]').parents('p');
+        if (getValue($t)) {
+            $opts.show();
+        } else {
+            $opts.hide();
+        }
+    });
+
     // 获取选项信息
     $('[key]').each(function() {
         var $t = $(this);
         setValue($t, SF.st.settings[$t.attr('key')]);
+        $t.change();
     });
 
     $('#btn_apply').click(function() {
