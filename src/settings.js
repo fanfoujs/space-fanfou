@@ -15,6 +15,8 @@ SF.st.default_settings = {
     user_switcher: false,
     float_message: false,
     'float_message.noajaxattop': false,
+    'float_message.notlostfocus': false,
+    'float_message.keepmentions': false,
     repost_photo_preview: true,
     disable_autocomplete: false,
     share_to_fanfou: true,

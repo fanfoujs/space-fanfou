@@ -3,7 +3,10 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
     if ($main.hasClass('privatemsg')) return;
     var $update = $('>#update', $main);
     if (! $update.length) return;
-    var noajaxattop = false;
+
+    var noajaxattop = false,
+        notlostfocus = false,
+        keepmentions = false;
 
     /* 处理悬浮 */
     var $msg = $('textarea', $update);
@@ -68,7 +71,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
         });
         var select_end = msg.length;
         msg += $msg.val();
-        msg = msg.split(' ');
+        msg = msg.split(/\s+/);
         var new_msg = [ ];
         var at_ed = { };
         for (var i = 0; i < msg.length; ++i) {
@@ -138,13 +141,29 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
             var $notice = $('<div>');
             if (! data.status) {
                 $notice.addClass('errmsg');
+                $msg.focus();
             } else {
                 $notice.addClass('sysmsg');
                 var q = location.search;
                 q = q.replace(/\b(status|in_reply_to_status_id|repost_status_id)=[^&]+&?/g, '');
                 if (q == '?') q = '';
                 pushState({ msg: '' }, location.pathname + q);
-                $msg.val('');
+                var msg = '';
+                if (keepmentions) {
+                    msg = $msg.val().split(/\s+/);
+                    for (var i = 0; i < msg.length; ++i) {
+                        if (msg[i].substr(0, 1) != '@') {
+                            msg = msg.slice(0, i);
+                            break;
+                        }
+                    }
+                    msg = msg.join(' ');
+                    if (msg)
+                        msg += ' ';
+                }
+                $msg.val(msg);
+                if (notlostfocus)
+                    $msg.focus();
                 $in_reply.val('');
                 $repost.val('');
             }
@@ -194,8 +213,10 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
     }
 
     return {
-        update: function(is_noajaxattop) {
+        update: function(is_noajaxattop, is_notlostfocus, is_keepmentions) {
             noajaxattop = is_noajaxattop;
+            notlostfocus = is_notlostfocus;
+            keepmentions = is_keepmentions;
         },
         load: function() {
             // 添加悬浮
