@@ -1,0 +1,17 @@
+太空饭否是饭否的 Chrome 浏览器专用辅助脚本。可以给饭否页面添加回复展开、网页端上传图片、多用户切换等功能，并且使饭否页面的变得更美更舒心，符合您的使用习惯。(功能简介见 Chrome 应用商店)
+
+作者：@Kevin, @Xidorn (@Upsuper)
+官方饭否帐号：http://fanfou.com/spacefanfou
+
+0.5.3.1 | Chrome 应用商店地址：https://chrome.google.com/webstore/detail/lphepkehgfhfhjaoamcihpkkgeigkfoi
+0.5.3.1 | Chrome Crx 打包地址：https://dl.dropbox.com/u/2912260/apps/space_fanfou_0531.crx
+0.5.0.2 | Opera 非官方工程开发版（由 @锐风 开发）：http://u.115.com/file/bh55b19f
+
+分拆插件下载 - 支持 Firefox (Greasemonkey)/Chrome/Chromium
+网页版图片上传功能 http://userscripts.org/scripts/show/100082
+浮动输入框功能 http://userscripts.org/scripts/show/101529
+用户快速切换功能 http://userscripts.org/scripts/show/100570
+回复链展开功能 http://userscripts.org/scripts/show/99885
+去除饭否 Logo 的测试版 http://userscripts.org/scripts/show/93538
+回复全部功能 http://userscripts.org/scripts/show/100771
+LaTeX 支持 http://userscripts.org/scripts/show/100111
