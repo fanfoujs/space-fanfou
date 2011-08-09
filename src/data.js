@@ -57,6 +57,11 @@ var plugins = [
         name: 'disable_autocomplete',
         js: 'disable_autocomplete.js',
     },
+    {
+        name: 'privatemsg_manage',
+        js: 'privatemsg_manage.js',
+        css: 'privatemsg_manage.css',
+    },
 
     /* 其他扩展 */
 

@@ -20,6 +20,7 @@ SF.st.default_settings = {
     repost_photo_preview: true,
     disable_autocomplete: false,
     share_to_fanfou: true,
+    privatemsg_manage: true,
 };
 
 /* 更新选项数据 */
