@@ -142,6 +142,9 @@ h4 {
 	background: #ebf3f5;
 	border-radius: 5px;
 }
+input[key="expanding_replies.number"] {
+	width: 35px;
+}
 .comment {
 	color: #999;
 	margin-left: 5px;
