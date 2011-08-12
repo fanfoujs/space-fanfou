@@ -351,6 +351,18 @@
 	font-size: 12px !important;
 	font-weight: normal !important;
 }
+#user_rec ul li.rec_usr {
+	height: 36px !important;
+	margin-bottom: 10px;
+}
+#user_rec ul li div.rec_user_info {
+	margin-left: 42px !important;
+	width: 160px !important;
+}
+.rec_usr_img img {
+	height: 36px;
+	border-radius: 36px;
+}
 #trendlist li {
 	max-width: 234px;
 	word-break: break-all;
