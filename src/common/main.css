@@ -334,14 +334,6 @@
 #searchr-submit {
 	text-shadow: 0 1px 0 #fff;
 }
-/* #sidebar #iconset {
-	opacity: .5;
-	-webkit-transition-property: opacity;
-	-webkit-transition-duration: 300ms;
-}
-#sidebar #iconset:hover {
-	opacity: 1;
-} */
 #sidebar .tags a {
 	border: 1px solid rgba(0,0,0,.2) !important;
 	background: rgba(255,255,255,.4) !important;
@@ -382,6 +374,9 @@
 }
 #friends li img {
 	border-radius: 2px;
+}
+#sidebar .user-op a {
+	background: rgba(0,0,0,.05) url(http://static2.fanfou.com/img/icon-block-user.gif?v=001) no-repeat 1px -14px !important;
 }
 #info #avatar {
 	border: none !important;
@@ -506,6 +501,11 @@
 #pro_bas_detail {
 	height: 150px;
 }
+.nf .pending {
+	border-radius: 10px;
+	text-shadow: 0 1px 0 #fff;
+	box-shadow: 0 0 5px rgba(0,0,0,.2) inset;
+}
 #ZoomImage {
 	box-shadow: 0 0 15px rgba(0,0,0,.5);
 }
@@ -558,7 +558,7 @@
 }
 
 /* Buttons */
-.bl, .bl-long, a.bl-added, input.formbutton, #setmobile input[type="submit"] {
+.bl, .bl-long, a.bl-added, input.formbutton, input.inlinebutton, #setmobile input[type="submit"] {
 	font-size: 12px;
 	height: 19px !important;
 	color: #333 !important;
@@ -580,8 +580,9 @@
 		0 1px 0 rgba(255,255,255,.75) inset,
 		0 1px 0 rgba(0,0,0,.09);
 }
-input.formbutton, #setmobile input[type="submit"] {
-	height: 23px !important;
+input.formbutton, input.inlinebutton, #setmobile input[type="submit"] {
+	height: 25px !important;
+	padding: 3px 15px;
 }
 .bl:hover, .bl-long:hover, a.bl-added:hover, input.formbutton:hover, #setmobile input[type="submit"]:hover {
 	-webkit-animation-name: bl-blinking;
