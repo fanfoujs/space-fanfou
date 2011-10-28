@@ -40,3 +40,6 @@ span.op a.repost:hover {
 	width: 408px !important;
 	padding: 9px 30px 12px 62px !important;
 }
+#friends.inner-content #stream .wa li, #finder_wrap #stream .wa li {
+	width: auto !important;
+}
