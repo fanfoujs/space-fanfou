@@ -3,80 +3,123 @@
 <head>
 	<meta charset="UTF-8">
 	<title>太空饭否 - 选项</title>
-    <link rel="stylesheet" href="options.css" />
-    <script type="text/javascript" src="http://static.fanfou.com/js/jquery.js"></script>
-    <script type="text/javascript" src="namespace.js"></script>
-    <script type="text/javascript" src="settings.js"></script>
-    <script type="text/javascript" src="options.js"></script>
+	<link rel="stylesheet" href="options.css" />
+	<script type="text/javascript" src="http://static.fanfou.com/js/jquery.js"></script>
+	<script type="text/javascript" src="namespace.js"></script>
+	<script type="text/javascript" src="settings.js"></script>
+	<script type="text/javascript" src="options.js"></script>
 </head>
 <body>
-    <div id="wrapper">
-        <h1>太空饭否</h1>
-        
-        <h2>扩展功能</h2>
-        <p>
-            <label><input type="checkbox" key="expanding_replies" />启用展开回复</label>
-        </p>
-        <p>
-            <label class="sublabel">每次展开数量：<input type="number" min="1" max="20" step="1" key="expanding_replies.number" /></label>
-        </p>
-        <p>
-            <label class="sublabel"><input type="checkbox" key="expanding_replies.auto_expand" />载入页面时自动展开一条消息上文</label>
-        </p>
-        <p>
-            <label><input type="checkbox" key="image_uploading" />启用图片上传</label>
-        </p>
-        <p>
-            <label><input type="checkbox" key="user_switcher" />启用多用户切换</label>
-        </p>
-        <p>
-        	<label><input type="checkbox" key="float_message" />启用浮动输入框</label>
-        	<span class="comment">使用固顶的浮动输入框取代弹出式窗口</span>
-        </p>
-        <p>
-            <label class="sublabel"><input type="checkbox" key="float_message.noajaxattop" />当输入框不浮动时，发布消息后刷新页面</label>
-        </p>
-        <p>
-            <label class="sublabel"><input type="checkbox" key="float_message.notlostfocus" />启用连发模式</label>
-            <span class="comment">消息发出后焦点保留在输入框</span>
-        </p>
-        <p>
-            <label class="sublabel"><input type="checkbox" key="float_message.keepmentions" />启用快速@模式</label>
-            <span class="comment">消息发出后输入框中保留所@的人</span>
-        </p>
-        <p>
-        	<label><input type="checkbox" key="share_to_fanfou" />添加“分享到饭否”至浏览器鼠标右键菜单</label>
-        </p>
-        <p>
-        	<label><input type="checkbox" key="repost_photo_preview" />在转发的消息中显示原图片预览</label>
-        </p>
-        <p>
-        	<label><input type="checkbox" key="disable_autocomplete" />禁用输入@时的自动补全</label>
-        </p>
-        <p>
-        	<label><input type="checkbox" key="privatemsg_manage" />私信批量管理</label>
-        </p>
-        
-        <h2>页面样式</h2>
-        <p>
-            <label><input type="checkbox" key="font_reset" title="TEST" />启用中文字体美化</label>
-            <span class="comment">使用微软雅黑等字体作为默认中文字体</span>
-        </p>
-        <p>
-            <label><input type="checkbox" key="translucent_sidebar" />启用半透明的侧栏</label>
-        </p>
-        <p>
-            <label><input type="checkbox" key="newstyle_trendlist" />启用新样式的热门话题、关注的话题并显示具体关键词</label>
-        </p>
-        <p>
-        	<label><input type="checkbox" key="logo_remove_beta" />去除 Logo 的“测试版”字样</label>
-        </p>
-        <p>
-            <label><input type="checkbox" key="remove_app_recom" />屏蔽“随机应用推荐”及“饭否应用”广告区</label>
-        </p>
+	<div id="wrapper">
+		<h1>太空饭否</h1>
+		
+		<div id="navigation">
+			<ul>
+				<li class="current"><a id="tab1" onclick="current('tabs0',this)" href="javascript:void(0)">扩展功能</a></li>
+				<li><a id="tab2" onclick="current('tabs1',this)" href="javascript:void(0)">页面样式</a></li>
+				<li><a id="tab3" onclick="current('tabs2',this)" href="javascript:void(0)">关于太空饭否</a></li>
+			</ul>
+		</div>
+		
+		<div id="tabs">
+			<div class="tabs current" id="tabs0" style="display: block;">
+				<p>
+					<label><input type="checkbox" key="expanding_replies" />启用展开回复</label>
+				</p>
+				<p>
+					<label class="sublabel">每次展开数量：<input type="number" min="1" max="20" step="1" key="expanding_replies.number" /></label>
+				</p>
+				<p>
+					<label class="sublabel"><input type="checkbox" key="expanding_replies.auto_expand" />载入页面时自动展开一条消息上文</label>
+				</p>
+				<p>
+					<label><input type="checkbox" key="image_uploading" />启用图片上传</label>
+				</p>
+				<p>
+					<label><input type="checkbox" key="user_switcher" />启用多用户切换</label>
+				</p>
+				<p>
+					<label><input type="checkbox" key="float_message" />启用浮动输入框</label>
+					<span class="comment">使用固顶的浮动输入框取代弹出式窗口</span>
+				</p>
+				<p>
+					<label class="sublabel"><input type="checkbox" key="float_message.noajaxattop" />当输入框不浮动时，发布消息后刷新页面</label>
+				</p>
+				<p>
+					<label class="sublabel"><input type="checkbox" key="float_message.notlostfocus" />启用连发模式</label>
+					<span class="comment">消息发出后焦点保留在输入框</span>
+				</p>
+				<p>
+					<label class="sublabel"><input type="checkbox" key="float_message.keepmentions" />启用快速@模式</label>
+					<span class="comment">消息发出后输入框中保留所@的人</span>
+				</p>
+				<p>
+					<label><input type="checkbox" key="share_to_fanfou" />添加“分享到饭否”至浏览器鼠标右键菜单</label>
+				</p>
+				<p>
+					<label><input type="checkbox" key="repost_photo_preview" />在转发的消息中显示原图片预览</label>
+				</p>
+				<p>
+					<label><input type="checkbox" key="disable_autocomplete" />禁用输入@时的自动补全</label>
+				</p>
+				<p>
+					<label><input type="checkbox" key="privatemsg_manage" />私信批量管理</label>
+				</p>
+				
+				<button id="btn_apply">应用</button>
+			</div>
+		
+			<div class="tabs" id="tabs1" style="display: none;">
+				<p>
+					<label><input type="checkbox" key="font_reset" title="TEST" />启用中文字体美化</label>
+					<span class="comment">使用微软雅黑等字体作为默认中文字体</span>
+				</p>
+				<p>
+					<label><input type="checkbox" key="translucent_sidebar" />启用半透明的侧栏</label>
+				</p>
+				<p>
+					<label><input type="checkbox" key="newstyle_trendlist" />启用新样式的热门话题、关注的话题并显示具体关键词</label>
+				</p>
+				<p>
+					<label><input type="checkbox" key="newstyle_op_icons" />启用简洁样式的回复、收藏、转发、删除按钮</label>
+				</p>
+				<p>
+					<label><input type="checkbox" key="logo_remove_beta" />去除 Logo 的“测试版”字样</label>
+				</p>
+				<p>
+					<label><input type="checkbox" key="remove_app_recom" />屏蔽“随机应用推荐”及“饭否应用”广告区</label>
+				</p>
+				
+				<button id="btn_apply">应用</button>
+			</div>
+			
+			<div class="tabs" id="tabs2" style="display: none;">
+				<p align="center">
+					<img src="icons/icon-128.png" width="128" height="128" />
+				</p>
+				<p align="center">
+					太空饭否 &copy; 2011 <a href="http://fanfou.com/anegie" target="_blank">Kevin</a>, <a href="http://fanfou.com/upsuper" target="_blank">Upsuper</a><br />
+					<a href="http://fanfou.com/spacefanfou" target="_blank">官方帐号</a> | <a href="https://github.com/anegie/Space-Fanfou" target="_blank">开源项目</a> | <a href="http://fanfou.com/home?status=@%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6+" target="_blank">提交使用反馈</a>
+				</p>
+			</div>
+		</div>
  
-        <button id="btn_apply">应用</button>
-        <div id="footer">&copy; 2011 <a href="http://fanfou.com/anegie" target="_blank">Kevin</a>, <a href="http://fanfou.com/upsuper" target="_blank">Upsuper</a> | <a href="http://fanfou.com/spacefanfou" target="_blank">官方帐号</a> | <a href="https://github.com/anegie/Space-Fanfou" target="_blank">开源项目</a> | <a href="http://fanfou.com/home?status=@%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6+" target="_blank">提交使用反馈</a></div>
-    </div>
+	</div>
+	
+	<script type=text/javascript>
+		function current(showContent,selfObj){
+			var tab = document.getElementById("navigation").getElementsByTagName("li");
+			var tablength = tab.length;
+			for(i=0; i<tablength; i++){
+				tab[i].className = "";
+			}
+			selfObj.parentNode.className = "current";
+			for(i=0; j=document.getElementById("tabs"+i); i++){
+				j.style.display = "none";
+			}
+			document.getElementById(showContent).style.display = "block";
+		}
+	</script>
+	
 </body>
 </html>

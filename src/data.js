@@ -17,6 +17,10 @@ var plugins = [
         css: 'newstyle_trendlist.css'
     },
     {
+        name: 'newstyle_op_icons',
+        css: 'newstyle_op_icons.css'
+    },
+    {
         name: 'logo_remove_beta',
         css: 'logo_remove_beta.css'
     },

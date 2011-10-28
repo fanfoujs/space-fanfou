@@ -6,11 +6,11 @@
 }
 #stream>ol>li.reply {
 	min-height: 38px;
-	padding: 6px 50px 6px 52px;
+	padding: 6px 50px 6px 52px !important;
 	border-left: 3px solid #e5e5e5;
 	font-size: 12px;
 	margin-left: 30px;
-	width: 365px;
+	width: 365px !important;
 }
 #stream>ol>li.reply.last {
 	border-bottom: 1px solid #e5e5e5;
@@ -30,10 +30,10 @@
 	height: 1.5em !important;
 	line-height: 1.5em;
 	margin-left: 70%;
-	margin-top: -1.6em; 
+	margin-top: -1.6em;
 	text-align: center;
-	padding: 0; 
-	width: 90px;
+	padding: 0 !important;
+	width: 90px !important;
 	min-height: 0;
 	border-left: none;
 	border-bottom: 1px solid #e5e5e5;

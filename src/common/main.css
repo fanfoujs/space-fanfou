@@ -273,12 +273,27 @@
 	margin-right: 5px;
 	pointer-events: none;
 }
+.stamp a, .light .stamp .reply a {
+	border-bottom: 1px solid rgba(0,0,0,.09) !important;
+	border-radius: 0 !important;
+}
+.stamp a:hover, .light .stamp .reply a:hover {
+	border-color: rgba(0,0,0,.18) !important;
+}
 .star {
 	width: 32px !important;
 	height: 32px !important;
 	top: -2px !important;
 	right: -5px !important;
-	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAEO0lEQVRIDbWV728URRjHn5nZ3dn71e4Vrj2upNIWxRCIAQ0o/oBKIvJH+G+YiIqKiYnG+EJf+NYfLyDGGDXxDRhfaPyBhhYqCgRQBBEhzXWPXu9ud252fGa229brHddSOnly2d2bmc883+fHkODk4XDiCHWA2sAsbYRoazsiBbXczuwzH1ePP5eeGacdpum1kTEJlrPrNUlJ4+wRxohlASCGAXRghAKC4lhWqcbAXqt+2rXbHsN8jAFC4ZaQeuTVJiON869HFMCigH50YNSlymw6AKCywwfrV99z3c4uoLMSQG9mRm7HKxH6cfENUOadkKUMpSDMbMnnighwc0U/9YBif3QSU+9DFCiFZ54bvQ8d5lteDCQNFRNAJWGKaQNrzkKgpH8/romNbXgWv8z/2/qQLFwAIMfb/jIfPRSEJBRUSCojqoChAdFWC2muNAZRFFu6sKce0vivzr90TqLEDfC2veRTGlx+C49rDBg+GKlDZyjfUzLJoadn+oZvOpsVudpeJVyiIqBLANqPrYd8IMGfbycMgoywqWjfPr1m8ejdLWrXHbtdqFFJSoHpvGkzvK0v8JHnA0HDJhMRk0rrkyo8qsVJYoAP2dLTdUEBT9nRGFG4oMOY+uvz2VsnXO7a3I4g1Te0n1Cj1yJRKtdOcKfdepM/qvzDnQC4zr/1c1A9z1MZh6dtmzNmLWW0215/E0FlevLN1iC3zPb6d/lKBTPnAAsH9TEMFFfHfZEfLavw9e8rpy6efHd4fa0LAKd6A7t9QMbvSX/hWBeaodozpGz+8u1HU1e+vH9jZl3e7SLR/NH8mz8GM79xF7VKJVoxnT3/92O6/M/3x9/pcW6MbMwWPNshUXcPYoY38JjR6qzOVLQ5rTBJFhjnfv3mwvgHmwbdoVKhJ2tbJAIplgvQWhX3+ADBbWRgESnDwGTXiRiKxndfvy+rZ7Y/mC/2Z9Ipi+CkCLtd0uziY3b9NQwVVCZBSeOHg3mFjImfjrlwYXRbqc9LOQ62YlPGmAjKtOuu+y6e4BUf11pVziRaacbw6I7m7cuFQpaxpHJRRgwPWTkAYd6GJ3Re+QuMdes3T9WyzOJx19IHigGw7CAvdsIwntR++KdN54hs24nYiFA3bOzScWfSuYDxlysIciuj9JSOuT8R14fl3FdvXLd6HFODxgPdhJp3D9B+aIYKpseRkc4MVso0m8P7VmsPmKMaoK/5VQ2vtNdodQpFD0QhkLMc96TIMBcflUnQV0HxBvdxb2dQn8UbtTorpDL3IF4GlKHdAwCezRsc4/mHbavXr0jRJHh/KLCUuSRWK9G858jA5/KlyVqjmdbVhyWOHqAj924gI1c8UKuJUERCglTYqO54o90duvzvMVH7iqcsx1G2HS63Xa8IVpn6NKx/wTlxuFgTAJ5mZvqTZvAZ53KtAMioV49KcXQNAcgIgw//AxD40b8fcFSrAAAAAElFTkSuQmCC') 0 0 no-repeat !important;
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAE5UlEQVRYCbWWS2wbVRSG/5nx2DPjvEibNEogjWlBXbACShAQ3htY8pTY0S1iDQg0li02IKjUglSxQZXYsWVHEWopoEBRSwOCQBVZBampWJSG2PN+8N8Zj+MUO/jRjHR8x6N77/nuf+6950jnXkMlr8GkQS0AORVQcoAsIXmkZpv+2/4bxYBdPITiw1U0vjKhN1Zb47b33PonxoQ+4NM8l/4Ov4PyytsS5ALMnCEhn+dHmiKnEDsBOJxE2b8EozgBe/5B5P74HRoXsNMTRUAQcBydQ47RWt/qB0pFK8LUdCBfkJCjCgplEADdIK43YmhLn0IbnYGzeRXO2RcwUWxN2ZEjAfBjuHYMu87FZr0OvRqW1z5WEcqSGSt0LMIgIPjeKRwxpYzVOzG2ZyGZIs/WGrsDqlrrCiw6hlQASsw2huLFoNBbz4EjftkL5aofywgkBZGsCAJIqgI5v90CWYYy8yRk9slMnXsK4vuNfdv/K2IeMV9i7LvlPn0rveSUbVequp4Ez5fhhzJpZZA3MRBMmOXJGJ19DBCaNs2YegA2v2d9dm5Fvw4AAqP0olXmRFXXV+AFCvwohzAmAOOSmZc/CH1slr2FpqkVJ0tw+V30SeInYtjJkmPGhQj1hMNOT+n5TUJQCargBVQiUloQbsiBk49yE9DxjTa+mPTt6LgFI5wLuC4KZECl5663QQglUgghvz51fyp9shvFjkxtZPZx2ITuDpCuXKxe2M5npkmyeubliqbrplbQeFmpFFzH5PwTDKHMCf57Tjf+PIUC75JOTxSG8DwPvuOgcWW5NwAxUe3nDyu6PmoW9CLvCYPHrcADkusK0cm5+BaFAQEc1DfWsf7D8d4BxODayvEmxAgh9IEgBEDt0jJ++fYE9hmN/gBSiGOEGKES/UOEdP7d6ZO4uvYZ5vfqGNeTAIpp+3tqF49WdIPh4N29XYnmpupwd/997Qq++fwoRnLruG2fgVGNlx2TSU+bsBNe7cf3CUEleoD49acv8dv5k1iY03DrTBEab8PQ82FtOoMDCKjahffalOAJaW3MVAnPd3D2ixMI6xdxYOEWzEynzn0/YDLyhgdIId5N90RLiXzzdCj4/utPENSX6XwSkxM6Uz3zSxjzFPhwLRdW3eYFP+Rz7KNTp185siQS5iMinhLjn6Rwvhd4Z4wblzE9PQY1z0KBF4/If2RAyLToB1H3q7gfrtLdr5dta7PqMsF7TgM+z3kYeNiz9yCrqxEaSy1ZAGQm8nwK1DUX9AMg+pbueYMQ/zQhrAQiYu0VKbdDpPfEuXAqElHSUnym+psGkEDc+2bZtqmEQyVcQnAT5vL7YTsRYnH3Z1kya/8vGfWrQgrx1pYShDCKc6hbrCdipnJmwDgLg6gr+P+mKpABlw6brT3hezZcfwpuyISZrTwpOBkOtrsCkChxX7lsN8TGbLCmnEa94XP3y4i48piVUFJ2d6uIspUM25YWK1SiXlVz47i+EfLYSSzvxFFsVlbcF7umQAYvIDzXqbqWAcsJEDAUYSyxpqDr3diEmeP2trRYLV/b+KtqWT4L3SiFiFKIgZNRu4Ne3y9deKZiFDWTx5+FtMujujlcMurVcXu/tZVnK7yHTMQMhz9AQdI+2aDvq+efrkgIzCgaMh0PCiDGrSw/VIkjzxxmjqHHnjtzV+Vf7Mz77S8D0zcAAAAASUVORK5CYII=') 0 0 no-repeat !important;
+}
+span.ajaxprompt {
+	padding: .6em 1em !important;
+	font-weight: normal !important;
+	color: #fff !important;
+	background: rgba(0,0,0,.65) !important;
+	border-radius: 3px;
+	box-shadow: 0 2px 2px rgba(0,0,0,.15);
 }
 #user_top:first-child > h3 {
 	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", Helvetica, Tahoma, "Hiragino Sans GB", "WenQuanYi Micro Hei", "Microsoft Yahei", sans-serif !important;
@@ -457,6 +472,10 @@
 .pagination .more-left {
 	width: 100% !important;
 }
+.narrowlook #body {
+	box-shadow: 0 2px 2px rgba(0,0,0,.2);
+	border-radius: 10px;
+}
 .tabs {
 	border-bottom: 1px solid rgba(0,0,0,.15) !important;
 }
@@ -507,9 +526,10 @@
 	height: 150px;
 }
 .nf .pending {
-	border-radius: 10px;
+	background: rgba(0,0,0,.05) !important;
+	border-radius: 5px;
 	text-shadow: 0 1px 0 #fff;
-	box-shadow: 0 0 5px rgba(0,0,0,.2) inset;
+	box-shadow: 0 0 3px rgba(0,0,0,.1) inset;
 }
 #ZoomImage {
 	box-shadow: 0 0 15px rgba(0,0,0,.5);
@@ -537,7 +557,7 @@
 	min-width: 16px;
 	height: 18px;
 	line-height: 18px;
-	-webkit-border-radius: 30px;
+	border-radius: 30px;
 	text-align: center;
 }
 #sidebar .stabs li {
@@ -558,7 +578,7 @@
 	min-width: 16px;
 	height: 18px;
 	line-height: 18px;
-	-webkit-border-radius: 30px;
+	border-radius: 30px;
 	text-align: center;
 }
 

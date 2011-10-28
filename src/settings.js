@@ -6,6 +6,7 @@ SF.st.default_settings = {
     font_reset: false,
     translucent_sidebar: true,
     newstyle_trendlist: true,
+    newstyle_op_icons: false,
     logo_remove_beta: true,
     remove_app_recom: true,
     expanding_replies: true,
@@ -32,9 +33,9 @@ SF.st.default_settings = {
     if (! storage_version) {
         var setting_names = [
             'font_reset', 'translucent_sidebar', 'newstyle_trendlist', 
-            'logo_remove_beta', 'expanding_replies', 'expanding_replies.number',
-            'image_uploading', 'user_switcher', 'float_message',
-            'repost_photo_preview', 'share_to_fanfou'
+            'newstyle_op_icons', 'logo_remove_beta', 'expanding_replies', 
+            'expanding_replies.number', 'image_uploading', 'user_switcher', 
+            'float_message', 'repost_photo_preview', 'share_to_fanfou'
         ];
         var settings = { };
         for (var i = 0; i < setting_names.length; ++i) {

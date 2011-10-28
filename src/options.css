@@ -130,11 +130,47 @@ h4 {
 
 /* Screen */
 #wrapper {
-	width: 400px;
-	max-width: 400px;
+	width: 380px;
+	max-width: 380px;
 	max-height: 600px;
 	margin: 0 auto;
 	padding: 10px;
+}
+#navigation {
+	border-bottom: 1px solid rgba(0,0,0,.15);
+	position: relative;
+	margin: 10px 0;
+}
+#navigation ul {
+	position: relative;
+	margin-bottom: -1px;
+	font-size: 14px;
+}
+#navigation ul li {
+	display: inline;
+}
+#navigation ul li a {
+	display: inline-block;
+	height: 21px;
+	margin: 5px 0 0;
+	padding: 3px 11px;
+	text-decoration: none;
+	line-height: 21px;
+	vertical-align: bottom;
+	border: 1px solid rgba(0,0,0,.11);
+	border-bottom-color: rgba(0,0,0,.15);
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	color: #666;
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eee));
+	text-shadow: 0 1px 0 white;
+}
+#navigation ul li.current a {
+	background: none;
+	border-bottom-color: rgba(255, 255, 255, 1);
+	padding: 5px 11px;
+	border-bottom: 1px solid white;
+	margin: 0;
 }
 #tip {
 	margin-top: 10px;
