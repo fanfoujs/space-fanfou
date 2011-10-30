@@ -96,16 +96,17 @@ h1 {
 }
 h2 {
 	font-size: 16px;
-	margin-top: 10px;
 	margin-bottom: 5px;
-	padding: 0 8px;
-	border-bottom: 3px solid #eee;
+	border-bottom: 1px solid #eee;
 }
 h3 {
 	font-size: 12px;
 }
 h4 {
 	font-size: 12px;
+}
+.left {
+	float: left;
 }
 @-webkit-keyframes bl-blinking {
 	from {
@@ -178,6 +179,18 @@ h4 {
 	background: #ebf3f5;
 	border-radius: 5px;
 }
+#info {
+	width: 322px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+}
+#info p {
+	color: #999;
+}
+#tabs0 p, #tabs1 p {
+	border-bottom: 1px dashed #e5e5e5;
+	padding: 3px 0;
+}
 input[key="expanding_replies.number"] {
 	width: 35px;
 }
@@ -195,7 +208,7 @@ input[key="expanding_replies.number"] {
 	font-size: 12px;
 	height: 25px;
 	width: 75px;
-	margin: 10px 0;
+	margin: 10px 0 0;
 	padding: 3px 6px;
 	color: #333;
 	background:
