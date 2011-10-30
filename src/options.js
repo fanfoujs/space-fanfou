@@ -43,4 +43,8 @@ $(function() {
     $(window).unload(function() {
         $('#btn_apply').click();
     });
+
+    $.getJSON('manifest.json', function(data) {
+        $('#version').text(data.version);
+    });
 });
