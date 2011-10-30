@@ -249,7 +249,11 @@
 }
 .solo {
 	border-top-color: rgba(0,0,0,.11) !important;
-	border-top-style: solid!important;
+	border-top-style: solid !important;
+}
+#friends.inner-content h2 {
+	border-bottom-color: rgba(0,0,0,.11) !important;
+	border-bottom-style: solid !important;
 }
 #stream h3, #stream li {
 	border-bottom-color: rgba(0,0,0,.11) !important;
