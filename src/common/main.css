@@ -1,6 +1,6 @@
 /* Global */
 * {
-	font-family: "Lucida Grande", Helvetica, Tahoma, sans-serif !important;
+	font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Tahoma, sans-serif !important;
 }
 ::selection {
 	background: rgba(82,168,236,.25);
@@ -306,7 +306,7 @@ span.ajaxprompt {
 	-webkit-background-clip: text;
 }
 #user_stats .count {
-	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", Georgia, "Times New Roman", Times, serif !important;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", Helvetica, Tahoma, sans-serif !important;
 	font-size: 18px !important;
 	font-weight: normal !important;
 	margin-bottom: 3px;
@@ -525,6 +525,16 @@ span.ajaxprompt {
 			from(#ddd),
 			to(#eee)
 		) !important;
+}
+#footer p {
+	margin-right: 0 !important;
+	color: #999 !important;
+}
+#footer p .szinfo {
+	margin-left: .25em;
+}
+#footer .police {
+	display: none;
 }
 #pro_bas_detail {
 	height: 150px;
