@@ -1,6 +1,6 @@
 /* Global */
 * {
-	font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Tahoma, sans-serif !important;
+	font-family: "Lucida Grande", Helvetica, Tahoma, sans-serif !important;
 }
 ::selection {
 	background: rgba(82,168,236,.25);
