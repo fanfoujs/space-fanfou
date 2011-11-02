@@ -205,6 +205,7 @@ input[key="expanding_replies.number"] {
 	margin-left: 18px;
 }
 #btn_apply {
+	font-family: inherit;
 	font-size: 12px;
 	height: 25px;
 	width: 75px;
