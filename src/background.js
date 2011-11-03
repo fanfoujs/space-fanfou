@@ -102,8 +102,8 @@ var ports = {};
 
 function checkURL(url) {
     if (typeof url != 'string') return false;
-    return url.substr(0, 18) == 'http://fanfou.com/' ||
-           url.substr(0, 18) == 'http://fanwai.com/';
+    return url.substr(0, 18) == 'http://fanfou.com/' &&
+           url.substr(0, 24) != 'http://fanfou.com/home.2';
 }
 
 // 等待页面连接
