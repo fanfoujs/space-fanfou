@@ -3,7 +3,8 @@ SF.st = {};
 /* 选项默认值 */
 
 SF.st.default_settings = {
-    font_reset: false,
+    font_reset: true,
+    font_reset_cn: false,
     translucent_sidebar: true,
     newstyle_trendlist: true,
     newstyle_op_icons: false,
@@ -32,10 +33,11 @@ SF.st.default_settings = {
     // 将原始存储方式更新为新的存储方式
     if (! storage_version) {
         var setting_names = [
-            'font_reset', 'translucent_sidebar', 'newstyle_trendlist', 
-            'newstyle_op_icons', 'logo_remove_beta', 'expanding_replies', 
-            'expanding_replies.number', 'image_uploading', 'user_switcher', 
-            'float_message', 'repost_photo_preview', 'share_to_fanfou'
+            'font_reset', 'font_reset_cn', 'translucent_sidebar', 
+            'newstyle_trendlist', 'newstyle_op_icons', 'logo_remove_beta',
+            'expanding_replies', 'expanding_replies.number', 'image_uploading',
+            'user_switcher', 'float_message', 'repost_photo_preview',
+            'share_to_fanfou'
         ];
         var settings = { };
         for (var i = 0; i < setting_names.length; ++i) {

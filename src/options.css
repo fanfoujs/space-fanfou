@@ -66,8 +66,8 @@ input, textarea, select {
 /* Private */
 body {
 	color: #555;
-	/*background: #fff url(../images/bg.png) repeat;*/
-	font: 400 12px/1.5 "Lucida Grande", "HelveticaNeue-Light", "Helvetica Neue Light", Hevetica, Tahoma, "Hiragino Sans GB", "Microsoft Yahei", "Wenquanyi MicroHei", sans-serif;
+	font: 400 12px/1.5 "Lucida Grande", Hevetica, Tahoma, "Hiragino Sans GB", "Microsoft Yahei", "Wenquanyi MicroHei", sans-serif;
+	-webkit-user-select: none;
 }
 ::selection, ::-moz-selection { 
 	color: rgba(255,255,255,.75);
@@ -187,7 +187,7 @@ h4 {
 #info p {
 	color: #999;
 }
-#tabs0 p, #tabs1 p {
+#tabs0 li, #tabs1 li {
 	border-bottom: 1px dashed #e5e5e5;
 	padding: 3px 0;
 }

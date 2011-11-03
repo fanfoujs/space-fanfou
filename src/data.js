@@ -9,6 +9,10 @@ var plugins = [
         css: 'font_reset.css',
     },
     {
+        name: 'font_reset_cn',
+        css: 'font_reset_cn.css',
+    },
+    {
         name: 'translucent_sidebar',
         css: 'translucent_sidebar.css',
     },

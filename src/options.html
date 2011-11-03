@@ -23,62 +23,75 @@
 		
 		<div id="tabs">
 			<div class="tabs current" id="tabs0" style="display: block;">
-				<p>
-					<label><input type="checkbox" key="expanding_replies" />启用展开回复</label><br />
-					<label class="sublabel">每次展开数量：<input type="number" min="1" max="20" step="1" key="expanding_replies.number" /></label><br />
-					<label class="sublabel"><input type="checkbox" key="expanding_replies.auto_expand" />载入页面时自动展开一条消息上文</label>
-				</p>
-				<p>
-					<label><input type="checkbox" key="image_uploading" />启用图片上传</label>
-				</p>
-				<p>
-					<label><input type="checkbox" key="user_switcher" />启用多用户切换</label>
-				</p>
-				<p>
-					<label><input type="checkbox" key="float_message" />启用浮动输入框</label>
-					<span class="comment">使用固顶的浮动输入框取代弹出式窗口</span><br />
-					<label class="sublabel"><input type="checkbox" key="float_message.noajaxattop" />当输入框不浮动时，发布消息后刷新页面</label><br />
-					<label class="sublabel"><input type="checkbox" key="float_message.notlostfocus" />启用连发模式</label>
-					<span class="comment">消息发出后焦点保留在输入框</span><br />
-					<label class="sublabel"><input type="checkbox" key="float_message.keepmentions" />启用快速@模式</label>
-					<span class="comment">消息发出后输入框中保留所@的人</span>
-				</p>
-				<p>
-					<label><input type="checkbox" key="share_to_fanfou" />添加“分享到饭否”至浏览器鼠标右键菜单</label>
-				</p>
-				<p>
-					<label><input type="checkbox" key="repost_photo_preview" />在转发的消息中显示原图片预览</label>
-				</p>
-				<p>
-					<label><input type="checkbox" key="disable_autocomplete" />禁用输入@时的自动补全</label>
-				</p>
-				<p>
-					<label><input type="checkbox" key="privatemsg_manage" />私信批量管理</label>
-				</p>
-				
+				<ul>
+					<li>
+						<label><input type="checkbox" key="expanding_replies" />启用展开回复</label>
+						<p>
+							<label class="sublabel">每次展开数量：<input type="number" min="1" max="20" step="1" key="expanding_replies.number" /></label>
+						</p>
+						<p>
+							<label class="sublabel"><input type="checkbox" key="expanding_replies.auto_expand" />载入页面时自动展开一条消息上文</label>
+						</p>
+					</li>
+					<li>
+						<label><input type="checkbox" key="image_uploading" />启用图片上传</label>
+					</li>
+					<li>
+						<label><input type="checkbox" key="user_switcher" />启用多用户切换</label>
+					</li>
+					<li>
+						<label><input type="checkbox" key="float_message" />启用浮动输入框</label>
+						<span class="comment">使用固顶的浮动输入框取代弹出式窗口</span>
+						<p>
+							<label class="sublabel"><input type="checkbox" key="float_message.noajaxattop" />当输入框不浮动时，发布消息后刷新页面</label>
+						</p>
+						<p>
+							<label class="sublabel"><input type="checkbox" key="float_message.notlostfocus" />启用连发模式</label>
+							<span class="comment">消息发出后焦点保留在输入框</span>
+						</p>
+						<p>
+							<label class="sublabel"><input type="checkbox" key="float_message.keepmentions" />启用快速@模式</label>
+							<span class="comment">消息发出后输入框中保留所@的人</span>
+						</p>
+					</li>
+					<li>
+						<label><input type="checkbox" key="share_to_fanfou" />添加“分享到饭否”至浏览器鼠标右键菜单</label>
+					</li>
+					<li>
+						<label><input type="checkbox" key="repost_photo_preview" />在转发的消息中显示原图片预览</label>
+					</li>
+					<li>
+						<label><input type="checkbox" key="disable_autocomplete" />禁用输入@时的自动补全</label>
+					</li>
+					<li>
+						<label><input type="checkbox" key="privatemsg_manage" />私信批量管理</label>
+					</li>
+				</ul>
 				<button id="btn_apply">应用</button>
 			</div>
 		
 			<div class="tabs" id="tabs1" style="display: none;">
-				<p>
-					<label><input type="checkbox" key="font_reset" title="TEST" />启用中文字体美化</label>
-					<span class="comment">使用微软雅黑等字体作为默认中文字体</span>
-				</p>
-				<p>
+				<li>
+					<label><input type="checkbox" key="font_reset" disabled />启用字体美化</label>
+					<p>
+						<label class="sublabel"><input type="checkbox" key="font_reset_cn" />使用微软雅黑等字体作为默认中文字体</label>
+					</p>
+				</li>
+				<li>
 					<label><input type="checkbox" key="translucent_sidebar" />启用半透明的侧栏</label>
-				</p>
-				<p>
+				</li>
+				<li>
 					<label><input type="checkbox" key="newstyle_trendlist" />启用新样式的热门话题、关注的话题并显示具体关键词</label>
-				</p>
-				<p>
+				</li>
+				<li>
 					<label><input type="checkbox" key="newstyle_op_icons" />启用简洁样式的回复、收藏、转发、删除按钮</label>
-				</p>
-				<p>
+				</li>
+				<li>
 					<label><input type="checkbox" key="logo_remove_beta" />去除 Logo 的“测试版”字样</label>
-				</p>
-				<p>
+				</li>
+				<li>
 					<label><input type="checkbox" key="remove_app_recom" />屏蔽“随机应用推荐”及“饭否应用”广告区</label>
-				</p>
+				</li>
 				
 				<button id="btn_apply">应用</button>
 			</div>
