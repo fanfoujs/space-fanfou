@@ -19,7 +19,8 @@
         {
             "js": [ "namespace.js", "functions.js", "load.js" ],
             "css": [ "common/main.css" ],
-            "matches": [ "http://fanfou.com/*", "http://fanwai.com/*" ],
+            "matches": [ "http://fanfou.com/*" ],
+            "exclude_globs": [ "*home.2*" ],
             "run_at": "document_start"
         }
     ]
