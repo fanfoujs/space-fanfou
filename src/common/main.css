@@ -175,14 +175,17 @@
 	border: 3px solid rgba(0,0,0,.5);
 	background: rgba(255,255,255,.9) !important;
 	border-radius: 10px;
-	box-shadow: 0 0 15px rgba(0,0,0,.5);
+	box-shadow: 0 5px 15px rgba(0,0,0,.5);
 	-webkit-animation: fadeIn .1s;
 }
+#PopupUpdate {
+	left: 37px !important;
+}
 #PopupUpdate .tip {
-	left: 390px !important;
+	left: 400px !important;
 }
 #PopupUpdate .formbutton {
-	left: 385px !important;
+	left: 360px !important;
 }
 #update .act {
 	padding: 0 0 2px !important;
