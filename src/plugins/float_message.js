@@ -175,8 +175,9 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
         }, 'json');
         return false;
     }
-    function onMsgKeyup(e) {
+    function onMsgKeypress(e) {
         if (e.ctrlKey && (e.keyCode == 10 || e.keyCode == 13)) {
+            e.preventDefault();
             $(this).blur();
             $form.submit();
             return false;
@@ -238,7 +239,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
             });
             // AJAX 化提交
             $form.submit(onFormSubmit);
-            $msg.keyup(onMsgKeyup);
+            $msg.keypress(onMsgKeypress);
             // 设置样式调节
             interval = setInterval(onInterval, 50);
             $msg.focus(onMsgFocus);
@@ -263,7 +264,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
             FF.app.Repost();
             // 回退 AJAX 化提交
             $form.unbind('submit', onFormSubmit);
-            $msg.unbind('keypress', onMsgKeyup);
+            $msg.unbind('keypress', onMsgKeypress);
             // 恢复原有事件
             if (backup.msg_keyup)
                 $E.on($msg[0], 'keyup', backup.msg_keyup);
