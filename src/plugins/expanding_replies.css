@@ -41,13 +41,13 @@
 #stream>ol>li.reply.more,
 #stream>ol>li.reply.hide,
 #stream>ol>li.reply.waiting {
-	background: rgba(235,235,235,1);
+	background: rgba(235, 235, 235, 1);
 	color: #666;
 	text-shadow: 0 1px 0 white; 
 	cursor: pointer;
 }
 #stream>ol>li.reply.notavail {
-	background: rgba(235,235,235,1);
+	background: rgba(235, 235, 235, 1);
 	color: #666;
 	text-shadow: 0 1px 0 white;
 	text-decoration: line-through;
@@ -55,7 +55,7 @@
 }
 #stream>ol>li.reply.more:hover,
 #stream>ol>li.reply.hide:hover {
-	background: rgba(230,230,230,1);
+	background: rgba(230, 230, 230, 1);
 	color: #666;
 }
 #stream>ol>li.reply.waiting {

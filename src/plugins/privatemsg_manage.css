@@ -1,18 +1,15 @@
 #stream>ol>li {
     position: relative;
 }
-
 #stream>ol>li>input[type=checkbox] {
     position: absolute;
     right: 5px; bottom: 5px;
 }
-
 #main>.tabs>.batch-manage {
     position: absolute;
     right: 5px;
     bottom: 5px;
 }
-
 #main>.tabs>.batch-manage>input {
     margin-left: 5px;
 }

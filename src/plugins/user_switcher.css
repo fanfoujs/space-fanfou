@@ -16,7 +16,7 @@
 	line-height: 24px;
 }
 #user_switcher a h3:hover {
-	background-color: rgba(0,0,0,.05);
+	background-color: rgba(0, 0, 0, .05);
 }
 #user_top.switcher {
 	position: absolute;
@@ -46,8 +46,8 @@
 }
 #user_top.switcher:hover {
 	/* border: 1px solid; */
-	box-shadow: 1px 2px 5px rgba(0,0,0,.3);
-	background-color: rgba(255,255,255,.95); 
+	box-shadow: 1px 2px 5px rgba(0, 0, 0, .3);
+	background-color: rgba(255, 255, 255, .95); 
 }
 #user_top.switcher:first-child > h3:after {
 	content: "▾";
@@ -75,13 +75,13 @@
 			color-stop(.5, #f3f3f3),
 			color-stop(1, #fff)
 		) !important;
-	text-shadow: 0px 1px 0 rgba(255,255,255,.25);
+	text-shadow: 0px 1px 0 rgba(255, 255, 255, .25);
 	white-space: nowrap;
 	border: 1px solid #9a9a9a !important;
 	border-radius: 3px;
 	box-shadow:
-		0 1px 0 rgba(255,255,255,.75) inset,
-		0 1px 0 rgba(0,0,0,.09);
+		0 1px 0 rgba(255, 255, 255, .75) inset,
+		0 1px 0 rgba(0, 0, 0, .09);
 }
 #user_switcher .addnew a:hover {
 	text-decoration: none;
@@ -106,9 +106,9 @@
 			color-stop(1, #d4e9fc)
 		) !important;
 	box-shadow:
-		0 999px 0 rgba(0,115,215,.3) inset,
-		0 1px 0 rgba(255,255,255,1) inset,
-		0 1px 0 rgba(0,0,0,.09);
+		0 999px 0 rgba(0, 115, 215, .3) inset,
+		0 1px 0 rgba(255, 255, 255, 1) inset,
+		0 1px 0 rgba(0, 0, 0, .09);
 	-webkit-animation-name: none;
 }
 #user_top.switcher + #reminder {

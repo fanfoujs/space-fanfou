@@ -18,10 +18,10 @@
 			linear,
 			left top,
 			left bottom,
-			from(rgba(255,255,255,1)),
-			color-stop(30%, rgba(255,255,255,.9)),
-			color-stop(60%, rgba(255,255,255,.9)),
-			color-stop(80%, rgba(255,255,255,0))
+			from(rgba(255, 255, 255, 1)),
+			color-stop(30%, rgba(255, 255, 255, .9)),
+			color-stop(60%, rgba(255, 255, 255, .9)),
+			color-stop(80%, rgba(255, 255, 255, 0))
 		);
 	border-bottom: none;
 	padding: 10px 0;
