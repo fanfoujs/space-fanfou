@@ -37,3 +37,23 @@ SF.fn.waitFor = (function() {
         setWaiting();
     };
 })();
+
+SF.fn.fixNumber = function(num, width) {
+    var num = num.toString();
+    var delta = width - num.length;
+    while (delta > 0) {
+        num = '0' + num;
+        --delta;
+    }
+    return num;
+};
+
+SF.fn.formateDate = function(date) {
+    var datestr;
+    if (! datestr) {
+        datestr = SF.fn.fixNumber(date.getFullYear(), 4) + '-' +
+                  SF.fn.fixNumber(date.getMonth() + 1, 2) + '-' +
+                  SF.fn.fixNumber(date.getDate(), 2);
+    }
+    return datestr;
+};

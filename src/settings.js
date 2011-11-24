@@ -23,6 +23,7 @@ SF.st.default_settings = {
     disable_autocomplete: false,
     share_to_fanfou: true,
     privatemsg_manage: true,
+    advanced_sidebar: true,
 };
 
 /* 更新选项数据 */

@@ -20,6 +20,7 @@ var SF = (function() {
     return {
         fn: { },
         pl: { },
+        cb: { },
         plugin: function(func) {
             if (! func) func = { };
             this.loaded = false;

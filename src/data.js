@@ -70,6 +70,10 @@ var plugins = [
         js: 'privatemsg_manage.js',
         css: 'privatemsg_manage.css',
     },
+    {
+        name: 'advanced_sidebar',
+        js: 'advanced_sidebar.js',
+    },
 
     /* 其他扩展 */
 
