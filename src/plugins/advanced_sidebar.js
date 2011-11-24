@@ -32,6 +32,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
                 $script.remove();
                 $script = null;
             }
+            $('.advanced', $vcard).remove();
         }
     };
 })(jQuery));
