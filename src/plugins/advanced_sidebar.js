@@ -15,7 +15,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
                 SF.cb.advanced_sidebar = undefined;
                 var created = new Date(data.created_at);
                 created = SF.fn.formateDate(created);
-                $vcard.prepend(
+                $vcard.append(
                     $('<li />').addClass('advanced')
                                .text('注册于：' + created)
                 );
