@@ -473,10 +473,6 @@ span.ajaxprompt {
 .pagination .more-left {
 	width: 100% !important;
 }
-.narrowlook #body {
-	box-shadow: 0 2px 2px rgba(0, 0, 0, .2);
-	border-radius: 10px;
-}
 .tabs {
 	border-bottom: 1px solid rgba(0, 0, 0, .15) !important;
 }

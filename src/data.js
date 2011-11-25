@@ -13,6 +13,10 @@ var plugins = [
         css: 'translucent_sidebar.css',
     },
     {
+        name: 'box_shadows',
+        css: 'box_shadows.css',
+    },
+    {
         name: 'newstyle_trendlist',
         css: 'newstyle_trendlist.css'
     },
