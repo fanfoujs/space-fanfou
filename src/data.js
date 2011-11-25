@@ -5,10 +5,6 @@ var plugins = [
     /* 页面样式扩展 */
 
     {
-        name: 'font_reset',
-        css: 'font_reset.css',
-    },
-    {
         name: 'font_reset_cn',
         css: 'font_reset_cn.css',
     },
