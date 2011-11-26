@@ -66,7 +66,7 @@ input, textarea, select {
 /* Private */
 body {
 	color: #555;
-	font: 400 12px/1.5 "Lucida Grande", Hevetica, Tahoma, "Hiragino Sans GB", "Microsoft Yahei", "Wenquanyi MicroHei", sans-serif;
+	font: 400 12px/1.5 "Lucida Grande", "Hevetica Neue", Hevetica, Tahoma, "Hiragino Sans GB", "Microsoft Yahei", "Wenquanyi MicroHei", sans-serif;
 	-webkit-user-select: none;
 }
 ::selection, ::-moz-selection { 
@@ -84,7 +84,6 @@ a:link {
 a:hover, a:active {
 	outline: none;
 }
-
 em {
 	font-style: italic;
 }
@@ -95,9 +94,11 @@ h1 {
 	border-radius: 5px;
 }
 h2 {
+	font-family: "Helvetica Neue", Helvetica, Tahoma, sans-serif;
 	font-size: 16px;
-	margin-bottom: 5px;
-	border-bottom: 1px solid #eee;
+	font-weight: 300;
+	line-height: 1em;
+	margin-bottom: 3px;
 }
 h3 {
 	font-size: 12px;
@@ -107,6 +108,9 @@ h4 {
 }
 .left {
 	float: left;
+}
+.clear {
+	clear: both;
 }
 @-webkit-keyframes bl-blinking {
 	from {
@@ -136,6 +140,20 @@ h4 {
 	max-height: 600px;
 	margin: 0 auto;
 	padding: 10px;
+}
+.logo {
+	background: #ebf0f5 url(icons/icon-48.png) .3em center no-repeat;
+	height: 48px;
+	padding: .3em .3em .3em 3em;
+	font-size: 20px;
+	text-shadow: 0 1px 0 white;
+	border-radius: 5px;
+}
+#version {
+	display: block;
+	font-size: 14px;
+	color: #999;
+	line-height: 14px;
 }
 #navigation {
 	border-bottom: 1px solid rgba(0,0,0,.15);
@@ -179,17 +197,24 @@ h4 {
 	background: #ebf3f5;
 	border-radius: 5px;
 }
-#info {
+.info {
 	width: 322px;
 	margin-left: 10px;
 	margin-bottom: 10px;
 }
-#info p {
+.info p {
 	color: #999;
+}
+#tabs ul {
+	max-height: 360px;
+	overflow-y: auto;
 }
 #tabs0 li, #tabs1 li {
 	border-bottom: 1px dashed #e5e5e5;
 	padding: 3px 0;
+}
+#tabs2 {
+	margin-top: 15px;
 }
 input[key="expanding_replies.number"] {
 	width: 35px;
@@ -257,9 +282,11 @@ input[key="expanding_replies.number"] {
 			0 1px 0 rgba(255,255,255,1) inset,
 			0 1px 0 rgba(0,0,0,.09);
 		-webkit-animation-name: none;
-	}
 }
 #footer {
-	margin-top: 10px;
+	border-top: 1px solid rgba(0, 0, 0, .15);
+	padding-top: 10px;
+}
+#footer a {
 	color: #999;
 }

@@ -11,7 +11,10 @@
 </head>
 <body>
 	<div id="wrapper">
-		<h1>太空饭否</h1>
+		<div class="logo">
+			太空饭否
+			<span id="version"></span>
+		</div>
 		
 		<div id="navigation">
 			<ul>
@@ -103,18 +106,50 @@
 			</div>
 			
 			<div class="tabs" id="tabs2" style="display: none;">
+				<style>
+					.fanfou_statuses p, .fanfou_statuses .fanfou_statuses_more {
+						display: none;
+					}
+					.fanfou_statuses ul li {
+						color: #666;
+						-webkit-user-select: auto;
+					}
+				</style>
 				<p class="left">
-					<img src="icons/icon-48.png" width="48" height="48"/>
+					<a href="http://fanfou.com/spacefanfou" target="_blank"><img src="http://avatar4.fanfou.com/s0/00/sw/av.jpg" width="48" height="48" style="border-radius: 3px;" /></a>
 				</p>
-				<div id="info" class="left">
-					<h2>太空饭否 <span id="version"></span></h2>
+				<div class="info left">
+					<h2>@<a href="http://fanfou.com/spacefanfou" target="_blank">太空饭否</a> (spacefanfou)</h2>
 					<p>
-						太空饭否是一个免费、用心的开源程序，是目前最强大最好用的饭否 Chrome 浏览器扩展。</p>
+						<script type="text/javascript">fanfou_name="spacefanfou";fanfou_count=1;fanfou_timeline="user";</script>
+						<script type="text/javascript" charset="utf-8" src="http://static.fanfou.com/badge/timeline.js"></script>
+					</p>
 				</div>
-				<p>
-					 &copy; 2011 <a href="http://fanfou.com/anegie" target="_blank">Kevin</a>, <a href="http://fanfou.com/upsuper" target="_blank">Upsuper</a>. All rights reserved.<br />
-					<a href="http://fanfou.com/spacefanfou" target="_blank">官方帐号</a> | <a href="https://github.com/anegie/Space-Fanfou" target="_blank">开源项目地址</a> | <a href="http://fanfou.com/home?status=@%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6+" target="_blank">提交使用反馈</a> | <a href="http://fanfou.com/sharer?u=http%3A%2F%2Fis.gd%2Fspacefanfou?t=%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%20-%20Chrome%20%E7%BD%91%E4%B8%8A%E5%BA%94%E7%94%A8%E5%BA%97?d=%E5%90%91%E5%A4%A7%E5%AE%B6%E6%8E%A8%E8%8D%90%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%EF%BC%8C%E8%B6%85%E5%BC%BA%E5%A4%A7%E7%9A%84%E9%A5%AD%E5%90%A6%20Chrome%20%E6%B5%8F%E8%A7%88%E5%99%A8%E6%89%A9%E5%B1%95%E7%A8%8B%E5%BA%8F%E3%80%82?s=bl" target="_blank">推荐太空饭否</a>
+				<p class="left">
+					<a href="http://fanfou.com/anegie" target="_blank"><img src="http://avatar4.fanfou.com/s0/00/3c/7j.jpg" width="48" height="48" style="border-radius: 3px;" /></a>
 				</p>
+				<div class="info left">
+					<h2>@<a href="http://fanfou.com/anegie" target="_blank">Kevin</a> (anegie)</h2>
+					<p>
+						<script type="text/javascript">fanfou_name="anegie";fanfou_count=1;fanfou_timeline="user";</script>
+						<script type="text/javascript" charset="utf-8" src="http://static.fanfou.com/badge/timeline.js"></script>
+					</p>
+				</div>
+				<p class="left">
+					<a href="http://fanfou.com/xidorn" target="_blank"><img src="http://avatar1.fanfou.com/s0/00/vq/0q.jpg" width="48" height="48" style="border-radius: 3px;" /></a>
+				</p>
+				<div class="info left">
+					<h2>@<a href="http://fanfou.com/xidorn" target="_blank">Xidorn</a> (xidorn)</h2>
+					<p>
+						<script type="text/javascript">fanfou_name="xidorn";fanfou_count=1;fanfou_timeline="user";</script>
+						<script type="text/javascript" charset="utf-8" src="http://static.fanfou.com/badge/timeline.js"></script>
+					</p>
+				</div>
+				<div class="clear"></div>
+				<div id="footer">
+					 &copy; 2011 <a href="http://fanfou.com/anegie" target="_blank">Kevin</a>, <a href="http://fanfou.com/xidorn" target="_blank">Xidorn (Upsuper)</a>. All rights reserved.<br />
+					<a href="http://fanfou.com/spacefanfou" target="_blank">官方帐号</a> | <a href="https://github.com/anegie/Space-Fanfou" target="_blank">开源项目地址</a> | <a href="http://fanfou.com/home?status=@%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6+" target="_blank">提交使用反馈</a> | <a href="http://fanfou.com/sharer?u=http%3A%2F%2Fis.gd%2Fspacefanfou?t=%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%20-%20Chrome%20%E7%BD%91%E4%B8%8A%E5%BA%94%E7%94%A8%E5%BA%97?d=%E5%90%91%E5%A4%A7%E5%AE%B6%E6%8E%A8%E8%8D%90%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%EF%BC%8C%E8%B6%85%E5%BC%BA%E5%A4%A7%E7%9A%84%E9%A5%AD%E5%90%A6%20Chrome%20%E6%B5%8F%E8%A7%88%E5%99%A8%E6%89%A9%E5%B1%95%E7%A8%8B%E5%BA%8F%E3%80%82?s=bl" target="_blank">推荐太空饭否</a>
+				</div>
 			</div>
 		</div>
  
