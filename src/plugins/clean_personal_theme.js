@@ -23,16 +23,17 @@ SF.pl.clean_personal_theme = new SF.plugin((function($) {
     return {
         load: function() {
             $('<a />').attr('id', 'sf_clean_personal_theme')
-                      .attr('href', '#').text('清除页面风格')
+                      .attr('title', '切换饭否默认模板 / 用户自定义模板')
+                      .attr('href', '#').text('使用饭否默认模板')
                       .click(function(e) {
                             e.preventDefault();
                             if ($('#sf_default_theme').length) {
                                 $('#sf_default_theme').remove();
-                                $(this).text('清除页面风格');
+                                $(this).text('使用饭否默认模板').removeClass('sf_default_theme');
                             } else {
                                 $('<style />').attr('id', 'sf_default_theme')
                                               .html(default_style).insertAfter('head style');
-                                $(this).text('恢复页面风格');
+                                $(this).text('使用用户自定义模板').addClass('sf_default_theme');
                             }
                       })
                       .appendTo('body');
