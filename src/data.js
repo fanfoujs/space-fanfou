@@ -74,6 +74,11 @@ var plugins = [
         name: 'advanced_sidebar',
         js: 'advanced_sidebar.js',
     },
+    {
+        name: 'clean_personal_theme',
+        js: 'clean_personal_theme.js',
+        css: 'clean_personal_theme.css',
+    },
 
     /* 其他扩展 */
 

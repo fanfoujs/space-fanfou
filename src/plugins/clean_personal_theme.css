@@ -1,0 +1,7 @@
+#sf_clean_personal_theme {
+    position: fixed;
+    bottom: 0; right: 0;
+    display: block;
+    background: #acdae5;
+    color: #222;
+}

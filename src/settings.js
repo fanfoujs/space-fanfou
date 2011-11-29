@@ -24,6 +24,7 @@ SF.st.default_settings = {
     share_to_fanfou: true,
     privatemsg_manage: true,
     advanced_sidebar: true,
+    clean_personal_theme: false,
 };
 
 /* 更新选项数据 */

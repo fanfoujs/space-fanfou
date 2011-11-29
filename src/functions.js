@@ -57,3 +57,7 @@ SF.fn.formateDate = function(date) {
     }
     return datestr;
 };
+
+SF.fn.isUserPage = function() {
+    return !! document.getElementById('leavemsg');
+};
