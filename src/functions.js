@@ -59,5 +59,5 @@ SF.fn.formateDate = function(date) {
 };
 
 SF.fn.isUserPage = function() {
-    return !! document.getElementById('leavemsg');
+    return !! document.getElementById('overlay-report');
 };
