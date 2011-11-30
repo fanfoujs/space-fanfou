@@ -135,6 +135,7 @@
 }
 #newsfeed li {
 	border-bottom: 1px solid rgba(0, 0, 0, .11) !important;
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAR0lEQVQIHWPcv38/GwMDQx0QJwAxCCwA4iYWINEIxBVADAPVQAYzE5BIhokg0ckgCawAJDEXi8wCkB31QAxyQBRUwTIgXQMAiI0Jzn69V+8AAAAASUVORK5CYII=') 5px center no-repeat !important;
 }
 #update .tip .counter, #PopupBox .tip .counter {
 	font-family: Georgia, "Times New Roman", Times, serif !important;
@@ -525,9 +526,6 @@ span.ajaxprompt {
 }
 #footer p .szinfo {
 	margin-left: .25em;
-}
-#footer .police {
-	display: none;
 }
 #pro_bas_detail {
 	height: 150px;
