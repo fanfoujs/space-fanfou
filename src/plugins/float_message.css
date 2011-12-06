@@ -27,7 +27,7 @@
 	padding: 10px 0;
 	pointer-events: none;
 }
-.float-message h2, .float-message textarea, .float-message .actpost {
+.float-message h2, .float-message textarea, .float-message .actpost .formbutton {
 	pointer-events: auto;
 }
 .float-message::before {
