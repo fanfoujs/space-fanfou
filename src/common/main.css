@@ -276,6 +276,10 @@
 	color: #fff;
 	background-color: #0e774a;
 } */
+#stream.search li dl strong, #stream.message li .content strong {
+	color: rgba(230, 50, 0, 1) !important;
+	font-weight: bold !important;
+}
 #stream .content a[href^="https"]::before {
 	content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAKCAYAAACJxx+AAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNAay06AAAAAVdEVYdENyZWF0aW9uIFRpbWUAOS8yMi8wOSXiRNYAAABzSURBVBiVrcqxDQFhGIDh57sodBJjiO6/UsQINlDbyk3gVhCl7wYQU5jgV7hEw1Xe9nmj1moYhgV67FBxwb6U8my86zHHGhsscYbZOGyxatv2Dpl5xBWaiBgfD59uEBEiM084+F4XmVl/IGim8H9DN+HdC0E/G7TuwOriAAAAAElFTkSuQmCC');
 	margin-right: 5px;
