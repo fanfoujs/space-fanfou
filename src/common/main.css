@@ -161,9 +161,17 @@
 	-webkit-transition-property: background;
 	-webkit-transition-duration: 300ms;
 }
+.formdisabled, .input_text[disabled] {
+	color: #777;
+	text-shadow: 0 1px 0 white;
+	background: rgba(192, 192, 192, .25);
+}
 .input_text:hover, #message textarea:hover, #update textarea:hover, #invite-url:hover, #PopupBox textarea:hover, .settings textarea:hover, #finder_emailarea:hover, #sharer textarea:hover {
 	background: rgba(255, 255, 255, 1);
 	border: 1px solid #999 !important;
+}
+.formdisabled:hover, .input_text[disabled]:hover {
+	background: rgba(192, 192, 192, .5);
 }
 .input_text:focus, #message textarea:focus, #update textarea:focus, #invite-url:focus, #PopupBox textarea:focus, .settings textarea:focus, #finder_emailarea:focus, #sharer textarea:focus {
 	outline: none;
