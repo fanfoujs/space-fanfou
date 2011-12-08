@@ -47,32 +47,30 @@ $(function() {
     $.getJSON('manifest.json', function(data) {
         $('#version').text(data.version);
     });
-});
 
-this.screenshotPreview = function(){	
-		xOffset = 10;
-		yOffset = 30;
-	$(".screenshot").hover(function(e){
-		this.t = this.title;
-		this.title = "";	
-		var c = (this.t != "") ? "<br />" + this.t : "";
-		$("body").append("<p id='screenshot'><img src='" + this.rel + "' alt='预览' />" + c + "</p>");								 
-		$("#screenshot")
-			.css("top", (e.pageY - xOffset) + "px")
-			.css("left", (e.pageX + yOffset) + "px")
-			.fadeIn("fast");						
+    // 预览图
+    function posPreview($ss, x, y) {
+        var targetX = x + 30,
+            targetY = y - 10;
+        var height = $ss.outerHeight(),
+            winHeight = $('body').innerHeight();
+        if (targetY + height > winHeight)
+            targetY = winHeight - height;
+        return $ss.css("left", targetX + "px")
+                  .css("top", targetY + "px");
+    }
+    $('.screenshot').hover(function(e) {
+        this.t = this.title;
+        this.title = "";
+        var c = (this.t != "") ? "<br />" + this.t : "";
+        $("body").append("<p id='screenshot'><img src='" + this.rel + "' alt='预览' />" + c + "</p>");
+        posPreview($("#screenshot"), e.pageX, e.pageY).fadeIn("fast");
     },
-	function(){
-		this.title = this.t;	
-		$("#screenshot").remove();
-    });	
-	$(".screenshot").mousemove(function(e){
-		$("#screenshot")
-			.css("top", (e.pageY - xOffset) + "px")
-			.css("left", (e.pageX + yOffset) + "px");
-	});			
-};
-
-$(document).ready(function(){
-	screenshotPreview();
+    function() {
+        this.title = this.t;
+        $("#screenshot").remove();
+    });
+    $('.screenshot').mousemove(function(e) {
+        posPreview($("#screenshot"), e.pageX, e.pageY);
+    });
 });
