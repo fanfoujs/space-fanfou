@@ -1,6 +1,8 @@
 SF.pl.image_uploading = new SF.plugin((function($) {
     var $message = $('#message');
     if (! $message.length) return;
+    var $overlay = $('#overlay');
+    if ($overlay.length) return;
 
     var domain = document.domain;
     var $h2 = $('h2', $message);
