@@ -55,7 +55,7 @@ $(function() {
         var height = $ss.outerHeight(),
             winHeight = $('body').innerHeight();
         if (targetY + height > winHeight)
-            targetY = winHeight - height;
+            targetY = winHeight - height - 10;
         return $ss.css("left", targetX + "px")
                   .css("top", targetY + "px");
     }
