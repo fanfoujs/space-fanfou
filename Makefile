@@ -12,14 +12,12 @@ OTHERS:=$(filter-out %.js %.css,$(OTHERS))
 OTHERS_DEST:=$(patsubst src/%,build/%,$(OTHERS))
 
 all: build_dir \
+	other_files \
 	compress_scripts \
 	compress_styles \
-	other_files
 
 build_dir:
-	mkdir -p $(BUILD_DIR)/common
-	mkdir -p $(BUILD_DIR)/plugins
-	mkdir -p $(BUILD_DIR)/icons
+	mkdir -p build
 
 compress_scripts: $(SCRIPTS_DEST)
 $(SCRIPTS_DEST): build/%: src/%
@@ -31,7 +29,14 @@ $(STYLES_DEST): build/%: src/%
 
 other_files: $(OTHERS_DEST)
 $(OTHERS_DEST): build/%: src/%
-	cp $< $@
+	@if [ -d $< ]; \
+		then \
+		mkdir -p $@; \
+		echo "mkdir -p $@"; \
+	else \
+		cp $< $@; \
+		echo "cp $< $@"; \
+	fi
 
 .PHONY: clean
 clean:
