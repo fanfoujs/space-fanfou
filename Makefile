@@ -1,15 +1,16 @@
 UGLIFYJS=uglifyjs
+UGLIFYCSS=uglifycss
 BUILD_DIR=build
 
 SCRIPTS:=$(wildcard src/*.js) $(wildcard src/*/*.js)
-SCRIPTS_DEST:=$(patsubst src/%,build/%,$(SCRIPTS))
+SCRIPTS_DEST:=$(patsubst src/%,$(BUILD_DIR)/%,$(SCRIPTS))
 
 STYLES:=$(wildcard src/*.css) $(wildcard src/*/*.css)
-STYLES_DEST:=$(patsubst src/%,build/%,$(STYLES))
+STYLES_DEST:=$(patsubst src/%,$(BUILD_DIR)/%,$(STYLES))
 
 OTHERS:=$(wildcard src/*) $(wildcard src/*/*)
 OTHERS:=$(filter-out %.js %.css,$(OTHERS))
-OTHERS_DEST:=$(patsubst src/%,build/%,$(OTHERS))
+OTHERS_DEST:=$(patsubst src/%,$(BUILD_DIR)/%,$(OTHERS))
 
 all: build_dir \
 	other_files \
@@ -17,18 +18,18 @@ all: build_dir \
 	compress_styles \
 
 build_dir:
-	mkdir -p build
+	mkdir -p $(BUILD_DIR)
 
 compress_scripts: $(SCRIPTS_DEST)
-$(SCRIPTS_DEST): build/%: src/%
-	uglifyjs -nc -o $@ $<
+$(SCRIPTS_DEST): $(BUILD_DIR)/%: src/%
+	$(UGLIFYJS) -nc -o $@ $<
 
 compress_styles: $(STYLES_DEST)
-$(STYLES_DEST): build/%: src/%
-	uglifycss $< >$@
+$(STYLES_DEST): $(BUILD_DIR)/%: src/%
+	$(UGLIFYCSS) $< >$@
 
 other_files: $(OTHERS_DEST)
-$(OTHERS_DEST): build/%: src/%
+$(OTHERS_DEST): $(BUILD_DIR)/%: src/%
 	@if [ -d $< ]; \
 		then \
 		mkdir -p $@; \
@@ -40,4 +41,4 @@ $(OTHERS_DEST): build/%: src/%
 
 .PHONY: clean
 clean:
-	-rm -rf build
+	-rm -rf $(BUILD_DIR)
