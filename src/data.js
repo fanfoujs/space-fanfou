@@ -88,4 +88,11 @@ var plugins = [
         js: 'share_to_fanfou.js',
     },
 
+    /* 彩蛋 */
+
+    {
+        name: 'snowstorm',
+        js: 'snowstorm.js',
+    },
+
 ];
