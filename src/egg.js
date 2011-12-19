@@ -33,7 +33,8 @@
         stop_snow.href = '#';
         stop_snow.innerHTML = '停止！';
         stop_snow.id = 'sf_stop_snow';
-        stop_snow.addEventListener('click', function() {
+        stop_snow.addEventListener('click', function(e) {
+            e.preventDefault();
             stopSnow();
             document.body.removeChild(this);
         }, false);
