@@ -134,6 +134,11 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
         $loading.css('visibility', 'visible');
         if ($form.attr('target')) return;
         if (noajaxattop && $update.is(':not(.float-message)')) return;
+        // 生成 form_submit 事件以触发彩蛋识别
+        var eve = document.createEvent('Event');
+        eve.initEvent('form_submit', false, false);
+        this.dispatchEvent(eve);
+        // 继续执行相关处理
         e.preventDefault();
         var data = $form.serialize() + '&ajax=yes';
         $.post('/home', data, function(data) {

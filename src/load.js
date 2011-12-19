@@ -57,6 +57,7 @@ port.onMessage.addListener(function(msg) {
         }, function() {
             for (var i = 0; i < scripts.length; ++i)
                 insertScript.apply(insertScript, scripts[i]);
+            SF.loaded = true;
             delete scripts;
         });
     } else if (msg.type == 'update') {

@@ -25,7 +25,7 @@ SF.st.default_settings = {
     privatemsg_manage: true,
     advanced_sidebar: true,
     clean_personal_theme: false,
-    snowstorm: true,
+    snowstorm: false,
 };
 
 /* 更新选项数据 */

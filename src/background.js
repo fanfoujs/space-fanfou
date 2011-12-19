@@ -115,6 +115,25 @@ chrome.extension.onConnect.addListener(function(port) {
     port.onDisconnect.addListener(function() {
         delete ports[portId];
     });
+    // 接收消息
+    port.onMessage.addListener(function(msg) {
+        if (msg.type == 'egg') {
+            var name = msg.name;
+            var old_settings = localStorage.settings;
+            var settings = JSON.parse(old_settings);
+            if (msg.act == 'enable')
+                settings[msg.name] = true;
+            else if (msg.act == 'disable')
+                settings[msg.name] = false;
+            settings = JSON.stringify(settings);
+            localStorage.settings = settings;
+            updateSettings({
+                key: 'settings',
+                oldValue: old_settings,
+                newValue: settings
+            });
+        }
+    });
     // 显示太空饭否图标
     chrome.pageAction.show(tabId);
     // 向目标发送初始化数据
@@ -142,8 +161,12 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 
 // 连接已打开的页面
 function connectTab(tab) {
-    if (tab && checkURL(tab.url))
+    if (tab && checkURL(tab.url)) {
+        chrome.tabs.executeScript(tab.id, { file: 'namespace.js' });
+        chrome.tabs.executeScript(tab.id, { file: 'functions.js' });
         chrome.tabs.executeScript(tab.id, { file: 'load.js' });
+        chrome.tabs.executeScript(tab.id, { file: 'egg.js' });
+    }
 }
 chrome.tabs.getCurrent(connectTab);
 chrome.tabs.onSelectionChanged.addListener(function(tabId) {
@@ -156,7 +179,7 @@ chrome.tabs.onSelectionChanged.addListener(function(tabId) {
 
 /* 监听选项变动 */
 
-addEventListener('storage', function(e) {
+function updateSettings(e) {
     if (e.key != 'settings') return;
     if (e.oldValue == e.newValue) return;
 
@@ -240,4 +263,5 @@ addEventListener('storage', function(e) {
             data: update_info
         });
     }
-}, false);
+};
+addEventListener('storage', updateSettings, false);

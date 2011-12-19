@@ -1,25 +1,4 @@
 SF.pl.snowstorm = (function (window, document) {
-    this.flakesMax = 60;
-    this.flakesMaxActive = 60;
-    this.animationInterval = 40;
-    this.excludeMobile = true;
-    this.flakeBottom = null;
-    this.followMouse = true;
-    this.snowColor = 'white';
-    this.snowCharacter = '&bull;';
-    this.snowStick = false;
-    this.targetElement = null;
-    this.useMeltEffect = true;
-    this.useTwinkleEffect = false;
-    this.usePositionFixed = false;
-    this.freezeOnBlur = true;
-    this.flakeLeftOffset = 0;
-    this.flakeRightOffset = 0;
-    this.flakeWidth = 3;
-    this.flakeHeight = 3;
-    this.vMaxX = 2.5;
-    this.vMaxY = 2.5;
-    this.zIndex = 100000;
     var s = this,
         storm = this,
         screenX = null,
@@ -34,14 +13,34 @@ SF.pl.snowstorm = (function (window, document) {
         fixedForEverything = false,
         didInit = false,
         docFrag = document.createDocumentFragment();
-    this.timers = [];
-    this.flakes = [];
-    this.disabled = false;
-    this.active = false;
-    this.meltFrameCount = 20;
-    this.meltFrames = [];
+    storm.flakesMax = 50;
+    storm.flakesMaxActive = 50;
+    storm.animationInterval = 42;
+    storm.flakeBottom = null;
+    storm.followMouse = true;
+    storm.snowColor = '#fffafa';
+    storm.snowCharacter = '&bull;';
+    storm.snowStick = true;
+    storm.targetElement = null;
+    storm.useMeltEffect = true;
+    storm.useTwinkleEffect = false;
+    storm.usePositionFixed = true;
+    storm.freezeOnBlur = true;
+    storm.flakeLeftOffset = 0;
+    storm.flakeRightOffset = 0;
+    storm.flakeWidth = 3;
+    storm.flakeHeight = 3;
+    storm.vMaxX = 2.5;
+    storm.vMaxY = 2.5;
+    storm.zIndex = 100000;
+    storm.timers = [];
+    storm.flakes = [];
+    storm.disabled = false;
+    storm.active = false;
+    storm.meltFrameCount = 20;
+    storm.meltFrames = [];
 
-    this.events = (function () {
+    storm.events = (function () {
         var slice = Array.prototype.slice,
             evt = {
                 add: 'addEventListener',
@@ -85,7 +84,7 @@ SF.pl.snowstorm = (function (window, document) {
         return (parseInt(rnd(2), 10) === 1 ? -n : n);
     }
 
-    this.randomizeWind = function () {
+    storm.randomizeWind = function () {
         vRndX = plusMinus(rnd(s.vMaxX, 0.2));
         vRndY = rnd(s.vMaxY, 0.2);
         if (this.flakes)
@@ -94,7 +93,7 @@ SF.pl.snowstorm = (function (window, document) {
                     this.flakes[i].setVelocities();
     };
 
-    this.scrollHandler = function () {
+    storm.scrollHandler = function () {
         scrollY = (s.flakeBottom ? 0 : parseInt(window.scrollY, 10));
         if (isNaN(scrollY))
             scrollY = 0;
@@ -104,7 +103,7 @@ SF.pl.snowstorm = (function (window, document) {
                     s.flakes[i].stick();
     };
 
-    this.resizeHandler = function () {
+    storm.resizeHandler = function () {
         if (window.innerWidth || window.innerHeight) {
             screenX = window.innerWidth - 16 - s.flakeRightOffset;
             screenY = (s.flakeBottom ? s.flakeBottom : window.innerHeight);
@@ -115,13 +114,13 @@ SF.pl.snowstorm = (function (window, document) {
         screenX2 = parseInt(screenX / 2, 10);
     };
 
-    this.resizeHandlerAlt = function () {
+    storm.resizeHandlerAlt = function () {
         screenX = s.targetElement.offsetLeft + s.targetElement.offsetWidth - s.flakeRightOffset;
         screenY = s.flakeBottom ? s.flakeBottom : s.targetElement.offsetTop + s.targetElement.offsetHeight;
         screenX2 = parseInt(screenX / 2, 10);
     };
 
-    this.freeze = function () {
+    storm.freeze = function () {
         if (!s.disabled)
             s.disabled = 1;
         else
@@ -130,7 +129,7 @@ SF.pl.snowstorm = (function (window, document) {
             clearInterval(s.timers[i]);
     };
 
-    this.resume = function () {
+    storm.resume = function () {
         if (s.disabled)
             s.disabled = 0;
         else
@@ -138,7 +137,7 @@ SF.pl.snowstorm = (function (window, document) {
         s.timerInit();
     };
 
-    this.toggleSnow = function () {
+    storm.toggleSnow = function () {
         if (!s.flakes.length) {
             s.start();
         } else {
@@ -153,7 +152,7 @@ SF.pl.snowstorm = (function (window, document) {
         }
     };
 
-    this.stop = function () {
+    storm.stop = function () {
         this.freeze();
         for (var i = this.flakes.length; i--;)
             this.flakes[i].o.style.display = 'none';
@@ -165,53 +164,53 @@ SF.pl.snowstorm = (function (window, document) {
         }
     };
 
-    this.show = function () {
+    storm.show = function () {
         for (var i = this.flakes.length; i--;)
             this.flakes[i].o.style.display = 'block';
     };
 
-    this.SnowFlake = function (parent, type, x, y) {
+    storm.SnowFlake = function (parent, type, x, y) {
         var s = this,
             storm = parent;
-        this.type = type;
-        this.x = x || parseInt(rnd(screenX - 20), 10);
-        this.y = (!isNaN(y) ? y : -rnd(screenY) - 12);
-        this.vX = null;
-        this.vY = null;
-        this.vAmpTypes = [1, 1.2, 1.4, 1.6, 1.8];
-        this.vAmp = this.vAmpTypes[this.type];
-        this.melting = false;
-        this.meltFrameCount = storm.meltFrameCount;
-        this.meltFrames = storm.meltFrames;
-        this.meltFrame = 0;
-        this.twinkleFrame = 0;
-        this.active = 1;
-        //this.fontSize = (10 + (this.type / 5) * 10);
-        this.o = document.createElement('div');
-        //this.o.innerHTML = storm.snowCharacter;
-        //this.o.style.color = storm.snowColor;
-        this.o.style.backgroundColor = storm.snowColor;
-        this.o.style.boxShadow = '0 2px 3px rgba(0, 0, 0, .25)';
-        this.o.style.position = (fixedForEverything ? 'fixed' : 'absolute');
-        //this.o.style.width = storm.flakeWidth + 10 + 'px';
-        //this.o.style.height = storm.flakeHeight + 10 + 'px';
-        var size = 3 + this.type;
-        this.o.style.width = this.o.style.height = size + 'px';
-        this.o.style.borderRadius = (size / 2) + 'px';
+        s.type = type;
+        s.x = x || parseInt(rnd(screenX - 20), 10);
+        s.y = (!isNaN(y) ? y : -rnd(screenY) - 12);
+        s.vX = null;
+        s.vY = null;
+        s.vAmpTypes = [1, 1.2, 1.4, 1.6, 1.8];
+        s.vAmp = s.vAmpTypes[s.type];
+        s.melting = false;
+        s.meltFrameCount = storm.meltFrameCount;
+        s.meltFrames = storm.meltFrames;
+        s.meltFrame = 0;
+        s.twinkleFrame = 0;
+        s.active = 1;
+        //s.fontSize = (10 + (this.type / 5) * 10);
+        s.o = document.createElement('div');
+        //s.o.innerHTML = storm.snowCharacter;
+        //s.o.style.color = storm.snowColor;
+        s.o.style.backgroundColor = storm.snowColor;
+        s.o.style.boxShadow = '2px 2px 3px rgba(0, 0, 0, .1)';
+        s.o.style.position = (fixedForEverything ? 'fixed' : 'absolute');
+        //s.o.style.width = storm.flakeWidth + 10 + 'px';
+        //s.o.style.height = storm.flakeHeight + 10 + 'px';
+        var size = 3 + s.type;
+        s.o.style.width = s.o.style.height = size + 'px';
+        s.o.style.borderRadius = (size / 2) + 'px';
         //this.o.style.fontFamily = 'arial,verdana';
         //this.o.style.overflow = 'hidden';
         //this.o.style.fontWeight = 'normal';
-        this.o.style.zIndex = storm.zIndex;
-        docFrag.appendChild(this.o);
+        s.o.style.zIndex = storm.zIndex;
+        docFrag.appendChild(s.o);
 
-        this.refresh = function () {
+        s.refresh = function () {
             if (isNaN(s.x) || isNaN(s.y))
                 return false;
             s.o.style.left = s.x + 'px';
             s.o.style.top = s.y + 'px';
         };
 
-        this.stick = function () {
+        s.stick = function () {
             if ((storm.targetElement !== document.documentElement && storm.targetElement !== document.body)) {
                 s.o.style.top = (screenY + scrollY - storm.flakeHeight) + 'px';
             } else if (storm.flakeBottom) {
@@ -225,7 +224,7 @@ SF.pl.snowstorm = (function (window, document) {
             }
         };
 
-        this.vCheck = function () {
+        s.vCheck = function () {
             if (s.vX >= 0 && s.vX < 0.2)
                 s.vX = 0.2;
             else if (s.vX < 0 && s.vX > -0.2)
@@ -234,7 +233,7 @@ SF.pl.snowstorm = (function (window, document) {
                 s.vY = 0.2;
         };
 
-        this.move = function () {
+        s.move = function () {
             var vX = s.vX * windOffset,
                 yDiff;
             s.x += vX;
@@ -268,20 +267,20 @@ SF.pl.snowstorm = (function (window, document) {
             }
         };
 
-        this.animate = function () {
+        s.animate = function () {
             s.move();
         };
 
-        this.setVelocities = function () {
+        s.setVelocities = function () {
             s.vX = vRndX + rnd(storm.vMaxX * 0.12, 0.1);
             s.vY = vRndY + rnd(storm.vMaxY * 0.12, 0.1);
         };
 
-        this.setOpacity = function (o, opacity) {
+        s.setOpacity = function (o, opacity) {
             o.style.opacity = opacity;
         };
 
-        this.melt = function () {
+        s.melt = function () {
             if (!storm.useMeltEffect || !s.melting) {
                 s.recycle();
             } else {
@@ -296,7 +295,7 @@ SF.pl.snowstorm = (function (window, document) {
             }
         };
 
-        this.recycle = function () {
+        s.recycle = function () {
             s.o.style.display = 'none';
             s.o.style.position = (fixedForEverything ? 'fixed' : 'absolute');
             s.o.style.bottom = 'auto';
@@ -317,11 +316,11 @@ SF.pl.snowstorm = (function (window, document) {
             s.o.style.display = 'block';
             s.active = 1;
         };
-        this.recycle();
-        this.refresh();
+        s.recycle();
+        s.refresh();
     };
 
-    this.snow = function () {
+    storm.snow = function () {
         var active = 0,
             used = 0,
             waiting = 0,
@@ -345,7 +344,7 @@ SF.pl.snowstorm = (function (window, document) {
         }
     };
 
-    this.mouseMove = function (e) {
+    storm.mouseMove = function (e) {
         if (!s.followMouse)
             return true;
         var x = parseInt(e.clientX, 10);
@@ -357,7 +356,7 @@ SF.pl.snowstorm = (function (window, document) {
         }
     };
 
-    this.createSnow = function (limit, allowInactive) {
+    storm.createSnow = function (limit, allowInactive) {
         for (var i = 0; i < limit; i++) {
             s.flakes[s.flakes.length] = new s.SnowFlake(s, parseInt(rnd(flakeTypes), 10));
             if (allowInactive || i > s.flakesMaxActive)
@@ -366,11 +365,11 @@ SF.pl.snowstorm = (function (window, document) {
         storm.targetElement.appendChild(docFrag);
     };
 
-    this.timerInit = function () {
+    storm.timerInit = function () {
         s.timers = [setInterval(s.snow, s.animationInterval)];
     };
 
-    this.init = function () {
+    storm.init = function () {
         for (var i = 0; i < s.meltFrameCount; i++)
             s.meltFrames.push(1 - (i / s.meltFrameCount));
         s.randomizeWind();
@@ -389,7 +388,7 @@ SF.pl.snowstorm = (function (window, document) {
         s.timerInit();
     };
 
-    this.start = function (bFromOnLoad) {
+    storm.start = function (bFromOnLoad) {
         if (!didInit)
             didInit = true;
         else if (bFromOnLoad)
@@ -415,10 +414,10 @@ SF.pl.snowstorm = (function (window, document) {
 
     return {
         load: function() {
-            storm.usePositionFixed = true;
             storm.start(true);
         },
         unload: function() {
+            storm.stop();
         }
     };
 }(window, document));

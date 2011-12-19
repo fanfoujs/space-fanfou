@@ -93,6 +93,7 @@ var plugins = [
     {
         name: 'snowstorm',
         js: 'snowstorm.js',
+        css: 'snowstorm.css',
     },
 
 ];

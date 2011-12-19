@@ -22,6 +22,11 @@
             "matches": [ "http://fanfou.com/*" ],
             "exclude_globs": [ "*home.2*" ],
             "run_at": "document_start"
+        },
+        {
+            "js": [ "egg.js" ],
+            "matches": [ "http://fanfou.com/*" ],
+            "exclude_globs": [ "*home.2*" ]
         }
     ]
 }
