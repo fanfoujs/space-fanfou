@@ -40,10 +40,7 @@
         document.body.appendChild(stop_snow);
     }
 
-    var $update = $i('update');
-    var $form = $i('message');
-    if (! $update) return;
-    var $msg = $update.getElementsByTagName('textarea')[0];
+    var $form, $msg;
 
     function onMsgSubmit(e) {
         if (is_enabled) return;
@@ -58,6 +55,20 @@
         is_enabled = true;
         showStopSnow();
     }
-    $form.addEventListener('submit', onMsgSubmit, false);
-    $form.addEventListener('form_submit', onMsgSubmit, false);
+
+    function onKeyUp(e) {
+        if (e.ctrlKey && (e.keyCode == 10 || e.keyCode == 13))
+            onMsgSubmit(e);
+    }
+
+    SF.fn.waitFor(function() {
+        return $i('message') &&
+                $i('message').getElementsByTagName('textarea');
+    }, function() {
+        $form = $i('message');
+        $msg = $form.getElementsByTagName('textarea')[0];
+        $form.addEventListener('submit', onMsgSubmit, true);
+        $msg.addEventListener('keyup', onKeyUp, true);
+        $form.addEventListener('form_submit', onMsgSubmit, false);
+    });
 })(port);

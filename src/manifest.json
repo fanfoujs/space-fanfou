@@ -17,16 +17,11 @@
     },
     "content_scripts": [
         {
-            "js": [ "namespace.js", "functions.js", "load.js" ],
+            "js": [ "namespace.js", "functions.js", "load.js", "egg.js" ],
             "css": [ "common/main.css" ],
             "matches": [ "http://fanfou.com/*" ],
             "exclude_globs": [ "*home.2*" ],
             "run_at": "document_start"
-        },
-        {
-            "js": [ "egg.js" ],
-            "matches": [ "http://fanfou.com/*" ],
-            "exclude_globs": [ "*home.2*" ]
         }
     ]
 }
