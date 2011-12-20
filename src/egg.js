@@ -31,6 +31,7 @@
         var stop_snow = $c('a');
         console.log(stop_snow);
         stop_snow.href = '#';
+        stop_snow.title = '停止下雪效果';
         stop_snow.innerHTML = '停止！';
         stop_snow.id = 'sf_stop_snow';
         stop_snow.addEventListener('click', function(e) {
