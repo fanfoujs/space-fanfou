@@ -1,0 +1,10 @@
+#stream li>a[href^="/lovelyamylee"].author,
+#stream.pm li>a[href^="/lovelyamylee"]:nth-of-type(2) {
+	margin-right: 22px;
+}
+#stream li>a[href^="/lovelyamylee"].author::after,
+#stream.pm li>a[href^="/lovelyamylee"]:nth-of-type(2)::after {
+	content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAOCAYAAADwikbvAAABh0lEQVQoFZVSv0vDQBR+d5dcEqMWHDo6iYFqXYT+B87SwaWrk7Ojgours4v/gVNdRRdBsOBoRdEOSlUUhNbGNJcf573UhgTN0IPLu+/73vfe43IgpYSi/fS4fFSkIU+hYHU7TtXgbFNFpyCl2MwpbZi6AZyS+uRmPapzPQZdCxsTmV9v9apGA0enAegsqir87+jk+Rr2mQY7hIzqY+QGAXumDJzbIIQL7tc7CB8vdpSDMQphj+Ct9e/pls6nDghlFgECVFXTNBMUhjgOVaIPscpWdpBx5AXie3t2MT5MzFhv+GBXuDF9TKlWgfEYo0ZpO1WoLfzBhrngtpFMzQjcG2qZVqnJGF/LFVDTRZE4HXq9dXsp9jAXV+4/oyAGvTkpBEAQphux4ktZ4x/z2xmZl6FcxdtIdhh8jM+Kr6GetPz95DqzGBosUooIotDt74LTKydRYeSVnn8w2bf7eQ6Xfgs6wyuoZXnEyCv9IsunnV9OiEUk3AkPVoyabGXHQ+wrHvVuk7Cx9gOBPABfT2srkwAAAABJRU5ErkJggg==');
+	position: absolute;
+	padding: 1px 0 0 3px;
+}
