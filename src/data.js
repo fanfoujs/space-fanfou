@@ -87,6 +87,10 @@ var plugins = [
         type: 'background',
         js: 'share_to_fanfou.js',
     },
+    {
+        name: 'amy_star',
+        css: 'amy_star.css'
+    },
 
     /* 彩蛋 */
 
