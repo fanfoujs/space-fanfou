@@ -133,6 +133,17 @@
 	background: rgba(255, 51, 0, .9) !important;
 	text-shadow: 0 -1px 0 rgba(102, 20, 0, .75);
 }
+#systip {
+	background: #ebf3f5 !important;
+	border: 3px solid #b4d5db !important;
+	border-radius: 5px;
+}
+#systip h3 {
+	border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+#systip div {
+	border-top: 1px solid rgba(255, 255, 255, .75) !important;
+}
 #newsfeed li {
 	border-bottom: 1px solid rgba(0, 0, 0, .11) !important;
 	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAR0lEQVQIHWPcv38/GwMDQx0QJwAxCCwA4iYWINEIxBVADAPVQAYzE5BIhokg0ckgCawAJDEXi8wCkB31QAxyQBRUwTIgXQMAiI0Jzn69V+8AAAAASUVORK5CYII=') 5px center no-repeat !important;
@@ -345,7 +356,7 @@ span.ajaxprompt {
 	border-radius: 3px;
 	box-shadow: 0 2px 2px rgba(0, 0, 0, .15);
 }
-#user_top:first-child > h3 {
+#user_top:first-child>h3 {
 	font-family: "Helvetica Neue", Helvetica, Tahoma, "Hiragino Sans GB", "WenQuanYi Micro Hei", "Microsoft Yahei", sans-serif !important;
 	font-weight: 300 !important;
 	/* -webkit-text-stroke: 1px transparent; */
