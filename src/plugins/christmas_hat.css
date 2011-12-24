@@ -7,5 +7,6 @@
 	top: -3px;
 	left: -8px;
 	pointer-events: none;
-	z-index: 999;
+	-webkit-user-select: none;
+	z-index: 99;
 }
