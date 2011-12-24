@@ -10,6 +10,7 @@ SF.st.default_settings = {
     newstyle_op_icons: false,
     logo_remove_beta: true,
     remove_app_recom: true,
+    christmas_hat: true,
     amy_star: true,
     expanding_replies: true,
     'expanding_replies.number': 3,
