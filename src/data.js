@@ -88,20 +88,8 @@ var plugins = [
         js: 'share_to_fanfou.js',
     },
     {
-        name: 'christmas_hat',
-        css: 'christmas_hat.css'
-    },
-    {
         name: 'amy_star',
         css: 'amy_star.css'
-    },
-
-    /* 彩蛋 */
-
-    {
-        name: 'snowstorm',
-        js: 'snowstorm.js',
-        css: 'snowstorm.css',
     },
 
 ];
