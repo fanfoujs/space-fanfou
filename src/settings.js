@@ -10,7 +10,6 @@ SF.st.default_settings = {
     newstyle_op_icons: false,
     logo_remove_beta: true,
     remove_app_recom: true,
-    christmas_hat: false,
     amy_star: false,
     expanding_replies: true,
     'expanding_replies.number': 3,
@@ -27,7 +26,6 @@ SF.st.default_settings = {
     privatemsg_manage: true,
     advanced_sidebar: true,
     clean_personal_theme: false,
-    snowstorm: false,
 };
 
 /* 更新选项数据 */
