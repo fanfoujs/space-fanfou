@@ -1,4 +1,4 @@
-#message iframe[name=upload_image] {
+#message iframe[name=upload_image], .upload-button-wrapper {
     display: none;
 }
 #message #u_button { 

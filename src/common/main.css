@@ -161,8 +161,19 @@
 #update {
 	margin-bottom: 0 !important;
 }
+#message .textarea-wrapper {
+	border: none !important;
+}
 #message textarea {
 	resize: vertical;
+}
+#message .upload-button-wrapper {
+	padding-top: 0 !important;
+}
+#message .web-upload-photo-file-name {
+	border-top: none !important;
+	margin: 0 !important;
+	padding: 5px 0 0 !important;
 }
 .input_text,
 #message textarea,

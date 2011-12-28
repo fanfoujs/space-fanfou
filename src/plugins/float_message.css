@@ -1,7 +1,8 @@
 .float-message .lastmsg {
 	display: none;
 }
-.actpost .formbutton, #u_button {
+.actpost .formbutton,
+#u_button {
 	-webkit-transition-property: opacity;
 	-webkit-transition-duration: 300ms;
 }
@@ -27,7 +28,10 @@
 	padding: 10px 0;
 	pointer-events: none;
 }
-.float-message h2, .float-message textarea, .float-message .actpost .formbutton {
+.float-message h2,
+.float-message textarea,
+.float-message .actpost .formbutton,
+.float-message .upload-button-wrapper {
 	pointer-events: auto;
 }
 .float-message::before {
@@ -45,9 +49,13 @@
 .float-message textarea:focus {
 	height: 50px !important;
 }
-.float-message .actpost .formbutton, .float-message #u_button {
+.float-message .actpost .formbutton,
+.float-message #u_button,
+.float-message .upload-button-wrapper {
 	opacity: 0;
 }
-.float-message:hover .actpost .formbutton, .float-message:hover #u_button {
+.float-message:hover .actpost .formbutton,
+.float-message:hover #u_button,
+.float-message:hover .upload-button-wrapper {
 	opacity: 1;
 }
