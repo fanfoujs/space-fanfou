@@ -26,10 +26,12 @@ SF.pl.image_uploading = new SF.plugin((function($) {
         var $iframe = $('<iframe>');
         $iframe.attr('name', 'upload_image');
         $message.append($iframe);
+        /*
         var $photo = $('<input>');
         $photo.attr('type', 'hidden');
         $photo.attr('name', 'photo');
         $message.append($photo);
+        */
         $textarea.attr('name', 'desc');
         $action.val('photo.upload');
         $message.attr('enctype', 'multipart/form-data');
@@ -42,11 +44,18 @@ SF.pl.image_uploading = new SF.plugin((function($) {
         });
     });
 
+    var $old_upload = $('#upload-file');
+    var $old_upload2 = $('#upload-base64');
+
     return {
         load: function() {
+            $old_upload.detach();
+            $old_upload2.detach();
             $h2.append($button);
         },
         unload: function() {
+            $('#upload-button').after($old_upload)
+                               .after($old_upload2);
             $button.detach();
         }
     };
