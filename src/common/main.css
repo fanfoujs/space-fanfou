@@ -191,6 +191,9 @@
 	-webkit-transition-property: background;
 	-webkit-transition-duration: 300ms;
 }
+.textarea-wrapper {
+    border: 0 none;
+}
 .formdisabled,
 .input_text[disabled] {
 	color: #777;
