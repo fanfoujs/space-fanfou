@@ -4,10 +4,10 @@
 #message #u_button { 
     display: inline-block;
     width: 23px;
-    height: 17px; 
+    height: 17px;
     overflow: hidden;
     text-decoration: none;
-    cursor: pointer; 
+    cursor: pointer;
     vertical-align: middle;
     margin: -3px 0 -2px 4px;
     background-position: top left;
