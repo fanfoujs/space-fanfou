@@ -1,3 +1,8 @@
 .global-header-content {
 	background: url(http://static2.fanfou.com/img/fanfou.png) no-repeat 0 0;
 }
+.logo_20120103 {
+	top: 0 !important;
+	height: 42px !important;
+	margin-bottom: 0 !important;
+}
