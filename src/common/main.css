@@ -101,7 +101,9 @@
 	font-family: "Lucida Grande", "Helvetica Neue", Helvetica, Tahoma, sans-serif !important;
 }
 ::selection {
-	background: rgba(82, 168, 236, .25);
+	color: rgba(255, 255, 255, .85);
+	background: rgba(83, 186, 237, 1);
+	text-shadow: none !important;
 }
 
 /* Screen */
@@ -150,7 +152,8 @@
 }
 #update .tip .counter,
 #PopupBox .tip .counter {
-	font-family: Georgia, "Times New Roman", Times, serif !important;
+	font-family: "Helvetica Neue", Helvetica, Tahoma, sans-serif !important;
+	font-weight: 300 !important;
 }
 #update .caution::after {
 	content: "\ff08\8d85\51fa\90e8\5206\5c06\4f1a\88ab\7701\7565\ff09";
@@ -322,10 +325,7 @@
 		to(#d5e5ed)
 	) !important;
 	border: 1px solid !important;
-	border-top-color: #d3e3eb !important;
-	border-right-color: #ccdbe3 !important;
-	border-bottom-color: #c5d4db !important;
-	border-left-color: #ccdbe3 !important;
+	border-color: #d3e3eb #ccdbe3 #c5d4db #ccdbe3 !important;
 	box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
 	margin-bottom: 10px;
 }
@@ -338,13 +338,11 @@
 		from(#dcedf5),
 		to(#c3dae5)
 	) !important;
-	border-top-color: #c1d8e3 !important;
-	border-right-color: #bad0db !important;
-	border-bottom-color: #b4c9d4 !important;
-	border-left-color: #bad0db !important;
+	border-color: #c1d8e3 #bad0db #b4c9d4 #bad0db !important;
 }
 #timeline-notification a:active,
 .sysnotice:active {
+	border-color: #b4c9d4 !important;
 	box-shadow: 0 2px 5px rgba(64, 106, 128, .5) inset;
 }
 #timeline-count {
@@ -571,8 +569,8 @@ span.ajaxprompt {
 	padding: 6px 9px !important;
 	border: none !important;
 }
-#pagination-more.more-right {
-	display: none;
+.paginator li a:active {
+	box-shadow: 0 2px 5px rgba(0, 0, 0, .25) inset;
 }
 #pagination-totop {
 	position: fixed;
@@ -592,8 +590,41 @@ span.ajaxprompt {
 #pagination-totop:hover {
     background-color: rgba(0, 0, 0, 1) !important;
 }
+.pagination .more {
+	color: #333 !important;
+	background: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		from(#fafafa),
+		to(#e5e5e5)
+	) !important;
+	border-color: #e3e3e3 #dbdbdb #d4d4d4 #dbdbdb !important;
+	text-shadow: 0 1px 0 #fff;
+	box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
+}
+.pagination .more:hover {
+	background: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		from(#f2f2f2),
+		to(#e0e0e0)
+	) !important;
+	border-color: #dbdbdb #d4d4d4 #ccc #d4d4d4 !important;
+}
+.pagination .more:active {
+	border-color: #ccc !important;
+	box-shadow: 0 2px 5px rgba(128, 128, 128, .5) inset;
+}
+.pagination .loading {
+	background: transparent url(http://static1.fanfou.com/img/ajax.gif) no-repeat 50% 50% !important;
+}
 .pagination .more-left {
 	width: 100% !important;
+}
+.pagination .more-right {
+	display: none;
 }
 .tabs {
 	border-bottom: 1px solid rgba(0, 0, 0, .15) !important;
