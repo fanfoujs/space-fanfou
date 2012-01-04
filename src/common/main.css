@@ -574,9 +574,11 @@ span.ajaxprompt {
 }
 #pagination-totop {
 	position: fixed;
+	display: block;
 	visibility: hidden;
 	bottom: 0;
 	margin-left: 762px;
+	margin-bottom: 6px;
 	width: 35px;
 	height: 35px;
 	padding: 5px !important;

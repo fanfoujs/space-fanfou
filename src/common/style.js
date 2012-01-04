@@ -48,7 +48,6 @@
             }
             totop = $c('a');
             totop.id = 'pagination-totop';
-            totop.className = 'more more-right';
             totop.href = '#';
             totop.innerHTML = '返回顶部';
             pagination.appendChild(totop);
@@ -64,6 +63,7 @@
             var $totop = $(totop), $win = $(window);
             var main_top = 66;
             $totop.hide();
+            $totop.removeClass('more more-right');
             $totop.css('visibility', 'visible');
             $win.scroll(function() {
                 if ($totop.is(':visible')) {
