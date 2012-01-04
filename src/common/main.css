@@ -619,7 +619,8 @@ span.ajaxprompt {
 	border-color: #ccc !important;
 	box-shadow: 0 2px 5px rgba(128, 128, 128, .5) inset;
 }
-.pagination .loading {
+.pagination .loading,
+.pagination .loading:hover {
 	background: transparent url(http://static1.fanfou.com/img/ajax.gif) no-repeat 50% 50% !important;
 }
 .pagination .more-left {
