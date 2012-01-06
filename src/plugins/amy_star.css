@@ -4,7 +4,7 @@
 }
 #stream li>a[href^="/lovelyamylee"].author::after,
 #stream.pm li>a[href^="/lovelyamylee"]:nth-of-type(2)::after {
-	content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAOCAYAAADwikbvAAABh0lEQVQoFZVSv0vDQBR+d5dcEqMWHDo6iYFqXYT+B87SwaWrk7Ojgours4v/gVNdRRdBsOBoRdEOSlUUhNbGNJcf573UhgTN0IPLu+/73vfe43IgpYSi/fS4fFSkIU+hYHU7TtXgbFNFpyCl2MwpbZi6AZyS+uRmPapzPQZdCxsTmV9v9apGA0enAegsqir87+jk+Rr2mQY7hIzqY+QGAXumDJzbIIQL7tc7CB8vdpSDMQphj+Ct9e/pls6nDghlFgECVFXTNBMUhjgOVaIPscpWdpBx5AXie3t2MT5MzFhv+GBXuDF9TKlWgfEYo0ZpO1WoLfzBhrngtpFMzQjcG2qZVqnJGF/LFVDTRZE4HXq9dXsp9jAXV+4/oyAGvTkpBEAQphux4ktZ4x/z2xmZl6FcxdtIdhh8jM+Kr6GetPz95DqzGBosUooIotDt74LTKydRYeSVnn8w2bf7eQ6Xfgs6wyuoZXnEyCv9IsunnV9OiEUk3AkPVoyabGXHQ+wrHvVuk7Cx9gOBPABfT2srkwAAAABJRU5ErkJggg==');
+	content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAOCAMAAADHVLbdAAAAvVBMVEX////ksADlsQD01AHywQDzwQDnvADk3Sbm1gT32wrk3Sbm1gT4yQDx2QHqugDqugDq3yf7zgHjzQDjzQDq3yji3SzvvQDvvQD83RDuvgDuvgD20QH20QHv4yP94hbw5CX5ygD/2A723wv+0Qfm0QDn0gDo0wDp4y/u2gHx6Db05iD1zQD34Q737TT4ygD44Q/55xf65BP87y/96Br+1wz+2hD+6Bv/2Q//3BP/4Bb/4Rf/5Br/5Rv/6h7/7SL0bt7IAAAAJHRSTlMAAwkJDAweJycqLS02aW94eHt+hIecnJ+6w8bJzNLV2N7q9vx/TV/DAAAAhElEQVQIHVXB2QJCQAAF0FtKKSqt2iSMhCxFBtX/f1YZHqZz0Frhz+gyAG95nYF3uh3BGXt3bwhmYRPiuPEndh1C7DmgmEGUPN+PJApMBT+SXr1qlS6BEbSiLMtCE9A6ZJTSbI+W6Kf5OU99EY1paKlQrXCCxs6QAcjGFkx300ett+4AX1trDYG6I1S1AAAAAElFTkSuQmCC');
 	position: absolute;
 	padding: 1px 0 0 3px;
 }
