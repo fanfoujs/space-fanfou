@@ -16,3 +16,11 @@
 #sf_clean_personal_theme:hover {
     background-color: rgba(0, 0, 0, .5) !important;
 }
+
+@media (max-width: 990px) {
+    #sf_clean_personal_theme {
+        -webkit-animation: fadeOut .75s;
+        opacity: 0;
+        z-index: -100;
+    }
+}
