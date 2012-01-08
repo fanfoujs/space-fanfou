@@ -3,12 +3,16 @@ SF.pl.repost_photo_preview = new SF.plugin((function($) {
     if (! $ol.length) return;
     var r_img = /<img src="(http:\/\/photo\.fanfou\.com\/n[^\.]+\.jpg)"/;
     var item_list = [];
+    var displayed = {};
     function processItem($item) {
         var $content = $('>.content', $item);
         if ($('>a.photo', $content).length) return;
         var $image = $('a[href^="http://fanfou.com/photo/"]', $content);
         if (! $image.length) return;
-        $.get($image.attr('href'), function(data) {
+        var url = $image.attr('href');
+        if (displayed[url]) return;
+        displayed[url] = true;
+        $.get(url, function(data) {
             var photo = r_img.exec(data);
             if (! photo) return;
             var src = photo[1];
