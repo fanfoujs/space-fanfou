@@ -1,12 +1,13 @@
-.float-message .lastmsg {
+/* .float-message .lastmsg {
 	display: none;
-}
+} */
 .actpost .formbutton,
+.tip,
 #u_button {
-	-webkit-transition-property: opacity;
+	-webkit-transition-property: opacity, top;
 	-webkit-transition-duration: 300ms;
 }
-#update textarea {
+#phupdate textarea {
 	-webkit-transition-property: all;
 	-webkit-transition-duration: 300ms;
 }
@@ -46,6 +47,9 @@
 }
 .float-message.msgempty textarea {
 	height: 18px !important;
+}
+.float-message.msgempty .tip {
+	top: 67px !important;
 }
 .float-message textarea:focus {
 	height: 50px !important;
