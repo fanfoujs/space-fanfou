@@ -1,7 +1,7 @@
 SF.pl.float_message = new SF.plugin((function($, $Y) {
     var $main = $('#main');
     if ($main.hasClass('privatemsg')) return;
-    var $update = $('>#update', $main);
+    var $update = $('>#phupdate', $main);
     if (! $update.length) return;
 
     var noajaxattop = false,
