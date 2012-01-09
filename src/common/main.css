@@ -150,6 +150,9 @@
 	border-bottom: 1px solid rgba(0, 0, 0, .11) !important;
 	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAR0lEQVQIHWPcv38/GwMDQx0QJwAxCCwA4iYWINEIxBVADAPVQAYzE5BIhokg0ckgCawAJDEXi8wCkB31QAxyQBRUwTIgXQMAiI0Jzn69V+8AAAAASUVORK5CYII=') 5px center no-repeat !important;
 }
+#phupdate {
+	margin-bottom: 7px !important;
+}
 .slogan {
 	text-indent: 0 !important;
 	background: transparent !important;
@@ -158,12 +161,15 @@
 	top: 99px !important;
 }
 #phupdate .tip .counter,
+#update .tip .counter,
 #PopupBox .tip .counter {
 	font-family: "Helvetica Neue", Helvetica, Tahoma, sans-serif !important;
 	font-weight: 300 !important;
 }
-#phupdate {
-	margin-bottom: 7px !important;
+#phupdate .act .loading {
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 #phupdate textarea {
 	width: 490px !important;
@@ -271,11 +277,13 @@
 .web-upload-photo-file-name {
 	left: 0;
 }
-/* #phupdate .formbutton {
+/* #phupdate .formbutton,
+#update .formbutton {
 	-webkit-transition-property: opacity;
 	-webkit-transition-duration: 300ms;
 }
-#phupdate.msgempty .formbutton {
+#phupdate.msgempty .formbutton,
+#update.msgempty .formbutton {
 	opacity: .5;
 } */
 .ui-autocomplete {
@@ -846,6 +854,7 @@ a.bh:focus {
 	box-shadow: 0 0 8px rgba(83, 186, 237, .6);
 }
 #phupdate .formbutton,
+#update .formbutton,
 #PopupBox .formbutton {
 	width: 115px !important;
 	height: 32px !important;
@@ -873,6 +882,7 @@ a.bh:focus {
 		0 1px 0 rgba(0, 0, 0, .09);
 }
 #phupdate .formbutton:hover,
+#update .formbutton:hover,
 #PopupBox .formbutton:hover {
 	-webkit-animation-name: bl-blinking;
 	-webkit-animation-timing-function: ease-in-out;
@@ -880,12 +890,14 @@ a.bh:focus {
 	-webkit-animation-duration: 1s;
 }
 #phupdate .formbutton:focus,
+#update .formbutton:focus,
 #PopupBox .formbutton:focus {
 	outline: none;
 	border-color: rgba(83, 186, 237, 1) !important;
 	box-shadow: 0 0 8px rgba(83, 186, 237, .6);
 }
 #phupdate .formbutton:active,
+#update .formbutton:active,
 #PopupBox .formbutton:active,
 .bl:active,
 .bl-long:active,
