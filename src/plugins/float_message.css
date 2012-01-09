@@ -22,12 +22,24 @@
 			left bottom,
 			from(rgba(255, 255, 255, 1)),
 			color-stop(30%, rgba(255, 255, 255, .9)),
-			color-stop(60%, rgba(255, 255, 255, .9)),
-			color-stop(80%, rgba(255, 255, 255, 0))
+			color-stop(75%, rgba(255, 255, 255, .9)),
+			color-stop(100%, rgba(255, 255, 255, 0))
 		);
 	border-bottom: none;
 	padding: 10px 0;
 	pointer-events: none;
+}
+.float-message.msgempty {
+	background:
+		-webkit-gradient(
+			linear,
+			left top,
+			left bottom,
+			from(rgba(255, 255, 255, 1)),
+			color-stop(30%, rgba(255, 255, 255, .9)),
+			color-stop(60%, rgba(255, 255, 255, .9)),
+			color-stop(80%, rgba(255, 255, 255, 0))
+		);
 }
 .float-message h2,
 .float-message textarea,

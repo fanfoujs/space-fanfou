@@ -193,6 +193,7 @@
 }
 .input_text,
 #message textarea,
+#phupdate textarea,
 #update textarea,
 #invite-url,
 #PopupBox textarea,
@@ -200,7 +201,7 @@
 #finder_emailarea,
 #sharer textarea {
 	padding: 4px;
-	background: rgba(255, 255, 255, .5);
+	background: rgba(255, 255, 255, .75);
 	border: 1px solid #b5b5b5 !important;
 	border-radius: 5px;
 	box-shadow: 0 2px 5px rgba(0, 0, 0, .075) inset !important;
@@ -215,6 +216,7 @@
 }
 .input_text:hover,
 #message textarea:hover,
+#phupdate textarea:hover,
 #update textarea:hover,
 #invite-url:hover,
 #PopupBox textarea:hover,
@@ -230,6 +232,7 @@
 }
 .input_text:focus,
 #message textarea:focus,
+#phupdate textarea:focus,
 #update textarea:focus,
 #invite-url:focus,
 #PopupBox textarea:focus,
