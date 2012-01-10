@@ -1,6 +1,10 @@
 #message iframe[name=upload_image], .upload-button-wrapper {
     display: none;
 }
+.float-message #upload-wrapper,
+.float-message .upload-button-wrapper {
+	pointer-events: none !important;
+}
 #message #u_button { 
     display: inline-block;
     width: 23px;

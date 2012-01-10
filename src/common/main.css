@@ -34,6 +34,16 @@
 		opacity: 0;
 	}
 }
+@-webkit-keyframes tipfadeIn {
+	from {
+		top: 77px;
+		opacity: 0;
+	}
+	to {
+		top: 98px;
+		opacity: 1;
+	}
+}
 @-webkit-keyframes colorfadeIn {
 	from {
 		color: rgba(255, 255, 255, 0);
@@ -158,12 +168,15 @@
 	background: transparent !important;
 }
 #phupdate .tip {
-	top: 99px;
+	top: 98px;
+	right: 125px;
+	-webkit-animation: tipfadeIn 300ms;
 }
 #phupdate .tip .counter,
 #update .tip .counter,
 #PopupBox .tip .counter {
 	font-family: "Helvetica Neue", Helvetica, Tahoma, sans-serif !important;
+	font-size: 18px !important;
 	font-weight: 300 !important;
 }
 #phupdate .act .loading {
@@ -254,7 +267,7 @@
 	left: 37px !important;
 }
 #PopupUpdate .tip {
-	left: 464px !important;
+	left: 470px !important;
 }
 #PopupUpdate .formbutton {
 	left: 39px !important;

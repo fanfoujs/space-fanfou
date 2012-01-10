@@ -58,13 +58,16 @@
 	pointer-events: auto;
 }
 .float-message.msgempty textarea {
-	height: 18px !important;
-}
-.float-message.msgempty .tip {
-	top: 67px !important;
+	height: 20px !important;
 }
 .float-message textarea:focus {
 	height: 50px !important;
+}
+.float-message .tip {
+	text-shadow: 0 1px 1px #fff;
+}
+.float-message.msgempty .tip {
+	top: 67px !important;
 }
 .float-message .actpost .formbutton,
 .float-message #u_button,
