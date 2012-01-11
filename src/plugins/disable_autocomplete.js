@@ -1,7 +1,6 @@
 SF.pl.disable_autocomplete = new SF.plugin((function($) {
-    if (location.pathname != '/home')
-        return new SF.plugin();
     var $content = $('textarea[name="content"]');
+    if (! $content.length) return;
     return {
         load: function() {
             SF.fn.waitFor(function() {
