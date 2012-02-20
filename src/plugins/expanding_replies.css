@@ -41,13 +41,13 @@
 #stream>ol>li.reply.more,
 #stream>ol>li.reply.hide,
 #stream>ol>li.reply.waiting {
-	background: rgba(235, 235, 235, 1);
+	background: rgba(0, 0, 0, .1);
 	color: #666;
 	text-shadow: 0 1px 0 white; 
 	cursor: pointer;
 }
 #stream>ol>li.reply.notavail {
-	background: rgba(235, 235, 235, 1);
+	background: rgba(0, 0, 0, .1);
 	color: #666;
 	text-shadow: 0 1px 0 white;
 	text-decoration: line-through;
@@ -55,8 +55,13 @@
 }
 #stream>ol>li.reply.more:hover,
 #stream>ol>li.reply.hide:hover {
-	background: rgba(230, 230, 230, 1);
+	background: rgba(0, 0, 0, .15) !important;
 	color: #666;
+}
+#stream>ol>li.reply.more:active,
+#stream>ol>li.reply.hide:active {
+	text-shadow: none;
+	box-shadow: 0 2px 5px rgba(128, 128, 128, .5) inset;
 }
 #stream>ol>li.reply.waiting {
 	background-image: url("http://static1.fanfou.com/img/ajax.gif");
@@ -74,8 +79,4 @@
 .light .stamp .reply a {
 	background: transparent !important;
 	color: #999 !important;
-	border-bottom: 1px dotted #999 !important;
-}
-.light .stamp .reply a:hover {
-	border-bottom-style: solid !important;
 }

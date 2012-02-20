@@ -190,6 +190,7 @@
 .textarea-wrapper-active {
 	border: none !important;
 }
+#phupdate .textarea-wrapper,
 #message .textarea-wrapper {
 	border: none !important;
 }
