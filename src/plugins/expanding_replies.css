@@ -60,8 +60,7 @@
 }
 #stream>ol>li.reply.more:active,
 #stream>ol>li.reply.hide:active {
-	text-shadow: none;
-	box-shadow: 0 2px 5px rgba(128, 128, 128, .5) inset;
+	box-shadow: 0 1px 3px rgba(128, 128, 128, .5) inset;
 }
 #stream>ol>li.reply.waiting {
 	background-image: url("http://static1.fanfou.com/img/ajax.gif");
