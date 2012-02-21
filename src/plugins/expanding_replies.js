@@ -17,7 +17,7 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
         return id;
     }
 
-    function displayReplyList(url, before, num, first) {
+    function displayReplyList(url, before, num, type) {
         if (num == 0) {
             var $more = $('<li>');
             $more.attr('href', url);
@@ -76,11 +76,11 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
                         url = $('a', $reply).attr('href');
                     }
                 }
-                if (first) {
+                if (type) {
                     var $hide_replies = $('<li>');
                     $hide_replies.addClass('reply hide');
                     $hide_replies.attr('expended', 'expended');
-                    $hide_replies.text('隐藏回复原文');
+                    $hide_replies.text('隐藏' + type + '原文');
                     $hide_replies.insertBefore($before);
                 }
                 $li.insertBefore($before);
@@ -105,13 +105,18 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
         if (! $reply.length) return;
         $item.attr('expended', 'expended');
         var $expand = $('<li>');
-        $expand.attr('href', $('a', $reply).attr('href'));
+        var $link = $('a', $reply);
+        if ($link.html().indexOf('转自') == 0)
+            $expand.attr('type', '转发');
+        else
+            $expand.attr('type', '回复');
+        $expand.attr('href', $link.attr('href'));
         $expand.addClass('reply more first');
-        $expand.text('展开回复原文');
+        $expand.text('展开' + $expand.attr('type') + '原文');
         $expand.insertAfter($item);
         if (auto_expand) {
             displayReplyList($expand.attr('href'),
-                showWaiting($expand), 1, true);
+                showWaiting($expand), 1, $item.attr('type'));
         }
     }
 
@@ -138,7 +143,7 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
                 var $t = $(this);
                 displayReplyList($item.attr('href'),
                     showWaiting($t), replies_number,
-                    $t.hasClass('first'));
+                    $t.hasClass('first') ? $item.attr('type') : false);
             });
         }
     }
