@@ -5,8 +5,8 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
     var replies_number;
     var auto_expand;
 
-    var MSG_DELETED = '原消息已删除';
-    var MSG_NOPUBLIC = '原消息不公开';
+    var MSG_DELETED = '已删除';
+    var MSG_NOPUBLIC = '不公开';
     
     function showWaiting($e) {
         var $wait = $('<li>');
@@ -80,7 +80,7 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
                     var $hide_replies = $('<li>');
                     $hide_replies.addClass('reply hide');
                     $hide_replies.attr('expended', 'expended');
-                    $hide_replies.text('隐藏' + type + '原文');
+                    $hide_replies.text('隐藏原文');
                     $hide_replies.insertBefore($before);
                 }
                 $li.insertBefore($before);
@@ -112,7 +112,10 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
             $expand.attr('type', '回复');
         $expand.attr('href', $link.attr('href'));
         $expand.addClass('reply more first');
-        $expand.text('展开' + $expand.attr('type') + '原文');
+        if ($link.html().indexOf('转自') == 0)
+        	$expand.text('转发自..');
+        else
+        	$expand.text('展开' + $expand.attr('type'));
         $expand.insertAfter($item);
         if (auto_expand) {
             displayReplyList($expand.attr('href'),

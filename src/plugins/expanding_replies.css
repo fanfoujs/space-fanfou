@@ -29,38 +29,104 @@
 	font-size: 90%;
 	height: 1.5em !important;
 	line-height: 1.5em;
-	margin-left: 70%;
+	margin-left: 75%;
 	margin-top: -1.6em;
 	text-align: center;
 	padding: 0 !important;
-	width: 90px !important;
+	width: 60px !important;
 	min-height: 0;
 	border-left: none;
-	border-bottom: 1px solid #e5e5e5;
 }
 #stream>ol>li.reply.more,
 #stream>ol>li.reply.hide,
-#stream>ol>li.reply.waiting {
-	background: rgba(0, 0, 0, .1);
+#stream>ol>li.reply.waiting,
+#stream>ol>li.reply.notavail {
+	background: 
+		-webkit-gradient(
+			linear,
+			left top,
+			left bottom,
+			from(rgba(235, 235, 235, .25)),
+			to(rgba(235, 235, 235, 1))
+		) !important;
 	color: #666;
 	text-shadow: 0 1px 0 white; 
 	cursor: pointer;
 }
+#stream>ol>li.reply.more:hover,
+#stream>ol>li.reply.hide:hover,
+#stream>ol>li.reply.waiting:hover,
+#stream>ol>li.reply.notavail:hover {
+	background: 
+		-webkit-gradient(
+			linear,
+			left top,
+			left bottom,
+			from(rgba(219, 219, 219, .25)),
+			to(rgba(219, 219, 219, 1))
+		) !important;
+}
+#stream>ol>li[type="转发"].reply.more,
+#stream>ol>li[type="转发"].reply.hide,
+#stream>ol>li[type="转发"].reply.waiting,
+#stream>ol>li[type="转发"].reply.notavail {
+	color: #08c;
+	background:
+		-webkit-gradient(
+			linear,
+			left top,
+			left bottom,
+			from(rgba(209, 240, 255, .25)),
+			to(rgba(209, 240, 255, 1))
+		) !important;
+	border-bottom: 1px solid #bedded !important;
+}
+#stream>ol>li[type="转发"].reply.more:hover,
+#stream>ol>li[type="转发"].reply.hide:hover,
+#stream>ol>li[type="转发"].reply.waiting:hover,
+#stream>ol>li[type="转发"].reply.notavail:hover {
+	background:
+		-webkit-gradient(
+			linear,
+			left top,
+			left bottom,
+			from(rgba(163, 224, 255, .25)),
+			to(rgba(163, 224, 255, 1))
+		) !important;
+	border-bottom: 1px solid #a6d5ed !important;
+}
+#stream>ol>li[type="回复"].reply.more,
+#stream>ol>li[type="回复"].reply.hide,
+#stream>ol>li[type="回复"].reply.waiting,
+#stream>ol>li[type="回复"].reply.notavail {
+	color: #690;
+	background:
+		-webkit-gradient(
+			linear,
+			left top,
+			left bottom,
+			from(rgba(240, 255, 209, .25)),
+			to(rgba(240, 255, 209, 1))
+		) !important;
+	border-bottom: 1px solid #ddedbe !important;
+}
+#stream>ol>li[type="回复"].reply.more:hover,
+#stream>ol>li[type="回复"].reply.hide:hover,
+#stream>ol>li[type="回复"].reply.waiting:hover,
+#stream>ol>li[type="回复"].reply.notavail:hover {
+	background:
+		-webkit-gradient(
+			linear,
+			left top,
+			left bottom,
+			from(rgba(224, 255, 163, .25)),
+			to(rgba(224, 255, 163, 1))
+		) !important;
+	border-bottom: 1px solid #d5eda6 !important;
+}
 #stream>ol>li.reply.notavail {
-	background: rgba(0, 0, 0, .1);
-	color: #666;
-	text-shadow: 0 1px 0 white;
 	text-decoration: line-through;
 	cursor: not-allowed;
-}
-#stream>ol>li.reply.more:hover,
-#stream>ol>li.reply.hide:hover {
-	background: rgba(0, 0, 0, .15) !important;
-	color: #666;
-}
-#stream>ol>li.reply.more:active,
-#stream>ol>li.reply.hide:active {
-	box-shadow: 0 1px 3px rgba(128, 128, 128, .5) inset;
 }
 #stream>ol>li.reply.waiting {
 	background-image: url("http://static1.fanfou.com/img/ajax.gif");
