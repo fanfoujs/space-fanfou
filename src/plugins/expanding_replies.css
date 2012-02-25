@@ -128,10 +128,10 @@
 	text-decoration: line-through;
 	cursor: not-allowed;
 }
-#stream>ol>li.reply.waiting {
-	background-image: url("http://static1.fanfou.com/img/ajax.gif");
-    background-repeat: no-repeat;
-    background-position: center center;
+#stream>ol>li.reply.waiting,
+#stream>ol>li.reply.waiting:hover,
+#stream>ol>li.reply.waiting:active {
+	background: url("http://static1.fanfou.com/img/ajax.gif") no-repeat center center !important;
 	cursor: progress;
 }
 #stream>ol>li.reply:not(.waiting):not(.hide) {
