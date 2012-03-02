@@ -113,9 +113,9 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
         $expand.attr('href', $link.attr('href'));
         $expand.addClass('reply more first');
         if ($link.html().indexOf('转自') == 0)
-        	$expand.text('转发自..');
+        	$expand.text('转自');
         else
-        	$expand.text('展开' + $expand.attr('type'));
+        	$expand.text('展开');
         $expand.insertAfter($item);
         if (auto_expand) {
             displayReplyList($expand.attr('href'),

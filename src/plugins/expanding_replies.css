@@ -27,28 +27,24 @@
 #stream>ol>li.reply.waiting,
 #stream>ol>li.reply.notavail { 
 	font-size: 90%;
-	height: 1.5em !important;
-	line-height: 1.5em;
-	margin-left: 75%;
-	margin-top: -1.6em;
+	height: 1.8em !important;
+	line-height: 1.8em;
+	margin-left: 81%;
+	margin-top: -1.8em;
 	text-align: center;
-	padding: 0 !important;
-	width: 60px !important;
+	padding: 0px !important;
+	width: 65px !important;
 	min-height: 0;
-	border-left: none;
+	border-left: 0;
+	border-bottom: 0;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
 }
 #stream>ol>li.reply.more,
 #stream>ol>li.reply.hide,
 #stream>ol>li.reply.waiting,
 #stream>ol>li.reply.notavail {
-	background: 
-		-webkit-gradient(
-			linear,
-			left top,
-			left bottom,
-			from(rgba(235, 235, 235, .25)),
-			to(rgba(235, 235, 235, 1))
-		) !important;
+	background: rgba(0, 0, 0, .05);
 	color: #666;
 	text-shadow: 0 1px 0 white; 
 	cursor: pointer;
@@ -57,72 +53,33 @@
 #stream>ol>li.reply.hide:hover,
 #stream>ol>li.reply.waiting:hover,
 #stream>ol>li.reply.notavail:hover {
-	background: 
-		-webkit-gradient(
-			linear,
-			left top,
-			left bottom,
-			from(rgba(219, 219, 219, .25)),
-			to(rgba(219, 219, 219, 1))
-		) !important;
+	background: rgba(0, 0, 0, .075);
+}
+#stream>ol>li.reply.more:active,
+#stream>ol>li.reply.hide:active,
+#stream>ol>li.reply.waiting:active,
+#stream>ol>li.reply.notavail:active {
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .25) inset;
 }
 #stream>ol>li[type="转发"].reply.more,
 #stream>ol>li[type="转发"].reply.hide,
 #stream>ol>li[type="转发"].reply.waiting,
 #stream>ol>li[type="转发"].reply.notavail {
-	color: #08c;
-	background:
-		-webkit-gradient(
-			linear,
-			left top,
-			left bottom,
-			from(rgba(209, 240, 255, .25)),
-			to(rgba(209, 240, 255, 1))
-		) !important;
-	border-bottom: 1px solid #bedded !important;
-}
-#stream>ol>li[type="转发"].reply.more:hover,
-#stream>ol>li[type="转发"].reply.hide:hover,
-#stream>ol>li[type="转发"].reply.waiting:hover,
-#stream>ol>li[type="转发"].reply.notavail:hover {
-	background:
-		-webkit-gradient(
-			linear,
-			left top,
-			left bottom,
-			from(rgba(163, 224, 255, .25)),
-			to(rgba(163, 224, 255, 1))
-		) !important;
-	border-bottom: 1px solid #a6d5ed !important;
+	width: 45px !important;
+	padding: 0 0 0 20px !important;
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAOCAYAAADwikbvAAAAwUlEQVQokZ3SMUoDQRTG8d+aJSAIOYCQSvAINtZiIQSC9jmAYOElLC0sBe8QLGwthekCW+UAqUIKKyuLnZVl2JVhvm7e+/7DN/NeFUIwomOcYjtmOBprYIqA6xIYZnjHQwkMEzzjLab5U41znAxAaW2FM9xh18GvuMxIIPq+cINNTuxU83jBbQlMO8b7UvgFVzXWaAYMU+0n9fWDxwir/tmwGQ698x5LfHaFOjNmg4VkVXPe/IGLFMyBn7Qz/R5q/gKkQB14wZY3/QAAAABJRU5ErkJggg==');
+	background-position: 5px center;
+	background-repeat: no-repeat;
 }
 #stream>ol>li[type="回复"].reply.more,
 #stream>ol>li[type="回复"].reply.hide,
 #stream>ol>li[type="回复"].reply.waiting,
 #stream>ol>li[type="回复"].reply.notavail {
-	color: #690;
-	background:
-		-webkit-gradient(
-			linear,
-			left top,
-			left bottom,
-			from(rgba(240, 255, 209, .25)),
-			to(rgba(240, 255, 209, 1))
-		) !important;
-	border-bottom: 1px solid #ddedbe !important;
-}
-#stream>ol>li[type="回复"].reply.more:hover,
-#stream>ol>li[type="回复"].reply.hide:hover,
-#stream>ol>li[type="回复"].reply.waiting:hover,
-#stream>ol>li[type="回复"].reply.notavail:hover {
-	background:
-		-webkit-gradient(
-			linear,
-			left top,
-			left bottom,
-			from(rgba(224, 255, 163, .25)),
-			to(rgba(224, 255, 163, 1))
-		) !important;
-	border-bottom: 1px solid #d5eda6 !important;
+	width: 45px !important;
+	padding: 0 0 0 20px !important;
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAANCAYAAABPeYUaAAAA8UlEQVQokZXToUsEQRgF8N+5ckk40HJ/gGlF+4GgRdFoEAWLlrP4DwgWwWCxCloEg0k0emAxGNciGEymq8KB6UCwzME67u6tDyZ88+Z77zHzTSPLMjUwha8ycmJM8yzucFB1qEykhTO8YWOMkcmoTtDFCaZz+826SdbwivNIAI7xhN1g9EckxUNYaYXhEq6CUScW6WNQFTdCGlJt5UUG2MbOP8SauB4lyt/JDebQK2i6xyke8ZkTukASP3Ef69j3e7hecIhVzGAT75jHYtmcXGIBz6H+jvjbwPewUjWxH1jGEYYF/BB7aDdq/p2kIM0I7R/VNivQOBrz4AAAAABJRU5ErkJggg==');
+	background-position: 5px center;
+	background-repeat: no-repeat;
 }
 #stream>ol>li.reply.notavail {
 	text-decoration: line-through;

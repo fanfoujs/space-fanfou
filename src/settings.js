@@ -7,7 +7,7 @@ SF.st.default_settings = {
     translucent_sidebar: true,
     box_shadows: false,
     newstyle_trendlist: true,
-    newstyle_op_icons: false,
+    newstyle_op_icons: true,
     logo_remove_beta: true,
     remove_app_recom: true,
     amy_star: false,
