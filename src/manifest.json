@@ -1,8 +1,8 @@
 {
     "name": "太空饭否",
-    "version": "0.6.2.0",
+    "version": "0.6.2.1",
     "permissions": [ "http://fanfou.com/*", "tabs", "notifications", "contextMenus" ],
-    "description": "饭否的辅助脚本。可以给饭否页面添加回复展开、网页端上传图片、多用户切换等功能，并且使饭否页面的变得更美更舒心，符合您的使用习惯。",
+    "description": "太空饭否是一个免费、用心的开源程序，是目前最强大最好用的饭否 Chrome 浏览器扩展。可以给饭否页面添加回复和转发展开、浮动输入框、多用户切换等功能，并且使饭否页面的变得更美更舒心，符合您的使用习惯。",
     "icons" : {
         "16": "icons/icon-16.png",
         "48": "icons/icon-48.png",
@@ -20,7 +20,6 @@
             "js": [ "namespace.js", "functions.js", "load.js" ],
             "css": [ "common/main.css" ],
             "matches": [ "http://fanfou.com/*" ],
-            "exclude_globs": [ "*home.2*" ],
             "run_at": "document_start"
         }
     ]
