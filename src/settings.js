@@ -23,6 +23,7 @@ SF.st.default_settings = {
     disable_autocomplete: false,
     share_to_fanfou: true,
     privatemsg_manage: true,
+    friend_manage: true,
     advanced_sidebar: true,
     clean_personal_theme: false,
 };

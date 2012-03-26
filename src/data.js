@@ -67,6 +67,11 @@ var plugins = [
         css: 'privatemsg_manage.css',
     },
     {
+        name: 'friend_manage',
+        js: 'friend_manage.js',
+        css: 'friend_manage.css',
+    },
+    {
         name: 'advanced_sidebar',
         js: 'advanced_sidebar.js',
     },
