@@ -2,35 +2,43 @@ SF.pl.friend_manage = new SF.plugin((function($) {
     if (!$('div#friends>.tabs').length)
         return;
     
+    var isFriend = $('.tabs li.current').is(':first-child');
+    
     var $li = $('#stream li');
     var $manage = $('<div>');
     $manage.addClass('batch-manage actions');
-    var $unfo = $('<a>取消关注选定</a>');
-    $unfo.addClass('friend-remove');
-    $unfo.attr('href', '#');
-    $unfo.click(function(evt) {
+    var $del = isFriend ? $('<a>取消关注选定</a>') : $('<a>删除选定用户</a>');
+    $del.addClass('friend-remove');
+    $del.attr('href', '#');
+    $del.click(function(evt) {
         evt.preventDefault();
-        var $tounfo = $('#stream li input[type=checkbox]:checked');
-        if (!$tounfo.length) return;
-        if (!confirm('确定要取消关注选定的' + $tounfo.length + '个人吗？'))
+        var $todel = $('#stream li input[type=checkbox]:checked');
+        if (!$todel.length) return;
+        var text = isFriend ? '取消关注' : '删除';
+        if (!confirm('确定要' + text + '选定的' + $todel.length + '个人吗？'))
             return;
-        $tounfo.each(function() {
+        $todel.each(function() {
             var $t = $(this);
-            var $unfo = $t.parent().find('a.friend-remove');
+            var $post_act = $t.parent().find('a.post_act');
+            var data = {
+                action: isFriend ? 'friend.remove' : 'follower.remove',
+                token: $post_act.attr('token'),
+                ajax: 'yes',
+            };
+            if (isFriend) {
+                data.friend = $t.attr('userid');
+            } else {
+                data.follower = $t.attr('userid');
+            }
             $.ajax({
                 type: 'POST',
                 url: location.href,
-                data: {
-                    action: 'friend.remove',
-                    friend: $t.attr('userid'),
-                    token: $unfo.attr('token'),
-                    ajax: 'yes',
-                },
+                data: data,
                 dataType: 'json',
                 contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
                 success: function(data) {
                     if (data.status) {
-                        FF.util.yFadeRemove($unfo.get(0), 'li');
+                        FF.util.yFadeRemove($post_act.get(0), 'li');
                     } else {
                         alert(data.msg);
                     }
@@ -45,7 +53,7 @@ SF.pl.friend_manage = new SF.plugin((function($) {
         var $chks = $('#stream li input[type=checkbox]');
         $chks.attr('checked', $all.is(':checked'));
     });
-    $manage.append($unfo).append($all);
+    $manage.append($del).append($all);
 
     $('#stream ol').change(function(evt) {
         if (!evt.target.checked)
@@ -57,7 +65,7 @@ SF.pl.friend_manage = new SF.plugin((function($) {
             $li.each(function() {
                 var $chk = $('<input>');
                 $chk.attr('type', 'checkbox');
-                var userid = $('>.actions>.friend-remove', this).attr('href').split('/').pop();
+                var userid = $('>a.name', this).attr('href').split('/').pop();
                 $chk.attr('userid', userid);
                 $chk.appendTo(this);
             });
