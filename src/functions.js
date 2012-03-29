@@ -48,7 +48,7 @@ SF.fn.fixNumber = function(num, width) {
     return num;
 };
 
-SF.fn.formateDate = function(date) {
+SF.fn.formatDate = function(date) {
     var datestr;
     if (! datestr) {
         datestr = SF.fn.fixNumber(date.getFullYear(), 4) + '-' +
