@@ -74,6 +74,7 @@ var plugins = [
     {
         name: 'advanced_sidebar',
         js: 'advanced_sidebar.js',
+        css: 'advanced_sidebar.css',
     },
     {
         name: 'clean_personal_theme',
