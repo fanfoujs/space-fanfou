@@ -23,21 +23,47 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
                     (regYear > 0 ? regYear + ' 年' +
                      (regMonth > 0 ? '零 ' + regMonth + ' 个月' : '') :
                      (regMonth > 0 ? regMonth + ' 个月' : ' 不足一个月'));
-                var statusFreq = (data.statuses_count / regDuration).toFixed(2); // TODO: 以下全部整合进一个下拉栏里。
+                // 从饭否出现开始计算
+                var sinceFanfouStart = Math.round(
+                        (new Date() - new Date(2007, 4, 12)) /
+                        (1000 * 3600 * 24))
+                var statusFreq =
+                    (data.statuses_count /
+                     (regDuration -
+                      (created < new Date(2009, 6, 8) ? 505 : 0)))
+                     .toFixed(2);
+                // TODO: 以下全部整合进一个下拉栏里。
                 $vcard
                 .append(
                     $('<li />').addClass('advanced')
-                               .text('注册于 ' + SF.fn.formatDate(created))
-                       )
+                    .text('注册于 ' + SF.fn.formatDate(created))
+                    )
                 .append(
                     $('<li />').addClass('advanced')
-                               .html('饭龄：' + duration + '（' + regDuration + ' 天）' +
-                                   '<div class="statbar"><div style="width:' + (regDuration / 20) + '%;"></div></div>') // TODO: 以 @王兴 为 100%
+                    .text('饭龄：' + duration +
+                        ' (' + regDuration + ' 天)')
+                    .append(
+                        $('<div />')
+                        .addClass('statbar')
+                        .append(
+                            $('<div />').width(
+                                (regDuration / sinceFanfouStart * 100) + '%')
+                            )
                        )
+                    )
                 .append(
+                    // 这里以300条为基准，目前看到的最多的是傻妹 290+
                     $('<li />').addClass('advanced')
-                               .html('饭量：平均 ' + statusFreq + ' 条消息 / 天' +
-                                   '<div class="statbar"><div style="width:' + (statusFreq / 1.5) + '%;"></div></div>') // TODO: 以 @苹果流冰 为 100%
+                               .text('饭量：平均 ' +
+                                   statusFreq + ' 条消息 / 天')
+                               .append(
+                                   $('<div />')
+                                   .addClass('statbar')
+                                   .append(
+                                       $('<div />').width(
+                                           (statusFreq / 3) + '%')
+                                       )
+                                   )
                        );
                 if (data.protected) {
                     $vcard.append(
