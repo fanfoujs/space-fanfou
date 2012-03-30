@@ -15,14 +15,17 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
                 SF.cb.advanced_sidebar = undefined;
                 var created = new Date(data.created_at);
                 var bgImage = data.profile_background_image_url;
-                var regDuration = Math.round((new Date() - created) /
+                var regDuration = Math.floor((new Date() - created) /
                                              (1000 * 3600 * 24));
-                var regYear = Math.round(regDuration / 365);
-                var regMonth = Math.round((regDuration - regYear * 365) / 30);
+                var regYear = Math.floor(regDuration / 365.2425);
+                var regMonth = Math.round(
+                    (regDuration - regYear * 365.2425) / 30.4369);
                 var duration = (regYear > 0 || regMonth > 0 ? '约 ' : '') +
                     (regYear > 0 ? regYear + ' 年' +
                      (regMonth > 0 ? '零 ' + regMonth + ' 个月' : '') :
-                     (regMonth > 0 ? regMonth + ' 个月' : ' 不足一个月'));
+                     (regMonth > 0 ? regMonth + ' 个月' :
+                      (regDuration >= 7 ? '不足一个月' :
+                       (regDuration > 0 ? '不足一周' : '今天刚来'))));
                 // 从饭否出现开始计算
                 var sinceFanfouStart = Math.round(
                         (new Date() - new Date(2007, 4, 12)) /
@@ -32,6 +35,8 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
                      (regDuration -
                       (created < new Date(2009, 6, 8) ? 505 : 0)))
                      .toFixed(2);
+                if (statusFreq == Infinity)
+                    statusFreq = data.statuses_count;
                 // TODO: 以下全部整合进一个下拉栏里。
                 $vcard
                 .append(
