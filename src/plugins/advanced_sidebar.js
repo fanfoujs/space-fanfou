@@ -26,7 +26,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
                      (regMonth > 0 ? regMonth + ' 个月' :
                       (regDuration >= 7 ? '不足一个月' :
                        (regDuration > 0 ? '不足一周' : '刚来不到一天'))));
-                // 从饭否出现开始计算
+                // 从饭否诞生开始计算
                 var sinceFanfouStart = Math.round(
                         (new Date() - new Date(2007, 4, 12)) /
                         (1000 * 3600 * 24))
@@ -37,7 +37,16 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
                      .toFixed(2);
                 if (statusFreq == Infinity)
                     statusFreq = data.statuses_count;
-                // TODO: 以下全部整合进一个下拉栏里。
+                // 影响力指数公式 alpha 2
+                var actIndex = ((40 * statusFreq) - (statusFreq * statusFreq)) / 400;
+                if (statusFreq > 20) {
+                    actIndex = 1;
+                }
+                var infIndex =
+                    ((data.followers_count / (5 * Math.log(regDuration + 1))) + 
+                     ((data.followers_count / 100) + (regDuration / 100)) * actIndex)
+                      .toFixed(1);
+                // TODO: 以下全部整合进一个悬浮栏内
                 $vcard
                 .append(
                     $('<li />').addClass('advanced')
@@ -57,7 +66,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
                        )
                     )
                 .append(
-                    // 这里以300条为基准，目前看到的最多的是傻妹 290+
+                    // 这里以 300 条为基准，目前看到的最多的是傻妹 290+
                     $('<li />').addClass('advanced')
                                .text('饭量：平均 ' +
                                    statusFreq + ' 条消息 / 天')
@@ -69,11 +78,16 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
                                            (statusFreq / 3) + '%')
                                        )
                                    )
+                       )
+                .append(
+                    $('<li />').addClass('advanced')
+                               .html('影响力指数：' + infIndex +
+                                   '<div class="statbar"><div style="width:' + (infIndex / 3) + '%;"></div></div>')
                        );
                 if (data.protected) {
                     $vcard.append(
                         $('<li />').addClass('advanced protected')
-                                   .text('设置了隐私保护') // TODO: 是否需要这玩意儿？
+                                   .text('设置了隐私保护')
                             );
                 } else {
                     $vcard.append(
