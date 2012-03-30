@@ -18,14 +18,14 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
                 var regDuration = Math.floor((new Date() - created) /
                                              (1000 * 3600 * 24));
                 var regYear = Math.floor(regDuration / 365.2425);
-                var regMonth = Math.round(
+                var regMonth = Math.floor(
                     (regDuration - regYear * 365.2425) / 30.4369);
                 var duration = (regYear > 0 || regMonth > 0 ? '约 ' : '') +
                     (regYear > 0 ? regYear + ' 年' +
                      (regMonth > 0 ? '零 ' + regMonth + ' 个月' : '') :
                      (regMonth > 0 ? regMonth + ' 个月' :
                       (regDuration >= 7 ? '不足一个月' :
-                       (regDuration > 0 ? '不足一周' : '今天刚来'))));
+                       (regDuration > 0 ? '不足一周' : '刚来不到一天'))));
                 // 从饭否出现开始计算
                 var sinceFanfouStart = Math.round(
                         (new Date() - new Date(2007, 4, 12)) /
