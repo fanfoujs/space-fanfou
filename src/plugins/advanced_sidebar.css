@@ -1,7 +1,14 @@
-/* .advanced {
-	margin: .5em 0;
-	list-style: none;
-} */
+.advanced_group {
+	padding-bottom: 1em !important;
+}
+.advanced_title {
+}
+.advanced_group ul {
+}
+.advanced_group ul li {
+	padding: 0 15px;
+	font-size: 12px;
+}
 .statbar {
 	display: block;
 	height: 5px;
@@ -10,4 +17,25 @@
 .statbar div {
 	height: 5px;
 	background: rgba(0, 0, 0, .25);
+}
+.statbar_a {
+	background: rgba(255, 42, 0, .1);
+}
+.statbar_a div {
+	background: rgba(255, 42, 0, .5);
+}
+.statbar_b {
+	background: rgba(136, 204, 0, .1);
+}
+.statbar_b div {
+	background: rgba(136, 204, 0, .5);
+}
+.statbar_c {
+	background: rgba(0, 170, 255, .1);
+}
+.statbar_c div {
+	background: rgba(0, 170, 255, .5);
+}
+.protected {
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAKCAYAAACJxx+AAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNAay06AAAAAVdEVYdENyZWF0aW9uIFRpbWUAOS8yMi8wOSXiRNYAAABzSURBVBiVrcqxDQFhGIDh57sodBJjiO6/UsQINlDbyk3gVhCl7wYQU5jgV7hEw1Xe9nmj1moYhgV67FBxwb6U8my86zHHGhsscYbZOGyxatv2Dpl5xBWaiBgfD59uEBEiM084+F4XmVl/IGim8H9DN+HdC0E/G7TuwOriAAAAAElFTkSuQmCC') 211px 9px no-repeat;
 }
