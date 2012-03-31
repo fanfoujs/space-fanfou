@@ -4,7 +4,8 @@ SF.pl.disable_autocomplete = new SF.plugin((function($) {
     return {
         load: function() {
             SF.fn.waitFor(function() {
-                return $content.autocomplete('option', 'disabled') === false;
+                return $content.autocomplete &&
+                    $content.autocomplete('option', 'disabled') === false;
             }, function() {
                 $content.autocomplete('disable');
             });
