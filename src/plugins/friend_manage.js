@@ -1,6 +1,10 @@
 SF.pl.friend_manage = new SF.plugin((function($) {
     if (!$('div#friends>.tabs').length)
         return;
+    var pageUrl = $('.tabs>a.crumb').attr('href');
+    var myPageUrl = $('#navigation ul>li:nth-child(2)>a').attr('href');
+    if (pageUrl.split('/').pop() != myPageUrl.split('/').pop())
+        return;
     
     var isFriend = $('.tabs li.current').is(':first-child');
     
