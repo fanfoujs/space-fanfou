@@ -52,10 +52,7 @@
             totop.innerHTML = '返回顶部';
             pagination.appendChild(totop);
         }
-        totop.addEventListener('click', function(e) {
-            e.preventDefault();
-            jQuery('body').animate({ scrollTop: 0 }, 500);
-        }, false);
+        totop.addEventListener('click', SF.fn.goTop, false);
         SF.fn.waitFor(function() {
             return window.jQuery;
         }, function() {
