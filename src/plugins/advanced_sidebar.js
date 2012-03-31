@@ -2,6 +2,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
     var $insert = $('.stabs');
 
     var userid = $('meta[name=author]').attr('content');
+    if (!userid) return;
     userid = /\((.+)\)/.exec(userid)[1];
 
     var $script;
@@ -43,7 +44,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
                     actIndex = actIndex * 0.75
                 };
                 var infIndex =
-                    ((10 *(Math.sqrt(data.followers_count)) / Math.log(regDuration + 100)) + 
+                    ((10 *(Math.sqrt(data.followers_count)) / Math.log(regDuration + 100)) +
                      ((data.followers_count / 100) + (regDuration / 100)) * actIndex)
                       .toFixed(0);
                 $insert
@@ -58,7 +59,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
                 .append(
                     $('<ul />')
                     );
-                $('.advanced_group ul')
+                $('.advanced_group>ul')
                 .append(
                     $('<li />').addClass('advanced')
                     .text('注册于 ' + SF.fn.formatDate(created))
@@ -77,30 +78,31 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
                        )
                     )
                 .append(
-                    $('<li />').addClass('advanced ptest')
-                               .text('饭量：平均 ' +
-                                   statusFreq + ' 条消息 / 天')
-                               .append(
-                                   $('<div />')
-                                   .addClass('statbar statbar_b')
-                                   .append(
-                                       $('<div />').width(
-                                           (statusFreq > 300 ? '100' : statusFreq / 3) + '%')
-                                       )
-                                   )
-                       )
+                    $('<li />')
+                    .addClass('advanced ptest')
+                    .text('饭量：平均 ' + statusFreq + ' 条消息 / 天')
+                    .append(
+                        $('<div />')
+                        .addClass('statbar statbar_b')
+                        .append(
+                            $('<div />').width(
+                                (statusFreq > 300 ?
+                                 '100' : statusFreq / 3) + '%')
+                            )
+                        )
+                    )
                 .append(
                     $('<li />').addClass('advanced')
-                               .text('饭粒：' + infIndex + ' 个')
-                               .append(
-                                   $('<div />')
-                                   .addClass('statbar statbar_c')
-                                   .append(
-                                       $('<div />').width(
-                                           (infIndex > 300 ? '100' : infIndex / 3) + '%')
-                                       )
-                                   )
-                       );
+                    .text('饭粒：' + infIndex + ' 个')
+                    .append(
+                        $('<div />')
+                        .addClass('statbar statbar_c')
+                        .append(
+                            $('<div />').width(
+                                (infIndex > 300 ?  '100' : infIndex / 3) + '%')
+                            )
+                        )
+                    );
                 if (data.protected) {
                     $('.ptest').addClass('protected');
                 } else {
@@ -119,7 +121,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
                 $script.remove();
                 $script = null;
             }
-            $('.advanced_group', '.advanced', $insert).remove();
+            $('.advanced_group').remove();
         }
     };
 })(jQuery));
