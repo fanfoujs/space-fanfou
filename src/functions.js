@@ -61,3 +61,22 @@ SF.fn.formatDate = function(date) {
 SF.fn.isUserPage = function() {
     return !! document.getElementById('overlay-report');
 };
+
+SF.fn.waitFor(function() {
+    return document && document.body;
+}, function() {
+    var body = document.body;
+    var    s = 0;
+    var current;
+    SF.fn.goTop = function(e) {
+        if (e) {
+            e.preventDefault();
+            s = body.scrollTop;
+        }
+        current = body.scrollTop;
+        if (s != current) return;
+        var to = Math.floor(s / 1.15);
+        window.scrollTo(0, (s = to));
+        if (s > 1) setTimeout(SF.fn.goTop, 24);
+		}
+});
