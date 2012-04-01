@@ -37,12 +37,10 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
                     statusFreq = data.statuses_count;
                 // 饭粒公式
                 var actIndex = ((40 * statusFreq) - (statusFreq * statusFreq)) / 400;
-                if (statusFreq > 20) {
+                if (statusFreq > 20)
                     actIndex = 1;
-                };
-                if (data.protected) {
+                if (data.protected)
                     actIndex = actIndex * 0.75
-                };
                 var infIndex =
                     ((10 *(Math.sqrt(data.followers_count)) / Math.log(regDuration + 100)) +
                      ((data.followers_count / 100) + (regDuration / 100)) * actIndex)
@@ -56,9 +54,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
                     $('<h2 />').addClass('advanced_title')
                     .text('统计信息')
                     )
-                .append(
-                    $('<ul />')
-                    );
+                .append($('<ul />'));
                 $('.advanced_group>ul')
                 .append(
                     $('<li />').addClass('advanced')
@@ -103,11 +99,8 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
                             )
                         )
                     );
-                if (data.protected) {
-                    $('.ptest').addClass('protected');
-                } else {
-                    $('.ptest').addClass('notprotected');
-                }
+                $('.ptest').addClass(
+                        data.protected ? 'protected' : 'notprotected');
             };
             $script = $('<script />').attr('src',
                 'http://api.fanfou.com/users/show.json?id=' +
