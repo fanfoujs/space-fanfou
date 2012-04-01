@@ -518,7 +518,11 @@ span.ajaxprompt {
 #searchr-submit {
 	text-shadow: 0 1px 0 #fff;
 }
+#sidebar .tags ul {
+	max-width: 210px;
+}
 #sidebar .tags a {
+	padding: 2px 5px 1px !important;
 	border: 1px solid rgba(0, 0, 0, .2) !important;
 	background: rgba(255, 255, 255, .4) !important;
 }
