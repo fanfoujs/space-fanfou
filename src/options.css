@@ -176,7 +176,7 @@ h4 {
 	text-decoration: none;
 	line-height: 21px;
 	vertical-align: bottom;
-	border: 1px solid rgba(0, 0, 0, .11);
+	border: 1px solid rgba(0, 0, 0, .12);
 	border-bottom-color: rgba(0, 0, 0, .15);
 	border-top-left-radius: 3px;
 	border-top-right-radius: 3px;
@@ -210,7 +210,7 @@ h4 {
 	overflow-y: auto;
 }
 #tabs0 li, #tabs1 li {
-	border-bottom: 1px dashed #e5e5e5;
+	border-bottom: 1px solid rgba(0, 0, 0, .12);
 	padding: 3px 0;
 }
 #tabs0 li label:hover, #tabs1 li label:hover {

@@ -157,7 +157,7 @@
 	border-top: 1px solid rgba(255, 255, 255, .75) !important;
 }
 #newsfeed li {
-	border-bottom: 1px solid rgba(0, 0, 0, .11) !important;
+	border-bottom: 1px solid rgba(0, 0, 0, .12) !important;
 	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAR0lEQVQIHWPcv38/GwMDQx0QJwAxCCwA4iYWINEIxBVADAPVQAYzE5BIhokg0ckgCawAJDEXi8wCkB31QAxyQBRUwTIgXQMAiI0Jzn69V+8AAAAASUVORK5CYII=') 5px center no-repeat !important;
 }
 #phupdate {
@@ -392,15 +392,15 @@
 	text-shadow: none;
 }
 .solo {
-	border-top-color: rgba(0, 0, 0, .11) !important;
+	border-top-color: rgba(0, 0, 0, .12) !important;
 	border-top-style: solid !important;
 }
 #friends.inner-content h2 {
-	border-bottom-color: rgba(0, 0, 0, .11) !important;
+	border-bottom-color: rgba(0, 0, 0, .12) !important;
 	border-bottom-style: solid !important;
 }
 #stream h3, #stream li {
-	border-bottom-color: rgba(0, 0, 0, .11) !important;
+	border-bottom-color: rgba(0, 0, 0, .12) !important;
 	border-bottom-style: solid !important;
 }
 #stream li.light {
@@ -688,7 +688,7 @@ span.ajaxprompt {
 			from(#fff),
 			to(#eee)
 		) !important;
-	border: 1px solid rgba(0, 0, 0, .11) !important;
+	border: 1px solid rgba(0, 0, 0, .12) !important;
 	border-bottom-color: rgba(0, 0, 0, .15) !important;
 	padding: 3px 11px !important;
 	color: #666 !important;
