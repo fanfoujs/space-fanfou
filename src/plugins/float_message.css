@@ -61,7 +61,7 @@
 	height: 20px !important;
 }
 .float-message textarea:focus {
-	height: 50px !important;
+	height: 4.6em !important;
 }
 .float-message .tip {
 	text-shadow: 0 1px 1px #fff;

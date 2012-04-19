@@ -1,6 +1,6 @@
 {
     "name": "太空饭否",
-    "version": "0.6.3.6",
+    "version": "0.6.3.7",
     "permissions": [ "http://fanfou.com/*", "tabs", "notifications", "contextMenus" ],
     "description": "太空饭否是一个免费、用心的开源程序，是目前最强大最好用的饭否 Chrome 浏览器扩展。可以给饭否页面添加回复和转发展开、浮动输入框、多用户切换等功能，并且使饭否页面的变得更美更舒心，符合您的使用习惯。",
     "icons" : {
