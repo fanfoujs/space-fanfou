@@ -33,7 +33,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
                      (regDuration -
                       (created < new Date(2009, 6, 8) ? 505 : 0)))
                      .toFixed(2);
-                if (statusFreq == Infinity)
+                if (!isFinite(statusFreq))
                     statusFreq = data.statuses_count;
                 // 饭粒公式
                 var actIndex = ((40 * statusFreq) - (statusFreq * statusFreq)) / 400;

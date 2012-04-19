@@ -32,7 +32,7 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
             var $before = $('#' + before);
             var avatar = /<div id="avatar">(.+?)<\/div>/.exec(data)[1];
             var author_exp = /<h1>(.+?)<\/h1>/g;
-            author_exp.lastIndex = data.indexOf('<div id="latest">');
+            author_exp.lastIndex = data.indexOf('id="latest"');
             var author = author_exp.exec(data)[1];
             var content = /<h2>([\s\S]+?)<\/h2>/.exec(data);
             var avail = false;
@@ -113,9 +113,9 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
         $expand.attr('href', $link.attr('href'));
         $expand.addClass('reply more first');
         if ($link.html().indexOf('转自') == 0)
-        	$expand.text('转自');
+            $expand.text('转自');
         else
-        	$expand.text('展开');
+            $expand.text('展开');
         $expand.insertAfter($item);
         if (auto_expand) {
             displayReplyList($expand.attr('href'),
