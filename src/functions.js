@@ -62,6 +62,12 @@ SF.fn.isUserPage = function() {
     return !! document.getElementById('overlay-report');
 };
 
+SF.fn.emulateClick = function(elem) {
+	var e = document.createEvent('MouseEvents');
+	e.initMouseEvent('click', false, true)
+	elem[0].dispatchEvent(e);
+}
+
 SF.fn.waitFor(function() {
     return document && document.body;
 }, function() {

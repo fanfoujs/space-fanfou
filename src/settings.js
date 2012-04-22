@@ -26,6 +26,7 @@ SF.st.default_settings = {
     friend_manage: true,
     advanced_sidebar: true,
     clean_personal_theme: false,
+		auto_pager: true
 };
 
 /* 更新选项数据 */

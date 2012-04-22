@@ -6,15 +6,15 @@ var plugins = [
 
     {
         name: 'font_reset_cn',
-        css: 'font_reset_cn.css',
+        css: 'font_reset_cn.css'
     },
     {
         name: 'translucent_sidebar',
-        css: 'translucent_sidebar.css',
+        css: 'translucent_sidebar.css'
     },
     {
         name: 'box_shadows',
-        css: 'box_shadows.css',
+        css: 'box_shadows.css'
     },
     {
         name: 'newstyle_trendlist',
@@ -39,47 +39,51 @@ var plugins = [
         name: 'expanding_replies',
         options: ['number', 'auto_expand'],
         js: 'expanding_replies.js',
-        css: 'expanding_replies.css',
+        css: 'expanding_replies.css'
     },
     {
         name: 'image_uploading',
         js: 'image_uploading.js',
-        css: 'image_uploading.css',
+        css: 'image_uploading.css'
     },
     {
         name: 'user_switcher',
         js: 'user_switcher.js',
-        css: 'user_switcher.css',
+        css: 'user_switcher.css'
     },
     {
         name: 'float_message',
         options: ['noajaxattop', 'notlostfocus', 'keepmentions'],
         js: 'float_message.js',
-        css: 'float_message.css',
+        css: 'float_message.css'
     },
     {
         name: 'disable_autocomplete',
-        js: 'disable_autocomplete.js',
+        js: 'disable_autocomplete.js'
     },
     {
         name: 'privatemsg_manage',
         js: 'privatemsg_manage.js',
-        css: 'privatemsg_manage.css',
+        css: 'privatemsg_manage.css'
     },
     {
         name: 'friend_manage',
         js: 'friend_manage.js',
-        css: 'friend_manage.css',
+        css: 'friend_manage.css'
     },
     {
         name: 'advanced_sidebar',
         js: 'advanced_sidebar.js',
-        css: 'advanced_sidebar.css',
+        css: 'advanced_sidebar.css'
     },
     {
         name: 'clean_personal_theme',
         js: 'clean_personal_theme.js',
-        css: 'clean_personal_theme.css',
+        css: 'clean_personal_theme.css'
+    },
+    {
+        name: 'auto_pager',
+        js: 'auto_pager.js'
     },
 
     /* 其他扩展 */
@@ -87,7 +91,7 @@ var plugins = [
     {
         name: 'share_to_fanfou',
         type: 'background',
-        js: 'share_to_fanfou.js',
+        js: 'share_to_fanfou.js'
     },
     {
         name: 'amy_star',
