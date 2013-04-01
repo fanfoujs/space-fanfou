@@ -269,9 +269,9 @@ addEventListener('storage', updateSettings, false);
 
 var Notifications = window.Notifications || window.webkitNotifications;
 
-var message = '您的太空饭否现已过时。请点击这里安装新版本，并卸载本扩展。如在安装过程中遇到问题，请联系@.rex。';
+var message = '此太空饭否版本已经过期。请点击这里安装新版本，并卸载本扩展。如在安装过程中遇到问题，请联系 @.rex。';
 var notification = Notifications.createNotification('/icons/icon-128.png',
-		'太空饭否', message);
+		'请安装新版太空饭否 :)', message);
 
 notification.addEventListener('click', function(e) {
 	chrome.tabs.create({
