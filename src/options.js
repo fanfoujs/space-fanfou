@@ -15,11 +15,31 @@ document.addEventListener('DOMContentLoaded', function() {
 	function setValue($elem, value) {
 		if ($elem.type == 'checkbox') {
 			if ($elem.checked !== value)
-				SF.fn.emulateClick([$elem]);
+				SF.fn.emulateClick($elem);
 		} else $elem.value = value;
 	}
 
-	$('version').textContent = chrome.app.getDetails().version;
+	var $foldables = $$('[foldable]');
+	forEach($$('[foldable]'), function($foldable) {
+		var $foldable_src = $foldable.querySelector('[foldable_src]');
+		setValue($foldable_src, true);
+
+		$foldable_src.addEventListener('change', function(e) {
+			if (getValue(this))
+				$foldable.classList.remove('folded');
+			else
+				$foldable.classList.add('folded');
+		}, false);
+	});
+	forEach($$('[foldable_tgt]'), function($f) {
+		$f.style.height = $f.offsetHeight + 'px';
+	});
+
+	document.body.classList.add('init');
+	forEach($$('.tabs ul'), function($ul) {
+		$ul.style.maxHeight = $ul.offsetHeight + 'px';
+	});
+	document.body.classList.remove('init');
 
 	// 获取选项信息
 	forEach($$('[key]'), function($t) {
@@ -37,8 +57,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	addEventListener('unload', function() {
-		SF.fn.emulateClick($$('.btn_apply'));
+		SF.fn.emulateClick($$('.btn_apply')[0]);
 	}, false);
+
+	$('version').textContent = localStorage['sf_version'];
 
 	var $wrapper = $('wrapper');
 	var $screenshots = $$('.screenshot');
@@ -81,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }, false);
 
 function current(target, self) {
+	localStorage['latest_options_tab'] = self.id;
 	var button = self.parentElement;
 	if (button.classList.contains('current')) return;
 	var current_button = $$('li.current a')[0];
@@ -95,9 +118,28 @@ function current(target, self) {
 	button.classList.add('current');
 	for (i = 0; j = $('tabs' + i); i++) {
 		j.style.display = 'none';
+		j.style.webkitAnimation = j.style.animation = '';
 	}
 	var target_style = $(target).style;
 	target_style.display = 'block';
+	var animation_name = current_tab_no > target_tab_no ? 'leftSlideIn' : 'rightSlideIn';
+	target_style.webkitAnimation = animation_name + '.2s ease-out';
+
+	var ul = $$('#' + target + ' ul')[0];
+	if (! ul) return;
+	clearTimeout(ul.timeout);
+	ul.style.overflow = 'hidden';
+	ul.timeout = setTimeout(function() {
+		ul.style.overflow = '';
+	}, 250);
+
+	forEach($$('button'), function(btn) {
+		clearTimeout(btn.timeout);
+		btn.style.webkitAnimation = 'btn-fadeIn .6s ease-in';
+		btn.timeout = setTimeout(function() {
+			btn.style.webkitAnimation = '';
+		}, 600);
+	});
 }
 
 addEventListener('load', function load(e) {
@@ -106,4 +148,17 @@ addEventListener('load', function load(e) {
 			current('tabs' + i, this);
 		}
 	});
+
+	forEach($$('.avatar img'), function(img) {
+		img.src += '?' + (new Date).getTime();
+	});
+
+	setTimeout(function() {
+		if (document.documentElement.clientHeight < 300) return load();
+		forEach($$('div[id^="tabs"]'), function(tab) {
+			tab.style.visibility = 'visible';
+		});
+		var latest_tab = localStorage['latest_options_tab'] || 'tab1';
+		SF.fn.emulateClick($(latest_tab));
+	}, 16);
 }, false);

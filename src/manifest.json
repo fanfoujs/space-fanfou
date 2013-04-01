@@ -1,30 +1,88 @@
 {
-    "name": "太空饭否（请安装新版太空饭否）",
-    "version": "0.6.4.0",
-    "permissions": [ "http://fanfou.com/*", "tabs", "notifications", "contextMenus" ],
-    "description": "此太空饭否版本已经过期，请安装新版并卸载当前版本。新版太空饭否地址：http://is.gd/sfanfou 详情：http://anegie.com/blog/space-fanfou-returns/",
-    "icons" : {
-        "16": "icons/icon-16.png",
-        "48": "icons/icon-48.png",
-        "128": "icons/icon-128.png"
-    },
 	"background": {
 		"scripts": [ "namespace.js", "data.js", "settings.js", "functions.js", "background.js" ]
 	},
-    "options_page": "options.html",
-    "page_action": {
-        "default_icon": "icons/icon-19.png",
-        "default_title": "太空饭否",
-        "default_popup": "options.html"
-    },
-    "content_scripts": [
-        {
-            "js": [ "namespace.js", "functions.js", "load.js" ],
-            "css": [ "common/main.css" ],
-            "matches": [ "http://fanfou.com/*" ],
-            "run_at": "document_start"
-        }
-    ],
-	"web_accessible_resources": [ "icons/icon-128.png" ],
+	"content_scripts": [ {
+		"css": [ "common/main.css" ],
+		"js": [ "namespace.js", "functions.js", "load.js" ],
+		"matches": [ "http://fanfou.com/*" ],
+		"run_at": "document_start"
+	} ],
+	"web_accessible_resources": [
+		"icons/icon-128.png",
+		"icons/icon-48.png",
+		"icons/icon-16.png",
+		"common/common.js",
+		"common/main.css",
+		"common/style.js",
+		"plugins/advanced_sidebar.css",
+		"plugins/advanced_sidebar.js",
+		"plugins/auto_pager.js",
+		"plugins/box_shadows.css",
+		"plugins/clean_personal_theme.css",
+		"plugins/clean_personal_theme.js",
+		"plugins/disable_autocomplete.js",
+		"plugins/expanding_replies.css",
+		"plugins/expanding_replies.js",
+		"plugins/fav_friends.css",
+		"plugins/fav_friends.js",
+		"plugins/float_message.css",
+		"plugins/float_message.js",
+		"plugins/font_reset_cn.css",
+		"plugins/friend_manage.css",
+		"plugins/friend_manage.js",
+		"plugins/logo_remove_beta.css",
+		"plugins/logo_remove_beta.js",
+		"plugins/newstyle_op_icons.css",
+		"plugins/newstyle_trendlist.css",
+		"plugins/notification.js",
+		"plugins/privatemsg_manage.css",
+		"plugins/privatemsg_manage.js",
+		"plugins/remove_app_recom.css",
+		"plugins/remove_app_recom.js",
+		"plugins/share_to_fanfou.js",
+		"plugins/status_manage.css",
+		"plugins/status_manage.js",
+		"plugins/translucent_sidebar.css",
+		"plugins/unread_statuses.js",
+		"plugins/user_switcher.css",
+		"plugins/user_switcher.js",
+		"resources/fonts/Lato-Regular.css",
+		"resources/fonts/Lato-Regular.woff",
+		"resources/images/default-style.png",
+		"resources/images/dot.png",
+		"resources/images/email.png",
+		"resources/images/gtalk.png",
+		"resources/images/mobile.png",
+		"resources/images/op-icons.png",
+		"resources/images/personalized-style.png",
+		"resources/images/protected.png",
+		"resources/images/protected-large.png",
+		"resources/images/reply.png",
+		"resources/images/repost.png",
+		"resources/images/star.png",
+		"resources/images/totop.png",
+		"resources/images/uploading-image-icons.png",
+		"resources/images/verify.png",
+		"resources/images/wlm.png",
+		"resources/sounds/ding.mp3",
+		"resources/sounds/dingdong.mp3"
+	],
+	"description": "\u592a\u7a7a\u996d\u5426\u662f\u4e00\u4e2a\u514d\u8d39\u3001\u7528\u5fc3\u7684\u5f00\u6e90\u7a0b\u5e8f\uff0c\u662f\u76ee\u524d\u6700\u5f3a\u5927\u6700\u597d\u7528\u7684\u996d\u5426\u6d4f\u89c8\u5668\u6269\u5c55\u3002\u53ef\u4ee5\u7ed9\u996d\u5426\u9875\u9762\u6dfb\u52a0\u56de\u590d\u548c\u8f6c\u53d1\u5c55\u5f00\u3001\u6d6e\u52a8\u8f93\u5165\u6846\u3001\u591a\u7528\u6237\u5207\u6362\u7b49\u529f\u80fd\uff0c\u5e76\u4e14\u4f7f\u996d\u5426\u9875\u9762\u53d8\u5f97\u66f4\u7f8e\u66f4\u8212\u5fc3\uff0c\u7b26\u5408\u60a8\u7684\u4f7f\u7528\u4e60\u60ef\u3002",
+	"icons": {
+		"128": "icons/icon-128.png",
+		"48": "icons/icon-48.png",
+		"16": "icons/icon-16.png"
+	},
+	"name": "\u592a\u7a7a\u996d\u5426",
+	"options_page": "options.html",
+	"page_action": {
+		"default_icon": "icons/icon-19.png",
+		"default_title": "\u592a\u7a7a\u996d\u5426",
+		"default_popup": "options.html"
+	},
+	"permissions": [ "http://fanfou.com/*", "http://*.fanfou.com/*", "tabs", "notifications", "contextMenus" ],
+	"content_security_policy": "script-src 'self'; object-src 'self'",
+	"version": "0.7.5.6",
 	"manifest_version": 2
 }

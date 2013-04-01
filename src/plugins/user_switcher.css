@@ -9,23 +9,30 @@
 }
 #user_switcher a:hover {
 	text-decoration: none;
+	cursor: pointer;
 }
-#user_switcher a h3 {
+#user_switcher a h3,
+#user_switcher li span {
 	font-size: 12px;
 	font-weight: normal;
 	line-height: 24px;
 }
-#user_switcher a h3:hover {
+#user_switcher li {
+	display: inline-block;
+}
+#user_switcher li:not(.addnew):hover {
 	background-color: rgba(0, 0, 0, .05);
 }
 #user_top.switcher {
 	position: absolute;
 	width: 202px;
 	z-index: 2;
-	/* border: 1px solid #ccc; */
 	border-radius: 3px;
 	margin: -2px 11px 9px -2px;
 	padding: 2px;
+}
+#user_top.switcher:hover > a::after {
+	display: none;
 }
 #user_top.switcher > a img {
 	float: left;
@@ -33,10 +40,22 @@
 	height: 32px;
 	margin-right: 10px;
 }
+#user_top.switcher:hover > a img {
+	box-shadow: none;
+}
+#user_switcher li {
+	width: 100%;
+	clear: both;
+}
 #user_switcher li a {
-	float: none;
-	width: auto;
+	float: left;
+	margin: 0;
 	height: auto;
+	width: 184px;
+}
+#user_switcher li.addnew a {
+	width: auto;
+	float: none;
 }
 #user_switcher li a img {
 	float: left;
@@ -44,12 +63,23 @@
 	height: 16px;
 	margin: 4px;
 }
-#user_top.switcher:hover {
-	/* border: 1px solid; */
-	box-shadow: 1px 2px 5px rgba(0, 0, 0, .3);
-	background-color: rgba(255, 255, 255, .95); 
+#user_switcher li span {
+	font-family: Lato !important;
+	float: right;
+	width: 8px;
+	margin: 0 4px;
+	overflow: hidden;
+	cursor: pointer;
+	visibility: hidden;
 }
-#user_top.switcher:first-child > h3:after {
+#user_switcher li:hover span {
+	visibility: visible;
+}
+#user_top.switcher:hover {
+	box-shadow: 1px 2px 5px rgba(0, 0, 0, .3);
+	background-color: rgba(255, 255, 255, .95);
+}
+#user_top.switcher:first-child > h3::after {
 	content: "▾";
 	margin-left: 7px;
 	opacity: .5;
@@ -59,7 +89,7 @@
 	height: 24px;
 	padding-top: 9px;
 }
-#user_switcher .addnew a { 
+#user_switcher .addnew a {
 	margin: 3px;
 	padding: 3px 6px;
 	font-size: 12px;

@@ -25,7 +25,7 @@
 #stream>ol>li.reply.more,
 #stream>ol>li.reply.hide,
 #stream>ol>li.reply.waiting,
-#stream>ol>li.reply.notavail { 
+#stream>ol>li.reply.notavail {
 	font-size: 90%;
 	height: 1.8em !important;
 	line-height: 1.8em;
@@ -46,7 +46,7 @@
 #stream>ol>li.reply.notavail {
 	background: rgba(0, 0, 0, .05);
 	color: #666;
-	text-shadow: 0 1px 0 white; 
+	text-shadow: 0 1px 0 white;
 	cursor: pointer;
 }
 #stream>ol>li.reply.more:hover,
@@ -67,7 +67,7 @@
 #stream>ol>li[type="转发"].reply.notavail {
 	width: 45px !important;
 	padding: 0 0 0 20px !important;
-	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAOCAYAAADwikbvAAAAwUlEQVQokZ3SMUoDQRTG8d+aJSAIOYCQSvAINtZiIQSC9jmAYOElLC0sBe8QLGwthekCW+UAqUIKKyuLnZVl2JVhvm7e+/7DN/NeFUIwomOcYjtmOBprYIqA6xIYZnjHQwkMEzzjLab5U41znAxAaW2FM9xh18GvuMxIIPq+cINNTuxU83jBbQlMO8b7UvgFVzXWaAYMU+0n9fWDxwir/tmwGQ698x5LfHaFOjNmg4VkVXPe/IGLFMyBn7Qz/R5q/gKkQB14wZY3/QAAAABJRU5ErkJggg==');
+	background-image: url('/resources/images/repost.png');
 	background-position: 5px center;
 	background-repeat: no-repeat;
 }
@@ -77,7 +77,7 @@
 #stream>ol>li[type="回复"].reply.notavail {
 	width: 45px !important;
 	padding: 0 0 0 20px !important;
-	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAANCAYAAABPeYUaAAAA8UlEQVQokZXToUsEQRgF8N+5ckk40HJ/gGlF+4GgRdFoEAWLlrP4DwgWwWCxCloEg0k0emAxGNciGEymq8KB6UCwzME67u6tDyZ88+Z77zHzTSPLMjUwha8ycmJM8yzucFB1qEykhTO8YWOMkcmoTtDFCaZz+826SdbwivNIAI7xhN1g9EckxUNYaYXhEq6CUScW6WNQFTdCGlJt5UUG2MbOP8SauB4lyt/JDebQK2i6xyke8ZkTukASP3Ef69j3e7hecIhVzGAT75jHYtmcXGIBz6H+jvjbwPewUjWxH1jGEYYF/BB7aDdq/p2kIM0I7R/VNivQOBrz4AAAAABJRU5ErkJggg==');
+	background-image: url('/resources/images/reply.png');
 	background-position: 5px center;
 	background-repeat: no-repeat;
 }
@@ -93,10 +93,6 @@
 }
 #stream>ol>li.reply:not(.waiting):not(.hide) {
 	-webkit-animation: fadeIn .75s;
-}
-#stream.message li.last-refresh + li.reply {
-	border-bottom: 3px solid #e5e5e5;
-	margin-top: -1.75em;
 }
 .light .stamp .reply a {
 	background: transparent !important;

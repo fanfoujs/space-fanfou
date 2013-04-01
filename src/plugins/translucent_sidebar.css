@@ -2,3 +2,31 @@
 	background-color: rgba(255, 255, 255, .85) !important;
 	text-shadow: 0 1px 0 #fff;
 }
+#main, #sidebar {
+	position: relative;
+}
+#main::before, #sidebar::before {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 50px;
+	content: "";
+	pointer-events: none;
+	box-shadow: 0 1px 0 rgba(255, 255, 255, .75) inset;
+}
+#main::before {
+	width: 540px;
+	border-top-left-radius: 10px;
+}
+#sidebar::before {
+	width: 234px;
+	border-top-right-radius: 10px;
+}
+@media (max-width: 775px) {
+	#main::before {
+		display: none;
+	}
+}
+#sidebar .tags a {
+	box-shadow: 0 1px 0 rgba(255, 255, 255, .4);
+}

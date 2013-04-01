@@ -1,26 +1,28 @@
 #sf_clean_personal_theme {
-    position: fixed;
-    bottom: 6px; right: 6px;
-    display: block;
-    width: 35px; height: 35px;
-    padding: 5px;
-    color: transparent;
-    text-indent: -9999px;
-    background: rgba(0, 0, 0, .25) url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAXCAMAAADX9CSSAAAAWlBMVEUUFAsUFAsUFAsUFAsUFAtxyuBzyuB0y+B3zOB5zOF8zeF/zuGDz+GG0OKJ0eKN0uKQ0uOU0+OX1OOa1eSe1uSh1+Sk2OSm2OWp2eWq2uXi8trl9N79/v3///+oEp/BAAAABXRSTlMMJDBrj/euGpQAAAA4SURBVCiRY2FgZcACfrMwMmITZ8QpzgAUF4Xy/v8Di70FEmBxdMWj4gMv/v8Vloj8/5/l/z+s4gDYtAxqfNRhSQAAAABJRU5ErkJggg==') no-repeat center 12px;
-    border-radius: 50px;
-    -webkit-animation: fadeIn .75s;
+	position: fixed;
+	bottom: 6px;
+	right: 6px;
+	display: block;
+	width: 35px;
+	height: 35px;
+	padding: 5px;
+	color: transparent;
+	text-indent: -9999px;
+	background: rgba(0, 0, 0, .25) url('/resources/images/default-style.png') no-repeat center 12px;
+	border-radius: 50px;
+	-webkit-animation: fadeIn .75s;
 }
 .sf_default_theme {
-	background: rgba(0, 0, 0, .25) url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAXCAMAAADX9CSSAAABF1BMVEUUFAsUFAsUFAsUFAsUFAtGRkZKSkpNTU1QUFBRUVFUVFRVVVVWVlZXV1dYWFhZWVlbW1tcXFxeXl5fX19gYGBhYWFjY2NkZGRlZWVmZmZnZ2dpaWlra2tubm5vb29wcHBycnJzc3N0dHR1dXV4eHh5eXl7e3t8fHyCgoKMjIyNjY2Pj4+QkJCUlJSWlpaXl5ecnJyfn5+goKCkpKSmpqapqamwsLCzs7O0tLS1tbW2tra3t7e4uLi5ubm6urq7u7u8vLy9vb2+vr6/v7/BwcHCwsLDw8PFxcXIyMjKysrLy8vMzMzU1NTV1dXW1tbZ2dna2trb29vc3Nze3t7j4+Ps7Ozv7+/y8vLz8/P6+vr7+/v9/f3///9JxVosAAAABXRSTlMMJDBrj/euGpQAAADUSURBVCjPY2DwxwYYGBixijMyMGEVZwKLx0BBlDkIOGCIh2MVD1E1ssQUj9BlZTW2QRePNuNk4+Q0tkMT95Rg5+IT4OeU1EQWd1Xn4BUUFhUVEeThEDK0gIkH+OoIi0uCgbiIALeuI0w8OMZDQQYKpMUETGHmBMTEhOnJycvLGZhoq8hKyaK4011NWdHaxy/IUUPKCcVfoXpK1i6Ort5+WkaBKP6NtrezM7ewdfPSD0ILn0iQf608fNHFo8Dh4xwUQGQ4EyPOyMyCCZgZgRHPhAkYGQD42XZ+9LhCiwAAAABJRU5ErkJggg==') no-repeat center 12px !important;
+	background: rgba(0, 0, 0, .25) url('/resources/images/personalized-style.png') no-repeat center 12px !important;
 }
 #sf_clean_personal_theme:hover {
-    background-color: rgba(0, 0, 0, .5) !important;
+	background-color: rgba(0, 0, 0, .5) !important;
 }
 
 @media (max-width: 990px) {
-    #sf_clean_personal_theme {
-        -webkit-animation: fadeOut .75s;
-        opacity: 0;
-        z-index: -100;
-    }
+	#sf_clean_personal_theme {
+		-webkit-animation: fadeOut .75s;
+		opacity: 0;
+		z-index: -100;
+	}
 }

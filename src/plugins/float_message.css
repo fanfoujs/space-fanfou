@@ -1,6 +1,3 @@
-/* .float-message .lastmsg {
-	display: none;
-} */
 .actpost .formbutton,
 .tip,
 #u_button {
@@ -72,6 +69,7 @@
 .float-message .actpost .formbutton,
 .float-message #u_button,
 .float-message .upload-button-wrapper,
+.float-message .location-button-wrapper,
 .float-message .tip {
 	opacity: 0;
 }
@@ -80,4 +78,16 @@
 .float-message:hover .upload-button-wrapper,
 .float-message:hover .tip {
 	opacity: 1;
+}
+.float-message#phupdate .act {
+	display: block;
+}
+.float-message#phupdate:not(:hover) .act {
+	position: static;
+}
+.float-message#phupdate:not(:hover) .act .loading {
+	position: absolute;
+	top: 0;
+	right: 0;
+	-webkit-transform: translateX(0);
 }

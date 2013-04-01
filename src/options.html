@@ -18,56 +18,93 @@
 
 		<div id="navigation">
 			<ul>
-				<li class="current"><a id="tab1">扩展功能</a></li>
+				<li><a id="tab1">扩展功能</a></li>
 				<li><a id="tab2">页面样式</a></li>
 				<li><a id="tab3">关于太空饭否</a></li>
 			</ul>
 		</div>
 
 		<div id="tabs">
-			<div class="tabs current" id="tabs0" style="display: block;">
+			<div class="tabs current" id="tabs0">
 				<ul>
-					<li>
-						<label><a class="screenshot" rel="screenshots/01_01_01.png" title="展开回复功能预览"><input type="checkbox" key="expanding_replies" />启用展开回复和转发</a></label>
-						<p>
-							<label class="sublabel">每次展开数量：<input type="number" min="1" max="20" step="1" key="expanding_replies.number" /></label>
+					<li foldable="foldable">
+						<label><a class="screenshot" rel="plugins/expanding_replies.png" title="展开回复功能预览"><input type="checkbox" key="expanding_replies" foldable_src="foldable_src" />启用展开回复和转发</a></label>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel">每次展开数量：</label><input type="number" min="1" max="20" step="1" key="expanding_replies.number" />
 						</p>
-						<p>
+						<p foldable_tgt="foldable_tgt">
 							<label class="sublabel"><input type="checkbox" key="expanding_replies.auto_expand" />载入页面时自动展开一条消息上文</label>
 						</p>
 					</li>
-					<li>
-						<label><a class="screenshot" rel="screenshots/01_02_01.png" title="图片上传功能预览"><input type="checkbox" key="image_uploading" />使用太空饭否图片上传</a></label>
-						<span class="comment">将禁用官方的图片上传功能</span>
-					</li>
-					<li>
-						<label><a class="screenshot" rel="screenshots/01_03_01.png" title="多用户切换功能预览"><input type="checkbox" key="user_switcher" />启用多用户切换</a></label>
-					</li>
-					<li>
-						<label><a class="screenshot" rel="screenshots/01_04_01.png" title="浮动输入框功能预览"><input type="checkbox" key="float_message" />启用浮动输入框</a></label>
-						<span class="comment">使用跟随页面滚动的浮动输入框</span>
-						<p>
-							<label class="sublabel"><input type="checkbox" key="float_message.noajaxattop" />当输入框不浮动时，发布消息后刷新页面</label>
+					<li foldable="foldable">
+						<label><a class="screenshot" rel="plugins/notification.png" title="消息通知功能预览"><input type="checkbox" key="notification" foldable_src="foldable_src" />启用消息通知</a></label>
+						<span class="comment">在屏幕一角显示通知窗口</span>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel">通知停留时间：</label><input type="number" min="5" max="60" step="2.5" key="notification.timeout" /><label> 秒</label>
+							<span class="comment">点击通知隐藏</span>
 						</p>
-						<p>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="notification.updates" foldable_src="foldable_src" />每次扩展升级后显示通知</label>
+							<span class="comment">显示扩展更新内容</span>
+						</p>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="notification.mentions" />显示新@和新私信通知</label>
+							<span class="comment">点击打开“提到我的”或“私信”页面</span>
+						</p>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="notification.followers" />显示新关注者通知</label>
+							<span class="comment">点击打开饭否首页</span>
+						</p>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="notification.notdisturb" />浏览饭否时不要显示通知</label>
+						</p>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="notification.playsound" />播放提示音</label>
+						</p>
+					</li>
+					<li foldable="foldable">
+						<label><a class="screenshot" rel="plugins/unread_statuses.png" title="未读消息处理功能预览"><input type="checkbox" key="unread_statuses" foldable_src="foldable_src" />启用未读消息处理</a></label>
+						<span class="comment">当 Timeline 上出现新消息时自动处理</span>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="unread_statuses.auto_show" foldable_src="foldable_src" />自动显示自己的消息</label>
+							<span class="comment">仅当所有未读消息都是自己的消息时</span>
+						</p>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="unread_statuses.playsound" />有未读消息时播放提示音</label>
+							<span class="comment">仅当饭否页面打开时有效</span>
+						</p>
+					</li>
+					<li>
+						<label><a class="screenshot" rel="plugins/user_switcher.png" title="多用户切换功能预览"><input type="checkbox" key="user_switcher" />启用多用户切换</a></label>
+					</li>
+					<li foldable="foldable">
+						<label><a class="screenshot" rel="plugins/float_message.png" title="浮动输入框功能预览"><input type="checkbox" key="float_message" foldable_src="foldable_src" />启用浮动输入框</a></label>
+						<span class="comment">使用跟随页面滚动的浮动输入框</span>
+						<p foldable_tgt="foldable_tgt">
 							<label class="sublabel"><input type="checkbox" key="float_message.notlostfocus" />启用连发模式</label>
 							<span class="comment">消息发出后焦点保留在输入框</span>
 						</p>
-						<p>
+						<p foldable_tgt="foldable_tgt">
 							<label class="sublabel"><input type="checkbox" key="float_message.keepmentions" />启用快速@模式</label>
 							<span class="comment">消息发出后输入框中保留所@的人</span>
 						</p>
 					</li>
 					<li>
-						<label><input type="checkbox" key="auto_pager" />启用自动翻页</label>
+						<label><a class="screenshot" rel="plugins/auto_pager.png" title="自动翻页功能预览"><input type="checkbox" key="auto_pager" />启用自动翻页</a></label>
 						<br />
 						<span>快捷键: A - 临时开启/关闭自动翻页；T - 回到顶部</span>
 					</li>
 					<li>
-						<label><a class="screenshot" rel="screenshots/01_05_01.png" title="分享到饭否功能预览"><input type="checkbox" key="share_to_fanfou" />添加“分享到饭否”至浏览器鼠标右键菜单</a></label>
+						<label><a class="screenshot" rel="plugins/share_to_fanfou.png" title="分享到饭否功能预览"><input type="checkbox" key="share_to_fanfou" />添加“分享到饭否”至浏览器鼠标右键菜单</a></label>
+						<br />
+						<span>推荐使用五星评分 Chrome 扩展“<a href="http://is.gd/fanjoy" title="Chrome 网上应用店 - 有饭同享" target="_blank">有饭同享</a>”，获取更好的分享体验</span>
 					</li>
 					<li>
 						<label><input type="checkbox" key="disable_autocomplete" />禁用输入@时的自动补全</label>
+					</li>
+					<li>
+						<label><a class="screenshot" rel="plugins/status_manage.png" title="消息批量管理功能预览"><input type="checkbox" key="status_manage" />启用消息批量管理</a></label>
+						<span class="comment">按住 Shift 键可以批量选择消息</span>
 					</li>
 					<li>
 						<label><input type="checkbox" key="privatemsg_manage" />启用私信批量管理</label>
@@ -75,59 +112,51 @@
 					<li>
 						<label><input type="checkbox" key="friend_manage" />启用关注批量管理</label>
 					</li>
-                    <li>
-                    	<label><a class="screenshot" rel="screenshots/01_09_01.png" title="增强的侧栏功能预览"><input type="checkbox" key="advanced_sidebar" />启用侧栏详细统计信息</a></label>
-                    	<span class="comment">在用户空间侧栏显示详细统计信息</span>
-                    </li>
-                    <li>
-                    	<label><a class="screenshot" rel="screenshots/01_10_01.png" title="可选切换默认模版功能预览"><input type="checkbox" key="clean_personal_theme" />启用可选切换默认模版</a></label>
-                    	<span class="comment">允许临时清除 / 恢复用户自定义模板</span>
-                    </li>
+					<li>
+						<label><a class="screenshot" rel="plugins/fav_friends.png" title="有爱饭友列表功能预览"><input type="checkbox" key="fav_friends" />启用有爱饭友列表</a></label>
+						<span class="comment">在首页显示自选饭友列表</span>
+					</li>
+					<li>
+						<label><a class="screenshot" rel="plugins/advanced_sidebar.png" title="增强的侧栏功能预览"><input type="checkbox" key="advanced_sidebar" />启用侧栏详细统计信息</a></label>
+						<span class="comment">在用户空间侧栏显示详细统计信息</span>
+					</li>
+					<li>
+						<label><a class="screenshot" rel="plugins/clean_personal_theme.png" title="可选切换默认模版功能预览"><input type="checkbox" key="clean_personal_theme" />启用可选切换默认模版</a></label>
+						<span class="comment">允许临时清除 / 恢复用户自定义模板</span>
+					</li>
 				</ul>
 				<button class="btn_apply">应用</button>
 			</div>
 
-			<div class="tabs" id="tabs1" style="display: none;">
+			<div class="tabs" id="tabs1">
 				<ul>
 					<li>
 						<label><input type="checkbox" key="font_reset_cn" />使用微软雅黑等字体作为默认中文字体</label>
 					</li>
 					<li>
-						<label><a class="screenshot" rel="screenshots/02_02_01.png" title="半透明的侧栏样式预览"><input type="checkbox" key="translucent_sidebar" />启用半透明的侧栏</a></label>
+						<label><a class="screenshot" rel="plugins/translucent_sidebar.png" title="半透明的侧栏样式预览"><input type="checkbox" key="translucent_sidebar" />启用半透明的侧栏</a></label>
 					</li>
 					<li>
-						<label><a class="screenshot" rel="screenshots/02_03_01.png" title="窗体下显示阴影样式预览"><input type="checkbox" key="box_shadows" />在导航栏、主窗体等窗体下显示阴影</a></label>
+						<label><a class="screenshot" rel="plugins/box_shadows.png" title="窗体下显示阴影样式预览"><input type="checkbox" key="box_shadows" />在导航栏、主窗体等窗体下显示阴影</a></label>
 					</li>
 					<li>
-						<label><a class="screenshot" rel="screenshots/02_04_01.png" title="新样式的热门话题样式预览"><input type="checkbox" key="newstyle_trendlist" />启用新样式的热门话题、关注的话题并显示具体关键词</a></label>
+						<label><a class="screenshot" rel="plugins/newstyle_trendlist.png" title="新样式的热门话题样式预览"><input type="checkbox" key="newstyle_trendlist" />启用新样式的热门话题、关注的话题并显示具体关键词</a></label>
 					</li>
 					<li>
-						<label><a class="screenshot" rel="screenshots/02_05_01.png" title="简洁样式的操作按钮样式预览"><input type="checkbox" key="newstyle_op_icons" />启用简洁样式的回复、收藏、转发、删除按钮</a></label>
+						<label><a class="screenshot" rel="plugins/newstyle_op_icons.png" title="简洁样式的操作按钮样式预览"><input type="checkbox" key="newstyle_op_icons" />启用简洁样式的回复、收藏、转发、删除按钮</a></label>
 					</li>
 					<li>
 						<label><a class="screenshot" rel="http://static2.fanfou.com/img/fanfou.png" title="经典版饭否 logo"><input type="checkbox" key="logo_remove_beta" />启用经典版饭否 logo</a></label>
 						<span class="comment">去除 logo 的“测试版”字样</span>
 					</li>
 					<li>
-						<label><input type="checkbox" key="remove_app_recom" />屏蔽“随机应用推荐”及“饭否应用”广告区</label>
-					</li>
-					<li>
-						<label><input type="checkbox" key="amy_star" />我喜欢雏儿名字后面的小星星</label>
+						<label><a class="screenshot" rel="plugins/remove_app_recom.png" title="屏蔽广告区功能预览"><input type="checkbox" key="remove_app_recom" />屏蔽“饭否应用”广告区并允许阻止重复推荐应用</a></label>
 					</li>
 				</ul>
 				<button class="btn_apply">应用</button>
 			</div>
 
-			<div class="tabs" id="tabs2" style="display: none;">
-				<style>
-					.fanfou_statuses p, .fanfou_statuses .fanfou_statuses_more {
-						display: none;
-					}
-					.fanfou_statuses ul li {
-						color: #666;
-						-webkit-user-select: auto;
-					}
-				</style>
+			<div class="tabs" id="tabs2">
 				<p class="left">
 					<a href="http://fanfou.com/spacefanfou" target="_blank"><img src="http://avatar4.fanfou.com/s0/00/sw/av.jpg" width="48" height="48" style="border-radius: 3px;" /></a>
 				</p>
@@ -137,16 +166,42 @@
 						太空饭否官方账号。负责版本发布、答疑、交流等事宜，有问题请私信。
 					</p>
 				</div>
+				<!--
+				<table>
+					<tbody>
+						<tr>
+							<td rowspan="2" class="avatar">
+								<a target="_blank" href="http://fanfou.com/zhasm"><img src="http://avatar4.fanfou.com/l0/00/57/sg.jpg" width="48" height="48" style="border-radius: 3px;" /></a>
+							</td>
+							<td class="author">
+								<a href="http://fanfou.com/zhasm" target="_blank">.rex</a>
+							</td>
+							<td rowspan="2" class="avatar">
+								<a target="_blank" href="http://fanfou.com/ruif"><img src="http://avatar4.fanfou.com/l0/00/34/d8.jpg" width="48" height="48" style="border-radius: 3px;" /></a>
+							</td>
+							<td class="author">
+								<a href="http://fanfou.com/ruif" target="_blank">锐风</a>
+							</td>
+						</tr>
+						<tr class="desc">
+							<td>
+								太空饭否++ 开源项目的维护者。
+							</td>
+							<td>
+								太空饭否++ 开源项目的主要开发者。
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				-->
 				<div class="clear"></div>
 				<div id="footer">
-					&copy; 2010-2012 <a href="http://fanfou.com/anegie" target="_blank">Kevin</a>. All rights reserved.<br />
-					这是太空饭否最终版，后续将不再提供任何更新与支持，敬请谅解！<br />
-					感谢曾经的太空饭否开发者 @<a href="http://fanfou.com/xidorn" target="_blank">Xidorn</a> 以及 @<a href="http://fanfou.com/ruif" target="_blank">锐风</a> 等为太空饭否开发贡献力量的有心人们。感谢所有使用和帮助推广太空饭否的饭否 er 们。<br />
-					<a href="http://fanfou.com/spacefanfou" target="_blank">官方帐号</a> | <a href="http://anegie.com/blog/spacefanfou/" target="_blank">入门手册</a> | <a href="https://github.com/anegie/Space-Fanfou" target="_blank">开源项目</a> | <a href="http://fanfou.com/home?status=@%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6+" target="_blank">提交使用反馈</a> | <a href="http://fanfou.com/sharer?u=http%3A%2F%2Fis.gd%2Fspacefanfou?t=%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%20-%20Chrome%20%E7%BD%91%E4%B8%8A%E5%BA%94%E7%94%A8%E5%BA%97?d=%E5%90%91%E5%A4%A7%E5%AE%B6%E6%8E%A8%E8%8D%90%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%EF%BC%8C%E8%B6%85%E5%BC%BA%E5%A4%A7%E7%9A%84%E9%A5%AD%E5%90%A6%20Chrome%20%E6%B5%8F%E8%A7%88%E5%99%A8%E6%89%A9%E5%B1%95%E7%A8%8B%E5%BA%8F%E3%80%82?s=bl" target="_blank">推荐太空饭否</a>
+					Copyright &copy; 2013 <a href="https://github.com/anegie/Space-Fanfou" target="_blank">The Space-Fanfou Team</a>.<br />
+					感谢曾经的太空饭否开发者 @<a href="http://fanfou.com/xidorn" target="_blank">Xidorn</a> (@Upsuper)。感谢所有使用和帮助推广太空饭否的饭友们。<br />
+					<a href="http://fanfou.com/spacefanfou" target="_blank">官方帐号</a> | <a href="http://anegie.com/blog/spacefanfou/" target="_blank">入门手册</a> | <a href="https://github.com/anegie/Space-Fanfou" target="_blank">开源项目</a> | <a href="http://fanfou.com/home?status=%40%E9%94%90%E9%A3%8E%20%40%E5%A4%AA%E7%A9%BA%E5%B0%8F%E5%AD%A9%20%E6%88%91%E5%8F%91%E7%8E%B0%E4%BA%86%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98%3A" target="_blank">提交使用反馈</a> | <a href="http://fanfou.com/sharer?u=http%3A%2F%2Fis.gd%2Fsfanfou?t=%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%20-%20Chrome%20%E7%BD%91%E4%B8%8A%E5%BA%94%E7%94%A8%E5%BA%97?d=%E5%90%91%E5%A4%A7%E5%AE%B6%E6%8E%A8%E8%8D%90%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%EF%BC%8C%E8%B6%85%E5%BC%BA%E5%A4%A7%E7%9A%84%E9%A5%AD%E5%90%A6%20Chrome%20%E6%B5%8F%E8%A7%88%E5%99%A8%E6%89%A9%E5%B1%95%E7%A8%8B%E5%BA%8F%E3%80%82?s=bl" target="_blank">推荐太空饭否</a>
 				</div>
 			</div>
 		</div>
-
 	</div>
 	<div id="screenshot" class="fadeOut"><div id="screenshot_img_wrapper"><img id="preview_img" src="" alt="预览" /></div><span id="preview_des" /></div>
 </body>
