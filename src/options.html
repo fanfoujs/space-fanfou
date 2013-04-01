@@ -4,10 +4,10 @@
 	<meta charset="UTF-8">
 	<title>太空饭否 - 选项</title>
 	<link rel="stylesheet" href="options.css" />
-	<script type="text/javascript" src="http://static.fanfou.com/js/jquery.js"></script>
-	<script type="text/javascript" src="namespace.js"></script>
-	<script type="text/javascript" src="settings.js"></script>
-	<script type="text/javascript" src="options.js"></script>
+	<script src="namespace.js"></script>
+	<script src="settings.js"></script>
+	<script src="functions.js"></script>
+	<script src="options.js"></script>
 </head>
 <body>
 	<div id="wrapper">
@@ -15,15 +15,15 @@
 			太空饭否
 			<span id="version">请稍候...</span>
 		</div>
-		
+
 		<div id="navigation">
 			<ul>
-				<li class="current"><a id="tab1" onclick="current('tabs0',this)" href="javascript:void(0)">扩展功能</a></li>
-				<li><a id="tab2" onclick="current('tabs1',this)" href="javascript:void(0)">页面样式</a></li>
-				<li><a id="tab3" onclick="current('tabs2',this)" href="javascript:void(0)">关于太空饭否</a></li>
+				<li class="current"><a id="tab1">扩展功能</a></li>
+				<li><a id="tab2">页面样式</a></li>
+				<li><a id="tab3">关于太空饭否</a></li>
 			</ul>
 		</div>
-		
+
 		<div id="tabs">
 			<div class="tabs current" id="tabs0" style="display: block;">
 				<ul>
@@ -84,9 +84,9 @@
                     	<span class="comment">允许临时清除 / 恢复用户自定义模板</span>
                     </li>
 				</ul>
-				<button id="btn_apply">应用</button>
+				<button class="btn_apply">应用</button>
 			</div>
-		
+
 			<div class="tabs" id="tabs1" style="display: none;">
 				<ul>
 					<li>
@@ -115,9 +115,9 @@
 						<label><input type="checkbox" key="amy_star" />我喜欢雏儿名字后面的小星星</label>
 					</li>
 				</ul>
-				<button id="btn_apply">应用</button>
+				<button class="btn_apply">应用</button>
 			</div>
-			
+
 			<div class="tabs" id="tabs2" style="display: none;">
 				<style>
 					.fanfou_statuses p, .fanfou_statuses .fanfou_statuses_more {
@@ -146,23 +146,8 @@
 				</div>
 			</div>
 		</div>
- 
+
 	</div>
-	
-	<script type=text/javascript>
-		function current(showContent,selfObj){
-			var tab = document.getElementById("navigation").getElementsByTagName("li");
-			var tablength = tab.length;
-			for(i=0; i<tablength; i++){
-				tab[i].className = "";
-			}
-			selfObj.parentNode.className = "current";
-			for(i=0; j=document.getElementById("tabs"+i); i++){
-				j.style.display = "none";
-			}
-			document.getElementById(showContent).style.display = "block";
-		}
-	</script>
-	
+	<div id="screenshot" class="fadeOut"><div id="screenshot_img_wrapper"><img id="preview_img" src="" alt="预览" /></div><span id="preview_des" /></div>
 </body>
 </html>

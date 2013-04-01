@@ -1,5 +1,5 @@
 {
-    "name": "太空饭否",
+    "name": "太空饭否（请安装新版后卸载）",
     "version": "0.6.4.0",
     "permissions": [ "http://fanfou.com/*", "tabs", "notifications", "contextMenus" ],
     "description": "太空饭否是一个免费、用心的开源程序，是目前最强大最好用的饭否 Chrome 浏览器扩展。可以给饭否页面添加回复和转发展开、浮动输入框、多用户切换等功能，并且使饭否页面的变得更美更舒心，符合您的使用习惯。",
@@ -8,12 +8,14 @@
         "48": "icons/icon-48.png",
         "128": "icons/icon-128.png"
     },
-    "background_page": "background.html",
+	"background": {
+		"scripts": [ "namespace.js", "data.js", "settings.js", "functions.js", "background.js" ]
+	},
     "options_page": "options.html",
     "page_action": {
         "default_icon": "icons/icon-19.png",
         "default_title": "太空饭否",
-        "popup": "options.html"
+        "default_popup": "options.html"
     },
     "content_scripts": [
         {
@@ -22,5 +24,7 @@
             "matches": [ "http://fanfou.com/*" ],
             "run_at": "document_start"
         }
-    ]
+    ],
+	"web_accessible_resources": [ "icons/icon-128.png" ],
+	"manifest_version": 2
 }

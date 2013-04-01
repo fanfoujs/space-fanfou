@@ -69,7 +69,7 @@ body {
 	font: 400 12px/1.5 "Lucida Grande", "Hevetica Neue", Hevetica, Tahoma, "Hiragino Sans GB", "Microsoft Yahei", "Wenquanyi MicroHei", sans-serif;
 	-webkit-user-select: none;
 }
-::selection { 
+::selection {
 	color: rgba(255, 255, 255, .75);
 	background: rgba(0, 0, 0, .5);
 	text-shadow: none;
@@ -114,20 +114,20 @@ h4 {
 }
 @-webkit-keyframes bl-blinking {
 	from {
-		box-shadow: 
-			0 999px 0 rgba(172, 172, 172, 0) inset, 
+		box-shadow:
+			0 999px 0 rgba(172, 172, 172, 0) inset,
 			0 1px 0 rgba(255, 255, 255, 1) inset,
 			0 1px 0 rgba(0, 0, 0, .09);
 	}
 	50% {
-		box-shadow: 
-			0 999px 0 rgba(172, 172, 172, .2) inset, 
+		box-shadow:
+			0 999px 0 rgba(172, 172, 172, .2) inset,
 			0 1px 0 rgba(255, 255, 255, 1) inset,
 			0 1px 0 rgba(0, 0, 0, .09);
 	}
 	to {
-		box-shadow: 
-			0 999px 0 rgba(172, 172, 172, 0) inset, 
+		box-shadow:
+			0 999px 0 rgba(172, 172, 172, 0) inset,
 			0 1px 0 rgba(255, 255, 255, 1) inset,
 			0 1px 0 rgba(0, 0, 0, .09);
 	}
@@ -183,6 +183,7 @@ h4 {
 	color: #666;
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eee));
 	text-shadow: 0 1px 0 white;
+	cursor: pointer;
 }
 #navigation ul li.current a {
 	background: none;
@@ -240,6 +241,8 @@ input[key="expanding_replies.number"] {
 }
 #screenshot {
 	position: absolute;
+	left: 0;
+	top: 0;
 	background: rgba(241, 241, 241, .9);
 	padding: 10px 10px 5px;
 	border: 1px solid;
@@ -249,15 +252,19 @@ input[key="expanding_replies.number"] {
 	border-bottom-color: rgba(0, 0, 0, .6);
 	border-radius: 5px;
 	box-shadow: 0 5px 10px rgba(0, 0, 0, .5);
-	display: none;
+	-webkit-transition: opacity .2s ease-in;
 	color: #333;
 	text-shadow: 0 1px 0 white;
+	pointer-events: none;
+}
+#screenshot.fadeOut {
+  opacity: 0;
 }
 #screenshot img {
 	border: 1px solid rgba(0, 0, 0, .2);
 	border-radius: 3px;
 }
-#btn_apply {
+.btn_apply {
 	font-family: inherit;
 	font-size: 12px;
 	height: 25px;
@@ -283,14 +290,14 @@ input[key="expanding_replies.number"] {
 		0 1px 0 rgba(255, 255, 255, .75) inset,
 		0 1px 0 rgba(0, 0, 0, .09);
 }
-#btn_apply:hover {
+.btn_apply:hover {
 	cursor: pointer;
 	-webkit-animation-name: bl-blinking;
 	-webkit-animation-timing-function: ease-in-out;
 	-webkit-animation-iteration-count: infinite;
 	-webkit-animation-duration: 1s;
 }
-#btn_apply:active {
+.btn_apply:active {
 	border-top-color: #5a5caf;
 		border-bottom-color: #52536f;
 		border-left-color: #56578f;

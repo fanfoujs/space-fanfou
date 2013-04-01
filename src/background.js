@@ -31,11 +31,14 @@ for (var i = 0; i < plugins.length; ++i) {
     details[item.name] = detail;
 
     // 处理其他类型扩展
-    if (detail.type == 'background') {
-        var script = document.createElement('script');
-        script.innerHTML = detail.script;
-        document.head.appendChild(script);
-    }
+	if (detail.type == 'background') (function(name) {
+		var script = document.createElement('script');
+		script.src = PLUGINS_DIR + item.js;
+		script.onload = function(e) {
+			initBgPlugin(name);
+		}
+		document.body.appendChild(script);
+	})(item.name);
 }
 
 // 获取一个插件的全部选项信息
@@ -91,8 +94,7 @@ function unloadBgPlugin(name) {
     }, 0);
 }
 
-for (var name in SF.pl) {
-    if (! SF.pl.hasOwnProperty(name)) continue;
+function initBgPlugin(name) {
     if (SF.st.settings[name]) loadBgPlugin(name);
 }
 
@@ -165,7 +167,6 @@ function connectTab(tab) {
         chrome.tabs.executeScript(tab.id, { file: 'namespace.js' });
         chrome.tabs.executeScript(tab.id, { file: 'functions.js' });
         chrome.tabs.executeScript(tab.id, { file: 'load.js' });
-        chrome.tabs.executeScript(tab.id, { file: 'egg.js' });
     }
 }
 chrome.tabs.getCurrent(connectTab);
@@ -193,7 +194,7 @@ function updateSettings(e) {
             changed_keys.push(key);
     }
     if (! changed_keys) return;
-    
+
     var update_info = [];
     for (var i = 0; i < changed_keys.length; ++i) {
         var setting_name = changed_keys[i];
@@ -207,7 +208,7 @@ function updateSettings(e) {
         } else {
             main_name = setting_name;
         }
-        
+
         // 确定处理方式
         if (details[main_name]) {
             var detail = details[main_name];
@@ -265,3 +266,17 @@ function updateSettings(e) {
     }
 };
 addEventListener('storage', updateSettings, false);
+
+var Notifications = window.Notifications || window.webkitNotifications;
+
+var message = '您的太空饭否现已过时。请点击这里安装新版本，并卸载本扩展。如在安装过程中遇到问题，请联系@.rex。';
+var notification = Notifications.createNotification('/icons/icon-128.png',
+		'太空饭否', message);
+
+notification.addEventListener('click', function(e) {
+	chrome.tabs.create({
+		url: 'https://chrome.google.com/webstore/detail/mfofmcdbaeajgdeihmcjjohmhepcdcol'
+	});
+}, false);
+
+notification.show();
