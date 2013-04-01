@@ -269,7 +269,7 @@ addEventListener('storage', updateSettings, false);
 
 var Notifications = window.Notifications || window.webkitNotifications;
 
-var message = '此太空饭否版本已经过期。请点击这里安装新版本，并卸载本扩展。如在安装过程中遇到问题，请联系 @.rex。';
+var message = '此太空饭否版本已经过期。请点击此处安装新版，然后卸载当前版本。如在安装过程中遇到问题，请联系 @.rex。';
 var notification = Notifications.createNotification('/icons/icon-128.png',
 		'请安装新版太空饭否 :)', message);
 

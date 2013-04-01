@@ -2,7 +2,7 @@
     "name": "太空饭否（请安装新版太空饭否）",
     "version": "0.6.4.0",
     "permissions": [ "http://fanfou.com/*", "tabs", "notifications", "contextMenus" ],
-    "description": "此太空饭否版本已经过期，请卸载并安装新版太空饭否。新版太空饭否地址：http://is.gd/sfanfou 详情：http://anegie.com/blog/space-fanfou-returns/",
+    "description": "此太空饭否版本已经过期，请安装新版并卸载当前版本。新版太空饭否地址：http://is.gd/sfanfou 详情：http://anegie.com/blog/space-fanfou-returns/",
     "icons" : {
         "16": "icons/icon-16.png",
         "48": "icons/icon-48.png",
