@@ -7,11 +7,11 @@
 > 入门手册：http://anegie.com/blog/spacefanfou/ 
 
 ## 官方版本下载
-* 最新版 | Chrome 网上应用店: https://chrome.google.com/webstore/detail/mfofmcdbaeajgdeihmcjjohmhepcdcol
-> 推荐安装 Chrome 网上应用店版本，以便于获得即时更新与良好的体验。如果您无法正常访问 Chrome 网上应用店，请联系 @[.rex](http://fanfou.com/zhasm)。
-* 0.8.0.0 | Chrome / Chromium Crx 打包地址: http://pan.baidu.com/share/link?shareid=369410&uk=1932005134  
-> Crx 本地安装方法：打开 [chrome://extensions/](chrome://extensions/)，将下载得到的 crx 拖拽到 Chrome 窗口中即可完成安装。
-* 0.5.3.1 | Safari 精简版（只有 CSS）: https://dl.dropbox.com/u/2912260/apps/space_fanfou_safari_0531.safariextz
+* [最新版 | Chrome 网上应用店](https://chrome.google.com/webstore/detail/mfofmcdbaeajgdeihmcjjohmhepcdcol)  
+推荐安装 Chrome 网上应用店版本，以便于获得即时更新与良好的体验。如果您无法正常访问 Chrome 网上应用店，请联系 @[.rex](http://fanfou.com/zhasm)。
+* [0.8.0.0 | Chrome / Chromium Crx 打包下载地址](http://pan.baidu.com/share/link?shareid=369410&uk=1932005134)  
+Crx 本地安装方法：打开 [chrome://extensions/](chrome://extensions/)，将下载得到的 crx 拖拽到 Chrome 窗口中即可完成安装。
+* [0.5.3.1 | Safari 精简版（只有 CSS）](https://dl.dropbox.com/u/2912260/apps/space_fanfou_safari_0531.safariextz)
 
 ## 非官方版本下载
 * 0.6.4.0 | Fantom / Opera 版太空饭否（by @锐风）: https://addons.opera.com/zh-cn/extensions/details/fantom
