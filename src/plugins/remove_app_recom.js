@@ -7,7 +7,7 @@ SF.pl.remove_app_recom = new SF.plugin((function($) {
 
 	function getList() {
 		list = SF.fn.getData('sfplus_blocked_app_list') ||
-			[ 'http://is.gd/sfplus' ];
+			[ 'http://is.gd/sfanfou' ];
 	}
 
 	function saveList() {
