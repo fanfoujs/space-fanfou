@@ -1,8 +1,8 @@
 **太空饭否是一个免费、用心的开源程序，是目前最强大最好用的饭否 Chrome 浏览器扩展。可以给饭否页面添加回复和转发展开、浮动输入框、多用户切换等功能，并且使饭否页面变得更美更舒心，符合您的使用习惯。**
 
-作者：@太空小孩 @锐风 (@Xidorn 已退出)
-官方饭否帐号：http://fanfou.com/spacefanfou
-太空饭否入门手册：http://anegie.com/blog/spacefanfou/
+作者：@太空小孩 @锐风 (@Xidorn 已退出) 
+官方饭否帐号：http://fanfou.com/spacefanfou 
+太空饭否入门手册：http://anegie.com/blog/spacefanfou/ 
 
 ## 官方版本下载
 * 最新版  | Chrome 应用商店地址: https://chrome.google.com/webstore/detail/mfofmcdbaeajgdeihmcjjohmhepcdcol
