@@ -4,9 +4,6 @@ SF.pl.rating = new SF.plugin((function() {
 
 	return {
 		load: function() {
-			// 待修改
-			return;
-
 			function accumulateTime() {
 				var time = SF.fn.getData('timer') || 0;
 				time++;
@@ -17,8 +14,7 @@ SF.pl.rating = new SF.plugin((function() {
 						timeout: 60000
 					}).
 					addEventListener('click', function(e) {
-						// 这个地址有问题, 待修改
-						var url = 'https://chrome.google.com/webstore/detail/%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%2B%2B/mfofmcdbaeajgdeihmcjjohmhepcdcol/reviews';
+						var url = 'https://chrome.google.com/webstore/detail/%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6/mfofmcdbaeajgdeihmcjjohmhepcdcol/reviews';
 						createTab(url);
 
 						SF.fn.setData('rating_page_shown', true);
