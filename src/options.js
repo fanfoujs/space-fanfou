@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		if ($elem.type == 'checkbox')
 			return $elem.checked;
 		else
-			return JSON.parse($elem.value);
+			return $elem.tagName == 'SELECT' ?
+				$elem.value : JSON.parse($elem.value);
 	}
 	function setValue($elem, value) {
 		if ($elem.type == 'checkbox') {

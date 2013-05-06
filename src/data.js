@@ -5,6 +5,14 @@ var plugins = [
 	/* 页面样式扩展 */
 
 	{
+		name: 'counternum_font',
+		options: [
+			'fontname'
+		],
+		js: 'counternum_font.js',
+		earlyload: true
+	},
+	{
 		name: 'font_reset_cn',
 		css: 'font_reset_cn.css',
 		sync: true

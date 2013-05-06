@@ -281,6 +281,9 @@ input[type="checkbox"] {
 input[type="number"] {
 	width: 45px;
 }
+select {
+	color: #555;
+}
 [foldable_tgt] {
   -webkit-transition: height .2s linear;
   overflow: hidden;

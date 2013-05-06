@@ -147,7 +147,8 @@ for (var i = 0; i < plugins.length; ++i) {
 	var detail = {
 		options: item.options,
 		type: item.type,
-		sync: item.sync
+		earlyload: item.earlyload === true,
+		sync: item.sync === true
 	};
 	// 同步缓存样式内容
 	if (item.css)
@@ -188,9 +189,10 @@ function buildPageCache() {
 		if (item.type || ! SF.st.settings[name]) continue;
 		var detail = {
 			name: name,
+			earlyload: item.earlyload,
 			sync: item.sync,
 			style: getURL(item.style),
-			script: item.sync ?
+			script: (item.sync || item.earlyload) ?
 				loadFile(item.script) : getURL(item.script),
 		};
 		if (item.options)
@@ -389,7 +391,8 @@ function updateSettings(e) {
 						update_info.push({
 							type: 'update',
 							name: main_name,
-							options: getPluginOptions(main_name)
+							options: getPluginOptions(main_name),
+							earlyload: detail.earlyload
 						});
 					}
 				} else {
@@ -397,14 +400,17 @@ function updateSettings(e) {
 						update_info.push({
 							type: 'disable',
 							name: main_name,
+							earlyload: detail.earlyload
 						});
 					} else {
 						update_info.push({
 							type: 'enable',
 							name: main_name,
 							style: getURL(detail.style),
-							script: getURL(detail.script),
-							options: getPluginOptions(main_name)
+							script: detail.earlyload ?
+								loadFile(detail.script) : getURL(detail.script),
+							options: getPluginOptions(main_name),
+							earlyload: detail.earlyload
 						});
 					}
 				}

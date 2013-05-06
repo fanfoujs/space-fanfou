@@ -31,18 +31,21 @@ var SF = (function() {
 			this.unload = pluginUnloader(func.unload || empty_func);
 		},
 		unload: function() {
+			for (var plugin in SF.pl) {
+				if (! SF.pl.hasOwnProperty(plugin)) continue;
+				try {
+					SF.pl[plugin].unload();
+				} catch (e) {
+					console.log('An error occurs while unloading SF.pl.' + plugin, e);
+				}
+			}
+			SF.pl = { };
 			if (typeof FF == 'undefined') return;
 			var $ = jQuery;
 			var reserved_scripts = [
 				'sf_script_common',
 				'sf_script_style'
 			];
-			for (var plugin in SF.pl) {
-				if (! SF.pl.hasOwnProperty(plugin)) continue;
-				try {
-					SF.pl[plugin].unload();
-				} catch (e) { }
-			}
 			var items = [
 				'#sf_flag_libs_ok',
 				'script.space-fanfou',
@@ -54,7 +57,6 @@ var SF = (function() {
 					this.parentNode.removeChild(this);
 				}
 			});
-			SF.pl = { };
 		}
 	};
 })();

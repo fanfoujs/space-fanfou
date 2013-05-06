@@ -71,8 +71,15 @@ var loadScript = (function() {
 	}
 })();
 
+function tryEval(script) {
+	script = 'try {' + script + '}' +
+		'catch(e) { console.log("An error occurs", e); }';
+	eval(script);
+}
+
 function unload() {
 	location.assign('javascript:SF.unload();');
+	SF.unload();
 }
 
 if (($i('sf_flag_libs_ok') || {}).name == 'spacefanfou-flags') {
@@ -103,18 +110,25 @@ port.onMessage.addListener(function(msg) {
 			var item = msg.data[i];
 			if (item.style) insertStyle(item.style, item.name);
 			if (item.script) {
-				scripts.push([item.script, 'plugin_' + item.name]);
-				load_plugins.push('setTimeout(function() {');
 				var plugin = 'SF.pl.' + item.name;
+				var load_code = 'try {';
 				if (item.options) {
-					load_plugins.push(
-						plugin + '.update.apply(' + plugin + ', ' +
-						JSON.stringify(item.options) + ');');
+					load_code += plugin + '.update.apply(' + plugin + ', ' +
+						JSON.stringify(item.options) + ');';
 				}
-				load_plugins.push(plugin + '.load();');
-				load_plugins.push('}, 0);');
+				load_code += plugin + '.load();';
+				load_code += '} catch(e) { ';
+				load_code += 'console.log("An error occurs while loading ' + plugin + '", e);';
+				load_code += '}';
+				if (item.earlyload) {
+					eval(item.script);
+					eval(load_code);
+				} else {
+					scripts.push([item.script, 'plugin_' + item.name]);
+					load_plugins.push(load_code);
+				}
 			}
-			if (item.sync) apply(true);
+			if (item.sync || item.earlyload) apply(true);
 		}
 		scripts.push([load_plugins.join('\n')]);
 		load_plugins = void 0;
@@ -134,28 +148,46 @@ port.onMessage.addListener(function(msg) {
 			var updates = [];
 			switch (item.type) {
 				case 'update':
-          updates.push('if(' + plugin + ')');
-          updates.push(
-              plugin + '.update.apply(' + plugin + ',' +
-              JSON.stringify(item.options) + ');');
+					var update = 'if(' + plugin + ')' +
+						plugin + '.update.apply(' + plugin + ',' +
+						JSON.stringify(item.options) + ');';
+					if (item.earlyload) {
+						tryEval(update);
+					} else {
+						updates.push(update);
+					}
 					break;
 				case 'enable':
 					if (item.style)
 						insertStyle(item.style, item.name);
 					if (item.script) {
-						loadScript(item.script, item.name);
-						if (item.options) {
-							updates.push(
+						if (item.earlyload) {
+							tryEval(item.script);
+							if (item.options) {
+								tryEval(
 									plugin + '.update.apply(' + plugin + ',' +
 									JSON.stringify(item.options) + ');');
+							}
+							tryEval(plugin + '.load();');
+						} else {
+							loadScript(item.script, item.name);
+							if (item.options) {
+								updates.push(
+										plugin + '.update.apply(' + plugin + ',' +
+										JSON.stringify(item.options) + ');');
+							}
+							updates.push(plugin + '.load();');
 						}
-						updates.push(plugin + '.load();');
 					}
 					break;
 				case 'disable':
-					updates.push('if(' + plugin + ')' + plugin + '.unload();');
-					updates.push('jQuery(' +
-								 '"#sf_script_' + item.name + '").remove();');
+					if (item.earlyload) {
+						tryEval(plugin + '.unload();');
+					} else {
+						updates.push('if(' + plugin + ')' + plugin + '.unload();');
+						updates.push('jQuery(' +
+									 '"#sf_script_' + item.name + '").remove();');
+					}
 					updates.push('jQuery(' +
 								 '"#sf_style_' + item.name + '").remove();');
 					break;
@@ -164,7 +196,7 @@ port.onMessage.addListener(function(msg) {
 			loadScript(updates.join(''), 'update_' + item.name);
 		}
 		loadScript('jQuery("' +
-			'[id^=sf_script_update_]").remove();', 'update_clear');
+			'[id^=sf_script_update_]").remove();', 'update_clean');
 	}
 });
 

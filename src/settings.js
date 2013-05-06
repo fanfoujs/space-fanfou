@@ -36,7 +36,10 @@ SF.st.default_settings = {
 	rating: true,
 	unread_statuses: true,
 	'unread_statuses.auto_show': true,
-	'unread_statuses.playsound': false
+	'unread_statuses.playsound': false,
+	counternum_font: true,
+	'counternum_font.fontname': navigator.platform == 'Win32' ?
+		'Lato' : 'Helvetica Neue'
 };
 
 /* 读取选项 */

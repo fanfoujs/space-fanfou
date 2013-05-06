@@ -21,6 +21,7 @@
 		"plugins/box_shadows.css",
 		"plugins/clean_personal_theme.css",
 		"plugins/clean_personal_theme.js",
+		"plugins/counternum_font.js",
 		"plugins/disable_autocomplete.js",
 		"plugins/expanding_replies.css",
 		"plugins/expanding_replies.js",
