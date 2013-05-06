@@ -245,12 +245,11 @@ function initBgPlugin(name) {
 
 /* 与页面交互 */
 
-var ports = {};
+var ports = { };
 
 function checkURL(url) {
 	if (typeof url != 'string') return false;
-	return url.substr(0, 18) == 'http://fanfou.com/' &&
-		   url.substr(0, 24) != 'http://fanfou.com/home.2';
+	return url.substr(0, 18) == 'http://fanfou.com/';
 }
 
 // 等待页面连接
