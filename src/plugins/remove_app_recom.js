@@ -2,16 +2,25 @@ SF.pl.remove_app_recom = new SF.plugin((function($) {
 	var $goodapp = $('#goodapp');
 	if (! $goodapp.length) return;
 
+	var default_list = [
+		"http://is.gd/sfanfou",
+		"http://imach.me/gohanapp",
+		"http://feed.fanfouapps.com/",
+		"http://help.fanfou.com/share_button.html",
+		"http://2012.fanfou.com/",
+		"http://bang.fanfou.com/?fr=apitips",
+		"http://blog.fanfou.com"
+	];
+
 	var list = [];
 	var app_url = $('>a', $goodapp).attr('href');
 
 	function getList() {
-		list = SF.fn.getData('sfplus_blocked_app_list') ||
-			[ 'http://is.gd/sfanfou' ];
+		list = SF.fn.getData('spacefanfou_hidden_app_recommendation_list') || default_list;
 	}
 
 	function saveList() {
-		SF.fn.setData('sfplus_blocked_app_list', list);
+		SF.fn.setData('spacefanfou_hidden_app_recommendation_list', list);
 	}
 
 	var $btn = $('<span />');
@@ -32,7 +41,7 @@ SF.pl.remove_app_recom = new SF.plugin((function($) {
 		.appendTo($goodapp);
 
 	return {
-		'load': function() {
+		load: function() {
 			getList();
 
 			if (list.indexOf(app_url) > -1) {
@@ -43,7 +52,7 @@ SF.pl.remove_app_recom = new SF.plugin((function($) {
 
 			$('>a>strong', $goodapp).append($btn);
 		},
-		'unload': function() {
+		unload: function() {
 			$goodapp.show();
 			$btn.detach();
 		}
