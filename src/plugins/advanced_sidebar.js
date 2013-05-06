@@ -8,7 +8,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 	var $script;
 
 	return {
-		'load': function() {
+		load: function() {
 			SF.cb.advanced_sidebar = function(data, isInit) {
 				if (! isInit) {
 					SF.cb.advanced_sidebar = undefined;
@@ -171,7 +171,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 			}
 			init();
 		},
-		'unload': function() {
+		unload: function() {
 			SF.cb.advanced_sidebar = undefined;
 			if ($script) {
 				$script.remove();
