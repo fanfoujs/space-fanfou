@@ -9,7 +9,8 @@ SF.pl.remove_app_recom = new SF.plugin((function($) {
 		"http://help.fanfou.com/share_button.html",
 		"http://2012.fanfou.com/",
 		"http://bang.fanfou.com/?fr=apitips",
-		"http://blog.fanfou.com"
+		"http://blog.fanfou.com",
+		"http://s.cnnicresearch.cn/sz130412.php?f=fanfou"
 	];
 
 	var list = [];
