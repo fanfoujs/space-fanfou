@@ -731,6 +731,15 @@ p.pm-parent {
 .overlay-leavemsg .bg {
 	opacity:.9
 }
+.paginator {
+	float: right;
+	max-width: 500px;
+	line-height: 30px;
+}
+.paginator li {
+	float: left;
+	margin: 0 3px !important;
+}
 .paginator li a {
 	padding: 5px 8px !important;
 	border: 1px solid #ddd !important;
