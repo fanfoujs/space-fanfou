@@ -116,7 +116,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 										$('<div />').each(function() {
 											var $elem = $(this);
 											setTimeout(function() {
-												$elem.width(Math.min(100, statusFreq) + '%');
+												$elem.width(Math.min(100, statusFreq / 0.5) + '%');
 											}, 0);
 										})
 									)
@@ -133,7 +133,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 								$('<div />').each(function() {
 									var $elem = $(this);
 									setTimeout(function() {
-										$elem.width(Math.min(100, infIndex / 3) + '%');
+										$elem.width(Math.min(100, infIndex) + '%');
 									}, 0);
 								})
 							)
