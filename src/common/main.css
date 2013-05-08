@@ -235,7 +235,7 @@
 #PopupBox .tip .counter {
 	/*font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif !important;*/
 	font-size: 18px !important;
-	font-weight: 400 !important;
+	font-weight: 300 !important;
 }
 #phupdate .act .loading {
 	-webkit-transform: translateX(-40px);
@@ -520,7 +520,7 @@ p.pm-parent {
 }
 #user_top:first-child>h3 {
 	/*font-family: Lato, "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "WenQuanYi Micro Hei", "Microsoft Yahei", sans-serif !important;*/
-	font-weight: 400 !important;
+	font-weight: 300 !important;
 	-webkit-font-smoothing: antialiased;
 }
 #user_top > a {
@@ -547,7 +547,7 @@ p.pm-parent {
 #user_stats .count {
 	/*font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif !important;*/
 	font-size: 18px !important;
-	font-weight: 400 !important;
+	font-weight: 300 !important;
 	margin-bottom: 3px;
 }
 #iconset {
@@ -712,7 +712,7 @@ p.pm-parent {
 #panel h1 {
 	/*font-family: Lato, "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB W3", "WenQuanYi Micro Hei", "Microsoft Yahei", sans-serif !important;*/
 	font-size: 26px !important;
-	font-weight: 400 !important;
+	font-weight: 300 !important;
 	text-shadow: 0 2px 1px white;
 	line-height: 32px !important;
 	margin-right: 5px;
