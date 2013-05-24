@@ -41,6 +41,7 @@
 		"plugins/privatemsg_manage.js",
 		"plugins/remove_app_recom.css",
 		"plugins/remove_app_recom.js",
+		"plugins/repost_self_statuses.js",
 		"plugins/share_to_fanfou.js",
 		"plugins/status_manage.css",
 		"plugins/status_manage.js",

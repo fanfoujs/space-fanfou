@@ -39,7 +39,8 @@ SF.st.default_settings = {
 	'unread_statuses.playsound': false,
 	counternum_font: true,
 	'counternum_font.fontname': navigator.platform == 'Win32' ?
-		'Lato' : 'Helvetica Neue'
+		'Lato' : 'Helvetica Neue',
+	repost_self_statuses: false
 };
 
 /* 读取选项 */

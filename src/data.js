@@ -116,6 +116,10 @@ var plugins = [
 		],
 		js: 'unread_statuses.js'
 	},
+	{
+		name: 'repost_self_statuses',
+		js: 'repost_self_statuses.js'
+	},
 
 	/* 其他扩展 */
 
