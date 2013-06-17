@@ -196,7 +196,7 @@ port.onMessage.addListener(function(msg) {
 			loadScript(updates.join(''), 'update_' + item.name);
 		}
 		loadScript('jQuery("' +
-			'[id^=sf_script_update_]").remove();', 'update_clean');
+			'[id^=sf_script_update_]").remove();', 'update_clear');
 	}
 });
 
