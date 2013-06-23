@@ -40,7 +40,8 @@ SF.st.default_settings = {
 	counternum_font: true,
 	'counternum_font.fontname': navigator.platform == 'Win32' ?
 		'Lato' : 'Helvetica Neue',
-	repost_self_statuses: false
+	repost_self_statuses: false,
+	emoji: true
 };
 
 /* 读取选项 */

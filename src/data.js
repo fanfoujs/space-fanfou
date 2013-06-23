@@ -44,6 +44,11 @@ var plugins = [
 		js: 'remove_app_recom.js',
 		css: 'remove_app_recom.css'
 	},
+	{
+		name: 'emoji',
+		js: 'emoji.js',
+		css: 'emoji.css'
+	},
 
 	/* 页面功能性扩展 */
 
