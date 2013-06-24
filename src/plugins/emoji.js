@@ -920,8 +920,13 @@ SF.pl.emoji = new SF.plugin((function($) {
 	});
 
 	function convert($content) {
+		$content = $content.first();
+		var $photo = $('.photo', $content);
 		var html = $content.html().trim();
 		$content.html(jEmoji.unifiedToHTML(html));
+		if ($photo.length) {
+			$('.photo', $content).replaceWith($photo);
+		}
 	}
 
 	function processItem($item) {
