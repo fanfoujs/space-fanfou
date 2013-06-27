@@ -102,8 +102,11 @@
 						<br />
 						<span>推荐使用五星评分 Chrome 扩展“<a href="http://is.gd/fanjoy" title="Chrome 网上应用店 - 有饭同享" target="_blank">有饭同享</a>”，获取更好的分享体验</span>
 					</li>
-					<li>
-						<label><input type="checkbox" key="disable_autocomplete" />禁用输入@时的自动补全</label>
+					<li foldable="foldable">
+						<label><input type="checkbox" key="disable_autocomplete" foldable_src="foldable_src" />禁用输入@时的自动补全</label>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="disable_autocomplete.sf_autocomplete" />启用太空饭否@自动补全功能</label>
+						</p>
 					</li>
 					<li>
 						<label><a class="screenshot" rel="plugins/status_manage.png" title="消息批量管理功能预览"><input type="checkbox" key="status_manage" />启用消息批量管理</a></label>

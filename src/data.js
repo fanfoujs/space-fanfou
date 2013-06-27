@@ -77,7 +77,11 @@ var plugins = [
 	},
 	{
 		name: 'disable_autocomplete',
-		js: 'disable_autocomplete.js'
+		options: [
+			'sf_autocomplete'
+		],
+		js: 'disable_autocomplete.js',
+		css: 'disable_autocomplete.css'
 	},
 	{
 		name: 'privatemsg_manage',
