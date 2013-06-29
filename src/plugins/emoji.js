@@ -923,6 +923,10 @@ SF.pl.emoji = new SF.plugin((function($) {
 		$content = $content.first();
 		var $photo = $('.photo', $content);
 		var html = ($content.html() || '').trim();
+		html = jEmoji.softbankToUnified(html);
+		html = jEmoji.googleToUnified(html);
+		html = jEmoji.docomoToUnified(html);
+		html = jEmoji.kddiToUnified(html);
 		$content.html(jEmoji.unifiedToHTML(html));
 		if ($photo.length) {
 			$('.photo', $content).replaceWith($photo);
