@@ -349,6 +349,11 @@
 	background-repeat: no-repeat;
 	background-position: top left !important;
 }
+.upload-button-wrapper,
+.emoji-button-wrapper,
+.location-button-wrapper {
+	-webkit-transition: opacity .3s;
+}
 .upload-button-wrapper:hover #upload-button {
 	background-position: top right !important;
 }

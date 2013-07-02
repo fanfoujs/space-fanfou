@@ -69,6 +69,7 @@
 .float-message .actpost .formbutton,
 .float-message #u_button,
 .float-message .upload-button-wrapper,
+.float-message .emoji-button-wrapper,
 .float-message .location-button-wrapper,
 .float-message .tip {
 	opacity: 0;
@@ -76,6 +77,7 @@
 .float-message:hover .actpost .formbutton,
 .float-message:hover #u_button,
 .float-message:hover .upload-button-wrapper,
+.float-message:hover .emoji-button-wrapper,
 .float-message:hover .tip {
 	opacity: 1;
 }
