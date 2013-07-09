@@ -78,6 +78,7 @@
 .float-message:hover #u_button,
 .float-message:hover .upload-button-wrapper,
 .float-message:hover .emoji-button-wrapper,
+.float-message:hover .location-button-wrapper,
 .float-message:hover .tip {
 	opacity: 1;
 }

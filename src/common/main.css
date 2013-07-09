@@ -348,6 +348,17 @@
 	background-repeat: no-repeat;
 	background-position: top left !important;
 }
+#location-button {
+	width: 14px;
+	height: 21px;
+	background: url('/resources/images/location.png') !important;
+	background-repeat: no-repeat;
+	background-position: top left;
+}
+#location-button:hover,
+#location-button[title="关闭地理位置"] {
+	background-position: top right !important;
+}
 .upload-button-wrapper,
 .emoji-button-wrapper,
 .location-button-wrapper {
