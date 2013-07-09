@@ -40,10 +40,10 @@ SF.pl.repost_self_statuses = new SF.plugin((function($) {
 			return false;
 
 		var id = $item.attr('id');
-		id = id || unescape(($('.avatar', $item).prop('href') + '').replace('http://fanfou.com/', ''));
+		id = id || unescape(($('.avatar', $item).prop('href') || '').replace('http://fanfou.com/', ''));
 		var is_my_status = false;
 
-		if (id == null) {
+		if (! id) {
 			is_my_status = is_my_page &&
 				! $item.is('.reply.more, .reply.hide, .reply.waiting, .reply.notavail');
 		} else {
