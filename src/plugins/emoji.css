@@ -848,6 +848,8 @@
 #emoji-selector .list li.placeholder {
 	padding: 0 6px;
 	height: 0px;
+	cursor: auto;
+	box-shadow: none !important;
 	border-right-width: 0 !important;
 }
 #emoji-selector .paginator {
