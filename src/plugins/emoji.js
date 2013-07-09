@@ -1074,6 +1074,7 @@ SF.pl.emoji = new SF.plugin((function($) {
 		load: function() {
 			if (is_status_page) {
 				convert($('.msg .content'));
+				$('ol.replymsg li .content').each(function() { convert($(this)); });
 			} else {
 				if ($location_btn_wrapper.length) {
 					$('.upload-button-wrapper').before($emoji_btn_wrapper);
