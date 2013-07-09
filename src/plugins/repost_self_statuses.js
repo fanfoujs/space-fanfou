@@ -4,12 +4,6 @@ SF.pl.repost_self_statuses = new SF.plugin((function($) {
 	var $stream = $('#stream');
 	if (! is_status_page && ! $stream.length) return;
 
-	if (is_status_page) {
-		var author_page_url = $('#latest h1 a').prop('href');
-		if (author_page_url != SF.fn.getMyPageURL())
-			return;
-	}
-
 	var my_id = SF.fn.getMyPageURL().replace('http://fanfou.com/', '');
 	var is_my_page = SF.fn.isMyPage();
 	var attr_name = 'is-my-status';
@@ -46,7 +40,8 @@ SF.pl.repost_self_statuses = new SF.plugin((function($) {
 			return false;
 
 		var id = $item.attr('id');
-		var is_my_status = false; id == my_id;
+		id = id || unescape(($('.avatar', $item).prop('href') + '').replace('http://fanfou.com/', ''));
+		var is_my_status = false;
 
 		if (id == null) {
 			is_my_status = is_my_page &&
@@ -60,10 +55,11 @@ SF.pl.repost_self_statuses = new SF.plugin((function($) {
 	}
 
 	function addRepostBtn($item) {
+		if (! $item || ! $item.length) return;
 		var $repost = $('<a class="repost" title="转发">转发</a>');
 		var $delete = $('.op .delete', $item);
 
-		var status_id = $('.stamp .time', $item).prop('href')
+		var status_id = ($('.stamp .time', $item).prop('href') || '')
 			.replace('http://fanfou.com/statuses/', '');
 		$repost.attr('ffid', status_id);
 
@@ -71,7 +67,7 @@ SF.pl.repost_self_statuses = new SF.plugin((function($) {
 		if (is_my_page) {
 			author = my_name;
 		} else if (is_status_page) {
-			author = $('#latest h1 a').text();
+			author = $('.author', $item).text() || $('#latest h1 a').text();
 		} else {
 			author = $('.author', $item).text();
 		}
@@ -114,6 +110,7 @@ SF.pl.repost_self_statuses = new SF.plugin((function($) {
 		load: function() {
 			if (is_status_page) {
 				addRepostBtn($('#latest'));
+				$('ol.replymsg li').each(function() { processItem($(this)); });
 			} else {
 				observer.observe($stream[0], { childList: true, subtree: true });
 				$('>ol li', $stream).each(function() { processItem($(this)); });
