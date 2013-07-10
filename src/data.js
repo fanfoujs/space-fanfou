@@ -129,6 +129,10 @@ var plugins = [
 		name: 'repost_self_statuses',
 		js: 'repost_self_statuses.js'
 	},
+	{
+		name: 'friendship_check',
+		js: 'friendship_check.js'
+	},
 
 	/* 其他扩展 */
 
