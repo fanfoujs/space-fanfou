@@ -17,7 +17,7 @@ SF.pl.friendship_check = new SF.plugin((function($) {
 	if (! my_url) return;
 
 	var my_id = getIdFromURL(my_url);
-	var follower_list_url = 'http://fanfou.com/followers/' + my_id + '/p.';
+	var follower_list_url = 'http://fanfou.com/followers/' + encodeURIComponent(my_id) + '/p.';
 
 	var $check = $('<span />');
 
@@ -65,7 +65,7 @@ SF.pl.friendship_check = new SF.plugin((function($) {
 				$check.text(gender_text + '关注了你！:)');
 			} else {
 				page_num++;
-				var next_page_pattern = '<a href="/followers/' + my_id + '/p.' + page_num + '">下一页</a>';
+				var next_page_pattern = '<a href="/followers/' + encodeURIComponent(my_id) + '/p.' + page_num + '">下一页</a>';
 				if (html.indexOf(next_page_pattern) > -1) {
 					checkPage(page_num, target_id);
 				} else {
