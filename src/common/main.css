@@ -167,16 +167,6 @@
 #columns {
 	border-radius: 10px;
 }
-#main {
-	background:
-		-webkit-gradient(
-			linear,
-			0 0,
-			0 100,
-			from(rgba(255, 255, 255, .95)),
-			to(rgba(255, 255, 255, 1))
-		) !important;
-}
 .sysmsg, .errmsg {
 	font-size: 14px;
 	padding: 8px 15px !important;
