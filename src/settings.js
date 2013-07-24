@@ -9,7 +9,7 @@ SF.st.default_settings = {
 	newstyle_trendlist: true,
 	newstyle_op_icons: true,
 	logo_remove_beta: true,
-	remove_app_recom: false,
+	remove_app_recom: true,
 	expanding_replies: true,
 	'expanding_replies.number': 3,
 	'expanding_replies.auto_expand': false,
