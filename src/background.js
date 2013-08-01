@@ -58,9 +58,11 @@ function showNotification(options) {
 	notification.show();
 	notifications.push(notification);
 
-	notification.timeout = setTimeout(function() {
-		hideNotification(notification);
-	}, options.timeout || 30000);
+	if (options.timeout !== false) {
+		notification.timeout = setTimeout(function() {
+			hideNotification(notification);
+		}, options.timeout || 30000);
+	}
 
 	return notification;
 }
