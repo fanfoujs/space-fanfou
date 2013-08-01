@@ -8,7 +8,10 @@
 	cursor: pointer;
 	display: inline;
 }
-#goodapp, #badge-sect, #fanfou-ad-microwave-oven {
+#goodapp, 
+#badge-sect, 
+#fanfou-ad-microwave-oven,
+.howto .paipai {
 	display: none;
 }
 #footer .police-info {
