@@ -147,6 +147,7 @@ var plugins = [
 		options: [
 			'updates',
 			'mentions',
+			'privatemsgs',
 			'followers',
 			'notdisturb',
 			'playsound',

@@ -1,5 +1,5 @@
 SF.pl.notification = new SF.plugin((function() {
-	var notifyonupdated, notifyonmentioned, notifyonfollowed, notdisturb, timeout;
+	var notifyonupdated, notifyonmentioned, notifyonsentmessage, notifyonfollowed, notdisturb, timeout;
 	var period = 30000;
 
 	var source;
@@ -111,6 +111,8 @@ SF.pl.notification = new SF.plugin((function() {
 		var sum = 0;
 		if (notifyonmentioned) {
 			checkAt();
+		}
+		if (notifyonsentmessage) {
 			checkPM();
 		}
 		if (notifyonfollowed) {
@@ -197,7 +199,7 @@ SF.pl.notification = new SF.plugin((function() {
 
 			SF.updated = false;
 		}
-		if (notifyonmentioned || notifyonfollowed) {
+		if (notifyonmentioned || notifyonsentmessage || notifyonfollowed) {
 			timer.setup();
 			check();
 		}
@@ -212,12 +214,13 @@ SF.pl.notification = new SF.plugin((function() {
 	}
 
 	return {
-		update: function(a, b, c, d, _, e) {
+		update: function(a, b, c, d, e, _, f) {
 			notifyonupdated = a;
 			notifyonmentioned = b;
-			notifyonfollowed = c;
-			notdisturb = d;
-			timeout = e * 1000;
+			notifyonsentmessage = c;
+			notifyonfollowed = d;
+			notdisturb = e;
+			timeout = f * 1000;
 			unload();
 			load();
 		},
