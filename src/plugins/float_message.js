@@ -3,7 +3,8 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 	if ($main.hasClass('privatemsg')) return;
 	var $update = $('>#phupdate', $main);
 	if (! $update.length) return;
-	var $button = $('.formbutton[type="submit"]', $update);
+	var $act = $('.act', $update);
+	var $button = $('.formbutton[type="submit"]', $act);
 
 	var notlostfocus = false,
 		keepmentions = false;
@@ -294,6 +295,9 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 	function onMsgFocus() {
 		$update.removeClass('msgempty');
 	}
+	function onMsgClick() {
+		$act.css('display', 'block');
+	}
 
 	return {
 		update: function(is_notlostfocus, is_keepmentions) {
@@ -323,7 +327,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 			$msg.keypress(onMsgKeypress);
 			// 设置样式调节
 			interval = setInterval(onInterval, 50);
-			$msg.focus(onMsgFocus);
+			$msg.focus(onMsgFocus).click(onMsgClick);
 			// 设置初始状态
 			pushState();
 		},
@@ -354,7 +358,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 			// 删除样式调节
 			clearInterval(interval);
 			interval = 0;
-			$msg.unbind('focus', onMsgFocus);
+			$msg.unbind('focus', onMsgFocus).unbind('click', onMsgClick);
 		}
 	};
 })(jQuery, YAHOO));
