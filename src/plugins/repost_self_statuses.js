@@ -72,7 +72,7 @@ SF.pl.repost_self_statuses = new SF.plugin((function($) {
 			author = $('.author', $item).text();
 		}
 
-		var $content = $('.content', $item).clone();
+		var $content = $('.content', $item).first().clone();
 		$('.photo', $content).remove();
 		$content.children('a').each(function() {
 			if (this.href.indexOf('http://fanfou.com/') !== 0)
