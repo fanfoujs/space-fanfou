@@ -85,31 +85,31 @@
 }
 @-webkit-keyframes bomb {
 	from {
-		-webkit-transform: translateY(-15px);
+		-webkit-transform: translateY(-15px) scale(.85);
 	}
 	35% {
-		-webkit-transform: translateY(0);
+		-webkit-transform: translateY(0) scale(.85);
 	}
 	42.5% {
-		-webkit-transform: rotateX(30deg);
+		-webkit-transform: rotateX(30deg) scale(.85);
 	}
 	47.5% {
-		-webkit-transform: rotateX(10deg);
+		-webkit-transform: rotateX(10deg) scale(.85);
 	}
 	65% {
-		-webkit-transform: rotateX(0) translateY(-8px);
+		-webkit-transform: rotateX(0) translateY(-8px) scale(.85);
 	}
 	82.5% {
-		-webkit-transform: translateY(0);
+		-webkit-transform: translateY(0) scale(.85);
 	}
 	85% {
-		-webkit-transform: rotateX(25deg);
+		-webkit-transform: rotateX(25deg) scale(.85);
 	}
 	92.5% {
-		-webkit-transform: rotateX(0) translateY(-2px);
+		-webkit-transform: rotateX(0) translateY(-2px) scale(.85);
 	}
 	to {
-		-webkit-transform: translateY(0);
+		-webkit-transform: translateY(0) scale(.85);
 	}
 }
 @-webkit-keyframes bl-blinking {
@@ -904,17 +904,18 @@ p.pm-parent {
 #navigation .count {
 	position: absolute;
 	top: -2px;
+	display: inline-block;
 	background: rgba(230, 50, 0, .75);
 	color: white;
-	font-size: 11px;
-	margin-left: -5px !important;
-	padding: 0 1px;
-	min-width: 16px;
+	font-size: 13px;
+	margin-left: -8px !important;
+	padding: 2px;
+	min-width: 18px;
 	height: 18px;
 	line-height: 18px;
 	border-radius: 30px;
 	text-align: center;
-	-webkit-text-size-adjust: none;
+	-webkit-transform: scale(.85);
 }
 #sidebar .stabs {
 	overflow: hidden;
@@ -936,15 +937,15 @@ p.pm-parent {
 	display: inline-block;
 	background: rgba(230, 50, 0, .75);
 	color: white;
-	font-size: 11px;
+	font-size: 13px;
 	margin: 5px 4px !important;
-	padding: 0 1px;
-	min-width: 16px;
+	padding: 2px;
+	min-width: 18px;
 	height: 18px;
 	line-height: 18px;
 	border-radius: 30px;
 	text-align: center;
-	-webkit-transform: translateY(-1px);
+	-webkit-transform: scale(.85);
 }
 
 /* Buttons */
