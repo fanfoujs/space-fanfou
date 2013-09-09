@@ -514,6 +514,7 @@
 }
 a.photo > img {
 	max-height: 100px;
+	cursor: -webkit-zoom-in;
 }
 span.ajaxprompt {
 	padding: .6em 1em !important;
