@@ -145,3 +145,14 @@ SF.fn.getData = function(key) {
 SF.fn.setData = function(key, data) {
 	localStorage.setItem(key, JSON.stringify(data));
 }
+
+SF.fn.openURL = function(url) {
+	var event = document.createEvent('MessageEvent');
+	var msg = {
+		type: 'openURL',
+		url: url
+	};
+
+	event.initMessageEvent('SFMessage', false, false, JSON.stringify(msg));
+	dispatchEvent(event);
+}

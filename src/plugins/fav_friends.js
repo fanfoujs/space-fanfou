@@ -6,14 +6,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 	var UNFAVED_TIP = '加入有爱饭友列表';
 
 	function openURL(url) {
-		var event = document.createEvent('MessageEvent');
-		var msg = {
-			type: 'openURL',
-			url: url
-		};
-
-		event.initMessageEvent('SFMessage', false, false, JSON.stringify(msg));
-		dispatchEvent(event);
+		return SF.fn.openURL(url);
 	}
 
 	if (is_user_page) {
