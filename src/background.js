@@ -290,7 +290,6 @@ chrome.extension.onConnect.addListener(function(port) {
 				chrome.tabs.create({
 					url: msg.url,
 					index: tab.index + 1,
-					windowId: tab.windowId,
 					selected: true,
 					openerTabId: tab.id
 				});
