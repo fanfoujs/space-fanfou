@@ -66,9 +66,9 @@
 #stream>ol>li[type="转发"].reply.waiting,
 #stream>ol>li[type="转发"].reply.notavail {
 	width: 45px !important;
-	padding: 0 0 0 20px !important;
+	padding: 0 0 0 21px !important;
 	background-image: url('/resources/images/repost.png');
-	background-position: 5px center;
+	background-position: 9px center;
 	background-repeat: no-repeat;
 }
 #stream>ol>li[type="回复"].reply.more,
@@ -76,9 +76,9 @@
 #stream>ol>li[type="回复"].reply.waiting,
 #stream>ol>li[type="回复"].reply.notavail {
 	width: 45px !important;
-	padding: 0 0 0 20px !important;
+	padding: 0 0 0 21px !important;
 	background-image: url('/resources/images/reply.png');
-	background-position: 5px center;
+	background-position: 9px center;
 	background-repeat: no-repeat;
 }
 #stream>ol>li.reply.notavail {
