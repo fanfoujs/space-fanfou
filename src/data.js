@@ -133,6 +133,10 @@ var plugins = [
 		name: 'friendship_check',
 		js: 'friendship_check.js'
 	},
+	{
+		name: 'restoring_state',
+		js: 'restoring_state.js'
+	},
 
 	/* 其他扩展 */
 

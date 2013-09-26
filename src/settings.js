@@ -44,7 +44,8 @@ SF.st.default_settings = {
 		'Lato' : 'Helvetica Neue',
 	repost_self_statuses: false,
 	emoji: true,
-	friendship_check: true
+	friendship_check: true,
+	restoring_state: true
 };
 
 /* 读取选项 */
