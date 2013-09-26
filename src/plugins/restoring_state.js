@@ -33,6 +33,9 @@ SF.pl.restoring_state = new SF.plugin((function($) {
 	}
 
 	var onScroll = SF.fn.throttle(saveState, 250);
+	function onSubmit(e) {
+		storage.value = '';
+	}
 
 	var MutationObserver = MutationObserver || WebKitMutationObserver;
 	var observer = new MutationObserver(function(mutations) {
@@ -43,11 +46,13 @@ SF.pl.restoring_state = new SF.plugin((function($) {
 		load: function() {
 			init();
 			observer.observe($stream[0], { childList: true, subtree: true });
+			$form.on('submit', onSubmit);
 			$win.on('scroll', onScroll);
 		},
 		unload: function() {
 			storage.value = '';
 			observer.disconnect();
+			$form.off('submit', onSubmit);
 			$win.off('scroll', onScroll);
 		}
 	};
