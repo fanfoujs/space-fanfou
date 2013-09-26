@@ -327,7 +327,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 			$msg.keypress(onMsgKeypress);
 			// 设置样式调节
 			interval = setInterval(onInterval, 50);
-			$msg.focus(onMsgFocus).click(onMsgClick);
+			$msg.focus(onMsgFocus).click(onMsgClick).change(onMsgClick);
 			// 设置初始状态
 			pushState();
 		},
@@ -358,7 +358,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 			// 删除样式调节
 			clearInterval(interval);
 			interval = 0;
-			$msg.unbind('focus', onMsgFocus).unbind('click', onMsgClick);
+			$msg.unbind('focus', onMsgFocus).unbind('click', onMsgClick).unbind('change', onMsgClick);
 		}
 	};
 })(jQuery, YAHOO));
