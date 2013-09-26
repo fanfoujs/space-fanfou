@@ -210,7 +210,6 @@
 					}
 				}
 				$h2.click(function(e) {
-					console.log($b, collapsed);
 					collapsed = ! collapsed;
 					SF.fn.setData(id + '-collapsed', collapsed);
 					toggle();
