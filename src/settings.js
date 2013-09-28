@@ -45,7 +45,8 @@ SF.st.default_settings = {
 	repost_self_statuses: false,
 	emoji: true,
 	friendship_check: true,
-	restoring_state: true
+	restoring_state: true,
+	backup_avatar: true
 };
 
 /* 读取选项 */
