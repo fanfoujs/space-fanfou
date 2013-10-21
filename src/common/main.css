@@ -208,6 +208,7 @@
 #newsfeed li {
 	border-bottom: 1px solid rgba(0, 0, 0, .12) !important;
 	background: url('/resources/images/dot.png') 5px center no-repeat !important;
+	list-style: none;
 }
 .tabs ul {
 	margin-bottom: -2px !important;
@@ -952,7 +953,7 @@ p.pm-parent {
 /* Buttons */
 .bl,
 .bl-long,
-a.bl-added,
+.actions > .bl-added,
 input.formbutton,
 input.inlinebutton,
 .post_act.friend-remove,
@@ -993,7 +994,7 @@ input.inlinebutton,
 }
 .bl:hover,
 .bl-long:hover,
-a.bl-added:hover,
+.actions > .bl-added:hover,
 input.formbutton:hover,
 .post_act.friend-remove:hover,
 .post_act.close-notice:hover,
@@ -1009,7 +1010,7 @@ input.formbutton:hover,
 }
 .bl:focus,
 .bl-long:focus,
-a.bl-added:focus,
+.actions > .bl-added:focus,
 input.formbutton:focus,
 .post_act.friend-remove:focus,
 .post_act.close-notice:focus,
@@ -1108,7 +1109,7 @@ a.bh:focus {
 #PopupBox .formbutton:active,
 .bl:active,
 .bl-long:active,
-a.bl-added:active,
+.actions > .bl-added:active,
 .post_act.friend-remove:active,
 .post_act.close-notice:active,
 .post_act.friend-deny:active,
@@ -1140,6 +1141,15 @@ a.bh:active {
 }
 .post_act.friend-deny, .post_act.follower-remove {
 	width: 75px;
+}
+#newsfeed-list li .bl-added {
+	background: none !important;
+	color: inherit !important;
+	float: none !important;
+	width: auto !important;
+	height: auto !important;
+	letter-spacing: 0 !important;
+	text-indent: 0 !important;
 }
 
 /* Simplified */
