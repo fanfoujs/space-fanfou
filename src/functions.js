@@ -99,7 +99,7 @@ SF.fn.isMyPage = function() {
 
 SF.fn.emulateClick = function(elem, canBubble) {
 	var e = document.createEvent('MouseEvents');
-	e.initMouseEvent('click', canBubble === true, true)
+	e.initMouseEvent('click', canBubble === true, true);
 	elem.dispatchEvent(e);
 }
 

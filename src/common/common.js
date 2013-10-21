@@ -25,6 +25,9 @@
 	/* 较大尺寸的图片在新窗口显示 */
 
 	(function() {
+		var $stream = $('#stream');
+		if (! $stream.length) return;
+
 		$(window).delegate('.photo.zoom', 'click', function(e) {
 			var $link = $(e.target);
 			$('#ZoomBox img').prop('href', $link.prop('href'));
@@ -54,7 +57,7 @@
 			});
 		}
 
-		observer.observe($('#stream')[0], { childList: true, subtree: true });
+		observer.observe($stream[0], { childList: true, subtree: true });
 		processPhotos();
 	})();
 
