@@ -173,33 +173,29 @@
 	border: none !important;
 	text-align: center;
 	z-index: 101;
+	box-shadow: 0 0 5px #666;
 }
-	.sysmsg {
-		color: #555 !important;
-		background: rgba(255, 255, 255, .9) !important;
-		text-shadow: 0 1px 0 #fff;
-		box-shadow: 0 0 5px #666;
-	}
-	.errmsg {
-		color: #fff !important;
-		background: rgba(255, 51, 0, .9) !important;
-		text-shadow: 0 -1px 0 rgba(102, 20, 0, .75);
-		box-shadow:
-			0 0 1px rgba(255, 255, 255, .75) inset,
-			-2px -2px 5px rgba(255, 255, 255, .3) inset,
-			0 0 5px #666;
-	}
+.sysmsg {
+	color: #555 !important;
+	background: rgba(255, 255, 255, .9) !important;
+	text-shadow: 0 1px 0 #fff;
+}
+.errmsg {
+	color: rgba(255, 255, 255, .75) !important;
+	background: rgba(255, 51, 0, .8) !important;
+	text-shadow: 0 -1px 0 rgba(102, 20, 0, .75);
+}
 #systip {
 	background: #ebf3f5 !important;
 	border: 3px solid #b4d5db !important;
 	border-radius: 5px;
 }
-	#systip h3 {
-		border-bottom: 1px solid rgba(0, 0, 0, .1);
-	}
-	#systip div {
-		border-top: 1px solid rgba(255, 255, 255, .75) !important;
-	}
+#systip h3 {
+	border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+#systip div {
+	border-top: 1px solid rgba(255, 255, 255, .75) !important;
+}
 .label.new_feature::after,
 .label.test_feature::after {
 	padding-left: 4px;
