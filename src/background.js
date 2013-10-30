@@ -103,8 +103,12 @@ function createTab(url) {
 		var current_tab = tabs[0] || {};
 		chrome.tabs.create({
 			url: url,
-			selected: true,
+			active: true,
 			index: (current_tab.index + 1) || void(0)
+		}, function(tab) {
+			chrome.windows.update(tab.windowId, {
+				focused: true
+			});
 		});
 	});
 }
