@@ -146,12 +146,10 @@ var plugins = [
 
 	{
 		name: 'share_to_fanfou',
-		type: 'background',
-		js: 'share_to_fanfou.js'
+		bg_js: 'share_to_fanfou.js'
 	},
 	{
 		name: 'notification',
-		type: 'background',
 		options: [
 			'updates',
 			'mentions',
@@ -161,12 +159,11 @@ var plugins = [
 			'playsound',
 			'timeout'
 		],
-		js: 'notification.js'
+		bg_js: 'notification.js'
 	},
 	{
 		name: 'rating',
-		type: 'background',
-		js: 'rating.js'
+		bg_js: 'rating.js'
 	}
 
 ];

@@ -164,9 +164,10 @@ for (var i = 0; i < plugins.length; ++i) {
 	details[item.name] = detail;
 
 	// 处理其他类型扩展
-	if (detail.type == 'background') (function(name) {
+	if (item.bg_js) (function(name) {
+		detail.bg_script = item.bg_js;
 		var script = document.createElement('script');
-		script.src = detail.script;
+		script.src = PLUGINS_DIR + detail.bg_script;
 		script.onload = function(e) {
 			initBgPlugin(name);
 		}
@@ -192,7 +193,7 @@ function buildPageCache() {
 	for (var name in details) {
 		if (! details.hasOwnProperty(name)) continue;
 		var item = details[name];
-		if (item.type || ! SF.st.settings[name]) continue;
+		if ((! item.script && ! item.style) || ! SF.st.settings[name]) continue;
 		var detail = {
 			name: name,
 			earlyload: item.earlyload,
@@ -294,7 +295,7 @@ chrome.extension.onConnect.addListener(function(port) {
 				chrome.tabs.create({
 					url: msg.url,
 					index: tab.index + 1,
-					selected: true,
+					active: true,
 					openerTabId: tab.id
 				});
 			});
@@ -372,7 +373,7 @@ function updateSettings(e) {
 		// 确定处理方式
 		if (details[main_name]) {
 			var detail = details[main_name];
-			if (detail.type == 'background') {
+			if (detail.bg_script) {
 				// 背景页面扩展
 				if (option_name) {
 					updateBgPlugin(main_name);
@@ -383,7 +384,8 @@ function updateSettings(e) {
 						unloadBgPlugin(main_name);
 					}
 				}
-			} else {
+			}
+			if (detail.script || detail.style) {
 				// 页面扩展
 				if (option_name) {
 					if (new_settings[main_name] &&
@@ -438,8 +440,9 @@ if (! SF.old_version) {
 	// 首次使用太空饭否
 	createTab('http://fanfou.com/home');
 	setTimeout(function() {
-		var text = '太空饭否已经安装到您的浏览器! 您将会发现, 饭否页面的外观发生了翻天覆地的变化! ' +
-			'请注意地址栏右端的 "饭" 字图标, 点击它将会弹出设置界面, 在这里可以开启和关闭太空饭否的各种功能, 以满足您的个性化需求.';
+		var text = '太空饭否已经安装到您的浏览器! ' +
+			'请注意地址栏右端的 "饭" 字图标, 点击它将会弹出设置界面, ' +
+			'在这里可以开启和关闭太空饭否的各种功能, 以满足您的个性化需求.';
 		showNotification({
 			content: text,
 			timeout: 120000
