@@ -221,13 +221,12 @@
 	right: 125px;
 	-webkit-animation: tipfadeIn 300ms;
 }
-	#phupdate .tip .counter,
-	#update .tip .counter,
-	#PopupBox .tip .counter {
-		/* font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif !important; */
-		font-size: 18px !important;
-		font-weight: 300 !important;
-	}
+#phupdate .tip .counter,
+#update .tip .counter,
+#PopupBox .tip .counter {
+	font-size: 18px !important;
+	font-weight: 300 !important;
+}
 #phupdate .act .loading {
 	-webkit-transform: translateX(-40px);
 }
@@ -553,7 +552,6 @@ p.pm-parent {
 	border-radius: 2px;
 }
 #user_stats .count {
-	/*font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif !important;*/
 	font-size: 18px !important;
 	font-weight: 300 !important;
 	margin-bottom: 3px;
@@ -562,31 +560,31 @@ p.pm-parent {
 	height: 17px;
 	overflow: hidden;
 }
-	#iconset img {
-		padding-top: 34px;
-		opacity: .75;
-		-webkit-transition-property: opacity;
-		-webkit-transition-duration: 300ms;
-	}
-	#iconset img:hover {
-		opacity: 1;
-	}
-	#iconset img[src$='ico-email-default.gif'],
-	#iconset img[src$='ico-email-gmail.gif'] {
-		background: url('/resources/images/email.png') no-repeat 0 0;
-	}
-	#iconset img[src$='ico-wlm.gif'] {
-		background: url('/resources/images/wlm.png') no-repeat 0 0;
-	}
-	#iconset img[src$='ico-gtalk.gif'] {
-		background: url('/resources/images/gtalk.png') no-repeat 0 0;
-	}
-	#iconset img[src$='ico-mobile.gif'] {
-		background: url('/resources/images/mobile.png') no-repeat 0 0;
-	}
-	#iconset img[src$='ico-verify.png'] {
-		background: url('/resources/images/verify.png') no-repeat 0 0;
-	}
+#iconset img {
+	padding-top: 34px;
+	opacity: .75;
+	-webkit-transition-property: opacity;
+	-webkit-transition-duration: 300ms;
+}
+#iconset img:hover {
+	opacity: 1;
+}
+#iconset img[src$='ico-email-default.gif'],
+#iconset img[src$='ico-email-gmail.gif'] {
+	background: url('/resources/images/email.png') no-repeat 0 0;
+}
+#iconset img[src$='ico-wlm.gif'] {
+	background: url('/resources/images/wlm.png') no-repeat 0 0;
+}
+#iconset img[src$='ico-gtalk.gif'] {
+	background: url('/resources/images/gtalk.png') no-repeat 0 0;
+}
+#iconset img[src$='ico-mobile.gif'] {
+	background: url('/resources/images/mobile.png') no-repeat 0 0;
+}
+#iconset img[src$='ico-verify.png'] {
+	background: url('/resources/images/verify.png') no-repeat 0 0;
+}
 #user_infos {
 	margin-bottom: .5em !important;
 }
@@ -639,7 +637,6 @@ p.pm-parent {
 		background: rgba(255, 255, 255, .75) !important;
 	}
 #sidebar .stabs li a .count {
-	/*font-family: Lato, "Lucida Grande", Helvetica, Arial, sans-serif !important;*/
 	font-weight: normal !important;
 }
 #savedsearchs li,
