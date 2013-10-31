@@ -31,13 +31,8 @@ var notifications = [];
 function showNotification(options) {
 	var notification;
 
-	options.type = options.type || 'text';
-	if (options.type == 'text') {
-		notification = Notifications.createNotification(options.icon || '/icons/icon-128.png',
-			options.title || '太空饭否', options.content);
-	} else if (options.type == 'page') {
-		notification = Notifications.createHTMLNotification(options.url);
-	}
+	notification = Notifications.createNotification(options.icon || '/icons/icon-128.png',
+		options.title || '太空饭否', options.content);
 
 	if (options.id) {
 		notification.id = options.id;
