@@ -46,7 +46,9 @@ SF.st.default_settings = {
 	emoji: true,
 	friendship_check: true,
 	restoring_state: true,
-	backup_avatar: true
+	backup_avatar: true,
+	check_saved_searchs: true,
+	'check_saved_searchs.show_notification': true
 };
 
 /* 读取选项 */

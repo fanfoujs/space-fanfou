@@ -164,6 +164,15 @@ var plugins = [
 	{
 		name: 'rating',
 		bg_js: 'rating.js'
+	},
+	{
+		name: 'check_saved_searchs',
+		bg_js: 'check_saved_searchs_bg.js',
+		js: 'check_saved_searchs.js',
+		css: 'check_saved_searchs.css',
+		options: [
+			'show_notification'
+		]
 	}
 
 ];

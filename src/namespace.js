@@ -25,6 +25,10 @@ var SF = (function() {
 		cb: { },
 		plugin: function(func) {
 			if (! func) func = { };
+			for (var name in func) {
+				if (! func.hasOwnProperty(name)) continue;
+				this[name] = func[name];
+			}
 			this.loaded = false;
 			this.update = func.update || empty_func;
 			this.load = pluginLoader(func.load || empty_func);

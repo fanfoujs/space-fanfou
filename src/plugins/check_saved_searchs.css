@@ -1,0 +1,24 @@
+@-webkit-keyframes blink {
+	0% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+#savedsearchs ul li a.new::after {
+	width: 6px;
+	height: 6px;
+	border-radius: 3px;
+	display: inline-block;
+	content: " ";
+	background: rgba(230, 50, 0, .75);
+	margin: 1px 4px;
+	-webkit-animation: fadeIn 1s infinite;
+}
+#savedsearchs ul li:hover a.new::after {
+	-webkit-animation: none;
+}
