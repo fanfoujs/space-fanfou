@@ -163,3 +163,4 @@ addEventListener('load', function load(e) {
 		SF.fn.emulateClick($(latest_tab));
 	}, 16);
 }, false);
+onmousewheel = function(e) { }
