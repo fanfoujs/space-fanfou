@@ -276,7 +276,7 @@ h4 {
 	margin-top: 15px;
 }
 input[type="checkbox"] {
-	margin-top: -1px;
+	margin-top: 0;
 }
 input[type="number"] {
 	width: 45px;
