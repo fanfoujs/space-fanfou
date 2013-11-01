@@ -179,25 +179,26 @@ SF.pl.notification = new SF.plugin((function() {
 			chrome.tabs.onActivated.addListener(onActivated);
 
 		if (notifyonupdated && SF.updated) {
-			var updated_items = getUpdates() || '';
-			if (updated_items)
+			var updated_items = getUpdates();
+			if (updated_items) {
 				updated_items = '更新内容: ' + updated_items;
 
-			var t = updates.length * 5000;
-			t = Math.max(t, 15000);
-			t = Math.min(t, 60000);
+				var t = updates.length * 5000;
+				t = Math.max(t, 15000);
+				t = Math.min(t, 60000);
 
-			showNotification({
-				type: 'text',
-				title: '太空饭否已由 ' + SF.old_version + ' 升级至 ' + SF.version,
-				content: updated_items,
-				timeout: t
-			}).
-			addEventListener('click', function(e) {
-				this.cancel();
-			}, false);
+				showNotification({
+					type: 'text',
+					title: '太空饭否已由 ' + SF.old_version + ' 升级至 ' + SF.version,
+					content: updated_items,
+					timeout: t
+				}).
+				addEventListener('click', function(e) {
+					this.cancel();
+				}, false);
 
-			SF.updated = false;
+				SF.updated = false;
+			}
 		}
 		if (notifyonmentioned || notifyonsentmessage || notifyonfollowed) {
 			timer.setup();
