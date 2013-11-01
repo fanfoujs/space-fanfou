@@ -42,7 +42,10 @@ var plugins = [
 	{
 		name: 'remove_app_recom',
 		js: 'remove_app_recom.js',
-		css: 'remove_app_recom.css'
+		css: 'remove_app_recom.css',
+		options: [
+			'completely_remove'
+		]
 	},
 	{
 		name: 'emoji',
@@ -180,6 +183,9 @@ var plugins = [
 /* 历史记录 */
 
 var history = {
+	'0.8.5.7': [
+		'允许彻底屏蔽随机应用推荐 (不再需要手工屏蔽)'
+	],
 	'0.8.5.5': [
 		'新增 "自动检查关注的话题" 插件'
 	],
