@@ -14,7 +14,7 @@ SF.st.default_settings = {
 	expanding_replies: true,
 	'expanding_replies.number': 3,
 	'expanding_replies.auto_expand': false,
-	user_switcher: false,
+	user_switcher: true,
 	float_message: false,
 	'float_message.notlostfocus': false,
 	'float_message.keepmentions': false,
@@ -65,6 +65,11 @@ SF.st.settings = (function() {
 		else
 			settings[key] = local_settings[key];
 	}
+
+	[ 'user_switcher', 'advanced_sidebar', 'friendship_check' ].
+	forEach(function(key) {
+		settings[key] = true;
+	});
 
 	return settings;
 })();
