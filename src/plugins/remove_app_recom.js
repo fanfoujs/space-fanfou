@@ -2,6 +2,8 @@ SF.pl.remove_app_recom = new SF.plugin((function($) {
 	var $goodapp = $('#goodapp');
 	if (! $goodapp.length) return;
 
+	var completely_remove = false;
+
 	var default_list = [
 		"http://is.gd/sfanfou",
 		"http://imach.me/gohanapp",
@@ -45,7 +47,7 @@ SF.pl.remove_app_recom = new SF.plugin((function($) {
 		load: function() {
 			getList();
 
-			if (list.indexOf(app_url) > -1) {
+			if (list.indexOf(app_url) > -1 || completely_remove) {
 				$goodapp.hide();
 			} else {
 				$goodapp.show();
@@ -56,6 +58,13 @@ SF.pl.remove_app_recom = new SF.plugin((function($) {
 		unload: function() {
 			$goodapp.show();
 			$btn.detach();
+		},
+		update: function(option) {
+			completely_remove = option;
+			if (this.loaded) {
+				this.unload();
+				this.load();
+			}
 		}
 	};
 })(jQuery));

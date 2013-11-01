@@ -10,6 +10,7 @@ SF.st.default_settings = {
 	newstyle_op_icons: true,
 	logo_remove_beta: true,
 	remove_app_recom: true,
+	'remove_app_recom.completely_remove': false,
 	expanding_replies: true,
 	'expanding_replies.number': 3,
 	'expanding_replies.auto_expand': false,
