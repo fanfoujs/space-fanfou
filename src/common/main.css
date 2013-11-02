@@ -883,6 +883,7 @@ p.pm-parent {
 }
 #ZoomImage {
 	box-shadow: 0 0 15px rgba(0, 0, 0, .5);
+	cursor: -webkit-zoom-out !important;
 }
 #sharer:first-child span {
 	margin-top: -24px;
