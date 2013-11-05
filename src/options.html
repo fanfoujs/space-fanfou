@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en">
+<html>
 <head>
 	<meta charset="UTF-8">
 	<title>太空饭否 - 选项</title>
@@ -11,221 +11,256 @@
 </head>
 <body>
 	<div id="wrapper">
-		<div class="logo">
-			太空饭否
-			<span id="version">请稍候...</span>
-		</div>
-
 		<div id="navigation">
+			<h1>太空饭否</h1>
 			<ul>
-				<li><a id="tab1">扩展功能</a></li>
-				<li><a id="tab2">页面样式</a></li>
-				<li><a id="tab3">关于太空饭否</a></li>
+				<li><a id="tab1">页面功能</a></li>
+				<li><a id="tab2">页面外观</a></li>
+				<li><a id="tab3">工具</a></li>
+				<li style="margin-top: 26px;"><a id="tab4">帮助与支持</a></li>
 			</ul>
 		</div>
 
 		<div id="tabs">
 			<div class="tabs current" id="tabs0">
+				<header>
+					<h2>页面功能</h2>
+				</header>
 				<ul>
+					<h3>Timeline 时间线</h3>
 					<li foldable="foldable">
-						<label><a class="screenshot" rel="plugins/expanding_replies.png" title="展开回复功能预览"><input type="checkbox" key="expanding_replies" foldable_src="foldable_src" />启用展开回复和转发</a></label>
+						<label><a class="screenshot" rel="plugins/expanding_replies.png" title="展开回复功能预览"><input type="checkbox" key="expanding_replies" foldable_src="foldable_src" />允许展开回复和转发的消息</a></label>
 						<p foldable_tgt="foldable_tgt">
-							<label class="sublabel">每次展开数量：</label><input type="number" min="1" max="20" step="1" key="expanding_replies.number" />
+							<label class="sublabel">每次展开 <input type="number" min="1" max="20" step="1" key="expanding_replies.number" /> 条消息</label>
 						</p>
 						<p foldable_tgt="foldable_tgt">
-							<label class="sublabel"><input type="checkbox" key="expanding_replies.auto_expand" />载入页面时自动展开一条消息上文</label>
-						</p>
-					</li>
-					<li foldable="foldable">
-						<label><a class="screenshot" rel="plugins/notification.png" title="消息通知功能预览"><input type="checkbox" key="notification" foldable_src="foldable_src" />启用消息通知</a></label>
-						<span class="comment">在屏幕一角显示通知窗口</span>
-						<p foldable_tgt="foldable_tgt">
-							<label class="sublabel">通知停留时间：</label><input type="number" min="5" max="60" step="2.5" key="notification.timeout" /><label> 秒</label>
-							<span class="comment">点击通知隐藏</span>
-						</p>
-						<p foldable_tgt="foldable_tgt">
-							<label class="sublabel"><input type="checkbox" key="notification.updates" foldable_src="foldable_src" />每次扩展升级后显示通知</label>
-							<span class="comment">显示扩展更新内容</span>
-						</p>
-						<p foldable_tgt="foldable_tgt">
-							<label class="sublabel"><input type="checkbox" key="notification.mentions" />显示新@通知</label>
-							<span class="comment">点击打开“提到我的”页面</span>
-						</p>
-						<p foldable_tgt="foldable_tgt">
-							<label class="sublabel"><input type="checkbox" key="notification.privatemsgs" />显示新私信通知</label>
-							<span class="comment">点击打开“私信”页面</span>
-						</p>
-						<p foldable_tgt="foldable_tgt">
-							<label class="sublabel"><input type="checkbox" key="notification.followers" />显示新关注者通知</label>
-							<span class="comment">点击打开饭否首页</span>
-						</p>
-						<p foldable_tgt="foldable_tgt">
-							<label class="sublabel"><input type="checkbox" key="notification.notdisturb" />浏览饭否时不要显示通知</label>
-						</p>
-						<p foldable_tgt="foldable_tgt">
-							<label class="sublabel"><input type="checkbox" key="notification.playsound" />播放提示音</label>
+							<label class="sublabel"><input type="checkbox" key="expanding_replies.auto_expand" />刷新页面时自动展开 1 条消息</label>
 						</p>
 					</li>
 					<li foldable="foldable">
-						<label><a class="screenshot" rel="plugins/unread_statuses.png" title="未读消息处理功能预览"><input type="checkbox" key="unread_statuses" foldable_src="foldable_src" />启用未读消息处理</a></label>
-						<span class="comment">当 Timeline 上出现新消息时自动处理</span>
+						<label><a class="screenshot" rel="plugins/unread_statuses.png" title="未读消息处理功能预览"><input type="checkbox" key="unread_statuses" foldable_src="foldable_src" />时间线上出现新消息时自动显示</a></label>
 						<p foldable_tgt="foldable_tgt">
-							<label class="sublabel"><input type="checkbox" key="unread_statuses.auto_show" foldable_src="foldable_src" />自动显示自己的消息</label>
-							<span class="comment">仅当所有未读消息都是自己的消息时</span>
+							<label class="sublabel"><input type="checkbox" key="unread_statuses.auto_show" foldable_src="foldable_src" />当所有未读消息都是自己的消息时，自动显示自己的消息</label>
 						</p>
 						<p foldable_tgt="foldable_tgt">
-							<label class="sublabel"><input type="checkbox" key="unread_statuses.playsound" />有未读消息时播放提示音</label>
-							<span class="comment">仅当饭否页面打开时有效</span>
+							<label class="sublabel"><input type="checkbox" key="unread_statuses.playsound" />饭否页面打开状态下，有未读消息时播放提示音</label>
+						</p>
+					</li>
+					<li>
+						<label><a class="screenshot" rel="plugins/auto_pager.png" title="自动翻页功能预览"><input type="checkbox" key="auto_pager" />自动翻页</a></label>
+						<span><br />使用快捷键 A 临时开启/关闭自动翻页；快捷键 T 回到顶部。</span>
+					</li>
+					<h3>输入框</h3>
+					<li foldable="foldable">
+						<label><a class="screenshot" rel="plugins/float_message.png" title="浮动输入框功能预览"><input type="checkbox" key="float_message" foldable_src="foldable_src" />使用跟随页面滚动的浮动输入框</a></label>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="float_message.notlostfocus" />消息发出后将焦点保留在输入框</label>
+						</p>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="float_message.keepmentions" />消息发出后在输入框中保留所 @ 的人</label>
 						</p>
 					</li>
 					<li foldable="foldable">
-						<label><a class="screenshot" rel="plugins/float_message.png" title="浮动输入框功能预览"><input type="checkbox" key="float_message" foldable_src="foldable_src" />启用浮动输入框</a></label>
-						<span class="comment">使用跟随页面滚动的浮动输入框</span>
+						<label><input type="checkbox" key="disable_autocomplete" foldable_src="foldable_src" />禁用官方输入 @ 时的自动补全</label>
 						<p foldable_tgt="foldable_tgt">
-							<label class="sublabel"><input type="checkbox" key="float_message.notlostfocus" />启用连发模式</label>
-							<span class="comment">消息发出后焦点保留在输入框</span>
-						</p>
-						<p foldable_tgt="foldable_tgt">
-							<label class="sublabel"><input type="checkbox" key="float_message.keepmentions" />启用快速@模式</label>
-							<span class="comment">消息发出后输入框中保留所@的人</span>
+							<label class="sublabel"><input type="checkbox" key="disable_autocomplete.sf_autocomplete" />启用太空饭否的 @ 自动补全</label>
 						</p>
 					</li>
+					<h3>侧栏</h3>
 					<li>
-						<label><a class="screenshot" rel="plugins/auto_pager.png" title="自动翻页功能预览"><input type="checkbox" key="auto_pager" />启用自动翻页</a></label>
-						<br />
-						<span>快捷键: A - 临时开启/关闭自动翻页；T - 回到顶部</span>
-					</li>
-					<li>
-						<label><a class="screenshot" rel="plugins/repost_self_statuses.png" title="给自己的消息添加转发按钮功能预览"><input type="checkbox" key="repost_self_statuses" />给自己的消息添加转发按钮</a></label>
-					</li>
-					<li>
-						<label><a class="screenshot" rel="plugins/share_to_fanfou.png" title="分享到饭否功能预览"><input type="checkbox" key="share_to_fanfou" />添加“分享到饭否”至浏览器鼠标右键菜单</a></label>
-						<br />
-						<span>推荐使用五星评分 Chrome 扩展“<a href="http://is.gd/fanjoy" title="Chrome 网上应用店 - 有饭同享" target="_blank">有饭同享</a>”，获取更好的分享体验</span>
+						<label><a class="screenshot" rel="plugins/fav_friends.png" title="有爱饭友列表功能预览"><input type="checkbox" key="fav_friends" />允许添加有爱饭友，并显示在首页的侧栏上</a></label>
 					</li>
 					<li foldable="foldable">
-						<label><input type="checkbox" key="disable_autocomplete" foldable_src="foldable_src" />禁用输入@时的自动补全</label>
-						<p foldable_tgt="foldable_tgt">
-							<label class="sublabel"><input type="checkbox" key="disable_autocomplete.sf_autocomplete" />启用太空饭否@自动补全功能</label>
-						</p>
-					</li>
-					<li>
-						<label><a class="screenshot" rel="plugins/status_manage.png" title="消息批量管理功能预览"><input type="checkbox" key="status_manage" />启用消息批量管理</a></label>
-						<span class="comment">按住 Shift 键可以批量选择消息</span>
-					</li>
-					<li>
-						<label><input type="checkbox" key="privatemsg_manage" />启用私信批量管理</label>
-					</li>
-					<li>
-						<label><input type="checkbox" key="friend_manage" />启用关注批量管理</label>
-					</li>
-					<li>
-						<label><a class="screenshot" rel="plugins/fav_friends.png" title="有爱饭友列表功能预览"><input type="checkbox" key="fav_friends" />启用有爱饭友列表</a></label>
-						<span class="comment">在首页显示自选饭友列表</span>
-					</li>
-					<li foldable="foldable">
-						<label><a class="screenshot" rel="plugins/check_saved_searchs.png" title="检查关注的话题是否有新消息功能预览"><input type="checkbox" key="check_saved_searchs" foldable_src="foldable_src" />定时检查关注的话题是否有新消息</a></label>
-						<span class="comment">有新消息的话题后缀红点</span>
+						<label><a class="screenshot" rel="plugins/check_saved_searchs.png" title="检查关注的话题是否有新消息功能预览"><input type="checkbox" key="check_saved_searchs" foldable_src="foldable_src" />自动检查关注的话题是否有新消息</a></label>
 						<p foldable_tgt="foldable_tgt">
 							<label class="sublabel"><input type="checkbox" key="check_saved_searchs.show_notification" />有新消息时显示桌面通知</label>
 						</p>
 					</li>
+					<h3>批量管理</h3>
 					<li>
-						<label><a class="screenshot" rel="plugins/clean_personal_theme.png" title="可选切换默认模版功能预览"><input type="checkbox" key="clean_personal_theme" />启用可选切换默认模版</a></label>
-						<span class="comment">允许临时清除 / 恢复用户自定义模板</span>
+						<label><a class="screenshot" rel="plugins/status_manage.png" title="消息批量管理功能预览"><input type="checkbox" key="status_manage" />批量管理消息</a></label>
+						<span><br />按住 Shift 键，并选择起始和结束的消息以进行多项选择。</span>
+					</li>
+					<li>
+						<label><input type="checkbox" key="privatemsg_manage" />批量管理私信</label>
+					</li>
+					<li>
+						<label><input type="checkbox" key="friend_manage" />批量管理关注的人</label>
 					</li>
 				</ul>
 				<button class="btn_apply">应用</button>
 			</div>
 
 			<div class="tabs" id="tabs1">
+				<header>
+					<h2>页面外观</h2>
+				</header>
 				<ul>
+					<h3>功能</h3>
+					<li>
+						<label><a class="screenshot" rel="plugins/emoji.png" title="Emoji 表情功能预览"><input type="checkbox" key="emoji" />支持 Apple Emoji 彩色表情</a></label>
+					</li>
+					<li>
+						<label><a class="screenshot" rel="plugins/clean_personal_theme.png" title="可选切换默认模版功能预览"><input type="checkbox" key="clean_personal_theme" />允许临时关闭和恢复用户的自定义模板</a></label>
+					</li>
+					<li foldable="foldable">
+						<label><a class="screenshot" rel="plugins/remove_app_recom.png" title="点击“×”屏蔽指定应用的随机推荐"><input type="checkbox" key="remove_app_recom" foldable_src="foldable_src" />屏蔽 “饭否应用” 广告区并允许手动屏蔽 “随机应用推荐” 中的应用</a></label>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="remove_app_recom.completely_remove" />完全屏蔽 “随机应用推荐”</label>
+						</p>
+					</li>
+					<h3>字体</h3>
+					<li>
+						<label><input type="checkbox" key="font_reset_cn" />使用微软雅黑等作为默认的中文字体</label>
+					</li>
 					<li>
 						<label>
-							<input type="checkbox" key="counternum_font" disabled="true" />统计数字使用
+							<input type="checkbox" key="counternum_font" disabled="true" />使用
 							<select key="counternum_font.fontname">
 								<option value ="Helvetica Neue">Helvetica Neue</option>
 								<option value ="Lato">Lato</option>
 								<option value ="Georgia">Georgia</option>
 							</select>
-							字体样式
+							作为侧栏顶部的统计数字字体
 						</label>
 					</li>
+					<h3>细节</h3>
 					<li>
-						<label><input type="checkbox" key="font_reset_cn" />使用微软雅黑等字体作为默认中文字体</label>
+						<label><a class="screenshot" rel="plugins/translucent_sidebar.png" title="半透明的侧栏样式预览"><input type="checkbox" key="translucent_sidebar" />半透明的侧栏</a></label>
 					</li>
 					<li>
-						<label><a class="screenshot" rel="plugins/translucent_sidebar.png" title="半透明的侧栏样式预览"><input type="checkbox" key="translucent_sidebar" />启用半透明的侧栏</a></label>
+						<label><a class="screenshot" rel="plugins/box_shadows.png" title="窗体下显示阴影样式预览"><input type="checkbox" key="box_shadows" />在导航栏、主窗体等框架下显示阴影</a></label>
 					</li>
 					<li>
-						<label><a class="screenshot" rel="plugins/emoji.png" title="Emoji 表情功能预览"><input type="checkbox" key="emoji" />启用 Emoji 表情支持</a></label>
+						<label><a class="screenshot" rel="plugins/newstyle_trendlist.png" title="新样式的热门话题样式预览"><input type="checkbox" key="newstyle_trendlist" />使用小字体的热门话题、关注的话题并显示关键词</a></label>
 					</li>
 					<li>
-						<label><a class="screenshot" rel="plugins/box_shadows.png" title="窗体下显示阴影样式预览"><input type="checkbox" key="box_shadows" />在导航栏、主窗体等窗体下显示阴影</a></label>
+						<label><a class="screenshot" rel="plugins/newstyle_op_icons.png" title="简洁样式的操作按钮样式预览"><input type="checkbox" key="newstyle_op_icons" />使用简洁的回复、收藏、转发、删除按钮</a></label>
 					</li>
 					<li>
-						<label><a class="screenshot" rel="plugins/newstyle_trendlist.png" title="新样式的热门话题样式预览"><input type="checkbox" key="newstyle_trendlist" />启用新样式的热门话题、关注的话题并显示具体关键词</a></label>
+						<label><a class="screenshot" rel="plugins/repost_self_statuses.png" title="给自己的消息添加转发按钮功能预览"><input type="checkbox" key="repost_self_statuses" />给自己的消息添加转发按钮</a></label>
 					</li>
 					<li>
-						<label><a class="screenshot" rel="plugins/newstyle_op_icons.png" title="简洁样式的操作按钮样式预览"><input type="checkbox" key="newstyle_op_icons" />启用简洁样式的回复、收藏、转发、删除按钮</a></label>
+						<label><a class="screenshot" rel="http://static2.fanfou.com/img/fanfou.png" title="经典版饭否 logo"><input type="checkbox" key="logo_remove_beta" />去除 logo 的 “测试版” 字样</a></label>
 					</li>
-					<li>
-						<label><a class="screenshot" rel="http://static2.fanfou.com/img/fanfou.png" title="经典版饭否 logo"><input type="checkbox" key="logo_remove_beta" />启用经典版饭否 logo</a></label>
-						<span class="comment">去除 logo 的“测试版”字样</span>
-					</li>
+				</ul>
+				<button class="btn_apply">应用</button>
+			</div>
+			
+			<div class="tabs" id="tabs2">
+				<header>
+					<h2>工具</h2>
+				</header>
+				<ul>
+					<h3>桌面通知</h3>
 					<li foldable="foldable">
-						<label><a class="screenshot" rel="plugins/remove_app_recom.png" title="点击“×”屏蔽指定应用的随机推荐"><input type="checkbox" key="remove_app_recom" foldable_src="foldable_src" />屏蔽“饭否应用”广告区并允许手动屏蔽“随机应用推荐”中的应用</a></label>
+						<label><a class="screenshot" rel="plugins/notification.png" title="消息通知功能预览"><input type="checkbox" key="notification" foldable_src="foldable_src" />启用 Chrome 桌面通知</a></label>
 						<p foldable_tgt="foldable_tgt">
-							<label class="sublabel"><input type="checkbox" key="remove_app_recom.completely_remove" />彻底屏蔽随机应用推荐 (不再需要手动点击)</label>
+							<label class="sublabel">通知在 </label><input type="number" min="5" max="60" step="2.5" key="notification.timeout" /><label> 秒后隐藏</label>
 						</p>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="notification.mentions" />显示新 @ 提到我的通知</label>
+						</p>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="notification.privatemsgs" />显示新私信通知</label>
+						</p>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="notification.followers" />显示新关注者通知</label>
+						</p>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="notification.notdisturb" />当我浏览饭否时不要显示通知</label>
+						</p>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="notification.updates" foldable_src="foldable_src" />太空饭否更新后发送通知</label>
+						</p>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="notification.playsound" />通知播放提示音</label>
+						</p>
+					</li>
+					<h3>右键菜单</h3>
+					<li>
+						<label><a class="screenshot" rel="plugins/share_to_fanfou.png" title="分享到饭否功能预览"><input type="checkbox" key="share_to_fanfou" />添加 “分享到饭否” 到右键菜单</a></label>
+						<br />
+						<span>您可以使用<a href="http://is.gd/fanjoy" title="Chrome 网上应用店 - 有饭同享" target="_blank">有饭同享</a>插件，以获取更好的分享体验。</span>
 					</li>
 				</ul>
 				<button class="btn_apply">应用</button>
 			</div>
 
-			<div class="tabs" id="tabs2">
-				<p class="left">
-					<a href="http://fanfou.com/spacefanfou" target="_blank"><img src="http://avatar4.fanfou.com/s0/00/sw/av.jpg" width="48" height="48" style="border-radius: 3px;" /></a>
-				</p>
-				<div class="info left">
-					<h2>@<a href="http://fanfou.com/spacefanfou" target="_blank">太空饭否</a> (spacefanfou)</h2>
-					<p>
-						太空饭否官方账号。负责版本发布、答疑、交流等事宜，有问题请私信。
-					</p>
-				</div>
-				<!--
-				<table>
-					<tbody>
-						<tr>
-							<td rowspan="2" class="avatar">
-								<a target="_blank" href="http://fanfou.com/zhasm"><img src="http://avatar4.fanfou.com/l0/00/57/sg.jpg" width="48" height="48" style="border-radius: 3px;" /></a>
-							</td>
-							<td class="author">
-								<a href="http://fanfou.com/zhasm" target="_blank">.rex</a>
-							</td>
-							<td rowspan="2" class="avatar">
-								<a target="_blank" href="http://fanfou.com/ruif"><img src="http://avatar4.fanfou.com/l0/00/34/d8.jpg" width="48" height="48" style="border-radius: 3px;" /></a>
-							</td>
-							<td class="author">
-								<a href="http://fanfou.com/ruif" target="_blank">锐风</a>
-							</td>
-						</tr>
-						<tr class="desc">
-							<td>
-								太空饭否++ 开源项目的维护者。
-							</td>
-							<td>
-								太空饭否++ 开源项目的主要开发者。
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				-->
-				<div class="clear"></div>
+			<div class="tabs" id="tabs3">
+				<header>
+					<h2>帮助与支持</h2>
+				</header>
+				<h3>太空饭否</h3>
+					<section>
+						<p class="left">
+							<a href="http://fanfou.com/spacefanfou" target="_blank"><img src="icons/icon-48.png" width="48" height="48" /></a>
+						</p>
+						<div class="info left">
+							<h4><a href="http://fanfou.com/spacefanfou" target="_blank">太空饭否</a></h4>
+							<p>
+								版本 <span id="version"></span>
+							</p>
+						</div>
+						<div class="clear"></div>
+					</section>
+				<h3>太空饭否开发组</h3>
+					<section>
+						<p class="left">
+							<a href="http://fanfou.com/anegie" target="_blank"><img src="http://avatar4.fanfou.com/l0/00/3c/7j.jpg" width="48" height="48" style="border-radius: 3px;" /></a>
+						</p>
+						<div class="info left">
+							<h4>@<a href="http://fanfou.com/anegie" target="_blank">太空小孩</a> (anegie)</h4>
+							<p>
+								<strong>太空饭否创始人。</strong>饭否全新页面外观的主要设计者。
+								<br />目前负责太空饭否少量开发和维护工作。
+							</p>
+						</div>
+						<div class="clear"></div>
+					</section>
+					<section>
+						<p class="left">
+							<a href="http://fanfou.com/ruif" target="_blank"><img src="http://avatar4.fanfou.com/l0/00/34/d8.jpg" width="48" height="48" style="border-radius: 3px;" /></a>
+						</p>
+						<div class="info left">
+							<h4>@<a href="http://fanfou.com/ruif" target="_blank">锐风</a> (ruif)</h4>
+							<p>
+								<strong>太空饭否主要开发者。</strong>饭否全新页面功能的主要创造者。
+								<br />目前负责太空饭否主要开发和维护工作。
+							</p>
+						</div>
+						<div class="clear"></div>
+					</section>
+					<section>
+						<p class="left">
+							<a href="http://fanfou.com/xidorn" target="_blank"><img src="http://avatar1.fanfou.com/l0/00/vq/0q.jpg" width="48" height="48" style="border-radius: 3px;" /></a>
+						</p>
+						<div class="info left">
+							<h4>@<a href="http://fanfou.com/xidorn" target="_blank">Xidorn</a> (Xidorn)</h4>
+							<p>
+								<strong>太空饭否主要开发者。</strong>饭否全新页面功能的主要创造者。
+								<br />目前已经退出开发工作。
+							</p>
+						</div>
+						<div class="clear"></div>
+					</section>
+					<section>
+						<p class="left">
+							<a href="http://fanfou.com/zhasm" target="_blank"><img src="http://avatar4.fanfou.com/l0/00/57/sg.jpg" width="48" height="48" style="border-radius: 3px;" /></a>
+						</p>
+						<div class="info left">
+							<h4>@<a href="http://fanfou.com/zhasm" target="_blank">.rex</a> (zhasm)</h4>
+							<p>
+								<strong>太空饭否协作开发者。</strong>
+								<br />目前负责太空饭否 Chrome 应用商店的疑难解答工作。
+							</p>
+						</div>
+						<div class="clear"></div>
+					</section>
 				<div id="footer">
-					Copyright &copy; 2013 <a href="https://github.com/anegie/Space-Fanfou" target="_blank">The Space-Fanfou Team</a>.<br />
-					感谢曾经的太空饭否开发者 @<a href="http://fanfou.com/xidorn" target="_blank">Xidorn</a> (@Upsuper)。感谢所有使用和帮助推广太空饭否的饭友们。<br />
-					<a href="http://fanfou.com/spacefanfou" target="_blank">官方帐号</a> | <a href="http://anegie.com/blog/spacefanfou/" target="_blank">入门手册</a> | <a href="https://github.com/anegie/Space-Fanfou" target="_blank">开源项目</a> | <a href="http://fanfou.com/home?status=%40%E9%94%90%E9%A3%8E%20%40%E5%A4%AA%E7%A9%BA%E5%B0%8F%E5%AD%A9%20%E6%88%91%E5%8F%91%E7%8E%B0%E4%BA%86%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98%3A" target="_blank">提交使用反馈</a> | <a href="http://fanfou.com/sharer?u=http%3A%2F%2Fis.gd%2Fsfanfou?t=%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%20-%20Chrome%20%E7%BD%91%E4%B8%8A%E5%BA%94%E7%94%A8%E5%BA%97?d=%E5%90%91%E5%A4%A7%E5%AE%B6%E6%8E%A8%E8%8D%90%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%EF%BC%8C%E8%B6%85%E5%BC%BA%E5%A4%A7%E7%9A%84%E9%A5%AD%E5%90%A6%20Chrome%20%E6%B5%8F%E8%A7%88%E5%99%A8%E6%89%A9%E5%B1%95%E7%A8%8B%E5%BA%8F%E3%80%82?s=bl" target="_blank">推荐太空饭否</a>
+					版权所有 &copy; 2013 <a href="https://github.com/anegie/Space-Fanfou" target="_blank">太空饭否开发组</a>。保留所有权利。<br />
+					太空饭否是一个公益的、免费的<a href="https://github.com/anegie/Space-Fanfou" target="_blank">开源项目</a>，不会给您添加任何商业广告。<br /><br />
+					<a href="http://fanfou.com/spacefanfou" target="_blank">官方饭否</a> - <a href="http://anegie.com/blog/spacefanfou/" target="_blank">入门手册</a> - <a href="http://fanfou.com/home?status=%40%E9%94%90%E9%A3%8E%20%40%E5%A4%AA%E7%A9%BA%E5%B0%8F%E5%AD%A9%20%E6%88%91%E5%8F%91%E7%8E%B0%E4%BA%86%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98%3A" target="_blank">报告问题</a> - <a href="http://fanfou.com/sharer?u=http%3A%2F%2Fis.gd%2Fsfanfou?t=%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%20-%20Chrome%20%E7%BD%91%E4%B8%8A%E5%BA%94%E7%94%A8%E5%BA%97?d=%E5%90%91%E5%A4%A7%E5%AE%B6%E6%8E%A8%E8%8D%90%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%EF%BC%8C%E8%B6%85%E5%BC%BA%E5%A4%A7%E7%9A%84%E9%A5%AD%E5%90%A6%20Chrome%20%E6%B5%8F%E8%A7%88%E5%99%A8%E6%89%A9%E5%B1%95%E7%A8%8B%E5%BA%8F%E3%80%82?s=bl" target="_blank">推荐太空饭否</a>
 				</div>
 			</div>
 		</div>
