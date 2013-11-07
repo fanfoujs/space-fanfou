@@ -132,7 +132,7 @@ h4 {
 }
 #navigation ul li {
 	border-left: 6px solid transparent;
-	padding: 6px 0 6px 18px;
+	padding: 0;
 	line-height: 17px;
 	cursor: pointer;
 	-webkit-user-select: none;
@@ -141,11 +141,12 @@ h4 {
 	border-left-color: rgb(78, 87, 100);
 }
 #navigation ul li a {
+	display: block;
 	border: 0;
 	color: #999;
 	cursor: pointer;
 	line-height: 17px;
-	padding: 0;
+	padding: 6px 0 6px 18px;
 	text-decoration: none;
 }
 #navigation ul li.current a {
