@@ -3,53 +3,68 @@ SF.st = {};
 /* 选项默认值 */
 
 SF.st.default_settings = {
-	font_reset_cn: false,
-	translucent_sidebar: true,
-	box_shadows: false,
-	newstyle_trendlist: true,
-	newstyle_op_icons: true,
-	logo_remove_beta: true,
-	remove_app_recom: true,
-	'remove_app_recom.completely_remove': false,
-	expanding_replies: true,
-	'expanding_replies.number': 3,
-	'expanding_replies.auto_expand': false,
-	user_switcher: true,
-	float_message: false,
-	'float_message.notlostfocus': false,
-	'float_message.keepmentions': false,
-	disable_autocomplete: false,
-	'disable_autocomplete.sf_autocomplete': true,
-	share_to_fanfou: false,
-	privatemsg_manage: true,
-	friend_manage: true,
-	advanced_sidebar: true,
-	clean_personal_theme: false,
-	auto_pager: true,
-	notification: true,
-	'notification.updates': true,
-	'notification.mentions': true,
-	'notification.privatemsgs': true,
-	'notification.followers': true,
-	'notification.notdisturb': false,
-	'notification.playsound': true,
-	'notification.timeout': 15,
-	status_manage: true,
-	fav_friends: false,
-	rating: true,
-	unread_statuses: true,
-	'unread_statuses.auto_show': true,
-	'unread_statuses.playsound': false,
-	counternum_font: true,
-	'counternum_font.fontname': navigator.platform == 'Win32' ?
-		'Lato' : 'Helvetica Neue',
-	repost_self_statuses: false,
-	emoji: true,
-	friendship_check: false,
-	restoring_state: true,
-	backup_avatar: true,
-	check_saved_searchs: true,
-	'check_saved_searchs.show_notification': true
+	/* 页面功能*/
+		/* Timeline 时间线 */
+			expanding_replies: true,
+				'expanding_replies.number': 3,
+				'expanding_replies.auto_expand': false,
+			auto_pager: true,
+		/* 输入框 */
+			float_message: false,
+				'float_message.notlostfocus': false,
+				'float_message.keepmentions': false,
+			disable_autocomplete: false,
+				'disable_autocomplete.sf_autocomplete': true,
+		/* 侧栏 */
+			fav_friends: false,
+			check_saved_searchs: true,
+				'check_saved_searchs.show_notification': true,
+		/* 批量管理 */
+			status_manage: true,
+			privatemsg_manage: true,
+			friend_manage: true,
+		/* 更多设置 */
+			unread_statuses: true,
+				'unread_statuses.auto_show': true,
+				'unread_statuses.playsound': false,
+			user_switcher: true,
+			friendship_check: false,
+			advanced_sidebar: true,
+	/* 页面外观 */
+		/* 功能 */
+			clean_personal_theme: false,
+			remove_app_recom: true,
+				'remove_app_recom.completely_remove': false,
+		/* 字体 */
+			emoji: true,
+			font_reset_cn: false,
+			counternum_font: true,
+				'counternum_font.fontname': navigator.platform == 'Win32' ?
+					'Lato' : 'Helvetica Neue',
+		/* 细节 */
+			translucent_sidebar: true,
+			box_shadows: false,
+			logo_remove_beta: true,
+		/* 更多设置 */
+			newstyle_trendlist: true,
+			newstyle_op_icons: true,
+			repost_self_statuses: false,
+	/* 工具 */
+		/* 桌面通知 */
+			notification: true,
+				'notification.timeout': 15,
+				'notification.mentions': true,
+				'notification.privatemsgs': true,
+				'notification.followers': true,
+				'notification.notdisturb': true,
+				'notification.updates': true,
+				'notification.playsound': true,
+		/* 右键菜单 */
+			share_to_fanfou: false,
+	/* 系统 */
+		rating: true,
+		backup_avatar: true,
+		restoring_state: true,
 };
 
 /* 读取选项 */
