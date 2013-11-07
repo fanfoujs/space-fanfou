@@ -110,7 +110,7 @@ h4 {
 	display: none !important;
 }
 
-/* Screen */
+/* Option Page */
 #wrapper {
 }
 #navigation {
@@ -160,8 +160,8 @@ h4 {
 #tabs {
 	margin-left: 155px;
 	box-sizing: border-box;
-	max-width: 500px;
-	min-width: 400px;
+	max-width: 718px;
+	min-width: 420px;
 	padding-top: 53px;
 }
 #tabs header {
@@ -169,8 +169,8 @@ h4 {
 	top: 0;
 	left: 155px;
 	right: 0;
-	max-width: 500px;
-	min-width: 400px;
+	max-width: 718px;
+	min-width: 420px;
 	border-bottom: 1px solid #eee;
 	padding: 15px 0 10px;
 	z-index: 3;
@@ -288,6 +288,35 @@ select {
 /* Why We Need This? */
 .btn_apply {
 	display: none;
+}
+
+/* Popup Page */
+@media (max-width: 775px) {
+	html {
+		width: 560px !important;
+		height: 600px;
+		min-height: 600px;
+		max-height: 600px;
+		overflow-y: hidden !important;
+	}
+	#tabs {
+		margin-left: 120px;
+		max-width: 440px;
+		min-width: 420px;
+		height: 600px;
+		overflow-y: auto;
+	}
+	#tabs header {
+		left: 120px;
+		max-width: 420px;
+		min-width: 420px;
+	}
+	#tabs ul li {
+		padding: 3px 0;
+	}
+	#tabs ul p {
+		margin-top: 6px;
+	}
 }
 
 /* Chrome Widgets */
