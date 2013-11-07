@@ -265,6 +265,8 @@ select {
 	color: #333;
 	text-shadow: 0 1px 0 white;
 	pointer-events: none;
+	left: 50%;
+	top: 0;
 }
 #screenshot.fadeOut {
   opacity: 0;
