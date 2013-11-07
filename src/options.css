@@ -252,15 +252,17 @@ select {
 }
 #screenshot {
 	position: absolute;
-	background: rgba(255, 255, 255, .95);
-	padding: 15px 15px 10px;
+	background: rgba(255, 255, 255, .9);
+	padding: 12px 12px 7px 12px;
 	border: 1px solid;
-	border-top-color: rgba(0, 0, 0, .2);
-	border-left-color: rgba(0, 0, 0, .3);
-	border-right-color: rgba(0, 0, 0, .3);
-	border-bottom-color: rgba(0, 0, 0, .4);
+	border-top-color: rgba(0, 0, 0, .05);
+	border-left-color: rgba(0, 0, 0, .1);
+	border-right-color: rgba(0, 0, 0, .15);
+	border-bottom-color: rgba(0, 0, 0, .2);
 	border-radius: 5px;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
+	box-shadow:
+		0 -1px 1px 1px #fff inset,
+		0 1px 3px rgba(0, 0, 0, .1);
 	-webkit-transition: opacity .2s ease-in;
 	color: #333;
 	text-shadow: 0 1px 0 white;
@@ -274,7 +276,6 @@ select {
 #screenshot_img_wrapper {
 	width: 200px;
 	height: 80px;
-	border: 1px solid rgba(0, 0, 0, .2);
 	border-radius: 3px;
 	display: table-cell;
 	text-align: center;
