@@ -192,10 +192,11 @@ h4 {
 	margin-left: 18px;
 	padding: 6px 0;
 }
-#tabs ul li:last-child,
-#footer {
-	content: " ";
-	height: 80px;
+.more-settings {
+	display: none;
+}
+footer {
+	margin-bottom: 20px;
 }
 #tabs a img {
 	cursor: pointer;
@@ -309,6 +310,7 @@ select {
 		min-width: 420px;
 		height: 600px;
 		overflow-y: auto;
+		overflow-x: hidden;
 	}
 	#tabs header {
 		left: 120px;
@@ -575,6 +577,7 @@ input:disabled:-webkit-any([type='password'],
   font: inherit;
   margin: 0;
   padding: 0 4px;
+  outline: 0;
 }
 
 .link-button:hover {
@@ -630,4 +633,13 @@ label > input:disabled:-webkit-any([type='checkbox'], [type='radio']) ~ span {
 input[type='checkbox'],
 input[type='radio'] {
 	margin-right: 5px;
+	margin-bottom: -1px;
+}
+
+body.uber-frame footer {
+	border-top: 1px solid #eee;
+	margin-top: 16px;
+	max-width: 638px;
+	min-width: 600px;
+	padding: 8px 0;
 }

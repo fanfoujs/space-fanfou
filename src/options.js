@@ -33,14 +33,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		}, false);
 	});
 	forEach($$('[foldable_tgt]'), function($f) {
-		$f.style.height = $f.offsetHeight + 'px';
+		$f.style.height = 'auto';
 	});
 
-	document.body.classList.add('init');
+	/*document.body.classList.add('init');
 	forEach($$('.tabs ul'), function($ul) {
 		$ul.style.maxHeight = $ul.offsetHeight + 'px';
 	});
-	document.body.classList.remove('init');
+	document.body.classList.remove('init');*/
 
 	// 获取选项信息
 	forEach($$('[key]'), function($t) {
@@ -54,6 +54,31 @@ document.addEventListener('DOMContentLoaded', function() {
 				SF.st.settings[key] = getValue($t);
 			});
 			localStorage['settings'] = JSON.stringify(SF.st.settings);
+		});
+	});
+
+	var unexpanded_msg = '显示更多设置…';
+	var expanded_msg = '隐藏更多设置…';
+	var expanders = $$('.more-settings-expander');
+	forEach(expanders, function(btn) {
+		btn.addEventListener('click', function(e) {
+			e.preventDefault();
+			var more_settings = $$('ul.more-settings');
+			if (btn.textContent === unexpanded_msg) {
+				forEach(more_settings, function(s) {
+					s.style.display = 'block';
+				});
+				forEach(expanders, function(expander) {
+					expander.textContent = expanded_msg;
+				});
+			} else {
+				forEach(more_settings, function(s) {
+					s.style.display = 'none';
+				});
+				forEach(expanders, function(expander) {
+					expander.textContent = unexpanded_msg;
+				});
+			}
 		});
 	});
 
@@ -129,10 +154,10 @@ function current(target, self) {
 	var ul = $$('#' + target + ' ul')[0];
 	if (! ul) return;
 	clearTimeout(ul.timeout);
-	ul.style.overflow = 'hidden';
+	/*ul.style.overflow = 'hidden';
 	ul.timeout = setTimeout(function() {
 		ul.style.overflow = '';
-	}, 250);
+	}, 250);*/
 
 	forEach($$('button'), function(btn) {
 		clearTimeout(btn.timeout);

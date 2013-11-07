@@ -9,7 +9,7 @@
 	<script src="functions.js"></script>
 	<script src="options.js"></script>
 </head>
-<body>
+<body class="uber-frame">
 	<div id="wrapper">
 		<div id="navigation">
 			<h1>太空饭否</h1>
@@ -35,15 +35,6 @@
 						</p>
 						<p foldable_tgt="foldable_tgt">
 							<label class="sublabel"><input type="checkbox" key="expanding_replies.auto_expand" />刷新页面时自动展开 1 条消息</label>
-						</p>
-					</li>
-					<li foldable="foldable">
-						<label><a class="screenshot" rel="plugins/unread_statuses.png" title="未读消息处理功能预览"><input type="checkbox" key="unread_statuses" foldable_src="foldable_src" />时间线上出现新消息时进行处理</a></label>
-						<p foldable_tgt="foldable_tgt">
-							<label class="sublabel"><input type="checkbox" key="unread_statuses.auto_show" foldable_src="foldable_src" />当所有未读消息都是自己的消息时，自动显示自己的消息</label>
-						</p>
-						<p foldable_tgt="foldable_tgt">
-							<label class="sublabel"><input type="checkbox" key="unread_statuses.playsound" />饭否页面打开状态下，有未读消息时播放提示音</label>
 						</p>
 					</li>
 					<li>
@@ -88,7 +79,31 @@
 						<label><input type="checkbox" key="friend_manage" />批量管理关注的人</label>
 					</li>
 				</ul>
-				<button class="btn_apply">应用</button>
+				<ul class="more-settings">
+					<h3>更多设置</h3>
+					<li foldable="foldable">
+						<label><a class="screenshot" rel="plugins/unread_statuses.png" title="未读消息处理功能预览"><input type="checkbox" key="unread_statuses" foldable_src="foldable_src" />时间线上出现新消息时进行处理</a></label>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="unread_statuses.auto_show" foldable_src="foldable_src" />当所有未读消息都是自己的消息时，自动显示这些消息</label>
+						</p>
+						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel"><input type="checkbox" key="unread_statuses.playsound" />饭否页面打开状态下，有未读消息时播放提示音</label>
+						</p>
+					</li>
+					<li>
+						<label><a class="screenshot" rel="plugins/user_switcher.png" title="多用户切换功能预览"><input type="checkbox" key="user_switcher" />启用多用户切换</a></label>
+					</li>
+					<li>
+						<label><input type="checkbox" key="friendship_check" />在用户页面显示好友关系检查工具</label>
+					</li>
+					<li>
+						<label><a class="screenshot" rel="plugins/advanced_sidebar.png" title="增强的侧栏功能预览"><input type="checkbox" key="advanced_sidebar" />在用户页面侧栏显示详细统计信息等工具</a></label>
+					</li>
+				</ul>
+				<footer>
+					<button class="more-settings-expander link-button">显示更多设置…</button>
+					<button class="btn_apply">应用</button>
+				</footer>
 			</div>
 
 			<div class="tabs" id="tabs1">
@@ -132,6 +147,12 @@
 						<label><a class="screenshot" rel="plugins/box_shadows.png" title="窗体下显示阴影样式预览"><input type="checkbox" key="box_shadows" />在导航栏、主窗体等框架下显示阴影</a></label>
 					</li>
 					<li>
+						<label><a class="screenshot" rel="http://static2.fanfou.com/img/fanfou.png" title="经典版饭否 logo"><input type="checkbox" key="logo_remove_beta" />去除 logo 的 “测试版” 字样</a></label>
+					</li>
+				</ul>
+				<ul class="more-settings">
+					<h3>更多设置</h3>
+					<li>
 						<label><a class="screenshot" rel="plugins/newstyle_trendlist.png" title="新样式的热门话题样式预览"><input type="checkbox" key="newstyle_trendlist" />使用小字体的热门话题、关注的话题并显示关键词</a></label>
 					</li>
 					<li>
@@ -140,11 +161,11 @@
 					<li>
 						<label><a class="screenshot" rel="plugins/repost_self_statuses.png" title="给自己的消息添加转发按钮功能预览"><input type="checkbox" key="repost_self_statuses" />给自己的消息添加转发按钮</a></label>
 					</li>
-					<li>
-						<label><a class="screenshot" rel="http://static2.fanfou.com/img/fanfou.png" title="经典版饭否 logo"><input type="checkbox" key="logo_remove_beta" />去除 logo 的 “测试版” 字样</a></label>
-					</li>
 				</ul>
-				<button class="btn_apply">应用</button>
+				<footer>
+					<button class="more-settings-expander link-button">显示更多设置…</button>
+					<button class="btn_apply">应用</button>
+				</footer>
 			</div>
 			
 			<div class="tabs" id="tabs2">
@@ -184,7 +205,9 @@
 						<span>您可以使用<a href="http://is.gd/fanjoy" title="Chrome 网上应用店 - 有饭同享" target="_blank">有饭同享</a>插件，以获取更好的分享体验。</span>
 					</li>
 				</ul>
-				<button class="btn_apply">应用</button>
+				<footer style="border: 0;">
+					<button class="btn_apply">应用</button>
+				</footer>
 			</div>
 
 			<div class="tabs" id="tabs3">
@@ -257,11 +280,11 @@
 						</div>
 						<div class="clear"></div>
 					</section>
-				<div id="footer">
+				<footer>
 					版权所有 &copy; 2013 <a href="https://github.com/anegie/Space-Fanfou" target="_blank">太空饭否开发组</a>。保留所有权利。<br />
 					太空饭否是一个公益的、免费的<a href="https://github.com/anegie/Space-Fanfou" target="_blank">开源项目</a>，不会给您添加任何商业广告。<br /><br />
 					<a href="http://fanfou.com/spacefanfou" target="_blank">官方饭否</a> - <a href="http://anegie.com/blog/spacefanfou/" target="_blank">入门手册</a> - <a href="http://fanfou.com/home?status=%40%E9%94%90%E9%A3%8E%20%40%E5%A4%AA%E7%A9%BA%E5%B0%8F%E5%AD%A9%20%E6%88%91%E5%8F%91%E7%8E%B0%E4%BA%86%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98%3A" target="_blank">报告问题</a> - <a href="http://fanfou.com/sharer?u=http%3A%2F%2Fis.gd%2Fsfanfou?t=%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%20-%20Chrome%20%E7%BD%91%E4%B8%8A%E5%BA%94%E7%94%A8%E5%BA%97?d=%E5%90%91%E5%A4%A7%E5%AE%B6%E6%8E%A8%E8%8D%90%E5%A4%AA%E7%A9%BA%E9%A5%AD%E5%90%A6%EF%BC%8C%E8%B6%85%E5%BC%BA%E5%A4%A7%E7%9A%84%E9%A5%AD%E5%90%A6%20Chrome%20%E6%B5%8F%E8%A7%88%E5%99%A8%E6%89%A9%E5%B1%95%E7%A8%8B%E5%BA%8F%E3%80%82?s=bl" target="_blank">推荐太空饭否</a>
-				</div>
+				</footer>
 			</div>
 		</div>
 	</div>
