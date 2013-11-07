@@ -252,15 +252,15 @@ select {
 }
 #screenshot {
 	position: absolute;
-	background: rgba(241, 241, 241, .9);
-	padding: 10px 10px 5px;
+	background: rgba(255, 255, 255, .95);
+	padding: 15px 15px 10px;
 	border: 1px solid;
-	border-top-color: rgba(0, 0, 0, .25);
-	border-left-color: rgba(0, 0, 0, .4);
-	border-right-color: rgba(0, 0, 0, .4);
-	border-bottom-color: rgba(0, 0, 0, .6);
+	border-top-color: rgba(0, 0, 0, .2);
+	border-left-color: rgba(0, 0, 0, .3);
+	border-right-color: rgba(0, 0, 0, .3);
+	border-bottom-color: rgba(0, 0, 0, .4);
 	border-radius: 5px;
-	box-shadow: 0 5px 10px rgba(0, 0, 0, .5);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
 	-webkit-transition: opacity .2s ease-in;
 	color: #333;
 	text-shadow: 0 1px 0 white;
@@ -283,6 +283,10 @@ select {
 #screenshot_img_wrapper img {
 	border-radius: 3px;
 	vertical-align: middle;
+}
+#screenshot #preview_des {
+	display: block;
+	padding-top: 5px;
 }
 #footer {
 	border-top: 1px solid rgba(0, 0, 0, .15);
