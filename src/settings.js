@@ -45,7 +45,7 @@ SF.st.default_settings = {
 		'Lato' : 'Helvetica Neue',
 	repost_self_statuses: false,
 	emoji: true,
-	friendship_check: true,
+	friendship_check: false,
 	restoring_state: true,
 	backup_avatar: true,
 	check_saved_searchs: true,
