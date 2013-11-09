@@ -18,6 +18,8 @@ SF.pl.user_switcher = new SF.plugin((function($) {
 	var $user_top = $('#user_top');
 	if (! $user_top.length) return;
 
+	var $logout = $('a[href^="http://fanfou.com/logout/"]');
+
 	/* 初始化 Cookie */
 	var domain = document.domain;
 	var cookie_strs = document.cookie.split(/\s*;\s*/);
@@ -38,17 +40,19 @@ SF.pl.user_switcher = new SF.plugin((function($) {
 						  'expires=Thu, 01 Jan 1970 00:00:00 GMT';
 	}
 	function setLogin(al) {
-		deleteCookie('al');
-		deleteCookie('u');
-		deleteCookie('m');
-		deleteCookie('uuid');
-		deleteCookie('SID');
-		if (al) {
-			document.cookie = 'al=' + al + ';domain=.' + domain;
-			location.href = '/home';
-		} else {
-			location.href = '/login';
-		}
+		stop();
+		$.ajax({
+			url: $logout.prop('href'),
+			method: 'HEAD',
+			complete: function() {
+				if (al) {
+					document.cookie = 'al=' + al + ';domain=.' + domain;
+					location.href = '/home';
+				} else {
+					location.href = '/login';
+				}
+			}
+		});
 	}
 	function removeUser(id) {
 		data[id] = undefined;
