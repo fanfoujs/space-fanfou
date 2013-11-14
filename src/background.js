@@ -25,7 +25,7 @@ SF.contentScripts = manifest['content_scripts'][0];
 
 /* 通知 */
 
-var Notifications = window.Notifications || window.webkitNotifications;
+window.Notifications = window.Notifications || window.webkitNotifications;
 var notifications = [];
 
 function showNotification(options) {
