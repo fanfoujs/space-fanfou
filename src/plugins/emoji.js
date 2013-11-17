@@ -781,7 +781,7 @@ function _createRegexp(map) {
 	keys.sort(function (a, b) {
 		return b.length - a.length;
 	});
-	return new RegExp('(' + keys.join('|') + ')', 'g');
+	return new RegExp('(' + keys.join('|') + ')️?', 'g');
 }
 
 var EMOJI_RE = null;
