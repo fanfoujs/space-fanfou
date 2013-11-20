@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	var $foldables = $$('[foldable]');
-	forEach($$('[foldable]'), function($foldable) {
+	forEach($foldables, function($foldable) {
 		var $foldable_src = $foldable.querySelector('[foldable_src]');
 		setValue($foldable_src, true);
 
@@ -99,6 +99,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		var $ss = $screenshots[i];
 		$ss.description = $ss.title;
 		$ss.title = '';
+		$ss.addEventListener('click', function(e) {
+			if (e.target !== this) return;
+			e.preventDefault();
+			e.stopPropagation();
+			this.querySelector('[type="checkbox"]').click();
+		});
 		$ss.addEventListener('mouseover', function(e) {
 			if (e.target != this) return;
 			$preview_img.src = this.rel;
