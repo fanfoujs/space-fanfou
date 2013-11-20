@@ -169,10 +169,10 @@ var plugins = [
 		bg_js: 'rating.js'
 	},
 	{
-		name: 'check_saved_searchs',
-		bg_js: 'check_saved_searchs_bg.js',
-		js: 'check_saved_searchs.js',
-		css: 'check_saved_searchs.css',
+		name: 'check_saved_searches',
+		bg_js: 'check_saved_searches_bg.js',
+		js: 'check_saved_searches.js',
+		css: 'check_saved_searches.css',
 		options: [
 			'show_notification'
 		]

@@ -1,14 +1,14 @@
-SF.pl.check_saved_searchs = new SF.plugin((function($) {
-	var saved_searchs = { };
+SF.pl.check_saved_searches = new SF.plugin((function($) {
+	var saved_searches = { };
 
 	var is_home = (location.origin + location.pathname) ===
 		'http://fanfou.com/home';
 	if (is_home) {
-		var $saved_searchs = { };
+		var $saved_searches = { };
 		$('#savedsearchs ul li a span').each(function() {
 			var $search = $(this);
 			var keyword = $search.text();
-			$saved_searchs[keyword] = $search;
+			$saved_searches[keyword] = $search;
 			$search.parents('li').click(function(e) {
 				$.get(
 					'http://fanfou.com/q/' + encodeURIComponent(keyword),
@@ -38,12 +38,12 @@ SF.pl.check_saved_searchs = new SF.plugin((function($) {
 	}
 
 	function saveTimestamp(keyword, timestamp) {
-		timestamp = Math.max(timestamp, saved_searchs[keyword] || 0);
+		timestamp = Math.max(timestamp, saved_searches[keyword] || 0);
 		SF.fn.setData('sf-saved-search-' + keyword, timestamp);
 	}
 
 	function loadData(keyword, timestamp) {
-		saved_searchs[keyword] = timestamp;
+		saved_searches[keyword] = timestamp;
 		if (is_search_page) {
 			saveTimestamp(keyword, Math.max(latest_timestamp, timestamp));
 		}
@@ -53,13 +53,14 @@ SF.pl.check_saved_searchs = new SF.plugin((function($) {
 	}
 
 	function processHome(keyword, timestamp) {
-		var $search = $saved_searchs[keyword];
+		var $search = $saved_searches[keyword];
 		if (! $search) return;
 		var last_timestamp = SF.fn.getData('sf-saved-search-' + keyword);
 		if (! last_timestamp && timestamp) {
 			saveTimestamp(keyword, timestamp);
 			return;
 		} else if (timestamp > last_timestamp) {
+			console.log($search)
 			$search.parent('a').addClass('new');
 		} else {
 			$search.parent('a').removeClass('new');

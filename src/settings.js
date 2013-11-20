@@ -17,8 +17,8 @@ SF.st.default_settings = {
 				'disable_autocomplete.sf_autocomplete': true,
 		/* 侧栏 */
 			fav_friends: false,
-			check_saved_searchs: true,
-				'check_saved_searchs.show_notification': true,
+			check_saved_searches: true,
+				'check_saved_searches.show_notification': true,
 		/* 批量管理 */
 			status_manage: true,
 			privatemsg_manage: true,
@@ -81,10 +81,19 @@ SF.st.settings = (function() {
 			settings[key] = local_settings[key];
 	}
 
+	[ 'check_saved_searchs', 'check_saved_searchs.show_notification' ].
+	forEach(function(key) {
+		if (local_settings[key] !== undefined) {
+			settings[key.replace('searchs', 'searches')] = local_settings[key];
+		}
+	});
+
 	[ 'user_switcher', 'advanced_sidebar', 'friendship_check' ].
 	forEach(function(key) {
 		settings[key] = true;
 	});
+
+	localStorage['settings'] = JSON.stringify(settings);
 
 	return settings;
 })();

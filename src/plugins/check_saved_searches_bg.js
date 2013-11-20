@@ -1,4 +1,4 @@
-SF.pl.check_saved_searchs = new SF.plugin((function() {
+SF.pl.check_saved_searches = new SF.plugin((function() {
 	function request(options) {
 		var xhr = new XMLHttpRequest;
 		xhr.open('GET', options.url, true);
@@ -78,8 +78,8 @@ SF.pl.check_saved_searchs = new SF.plugin((function() {
 		}).join(', ');
 		var code = 'javascript:';
 		code += '(function() { ';
-		code += 'if (! SF.pl.check_saved_searchs) return; ';
-		code += 'SF.pl.check_saved_searchs.loadData(';
+		code += 'if (! SF.pl.check_saved_searches) return; ';
+		code += 'SF.pl.check_saved_searches.loadData(';
 		code +=	data + '); ';
 		code += '})();';
 		return 'location.assign(\'' + code + '\');';
@@ -151,9 +151,9 @@ SF.pl.check_saved_searchs = new SF.plugin((function() {
 	}
 
 	function extractKeywords(document) {
-		var saved_searchs = document.getElementById('savedsearchs');
-		if (! saved_searchs) return;
-		var items = saved_searchs.querySelectorAll('ul li a span');
+		var saved_searches = document.getElementById('savedsearchs');
+		if (! saved_searches) return;
+		var items = saved_searches.querySelectorAll('ul li a span');
 		var keywords = [].slice.call(items).map(function(item) {
 			return item.textContent;
 		});
