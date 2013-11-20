@@ -37,13 +37,22 @@ SF.pl.check_saved_searchs = new SF.plugin((function() {
 					div.innerHTML = data.data.timeline;
 					var time = div.querySelector('li .stamp .time');
 					if (! time) return;
-					var userid = div.querySelector('li .author').
-						getAttribute('href').replace('/', '');
-					userid = decodeURIComponent(userid);
-					var timestamp = Date.parse(time.title);
+					var timestamp;
+					var items = [].slice.call(div.querySelectorAll('li'));
+					items.some(function(li) {
+						var userid = li.querySelector('.author').
+							getAttribute('href').replace('/', '');
+						userid = decodeURIComponent(userid);
+						if (userid === current_userid) {
+							return false;
+						}
+						var time = li.querySelector('.stamp .time');
+						timestamp = Date.parse(time.title);
+						return true;
+					})
 					self.data = [ self.keyword, timestamp ];
 					broadcast(self.data);
-					if (userid !== current_userid && show_notification) {
+					if (timestamp && show_notification) {
 						if (timestamp > self.last_timestmap &&
 							self.last_timestmap) {
 							showNotification({

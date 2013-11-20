@@ -56,7 +56,7 @@ SF.pl.check_saved_searchs = new SF.plugin((function($) {
 		var $search = $saved_searchs[keyword];
 		if (! $search) return;
 		var last_timestamp = SF.fn.getData('sf-saved-search-' + keyword);
-		if (! last_timestamp) {
+		if (! last_timestamp && timestamp) {
 			saveTimestamp(keyword, timestamp);
 			return;
 		} else if (timestamp > last_timestamp) {
