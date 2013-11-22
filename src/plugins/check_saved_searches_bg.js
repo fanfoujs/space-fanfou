@@ -46,6 +46,14 @@ SF.pl.check_saved_searches = new SF.plugin((function() {
 						if (userid === current_userid) {
 							return false;
 						}
+						var content = li.querySelector('.content');
+						var html = content.innerHTML;
+						var pattern = '<a href="http://fanfou.com/' +
+							current_userid +
+							'" class="former">';
+						if (html.indexOf(pattern) > -1) {
+							return false;
+						}
 						var time = li.querySelector('.stamp .time');
 						timestamp = Date.parse(time.title);
 						return true;
