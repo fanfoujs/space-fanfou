@@ -28,11 +28,6 @@
 		var $stream = $('#stream');
 		if (! $stream.length) return;
 
-		$(window).delegate('.photo.zoom', 'click', function(e) {
-			var $link = $(e.target);
-			$('#ZoomBox img').prop('href', $link.prop('href'));
-		});
-
 		var MutationObserver = MutationObserver || WebKitMutationObserver;
 		var observer = new MutationObserver(function(mutations) {
 			mutations.forEach(processPhotos);
@@ -41,19 +36,18 @@
 		function processPhotos() {
 			$('.photo.zoom img').each(function() {
 				var $img = $(this);
-				[ 1, 2, 3, 4, 5 ].forEach(function(i) {
-					setTimeout(function() {
-						$img.click(function(e) {
-							var width = $img.width();
-							var height = $img.height();
-							if (width / height > 3 || height / width > 3) {
-								e.stopImmediatePropagation();
-								e.preventDefault();
-								SF.fn.openURL(location.origin + $img.parent().attr('name'));
-							}
-						});
-					}, i * 100);
-				});
+				$img[0].onclick = function(e) {
+					var width = $img.width();
+					var height = $img.height();
+					if (width / height > 3 || height / width > 3) {
+						e.stopImmediatePropagation();
+						e.preventDefault();
+						SF.fn.openURL(location.origin + $img.parent().attr('name'));
+					} else {
+						var $link = $img.parent();
+						$('#ZoomBox img').prop('href', $link.prop('href'));
+					}
+				}
 			});
 		}
 
