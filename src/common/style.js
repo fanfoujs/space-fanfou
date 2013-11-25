@@ -188,34 +188,4 @@
 			}
 		}, false);
 	});
-
-	(function($) {
-		SF.fn.waitFor(function() {
-			return ($ = window.jQuery) && $i('footer');
-		}, function() {
-			$('.colltab:not(.fav_friends)').each(function() {
-				var $colltab = $(this);
-				var $h2 = $('>h2', $colltab);
-				var $b = $('>b', $colltab);
-				var $ul = $('>ul', $colltab);
-				var id = $colltab.attr('id');
-				var collapsed = !! SF.fn.getData(id + '-collapsed');
-				function toggle() {
-					if (collapsed) {
-						$b.addClass('collapse');
-						$ul.hide();
-					} else {
-						$b.removeClass('collapse');
-						$ul.show();
-					}
-				}
-				$h2.click(function(e) {
-					collapsed = ! collapsed;
-					SF.fn.setData(id + '-collapsed', collapsed);
-					toggle();
-				});
-				if (collapsed) toggle();
-			});
-		});
-	})();
 })();
