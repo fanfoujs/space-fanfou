@@ -131,7 +131,7 @@ var updates = (function() {
 
 /* 初始化插件 */
 
-PLUGINS_DIR = 'plugins/';
+var PLUGINS_DIR = 'plugins/';
 
 // 初始化扩展信息
 var details = { };
