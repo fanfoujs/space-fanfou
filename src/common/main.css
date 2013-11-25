@@ -154,7 +154,7 @@
 }
 @-webkit-keyframes wobbleIn {
 	0% {
-		-webkit-transform: perspective(300px) rotateX(-90deg) scale(.8);
+		-webkit-transform: perspective(300px) rotateX(90deg) scale(.8);
 		opacity: .5;
 	}
 	75% {
