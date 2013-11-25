@@ -94,18 +94,12 @@ var playSound = (function() {
 })();
 
 function createTab(url) {
-	chrome.tabs.query({
+	chrome.tabs.create({
+		url: url,
 		active: true
-	}, function(tabs) {
-		var current_tab = tabs[0] || {};
-		chrome.tabs.create({
-			url: url,
-			active: true,
-			index: (current_tab.index + 1) || void(0)
-		}, function(tab) {
-			chrome.windows.update(tab.windowId, {
-				focused: true
-			});
+	}, function(tab) {
+		chrome.windows.update(tab.windowId, {
+			focused: true
 		});
 	});
 }
@@ -281,17 +275,7 @@ chrome.extension.onConnect.addListener(function(port) {
 				newValue: settings
 			});
 		} else if (msg.type == 'openURL') {
-			chrome.tabs.query({
-				active: true
-			}, function(tabs) {
-				var tab = tabs[0];
-				chrome.tabs.create({
-					url: msg.url,
-					index: tab.index + 1,
-					active: true,
-					openerTabId: tab.id
-				});
-			});
+			createTab(msg.url);
 		}
 	});
 	// 显示太空饭否图标
