@@ -45,7 +45,7 @@
 						SF.fn.openURL(location.origin + $img.parent().attr('name'));
 					} else {
 						var $link = $img.parent();
-						$('#ZoomBox img').prop('href', $link.prop('href'));
+						$('#ZoomImage').prop('src', $link.prop('href'));
 					}
 				}
 			});
