@@ -1,9 +1,9 @@
 **太空饭否是一个免费、用心的开源程序，是目前最强大最好用的饭否浏览器扩展。可以给饭否页面添加回复和转发展开、新@新私信通知、浮动输入框、多用户切换、消息批量管理、自动翻页等功能，并且使饭否页面变得更美更舒心，符合您的使用习惯。**
 
 ## 团队
-作者：@[太空小孩](http://fanfou.com/anegie)，@[锐风](http://fanfou.com/ruif)，@[Xidorn](http://fanfou.com/xidorn)（已退出）
+作者：@[太空小孩](http://fanfou.com/anegie)，@[锐风](http://fanfou.com/ruif)，@[Xidorn](http://fanfou.com/xidorn)（已退出）  
 协作作者：@[.rex](http://fanfou.com/zhasm)
-> 官方饭否：http://fanfou.com/spacefanfou
+> 官方饭否：http://fanfou.com/spacefanfou  
 > 入门手册：http://anegie.com/blog/spacefanfou/
 
 ## 官方版本下载
