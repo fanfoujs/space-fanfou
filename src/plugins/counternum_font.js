@@ -15,9 +15,6 @@ SF.pl.counternum_font = new SF.plugin((function() {
 		'#user_stats .count {' +
 			'font-family: #fontname#, "Helvetica Neue", Helvetica, Arial, sans-serif !important;' +
 		'} ' +
-		'#sidebar .stabs li a .count {' +
-			'font-family: #fontname#, "Lucida Grande", Helvetica, Arial, sans-serif !important;' +
-		'} ' +
 		'#panel h1 {' +
 			'font-family: #fontname2#, Helvetica, Arial, "Hiragino Sans GB W3", "WenQuanYi Micro Hei", "Microsoft Yahei", sans-serif !important;' +
 		'}';
