@@ -96,7 +96,7 @@ SF.pl.xmas_spec_theme = new SF.plugin(function($) {
 			[ 1, 2, 3, 4 ].forEach(function(i) {
 				setTimeout(function() {
 					$giftbox.css('background-position', '0 -' + (i  * 65) + 'px');
-				}, i * 150);
+				}, i * 75);
 				setTimeout(function() {
 					$giftbox.fadeOut(function() {
 						$giftbox.remove();
