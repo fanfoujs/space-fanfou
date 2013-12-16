@@ -1,3 +1,15 @@
 .global-header-content {
+	width: 285px;
+	height: 75px;
+	background: url("/resources/images/fflogo_xmas.png") no-repeat 0 0 !important;
+	position: absolute;
+	top: 8px;
+	z-index: 75;
+}
+.narrowlook .global-header-content:not([data-original-logo]) {
+	width: 244px;
+	height: 42px;
 	background: url(http://static2.fanfou.com/img/fanfou.png) no-repeat 0 0 !important;
+	position: relative;
+	top: 0;
 }

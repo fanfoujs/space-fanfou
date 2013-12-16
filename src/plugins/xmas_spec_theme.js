@@ -101,7 +101,7 @@ SF.pl.xmas_spec_theme = new SF.plugin(function($) {
 					$giftbox.fadeOut(function() {
 						$giftbox.remove();
 					});
-				}, 600);
+				}, 300);
 			});
 		});
 		$giftbox.hide();
@@ -125,6 +125,7 @@ SF.pl.xmas_spec_theme = new SF.plugin(function($) {
 		}
 		var last_time = new Date(SF.fn.getData('last_giftbox_collected_at') || 0);
 		var now = Date.now();
+		chance = 100;
 		if (r <= chance) {
 			if (now - last_time > 10 * 60 * 1000) {
 				setTimeout(showGiftBox, getRandomNumber(1000000) / 10000);
