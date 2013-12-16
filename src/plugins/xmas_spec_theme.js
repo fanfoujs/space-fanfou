@@ -92,6 +92,7 @@ SF.pl.xmas_spec_theme = new SF.plugin(function($) {
 			top: Math.min(top, avail_height - 65) + 'px'
 		});
 		$giftbox.click(function() {
+			$giftbox.css('-webkit-animation', 'none');
 			newGiftboxCollected();
 			[ 1, 2, 3, 4 ].forEach(function(i) {
 				setTimeout(function() {
@@ -102,8 +103,10 @@ SF.pl.xmas_spec_theme = new SF.plugin(function($) {
 				}, 375);
 			});
 		});
-		$giftbox.hide();
-		$giftbox.appendTo('body').fadeIn();
+		$giftbox.appendTo('body');
+		setTimeout(function() {
+			$giftbox.css('-webkit-animation', 'gb-blinking 2s ease-in-out infinite');
+		}, 500);
 	}
 
 	function initGiftBox() {

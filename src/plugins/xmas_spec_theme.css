@@ -1,10 +1,43 @@
+@-webkit-keyframes gb-blinking {
+	0% {
+		opacity: 1;
+	}
+	70% {
+		opacity: 1;
+	}
+	85% {
+		opacity: .5;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+@-webkit-keyframes gb-jumpIn {
+	0% {
+		-webkit-transform: perspective(100px) rotateX(60deg) scale(.5) translateY(-25px);
+	}
+	45% {
+		-webkit-transform: perspective(100px) rotateX(-30deg) scale(.9) translateY(0);
+	}
+	65% {
+		-webkit-transform: perspective(100px) rotateX(15deg) scale(1) translateY(0);
+	}
+	85% {
+		-webkit-transform: perspective(100px) rotateX(-10deg) scale(1) translateY(0);
+	}
+	100% {
+		-webkit-transform: perspective(100px) rotateX(0) scale(1) translateY(0);
+	}
+}
 #sf-giftbox {
 	width: 65px;
 	height: 65px;
-	background: url("/resources/images/giftbox.png") no-repeat left top;
+	background: url('/resources/images/giftbox.png') no-repeat left top;
 	position: fixed;
 	z-index: 99999999999;
 	cursor: pointer;
+	-webkit-animation: gb-jumpIn .5s;
+	-webkit-transform-origin: bottom center;
 }
 .show-hat #stream .wa li {
 	overflow: visible !important;
