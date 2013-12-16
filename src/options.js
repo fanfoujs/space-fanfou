@@ -193,5 +193,13 @@ addEventListener('load', function load(e) {
 		var latest_tab = localStorage['latest_options_tab'] || 'tab1';
 		SF.fn.emulateClick($(latest_tab));
 	}, 16);
+
+	var count = SF.fn.getData('giftbox_count') || 0;
+	if (count >= 10) {
+		$$('.locked')[0].hidden = true;
+	} else {
+		$$('.unlocked')[0].hidden = true;
+		$('giftbox_count').textContent = count;
+	}
 }, false);
 onmousewheel = function(e) { }

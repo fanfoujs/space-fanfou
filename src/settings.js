@@ -65,6 +65,14 @@ SF.st.default_settings = {
 		rating: true,
 		backup_avatar: true,
 		restoring_state: true,
+	/* 2013 圣诞节 */
+		/* 圣诞装饰 */
+			xmas_logo: true,
+		/* 圣诞节特别主题 */
+			xmas_spec_theme: true,
+			'xmas_spec_theme.snowstorm': false,
+			'xmas_spec_theme.song': false,
+			'xmas_spec_theme.hat': false
 };
 
 /* 读取选项 */

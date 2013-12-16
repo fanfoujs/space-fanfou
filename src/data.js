@@ -176,6 +176,23 @@ var plugins = [
 		options: [
 			'show_notification'
 		]
+	},
+
+	/* Xmas 2013 */
+
+	{
+		name: 'xmas_logo',
+		css: 'xmas_logo.css'
+	},
+	{
+		name: 'xmas_spec_theme',
+		js: 'xmas_spec_theme.js',
+		css: 'xmas_spec_theme.css',
+		options: [
+			'snowstorm',
+			'song',
+			'hat'
+		]
 	}
 
 ];

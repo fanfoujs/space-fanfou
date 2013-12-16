@@ -204,5 +204,7 @@ addEventListener('SFMessage', function(e) {
 	var msg = JSON.parse(e.data);
 	if (msg.type == 'openURL') {
 		port.postMessage(msg);
+	} else if (msg.from == 'xmas_spec_theme') {
+		port.postMessage(msg.data);
 	}
 });

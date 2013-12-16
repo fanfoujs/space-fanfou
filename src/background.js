@@ -276,6 +276,21 @@ chrome.extension.onConnect.addListener(function(port) {
 			});
 		} else if (msg.type == 'openURL') {
 			createTab(msg.url);
+		} else if (msg.type == 'new_giftbox_collected') {
+			SF.fn.setData('giftbox_count', msg.count);
+		} else if (msg.type == 'ten_giftboxes_collected') {
+			SF.fn.setData('giftbox_count', 10);
+		} else if (msg.type == 'disable_setting') {
+			var old_settings = localStorage.settings;
+			var settings = JSON.parse(old_settings);
+			settings[msg.key] = false;
+			settings = JSON.stringify(settings);
+			localStorage.settings = settings;
+			updateSettings({
+				key: 'settings',
+				oldValue: old_settings,
+				newValue: settings
+			});
 		}
 	});
 	// 显示太空饭否图标
