@@ -650,3 +650,6 @@ body.uber-frame footer {
 	min-width: 600px;
 	padding: 8px 0;
 }
+body.uber-frame #tabs4 footer {
+	margin-top: 0;
+}
