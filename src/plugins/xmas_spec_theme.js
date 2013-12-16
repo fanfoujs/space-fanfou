@@ -57,7 +57,7 @@ SF.pl.xmas_spec_theme = new SF.plugin(function($) {
 			postMessage({
 				type: 'ten_giftboxes_collected'
 			});
-			showNotification('您成功收集到了 10 个圣诞礼盒！快去设置页看看吧~', true);
+			showNotification('您成功收集到了 10 个圣诞礼盒！', true);
 		} else {
 			postMessage({
 				type: 'new_giftbox_collected',

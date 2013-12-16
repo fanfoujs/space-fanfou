@@ -280,6 +280,19 @@ chrome.extension.onConnect.addListener(function(port) {
 			SF.fn.setData('giftbox_count', msg.count);
 		} else if (msg.type == 'ten_giftboxes_collected') {
 			SF.fn.setData('giftbox_count', 10);
+			var old_settings = localStorage.settings;
+			var settings = JSON.parse(old_settings);
+			[ 'snowstorm', 'song', 'hat' ].
+			forEach(function(item) {
+				settings['xmas_spec_theme.' + item] = true;
+			});
+			settings = JSON.stringify(settings);
+			localStorage.settings = settings;
+			updateSettings({
+				key: 'settings',
+				oldValue: old_settings,
+				newValue: settings
+			});
 		} else if (msg.type == 'disable_setting') {
 			var old_settings = localStorage.settings;
 			var settings = JSON.parse(old_settings);
