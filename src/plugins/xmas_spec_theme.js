@@ -98,10 +98,8 @@ SF.pl.xmas_spec_theme = new SF.plugin(function($) {
 					$giftbox.css('background-position', '0 -' + (i  * 65) + 'px');
 				}, i * 75);
 				setTimeout(function() {
-					$giftbox.fadeOut(function() {
-						$giftbox.remove();
-					});
-				}, 300);
+					$giftbox.remove();
+				}, 375);
 			});
 		});
 		$giftbox.hide();
