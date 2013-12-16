@@ -95,6 +95,6 @@
 	cursor: pointer;
 	-webkit-animation: fadeIn .75s;
 }
-#sf_stop_snow:hover {
-	background-music: rgba(0, 0, 0, .5);
+#sf_stop_music:hover {
+	background-color: rgba(0, 0, 0, .5);
 }
