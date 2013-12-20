@@ -171,7 +171,7 @@ SF.pl.xmas_spec_theme = new SF.plugin(function($) {
 			} else {
 				SF.fn.setData(key, true);
 			}
-			if (e.type === 'form_submit' &&
+			if (e && e.type === 'form_submit' &&
 				this.id === 'message') {
 				initGiftBox();
 			}
@@ -758,7 +758,6 @@ SF.pl.xmas_spec_theme = new SF.plugin(function($) {
 			}
 		},
 		load: function() {
-			enableCheat();
 			if (giftbox_collected < 10) {
 				initGiftBox();
 			} else {
