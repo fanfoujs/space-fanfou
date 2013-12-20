@@ -141,6 +141,7 @@ SF.pl.xmas_spec_theme = new SF.plugin(function($) {
 
 	function initMessageEvent() {
 		bindEvent($('form#message'), 'posted_a_status');
+		bindEvent($('form#PopupForm'), initGiftBox);
 	}
 
 	function initPictureMessageEvent() {
@@ -164,24 +165,29 @@ SF.pl.xmas_spec_theme = new SF.plugin(function($) {
 
 	function bindEvent($form, key) {
 		if (! $form.length) return;
+		var form = $form[0];
 		function onsubmit(e) {
+			var last_time = form.last_time;
+			form.last_time = Date.now();
+			if (Date.now() - last_time < 1000)
+				return;
 			if ($.isFunction(key)) {
 				var callback = key;
 				callback();
 			} else {
 				SF.fn.setData(key, true);
 			}
-			if (e && e.type === 'form_submit' &&
-				this.id === 'message') {
+			if (e && (e.ctrlKey || e.metaKey) && e.keyCode === 13) {
 				initGiftBox();
 			}
 		}
 		$form.on('submit form_submit', onsubmit);
 		$form.on('keydown', function(e) {
 			if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
-				onsubmit();
+				onsubmit(e);
 			}
 		});
+		$form.find('input[type="submit"]').click(onsubmit);
 	}
 
 	function snow() {
