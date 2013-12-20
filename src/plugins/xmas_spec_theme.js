@@ -41,14 +41,6 @@ SF.pl.xmas_spec_theme = new SF.plugin(function($) {
 			function() { $(this).remove(); });
 	}
 
-	function enableCheat() {
-		// javascript:jQuery(window).trigger('这是一个酷炫的事件');
-		$(window).bind('这是一个酷炫的事件', function(e) {
-			SF.fn.setData('giftbox_count', 9);
-			newGiftboxCollected();
-		});
-	}
-
 	function newGiftboxCollected() {
 		giftbox_collected = SF.fn.getData('giftbox_count') || 0;
 		SF.fn.setData('giftbox_count', ++giftbox_collected);
