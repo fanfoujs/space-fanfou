@@ -330,6 +330,9 @@ select {
 		max-width: 420px;
 		min-width: 420px;
 	}
+	#tabs ul {
+		max-width: 420px;
+	}
 	#tabs ul li {
 		padding: 3px 0;
 	}
