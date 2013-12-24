@@ -262,7 +262,7 @@ addEventListener('load', function load(e) {
 		});
 	} else {
 		function fail() {
-			$('use_invite_code').textContent = '验证失败 :(';
+			$('use_invite_code').textContent = '这是恐龙蛋，不是奥特蛋！';
 			$('use_invite_code').disabled = false;
 			setTimeout(function() {
 				$('use_invite_code').textContent = '使用奥特蛋';
@@ -327,7 +327,7 @@ addEventListener('load', function load(e) {
 				showInvalid();
 			}
 			if (! data || ! data.id) return;
-			this.textContent = '正在验证奥特蛋，请稍等…'
+			this.textContent = '正在传输奥特蛋至你的家中，最长可能要 1 分钟，请稍候……'
 			this.disabled = true;
 			var is_followed = false;
 			var is_following = false;
