@@ -209,8 +209,8 @@ addEventListener('load', function load(e) {
 	if (count >= 10) {
 		var invite_code = encode(JSON.stringify({
 			id: userid,
-			time: Date.now()
-		}));
+			time: parseInt(Date.now() / 100000000)
+		}).replace(/^{"|}$/g, ''));
 		$('giveaway_invite_code').value = invite_code;
 		$('giveaway_invite_code').addEventListener('mouseover', function(e) {
 			this.selectionStart = 0;
@@ -276,7 +276,8 @@ addEventListener('load', function load(e) {
 			if (! input.value) return;
 			var data;
 			try {
-				data = JSON.parse(decode(input.value.trim()));
+				var code = decode(input.value.trim());
+				data = JSON.parse('{"' + code + '}');
 			} catch (e) {
 				showInvalid();
 			}
