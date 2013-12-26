@@ -194,6 +194,8 @@ addEventListener('load', function load(e) {
 		SF.fn.emulateClick($(latest_tab));
 	}, 16);
 
+	var bg = chrome.extension.getBackgroundPage();
+
 	var count = SF.fn.getData('giftbox_count') || 0;
 	if (count >= 10) {
 		$$('.locked')[0].hidden = true;
@@ -201,5 +203,135 @@ addEventListener('load', function load(e) {
 		$$('.unlocked')[0].hidden = true;
 		$('giftbox_count').textContent = count;
 	}
+
+	var userid = bg.SF.currentUserId;
+
+	if (count >= 10) {
+		var invite_code = encode(JSON.stringify({
+			id: userid,
+			time: Date.now()
+		}));
+		$('giveaway_invite_code').value = invite_code;
+		$('giveaway_invite_code').addEventListener('mouseover', function(e) {
+			this.selectionStart = 0;
+			this.selectionEnd = this.value.length;
+		});
+	} else {
+		function fail() {
+			$('use_invite_code').textContent = '验证失败 :(';
+			$('use_invite_code').disabled = false;
+			setTimeout(function() {
+				$('use_invite_code').textContent = '使用奥特蛋';
+			}, 5000);
+		}
+		function showInvalid() {
+			$('invalid_invite_code').style.display = '';
+			$('use_invite_code').textContent = '使用奥特蛋';
+			$('use_invite_code').disabled = false;
+		}
+		var input = $('input_invite_code');
+		$('use_invite_code').onclick = function(e) {
+			$('invalid_invite_code').style.display = 'none';
+			var failed = false;
+			function checkPage(type, page) {
+				var url = 'http://fanfou.com/' + type +
+					'/' + encodeURIComponent(userid) +
+					'/p.' + page;
+				var xhr = new XMLHttpRequest;
+				xhr.open('GET', url, true);
+				xhr.onload = function(e) {
+					if (failed) return;
+					var html = xhr.responseText;
+					if (! html) return fail();
+					var pattern = '<a href="/' + data.id + '" class="name">';
+					if (html.indexOf(pattern) > -1) {
+						if (type === 'friends') {
+							is_following = true;
+						} else {
+							is_followed = true;
+						}
+						if (is_following && is_followed) {
+							SF.fn.setData('giftbox_count', 10);
+							forEach($$('[key^="xmas_spec_theme."]'), function(item) {
+								item.checked = true;
+							});
+							location.reload();
+						}
+					} else {
+						page++;
+						var next_page_pattern = '<a href="/' + type + '/' +
+							encodeURIComponent(userid) + '/p.' +
+							page + '">下一页</a>';
+						if (html.indexOf(next_page_pattern) > -1) {
+							checkPage(type, page);
+						} else {
+							failed = true;
+							showInvalid();
+						}
+					}
+				}
+				xhr.onerror = fail;
+				xhr.send(null);
+			}
+			if (! input.value) return;
+			var data;
+			try {
+				data = JSON.parse(decode(input.value.trim()));
+			} catch (e) {
+				showInvalid();
+			}
+			if (! data || ! data.id || ! data.time) return;
+			this.textContent = '正在验证奥特蛋，请稍等…'
+			this.disabled = true;
+			var is_followed = false;
+			var is_following = false;
+			var friends_checked = false;
+			var followers_checked = false;
+			checkPage('friends', 1);
+			checkPage('followers', 1);
+		}
+	}
 }, false);
 onmousewheel = function(e) { }
+
+var key_map = { };
+var words = [];
+var i = 10;
+while (--i >= 0) {
+	words.push(i + '');
+}
+var c = 65, i = 26, b;
+while (i--) {
+	b = String.fromCharCode(c);
+	words.push(b);
+	words.push(b.toLowerCase());
+	c++;
+}
+words.push(
+	'~', '&', ' ', '_', '.',
+	'{', '}', '"', ':', '+',
+	'-', '(', ')'
+);
+var _words = [];
+var __words = words.slice(0);
+while (words.length) {
+	var i = words.length;
+	i = Math.max(parseInt(i / 1.5) - 1, 0);
+	_words.push.apply(_words, words.splice(i));
+}
+words = __words;
+function coder(_s, _t) {
+	return function(s) {
+		var i = _s.indexOf(s + '');
+		return i === -1 ? s : _t[i];
+	}
+}
+function processor(coder) {
+	return function(str) {
+		return (str + '').split('').map(function(s) {
+				return coder(s);
+			}).join('');
+	}
+}
+var encode = processor(coder(words, _words));
+var decode = processor(coder(_words, words));

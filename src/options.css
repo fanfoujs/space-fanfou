@@ -100,6 +100,9 @@ h3 {
 h4 {
 	font-size: 1.2em;
 }
+strong {
+	font-weight: bold;
+}
 .left {
 	float: left;
 }
@@ -234,6 +237,9 @@ input[type="checkbox"] {
 }
 input[type="number"] {
 	width: 45px;
+}
+input[type="text"] {
+	width: 300px;
 }
 select {
 	color: #555;

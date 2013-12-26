@@ -1,5 +1,5 @@
 SF.pl.xmas_spec_theme = new SF.plugin(function($) {
-	var end_date = new Date(2013, 11, 26);
+	var end_date = new Date(2014, 0, 1);
 	var now = Date.now();
 	if (now > end_date) {
 		return new SF.plugin;
@@ -102,6 +102,8 @@ SF.pl.xmas_spec_theme = new SF.plugin(function($) {
 	}
 
 	function initGiftBox() {
+		if (Date.now() > (new Date(2013, 11, 26)))
+			return;
 		var r = getRandomNumber(100);
 		var chance = SF.fn.getData('sf-giftbox-chance') || 0;
 		chance = Math.min(chance, 25);
@@ -766,9 +768,8 @@ SF.pl.xmas_spec_theme = new SF.plugin(function($) {
 		load: function() {
 			if (giftbox_collected < 10) {
 				initGiftBox();
-			} else {
-				initSpecTheme();
 			}
+			initSpecTheme();
 		}
 	}
 }(jQuery));

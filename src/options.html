@@ -222,6 +222,13 @@
 				<ul class="locked">
 					<h3>圣诞节特别主题</h3>
 					<li>你需要获得 10 个圣诞礼盒后才能解锁本主题，目前已经获得了 <span id="giftbox_count"></span> 个礼盒。<br />多刷刷饭否再来看看吧 (｡･ω･)ﾉﾞ</li>
+					<h3>使用奥特蛋解锁</h3>
+					<li>你还未解锁太空饭否圣诞特别主题，你可以从你已解锁特别主题的好友那里得到一个<strong>奥特蛋</strong>，即公开邀请码。注意，只有你和发放奥特蛋的人是互相关注的好友关系时，你才能使用他的奥特蛋。</li>
+					<li>
+						<input type="text" id="input_invite_code" placeholder="输入一个奥特蛋" />
+						<button id="use_invite_code">使用奥特蛋</button>
+					</li>
+					<li id="invalid_invite_code" style="display: none;">这个奥特蛋是无效的。</li>
 				</ul>
 				<ul class="unlocked">
 					<h3>圣诞节特别主题</h3>
@@ -230,7 +237,9 @@
 					<li><label><input type="checkbox" key="xmas_spec_theme.snowstorm" />赐予我在饭否上召唤雪景的能力吧！</label></li>
 					<li><label><input type="checkbox" key="xmas_spec_theme.song" />赐予我在饭否上召唤圣诞歌的能力吧！</label></li>
 					<li><label><input type="checkbox" key="xmas_spec_theme.hat" />赐予我给饭否好友戴上圣诞帽的能力吧！</label></li>
-					<li><label><input type="checkbox" disabled style="opacity: .5;" />赐予我一个奥特蛋！</label></li>
+					<h3>送出奥特蛋</h3>
+					<li>你已经解锁太空饭否圣诞特别主题，你可以把下面的<strong>奥特蛋</strong>，即公开邀请码，发送给你的好友，让他们能够解锁特别主题。注意，只有你和使用邀请码的人是互相关注的好友关系时，TA 才能使用你的邀请码。</li>
+					<li>送出你的奥特蛋 <input type="text" id="giveaway_invite_code" readonly /></li>
 				</ul>
 			</div>
 
