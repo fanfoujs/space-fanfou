@@ -194,6 +194,48 @@ addEventListener('load', function load(e) {
 		SF.fn.emulateClick($(latest_tab));
 	}, 16);
 
+	var key_map = { };
+	var words = [];
+	var i = 10;
+	while (--i >= 0) {
+		words.push(i + '');
+	}
+	var c = 65, i = 26, b;
+	while (i--) {
+		b = String.fromCharCode(c);
+		words.push(b);
+		words.push(b.toLowerCase());
+		c++;
+	}
+	words.push(
+		'~', '&', '_', '.', '{',
+		'}', '"', ':', '+', '-',
+		'(', ')', '%', '/', '='
+	);
+	var _words = [];
+	var __words = words.slice(0);
+	while (words.length) {
+		var i = words.length;
+		i = Math.max(parseInt(i / 1.5) - 1, 0);
+		_words.push.apply(_words, words.splice(i));
+	}
+	words = __words;
+	function coder(_s, _t) {
+		return function(s) {
+			var i = _s.indexOf(s + '');
+			return i === -1 ? s : _t[i];
+		}
+	}
+	function processor(coder) {
+		return function(str) {
+			return (str + '').split('').map(function(s) {
+					return coder(s);
+				}).join('');
+		}
+	}
+	var encode = processor(coder(words, _words));
+	var decode = processor(coder(_words, words));
+
 	var bg = chrome.extension.getBackgroundPage();
 
 	var count = SF.fn.getData('giftbox_count') || 0;
@@ -208,9 +250,8 @@ addEventListener('load', function load(e) {
 
 	if (count >= 10) {
 		var invite_code = JSON.stringify({
-			id: userid,
-			time: parseInt(Date.now() / 100000000)
-		}).replace(/^{"|}$/g, '');
+			id: userid
+		}).replace(/^{"|"}$/g, '');
 		invite_code = CryptoJS.enc.Utf8.parse(invite_code);
 		invite_code = CryptoJS.enc.Base64.stringify(invite_code);
 		invite_code = encode(invite_code);
@@ -281,11 +322,11 @@ addEventListener('load', function load(e) {
 			try {
 				var code = decode(input.value.trim());
 				code = CryptoJS.enc.Base64.parse(code).toString(CryptoJS.enc.Utf8);
-				data = JSON.parse('{"' + code + '}');
+				data = JSON.parse('{"' + code + '"}');
 			} catch (e) {
 				showInvalid();
 			}
-			if (! data || ! data.id || ! data.time) return;
+			if (! data || ! data.id) return;
 			this.textContent = '正在验证奥特蛋，请稍等…'
 			this.disabled = true;
 			var is_followed = false;
@@ -298,49 +339,6 @@ addEventListener('load', function load(e) {
 	}
 }, false);
 onmousewheel = function(e) { }
-
-var key_map = { };
-var words = [];
-var i = 10;
-while (--i >= 0) {
-	words.push(i + '');
-}
-var c = 65, i = 26, b;
-while (i--) {
-	b = String.fromCharCode(c);
-	words.push(b);
-	words.push(b.toLowerCase());
-	c++;
-}
-words.push(
-	'~', '&', ' ', '_', '.',
-	'{', '}', '"', ':', '+',
-	'-', '(', ')', '%', '/',
-	'='
-);
-var _words = [];
-var __words = words.slice(0);
-while (words.length) {
-	var i = words.length;
-	i = Math.max(parseInt(i / 1.5) - 1, 0);
-	_words.push.apply(_words, words.splice(i));
-}
-words = __words;
-function coder(_s, _t) {
-	return function(s) {
-		var i = _s.indexOf(s + '');
-		return i === -1 ? s : _t[i];
-	}
-}
-function processor(coder) {
-	return function(str) {
-		return (str + '').split('').map(function(s) {
-				return coder(s);
-			}).join('');
-	}
-}
-var encode = processor(coder(words, _words));
-var decode = processor(coder(_words, words));
 
 var CryptoJS=CryptoJS||function(h,o){var f={},j=f.lib={},k=j.Base=function(){function a(){}return{extend:function(b){a.prototype=this;var c=new a;b&&c.mixIn(b);c.$super=this;return c},create:function(){var a=this.extend();a.init.apply(a,arguments);return a},init:function(){},mixIn:function(a){for(var c in a)a.hasOwnProperty(c)&&(this[c]=a[c]);a.hasOwnProperty("toString")&&(this.toString=a.toString)},clone:function(){return this.$super.extend(this)}}}(),i=j.WordArray=k.extend({init:function(a,b){a=
 this.words=a||[];this.sigBytes=b!=o?b:4*a.length},toString:function(a){return(a||p).stringify(this)},concat:function(a){var b=this.words,c=a.words,d=this.sigBytes,a=a.sigBytes;this.clamp();if(d%4)for(var e=0;e<a;e++)b[d+e>>>2]|=(c[e>>>2]>>>24-8*(e%4)&255)<<24-8*((d+e)%4);else if(65535<c.length)for(e=0;e<a;e+=4)b[d+e>>>2]=c[e>>>2];else b.push.apply(b,c);this.sigBytes+=a;return this},clamp:function(){var a=this.words,b=this.sigBytes;a[b>>>2]&=4294967295<<32-8*(b%4);a.length=h.ceil(b/4)},clone:function(){var a=
