@@ -169,6 +169,7 @@ SF.pl.notification = new SF.plugin((function() {
 			}).
 			addEventListener('click', function(e) {
 				this.cancel();
+				hideAllNotifications();
 				createTab(web_url + path);
 			}, false);
 		});
