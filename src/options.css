@@ -100,9 +100,6 @@ h3 {
 h4 {
 	font-size: 1.2em;
 }
-strong {
-	font-weight: bold;
-}
 .left {
 	float: left;
 }
@@ -238,9 +235,6 @@ input[type="checkbox"] {
 input[type="number"] {
 	width: 45px;
 }
-input[type="text"] {
-	width: 300px;
-}
 select {
 	color: #555;
 }
@@ -329,9 +323,6 @@ select {
 		left: 120px;
 		max-width: 420px;
 		min-width: 420px;
-	}
-	#tabs ul {
-		max-width: 420px;
 	}
 	#tabs ul li {
 		padding: 3px 0;
@@ -658,7 +649,4 @@ body.uber-frame footer {
 	max-width: 638px;
 	min-width: 600px;
 	padding: 8px 0;
-}
-body.uber-frame #tabs4 footer {
-	margin-top: 0;
 }

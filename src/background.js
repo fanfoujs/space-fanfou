@@ -276,21 +276,6 @@ chrome.extension.onConnect.addListener(function(port) {
 			});
 		} else if (msg.type == 'openURL') {
 			createTab(msg.url);
-		} else if (msg.type == 'new_giftbox_collected') {
-			SF.fn.setData('giftbox_count', msg.count);
-		} else if (msg.type == 'ten_giftboxes_collected') {
-			triggerSpecialTheme();
-		} else if (msg.type == 'disable_setting') {
-			var old_settings = localStorage.settings;
-			var settings = JSON.parse(old_settings);
-			settings[msg.key] = false;
-			settings = JSON.stringify(settings);
-			localStorage.settings = settings;
-			updateSettings({
-				key: 'settings',
-				oldValue: old_settings,
-				newValue: settings
-			});
 		}
 	});
 	// 显示太空饭否图标
@@ -444,61 +429,3 @@ if (! SF.old_version) {
 		});
 	}, 1000);
 }
-
-function triggerSpecialTheme() {
-	SF.fn.setData('giftbox_count', 10);
-	var old_settings = localStorage.settings;
-	var settings = JSON.parse(old_settings);
-	[ 'snowstorm', 'song', 'hat' ].
-	forEach(function(item) {
-		settings['xmas_spec_theme.' + item] = true;
-	});
-	settings = JSON.stringify(settings);
-	localStorage.settings = settings;
-	updateSettings({
-		key: 'settings',
-		oldValue: old_settings,
-		newValue: settings
-	});
-}
-
-(function init() {
-	function retry() {
-		setTimeout(init, 60 * 1000);
-	}
-	if (Date.now() > (new Date(2013, 11, 26))) {
-		SF.fn.setData('giftbox_count', 10);
-		var old_settings = localStorage.settings;
-		var settings = JSON.parse(old_settings);
-		[ 'snowstorm', 'song', 'hat' ].
-		forEach(function(item) {
-			settings['xmas_spec_theme.' + item] = false;
-		});
-		settings = JSON.stringify(settings);
-		localStorage.settings = settings;
-		updateSettings({
-			key: 'settings',
-			oldValue: old_settings,
-			newValue: settings
-		});
-	}
-	var xhr = new XMLHttpRequest;
-	xhr.open('GET', 'http://m.fanfou.com/home', true);
-	xhr.onload = function(e) {
-		var html = xhr.responseText;
-		if (! xhr.status || ! html)
-			return retry();
-		var re = /<a href="\/([^"]+)"\s+accesskey="1">空间<\/a>/;
-		var result = html.match(re);
-		if (result) {
-			SF.currentUserId = decodeURIComponent(result[1]);
-		} else {
-			retry();
-		}
-	}
-	try {
-		xhr.send(null);
-	} catch (e) {
-		retry();
-	}
-})();

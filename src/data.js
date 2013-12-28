@@ -176,23 +176,6 @@ var plugins = [
 		options: [
 			'show_notification'
 		]
-	},
-
-	/* Xmas 2013 */
-
-	{
-		name: 'xmas_logo',
-		css: 'xmas_logo.css'
-	},
-	{
-		name: 'xmas_spec_theme',
-		js: 'xmas_spec_theme.js',
-		css: 'xmas_spec_theme.css',
-		options: [
-			'snowstorm',
-			'song',
-			'hat'
-		]
 	}
 
 ];
@@ -200,12 +183,6 @@ var plugins = [
 /* 历史记录 */
 
 var history = {
-	'0.8.8.3': [
-		'快去设置页看看你有没有拿到奥特蛋？'
-	],
-	'0.8.8.0': [
-		'2013 太空饭否圣诞特别主题 (详见设置页)'
-	],
 	'0.8.7.0': [
 		'修正 "Emoji 表情" 插件',
 		'修正 "自动检查关注的话题" 插件',
