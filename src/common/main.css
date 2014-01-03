@@ -1157,6 +1157,9 @@ a.bh:active {
 	letter-spacing: 0 !important;
 	text-indent: 0 !important;
 }
+.overlay-report {
+	z-index: 3 !important;
+}
 
 /* Simplified */
 @media (max-width: 775px) {
