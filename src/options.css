@@ -324,6 +324,9 @@ select {
 		max-width: 420px;
 		min-width: 420px;
 	}
+	#tabs ul {
+		max-width: 420px;
+	}
 	#tabs ul li {
 		padding: 3px 0;
 	}
@@ -642,11 +645,13 @@ input[type='radio'] {
 	margin-right: 5px;
 	margin-bottom: -1px;
 }
-
 body.uber-frame footer {
 	border-top: 1px solid #eee;
 	margin-top: 16px;
 	max-width: 638px;
 	min-width: 600px;
 	padding: 8px 0;
+}
+body.uber-frame #tabs3 footer {
+        margin-top: 0;
 }
