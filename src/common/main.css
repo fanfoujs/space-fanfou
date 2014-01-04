@@ -171,8 +171,40 @@
 }
 ::selection {
 	color: rgba(255, 255, 255, .85);
-	background: #53BAED;
+	background: rgba(83, 186, 237, .85);
 	text-shadow: none !important;
+}
+::-webkit-scrollbar {
+	background-color: rgba(255, 255, 255, .75);
+	border: 0;
+	width: 12px;
+	height: 12px;
+}
+::-webkit-scrollbar-track {
+	border: 0;
+	background-clip: padding-box;
+	background-color: transparent;
+}
+	::-webkit-scrollbar-track:hover {
+	}
+	::-webkit-scrollbar-track:active {
+	}
+::-webkit-scrollbar-thumb {
+	border: 0;
+	min-height: 24px;
+	padding-top: 100;
+	background-clip: padding-box;
+	background-color: rgba(0, 0, 0, .3);
+}
+	::-webkit-scrollbar-thumb:hover {
+		background-color: rgba(0, 0, 0, .4);
+	}
+	::-webkit-scrollbar-thumb:active {
+		background-color: rgba(0, 0, 0, .5);
+	}
+::-webkit-scrollbar-button {
+	width: 0;
+	height: 0;
 }
 
 /* Screen */
