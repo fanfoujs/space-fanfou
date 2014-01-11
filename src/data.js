@@ -147,6 +147,7 @@ var plugins = [
 	{
 		name: 'enrich_statuses',
 		js: 'enrich_statuses.js',
+		css: 'enrich_statuses.css',
 		earlyload: true
 	},
 

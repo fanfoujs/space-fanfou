@@ -3,6 +3,8 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 
 	var $stream;
 
+	var set_position_interval;
+
 	var short_url_re = /https?:\/\/(?:bit\.ly|goo\.gl|v\.gd|is\.gd|tinyurl\.com|to\.ly|yep\.it|j\.mp)\//;
 	var fanfou_url_re = /^http:\/\/(?:\S+\.)?fanfou\.com\//;
 
@@ -169,10 +171,35 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 				});
 			}
 
-			if (! isPhotoLink(url)) {
+			if (! isPhotoLink(url) && ! isMusicLink(url)) {
 				self.status = 'ignored';
 				SF.fn.setData('sf-url-' + url, self);
 				return;
+			}
+
+			var result = url.match(xiami_re);
+			if (result) {
+				var music_url = result[0];
+				self.data = {
+					type: 'music',
+					url: music_url,
+					id: music_url.match(/\d+$/)[0]
+				};
+				$.get(music_url, function(html) {
+					var re = /<img class="cdCDcover185" src="(\S+)" \/>/;
+					var cover_url = html.match(re)[1];
+					self.data.cover_url = cover_url;
+					self.data.cover_url_large = cover_url.replace(/_2\.jpg/, '.jpg');
+					getNaturalDimentions(cover_url, function(dimentions) {
+						self.cover_width = dimentions.width;
+						self.cover_height = dimentions.height;
+						self.status = 'completed';
+						SF.fn.setData('sf-url-' + self.url, self);
+						setTimeout(function() {
+							self.call();
+						});
+					});
+				});
 			}
 
 			var result = url.match(instagram_re);
@@ -350,8 +377,40 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 
 		function process($item, url_item) {
 			var data = url_item.data;
-			if (! data || $item.find('.photo').length)
+			if (! data) return;
+			if (data.type === 'music') {
+				if (data.url.indexOf('xiami.com') > -1) {
+					var id = data.id + '-' + Math.round(10000 * Math.random());
+					var code = '<embed src="http://www.xiami.com/widget/0_';
+					code += data.id + '/singlePlayer.swf" ';
+					code += 'type="application/x-shockwave-flash" ';
+					code += 'width="257" height="33" wmode="transparent"></embed>'
+					var $player = $('<span>');
+					$player.addClass('xiami-player');
+					$player.attr('player-id', id);
+					$player.attr('status', 'paused');
+					$player.mouseup(function() {
+						var status = $player.attr('status');
+						status = status === 'paused' ? 'playing' : 'paused';
+						$player.attr('status', status);
+					});
+					$player.append($(code));
+					$('body').append($player);
+					var $placeholder = $('<span>');
+					$placeholder.addClass('xiami-player-placeholder');
+					$placeholder.attr('player-id', id);
+					$item.find('.content').after($placeholder);
+					data = $.extend({ }, data);
+					data.type = 'photo';
+					data.large_url = data.cover_url_large;
+					data.thumbnail_url = data.cover_url;
+					data.width = data.cover_width;
+					data.height = data.cover_height;
+				}
+			}
+			if (data.type !== 'photo' || $item.find('.photo').length) {
 				return;
+			}
 			var width = data.width;
 			var height = data.height;
 			if (width > height) {
@@ -459,6 +518,18 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 				});
 		}
 
+		var xiami_re = /https?:\/\/(?:www\.)?xiami\.com\/song\/(\d+)/
+
+		var music_res = [
+			xiami_re
+		];
+
+		function isMusicLink(url) {
+			return music_res.some(function(re) {
+					return re.test(url);
+				});
+		}
+
 		return function($item) {
 			var $links = $('.content a', $item);
 			var urls = [].map.call($links, function(link) {
@@ -521,11 +592,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 
 		if (! $item || ! $item.length) return;
 
-		if (is_status_page) {
-		} else {
-			enrichStatus($item);
-		}
-
+		enrichStatus($item);
 		$item.attr('enriched', 'true');
 	}
 
@@ -534,6 +601,19 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 		if (e.key === 'short_url_services') {
 			cachedShortUrls = SF.fn.getData('short_url_services');
 		}
+	}
+
+	function setPlayerPosition() {
+		$('.xiami-player-placeholder').each(function() {
+			var $placeholder = $(this);
+			var id = $placeholder.attr('player-id');
+			var $player = $('.xiami-player[player-id="' + id + '"]');
+			var offset = $placeholder.offset();
+			$player.css({
+				left: offset.left + 'px',
+				top: offset.top + 'px'
+			});
+		});
 	}
 
 	initUrlExpand();
@@ -554,10 +634,12 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 				}
 				addEventListener('storage', onStorage, false);
 			});
+			set_position_interval = setInterval(setPlayerPosition, 100);
 		},
 		unload: function() {
 			observer.disconnect();
 			removeEventListener('storage', onStorage, false);
+			clearInterval(set_position_interval)
 		}
 	};
 })(Zepto));
