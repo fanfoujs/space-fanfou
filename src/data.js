@@ -144,6 +144,11 @@ var plugins = [
 		name: 'backup_avatar',
 		js: 'backup_avatar.js'
 	},
+	{
+		name: 'enrich_statuses',
+		js: 'enrich_statuses.js',
+		earlyload: true
+	},
 
 	/* 其他扩展 */
 

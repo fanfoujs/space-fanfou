@@ -4,7 +4,7 @@
 	},
 	"content_scripts": [ {
 		"css": [ "common/main.css" ],
-		"js": [ "namespace.js", "functions.js", "load.js" ],
+		"js": [ "zepto.min.js", "namespace.js", "functions.js", "load.js" ],
 		"matches": [ "http://fanfou.com/*" ],
 		"run_at": "document_start"
 	} ],
@@ -27,7 +27,7 @@
 		"default_title": "\u592a\u7a7a\u996d\u5426",
 		"default_popup": "options.html"
 	},
-	"permissions": [ "http://fanfou.com/*", "http://*.fanfou.com/*", "tabs", "notifications", "contextMenus" ],
+	"permissions": [ "*://*/", "tabs", "notifications", "contextMenus" ],
 	"content_security_policy": "script-src 'self'; object-src 'self'",
 	"version": "0.8.8.4",
 	"manifest_version": 2

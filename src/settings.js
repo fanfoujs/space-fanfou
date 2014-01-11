@@ -9,6 +9,7 @@ SF.st.default_settings = {
 				'expanding_replies.number': 3,
 				'expanding_replies.auto_expand': false,
 			auto_pager: true,
+			enrich_statuses: true,
 		/* 输入框 */
 			float_message: false,
 				'float_message.notlostfocus': false,
