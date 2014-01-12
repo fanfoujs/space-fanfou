@@ -399,7 +399,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 					var $placeholder = $('<span>');
 					$placeholder.addClass('xiami-player-placeholder');
 					$placeholder.attr('player-id', id);
-					$item.find('.content').after($placeholder);
+					$item.find('[href^="' + data.url + '"]').after($placeholder);
 					data = $.extend({ }, data);
 					data.type = 'photo';
 					data.large_url = data.cover_url_large;
@@ -604,15 +604,19 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 	}
 
 	function setPlayerPosition() {
-		$('.xiami-player-placeholder').each(function() {
-			var $placeholder = $(this);
-			var id = $placeholder.attr('player-id');
-			var $player = $('.xiami-player[player-id="' + id + '"]');
-			var offset = $placeholder.offset();
-			$player.css({
-				left: offset.left + 'px',
-				top: offset.top + 'px'
-			});
+		$('.xiami-player').each(function() {
+			var $player = $(this);
+			var id = $player.attr('player-id');
+			var $placeholder = $('.xiami-player-placeholder[player-id="' + id + '"]');
+			if (! $placeholder.length) {
+				$player.remove();
+			} else {
+				var offset = $placeholder.offset();
+				$player.css({
+					left: offset.left + 'px',
+					top: offset.top + 'px'
+				});
+			}
 		});
 	}
 
