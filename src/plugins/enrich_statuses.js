@@ -83,6 +83,8 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 	}
 
 	function setLink($link, url) {
+		var original_url = $link.prop('href');
+		$link.attr('original-url', original_url);
 		$link.prop('title', url);
 		$link.prop('href', url);
 		var display_url = url.replace(/^https?:\/\/(?:www\.)?/, '');
@@ -118,11 +120,11 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 		});
 	}
 
-	var cachedShortUrls = SF.fn.getData('cached_short_urls') || { };
+	var cached_short_urls = SF.fn.getData('cached_short_urls') || { };
 	function expandUrl(url, callback) {
-		if (cachedShortUrls[url]) {
+		if (cached_short_urls[url]) {
 			setTimeout(function() {
-				callback(cachedShortUrls[url]);
+				callback(cached_short_urls[url]);
 			});
 		} else {
 			$.ajax({
@@ -134,8 +136,8 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 				},
 				success: function(data) {
 					var long_url = data['long-url'];
-					cachedShortUrls[url] = long_url;
-					SF.fn.setData('cached_short_urls', cachedShortUrls);
+					cached_short_urls[url] = long_url;
+					SF.fn.setData('cached_short_urls', cached_short_urls);
 					callback(long_url);
 				}
 			});
@@ -599,7 +601,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 	function onStorage(e) {
 		if (e.oldValue == e.newValue) return;
 		if (e.key === 'short_url_services') {
-			cachedShortUrls = SF.fn.getData('short_url_services');
+			cached_short_urls = SF.fn.getData('short_url_services');
 		}
 	}
 
@@ -617,6 +619,35 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 					top: offset.top + 'px'
 				});
 			}
+		});
+	}
+
+	function revertLinks($textarea, links) {
+		var value = $textarea.val();
+		if (! value || ! value.trim().length)
+			return;
+		links.forEach(function(item) {
+			value = value.replace(item.expanded_url, item.original_url);
+		});
+		$textarea.val(value);
+		$textarea[0].selectionStart = $textarea[0].selectionEnd = 0;
+	}
+
+	function onRepost(e) {
+		var $status = $(e.target).parents('li');
+		var $links = $status.find('.content a[original-url]');
+		var links = [].map.call($links, function(link) {
+			var $link = $(link);
+			return {
+				original_url: $link.attr('original-url'),
+				expanded_url: $link.prop('href')
+			};
+		});
+		var $repost_textarea = $('#PopupForm textarea');
+		var $message_textarea = $('#message textarea');
+		setTimeout(function(){
+			revertLinks($repost_textarea, links);
+			revertLinks($message_textarea, links);
 		});
 	}
 
@@ -639,11 +670,13 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 				addEventListener('storage', onStorage, false);
 			});
 			set_position_interval = setInterval(setPlayerPosition, 100);
+			$('html').on('click', '.op .repost', onRepost);
 		},
 		unload: function() {
 			observer.disconnect();
 			removeEventListener('storage', onStorage, false);
 			clearInterval(set_position_interval)
+			$('html').off('click', '.op .repost', onRepost);
 		}
 	};
 })(Zepto));
