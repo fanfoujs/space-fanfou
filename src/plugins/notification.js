@@ -170,7 +170,23 @@ SF.pl.notification = new SF.plugin((function() {
 			addEventListener('click', function(e) {
 				this.cancel();
 				hideAllNotifications();
-				createTab(web_url + path);
+				var url = web_url + path;
+				chrome.tabs.query({
+					url: url
+				}, function(tabs) {
+					var tab = tabs[0];
+					if (tab && path !== 'home') {
+						chrome.tabs.update(tab.id, {
+							active: true
+						});
+						chrome.windows.update(tab.windowId, {
+							focused: true
+						});
+						chrome.tabs.reload(tab.id);
+					} else {
+						createTab(url);
+					}
+				})
 			}, false);
 		});
 	}
