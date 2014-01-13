@@ -118,7 +118,7 @@ port.onMessage.addListener(function(msg) {
 				}
 				load_code += plugin + '.load();';
 				load_code += '} catch(e) { ';
-				load_code += 'console.log("An error occurs while loading ' + plugin + '", e);';
+				load_code += 'console.log("An error occurs while loading ' + plugin + '", e, e.message);';
 				load_code += '}';
 				if (item.earlyload) {
 					eval(item.script);
