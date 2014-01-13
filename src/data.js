@@ -154,6 +154,11 @@ var plugins = [
 		name: 'hide_username',
 		css: 'hide_username.css'
 	},
+	{
+		name: 'replace_self_name',
+		js: 'replace_self_name.js',
+		earlyload: true
+	},
 
 	/* 其他扩展 */
 

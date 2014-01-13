@@ -37,6 +37,7 @@ SF.st.default_settings = {
 			remove_app_recom: true,
 				'remove_app_recom.completely_remove': false,
 			hide_username: false,
+			replace_self_name: false,
 		/* 字体 */
 			emoji: true,
 			font_reset_cn: false,
