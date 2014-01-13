@@ -150,6 +150,10 @@ var plugins = [
 		css: 'enrich_statuses.css',
 		earlyload: true
 	},
+	{
+		name: 'hide_username',
+		css: 'hide_username.css'
+	},
 
 	/* 其他扩展 */
 

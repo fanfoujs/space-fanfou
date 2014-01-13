@@ -36,6 +36,7 @@ SF.st.default_settings = {
 			clean_personal_theme: false,
 			remove_app_recom: true,
 				'remove_app_recom.completely_remove': false,
+			hide_username: false,
 		/* 字体 */
 			emoji: true,
 			font_reset_cn: false,
@@ -81,18 +82,6 @@ SF.st.settings = (function() {
 		else
 			settings[key] = local_settings[key];
 	}
-
-	[ 'check_saved_searchs', 'check_saved_searchs.show_notification' ].
-	forEach(function(key) {
-		if (local_settings[key] !== undefined) {
-			settings[key.replace('searchs', 'searches')] = local_settings[key];
-		}
-	});
-
-	[ 'user_switcher', 'advanced_sidebar', 'friendship_check' ].
-	forEach(function(key) {
-		settings[key] = true;
-	});
 
 	localStorage['settings'] = JSON.stringify(settings);
 
