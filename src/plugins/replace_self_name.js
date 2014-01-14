@@ -10,6 +10,10 @@ SF.pl.replace_self_name = new SF.plugin((function($) {
 		'margin-right: .3em;' +
 		'font-size: 14px;' +
 		'}'+
+		'.reply .author[href="/#escaped_id"]::after,' +
+		'.reply .content [href="http://fanfou.com/#id"]::after {' +
+		'font-size: 12px;' +
+		'}'+
 		'.author[href="/#id"]::after {' +
 		'float: left;' +
 		'text-decoration: underline;' +
