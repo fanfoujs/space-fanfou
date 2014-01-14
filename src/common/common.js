@@ -55,4 +55,52 @@
 		processPhotos();
 	})();
 
+	/* 输入框粘贴上传图片 */
+
+	(function() {
+		var $textarea = $('#phupdate textarea');
+		if (! $textarea.length) return;
+
+		function isImage(type) {
+			switch (type) {
+			case 'image/jpeg':
+			case 'image/png':
+			case 'image/gif':
+			case 'image/bmp':
+			case 'image/jpg':
+				return true;
+			default:
+				return false;
+			}
+		}
+
+		$(window).on('paste', function(e) {
+			var e = e.originalEvent;
+			var items = e.clipboardData.items;
+			if (! items.length) return;
+			var f, i = 0;
+			while (items[i]) {
+				f = items[i].getAsFile();
+				if (f && isImage(f.type)) {
+					break;
+				}
+				i++;
+			}
+			if (! f) return;
+			f.name = 'image-from-clipboard.' + f.type.replace('image/', '');
+
+			$('#upload-filename').text(f.name);
+			$('#message').attr('action', '/home/upload').attr('enctype', 'multipart/form-data');
+			$('#phupdate input[name="action"]').val('photo.upload');
+			$textarea.attr('name', 'desc');
+
+			var fr = new FileReader;
+			fr.onload = function(e) {
+				$('#upload-base64').val(fr.result);
+				$('#upload-wrapper').slideDown();
+			}
+			fr.readAsDataURL(f);
+		});
+	})();
+
 })(jQuery);
