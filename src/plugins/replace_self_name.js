@@ -1,10 +1,10 @@
 SF.pl.replace_self_name = new SF.plugin((function($) {
 	var $style = $('<style>');
-	var code = '.author[href="/#id"],' +
+	var code = '.author[href="/#escaped_id"],' +
 		'.content [href="http://fanfou.com/#id"] {' +
 		'font-size: 0;' +
 		'}' +
-		'.author[href="/#id"]::after,' +
+		'.author[href="/#escaped_id"]::after,' +
 		'.content [href="http://fanfou.com/#id"]::after {' +
 		'content: "我";' +
 		'margin-right: .3em;' +
@@ -22,7 +22,11 @@ SF.pl.replace_self_name = new SF.plugin((function($) {
 				return url = SF.fn.getMyPageURL();
 			}, function() {
 				var id = url.replace('http://fanfou.com/', '');
-				$style.text(code.replace(/#id/g, id));
+				var escaped_id = escape(id);
+				$style.text(
+					code.replace(/#id/g, id)
+						.replace(/#escaped_id/g, escaped_id)
+				);
 				$style.appendTo('head');
 				if (SF.fn.isMyPage()) {
 					var $h1;
@@ -35,7 +39,7 @@ SF.pl.replace_self_name = new SF.plugin((function($) {
 				} else if (SF.fn.isUserPage()) {
 					var $me;
 					SF.fn.waitFor(function() {
-						$me = $('#friends li a[href="/' + id + '"]');
+						$me = $('#friends li a[href="/' + escaped_id + '"]');
 						return $me.length;
 					}, function() {
 						$me.find('span').text('我');
