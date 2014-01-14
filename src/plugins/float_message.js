@@ -266,6 +266,14 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 			return false;
 		}
 	}
+	function onDrop(e) {
+		var $base64 = $('#upload-base64');
+		setTimeout(function() {
+			if ($base64.val()) {
+				$('#upload-filename, #ul_close').show();
+			}
+		}, 250);
+	}
 
 	/* 历史记录 */
 	// 历史记录不在禁用时关闭是为了已经加入的历史可以被正确处理
@@ -330,6 +338,8 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 			$msg.focus(onMsgFocus).click(onMsgClick).change(onMsgClick);
 			// 设置初始状态
 			pushState();
+			// 修正拖拽上传图片
+			$msg.on('drop', onDrop);
 		},
 		unload: function() {
 			// 取消悬浮
@@ -350,6 +360,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 			// 回退 AJAX 化提交
 			$form.unbind('submit', onFormSubmit);
 			$msg.unbind('keypress', onMsgKeypress);
+			$msg.off('drop', onDrop);
 			// 恢复原有事件
 			if (backup.msg_keyup)
 				$E.on($msg[0], 'keyup', backup.msg_keyup);
