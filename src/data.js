@@ -151,12 +151,13 @@ var plugins = [
 		earlyload: true
 	},
 	{
-		name: 'hide_username',
-		css: 'hide_username.css'
+		name: 'disguise_username',
+		css: 'disguise_username.js'
 	},
 	{
 		name: 'replace_self_name',
 		js: 'replace_self_name.js',
+		css: 'replace_self_name.css',
 		earlyload: true
 	},
 
