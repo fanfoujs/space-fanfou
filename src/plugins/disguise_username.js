@@ -9,6 +9,7 @@ SF.pl.disguise_username = new SF.plugin((function($) {
 		'}' +
 		'#user_top:first-child > h3::before {' +
 		'content: "#fake_name" !important;' +
+		'float: left;' +
 		'}' +
 		'#user_top:hover:first-child > h3 {' +
 		'font-size: 18px;' +
