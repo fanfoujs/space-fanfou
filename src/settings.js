@@ -36,7 +36,8 @@ SF.st.default_settings = {
 			clean_personal_theme: false,
 			remove_app_recom: true,
 				'remove_app_recom.completely_remove': false,
-			hide_username: false,
+			disguise_username: false,
+			'disguise_username.fake_name': '\u7565',
 			replace_self_name: false,
 		/* 字体 */
 			emoji: true,

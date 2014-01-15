@@ -152,7 +152,11 @@ var plugins = [
 	},
 	{
 		name: 'disguise_username',
-		css: 'disguise_username.js'
+		js: 'disguise_username.js',
+		earlyload: true,
+		options: [
+			'fake_name'
+		]
 	},
 	{
 		name: 'replace_self_name',

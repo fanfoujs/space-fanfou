@@ -7,17 +7,31 @@ function forEach(array, func, context) {
 
 document.addEventListener('DOMContentLoaded', function() {
 	function getValue($elem) {
-		if ($elem.type == 'checkbox')
-			return $elem.checked;
-		else
-			return $elem.tagName == 'SELECT' ?
-				$elem.value : JSON.parse($elem.value);
+		switch ($elem.type) {
+			case 'checkbox':
+				return $elem.checked;
+			case 'text':
+			case 'select':
+			case 'select-one':
+				return $elem.value;
+				break;
+			case 'number':
+				return JSON.parse($elem.value);
+		}
 	}
 	function setValue($elem, value) {
-		if ($elem.type == 'checkbox') {
-			if ($elem.checked !== value)
-				SF.fn.emulateClick($elem);
-		} else $elem.value = value;
+		switch ($elem.type) {
+			case 'checkbox':
+				if ($elem.checked !== value)
+					SF.fn.emulateClick($elem);
+				break;
+			case 'text':
+			case 'number':
+			case 'select':
+			case 'select-one':
+				$elem.value = value;
+				break;
+		}
 	}
 
 	var $foldables = $$('[foldable]');
