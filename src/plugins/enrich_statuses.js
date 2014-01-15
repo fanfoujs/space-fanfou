@@ -349,6 +349,33 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 				return;
 			}
 
+			var result = url.match(flickr_re);
+			if (result) {
+				$.get(url, function(html) {
+					var $html = $(html);
+					var large_code = $html.find('#share-options-embed-textarea-l-bbcode').text();
+					var result = large_code.match(/\[img\](\S+)\[\/img\]/);
+					var large_url = result && result[1];
+					var thumbnail_code = $html.find('#share-options-embed-textarea-t-bbcode').text();
+					var result = thumbnail_code.match(/\[img\](\S+)\[\/img\]/);
+					var thumbnail_url = result && result[1];
+					$html.length = 0;
+					$html = null;
+					if (large_url) {
+						loadImage({
+							url: self.url,
+							large_url: large_url,
+							thumbnail_url: thumbnail_url,
+							urlItem: self
+						});
+					} else {
+						self.status = 'ignored';
+						lscache.set('sf-url-' + url, self);
+					}
+				});
+				return;
+			}
+
 			var result = picture_re.test(url);
 			if (result) {
 				loadImage({
@@ -507,6 +534,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 		var imgly_re = /https?:\/\/img\.ly\//;
 		var lofter_re = /\.lofter\.com\/post\/[a-zA-Z0-9_]+/;
 		var fanfou_re = /https?:\/\/fanfou\.com\/photo\//;
+		var flickr_re = /https?:\/\/(?:www\.)?flickr\.com\/photos\//;
 		var picture_re = /\.(?:jpg|jpeg|png|gif|webp)(?:\??\S*)?$/i;
 
 		var photo_res = [
@@ -516,6 +544,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 			imgly_re,
 			lofter_re,
 			fanfou_re,
+			flickr_re,
 			picture_re
 		];
 
