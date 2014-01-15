@@ -97,6 +97,8 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 	function initUrlExpand() {
 		var short_url_services = SF.fn.getData('short_url_services');
 		if (short_url_services) {
+			// 识别更多短链接
+			short_url_services['[a-z0-9]{1,5}\.[a-z]{2,3}'] = true;
 			var re = '^https?:\\/\\/';
 			re += '(?:' + Object.keys(short_url_services).join('|') + ')';
 			re += '\\/\\S+';
