@@ -129,20 +129,35 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 				callback(cached_short_urls[url]);
 			});
 		} else {
-			$.ajax({
-				type: 'GET',
-				url: 'http://api.longurl.org/v2/expand',
-				data: {
-					url: url,
-					format: 'json'
-				},
-				success: function(data) {
-					var long_url = data['long-url'];
-					cached_short_urls[url] = long_url;
-					SF.fn.setData('cached_short_urls', cached_short_urls);
-					callback(long_url);
-				}
-			});
+			function cb(long_url) {
+				cached_short_urls[url] = long_url;
+				SF.fn.setData('cached_short_urls', cached_short_urls);
+				callback(long_url);
+			}
+			var is_gd_re = /https?:\/\/is\.gd\/([a-zA-Z0-9\-\_]+)/;
+			if (is_gd_re.test(url)) {
+				$.ajax({
+					type: 'GET',
+					url: 'http://is.gd/forward.php',
+					data: {
+						shorturl: url.match(is_gd_re)[1],
+						format: 'simple'
+					},
+					success: cb
+				});
+			} else {
+				$.ajax({
+					type: 'GET',
+					url: 'http://api.longurl.org/v2/expand',
+					data: {
+						url: url,
+						format: 'json'
+					},
+					success: function(data) {
+						cb(data['long-url']);
+					}
+				});
+			}
 		}
 	}
 
@@ -352,15 +367,26 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 			var result = url.match(flickr_re);
 			if (result) {
 				$.get(url, function(html) {
-					var $html = $(html);
-					var large_code = $html.find('#share-options-embed-textarea-l-bbcode').text();
-					var result = large_code.match(/\[img\](\S+)\[\/img\]/);
-					var large_url = result && result[1];
-					var thumbnail_code = $html.find('#share-options-embed-textarea-t-bbcode').text();
-					var result = thumbnail_code.match(/\[img\](\S+)\[\/img\]/);
-					var thumbnail_url = result && result[1];
-					$html.length = 0;
-					$html = null;
+					function createPhotoURL(size) {
+						var url;
+						if (size.secret) {
+							url = base_url.replace(/_.*\.jpg$/, '_' + size.secret + size.fileExtension + '.jpg');
+						} else {
+							url = base_url.replace(/\.jpg$/, size.fileExtension + '.jpg');
+						}
+						if (size.queryString) {
+							url += size.queryString;
+						}
+						return url;
+					}
+					var result = html.match(/baseURL: '(\S+)',/);
+					var base_url = result && result[1];
+					var result = html.match(/sizeMap: (\[[^\]]+\])/);
+					var size_map = result && JSON.parse(result[1]);
+					var size_t = size_map[0];
+					var size_l = size_map.reverse()[0];
+					var large_url = createPhotoURL(size_l);
+					var thumbnail_url = createPhotoURL(size_t);
 					if (large_url) {
 						loadImage({
 							url: self.url,
