@@ -455,11 +455,17 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 						$player.attr('status', status);
 					});
 					$player.append($(code));
-					$('body').append($player);
 					var $placeholder = $('<span>');
 					$placeholder.addClass('xiami-player-placeholder');
 					$placeholder.attr('player-id', id);
-					$item.find('[href^="' + data.url + '"]').after($placeholder);
+					var $music_link;
+					waitFor(function() {
+						$music_link = $item.find('[href^="' + data.url + '"]');
+						return $music_link.length;
+					}, function() {
+						$music_link.after($placeholder);
+						$('body').append($player);
+					});
 					data = $.extend({ }, data);
 					data.type = 'photo';
 					data.large_url = data.cover_url_large;
