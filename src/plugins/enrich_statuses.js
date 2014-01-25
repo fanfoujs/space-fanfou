@@ -3,6 +3,8 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 
 	var $stream;
 
+	var $temp = $('<div>');
+
 	var set_position_interval;
 
 	var short_url_re = /https?:\/\/(?:bit\.ly|goo\.gl|v\.gd|is\.gd|tinyurl\.com|to\.ly|yep\.it|j\.mp)\//;
@@ -143,7 +145,10 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 						shorturl: url.match(is_gd_re)[1],
 						format: 'simple'
 					},
-					success: cb
+					success: function(data) {
+						var url = $temp.html(data).text();
+						return cb(url);
+					}
 				});
 			} else {
 				$.ajax({
