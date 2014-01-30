@@ -6,6 +6,8 @@ SF.pl.friend_manage = new SF.plugin((function($) {
 	if (pageUrl.split('/').pop() != myPageUrl.split('/').pop())
 		return;
 
+	var token = $('[token]').attr('token');
+
 	var isFriend = $('.tabs li.current').is(':first-child');
 
 	var $li = $('#stream li');
@@ -24,29 +26,40 @@ SF.pl.friend_manage = new SF.plugin((function($) {
 		$todel.each(function() {
 			var $t = $(this);
 			var $post_act = $t.parent().find('a.post_act');
-			var data = {
-				action: isFriend ? 'friend.remove' : 'follower.remove',
-				token: $post_act.attr('token'),
-				ajax: 'yes',
-			};
-			if (isFriend) {
-				data.friend = $t.attr('userid');
-			} else {
-				data.follower = $t.attr('userid');
-			}
-			$.ajax({
-				type: 'POST',
-				url: location.href,
-				data: data,
-				dataType: 'json',
-				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-				success: function(data) {
-					if (data.status) {
-						FF.util.yFadeRemove($post_act.get(0), 'li');
-					} else {
-						alert(data.msg);
-					}
-				},
+			var _token = $post_act.attr('token');
+			waitFor(function() {
+				return _token = _token || token;
+			}, function() {
+				var data = {
+					action: isFriend ? 'friend.remove' : 'follower.remove',
+					token: _token,
+					ajax: 'yes',
+				};
+				if (isFriend) {
+					data.friend = $t.attr('userid');
+				} else {
+					data.follower = $t.attr('userid');
+				}
+				$.ajax({
+					type: 'POST',
+					url: location.href,
+					data: data,
+					dataType: 'json',
+					contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+					success: function(data) {
+						if (data.status) {
+							if (! $post_act.length) {
+								$post_act = $('<a>');
+								$post_act.attr('token', _token);
+								$post_act.hide();
+								$t.parent().find('.actions').append($post_act);
+							}
+							FF.util.yFadeRemove($post_act.get(0), 'li');
+						} else {
+							alert(data.msg);
+						}
+					},
+				});
 			});
 		});
 	});
@@ -73,6 +86,57 @@ SF.pl.friend_manage = new SF.plugin((function($) {
 			}
 		}
 	});
+
+	var waitFor = (function() {
+		var waiting_list = [];
+
+		var interval = 0;
+		var lock = false;
+		function setWaiting() {
+			if (interval) return;
+			interval = setInterval(function() {
+				if (lock) return;
+				lock = true;
+
+				var not_avail = 0;
+				for (var i = 0; i < waiting_list.length; ++i) {
+					var item = waiting_list[i];
+					if (item) {
+						if (item.checker()) {
+							item.worker();
+							waiting_list[i] = null;
+						} else {
+							++not_avail;
+						}
+					}
+				}
+
+				if (! not_avail) {
+					interval = 0 * clearInterval(interval);
+				}
+
+				lock = false;
+			}, 40);
+		}
+
+		return function(checker, worker) {
+			if (checker()) return worker();
+			waiting_list.push({ checker: checker, worker: worker });
+			setWaiting();
+		};
+	})();
+
+	if (! token) {
+		$.ajax({
+			url: '/home',
+			headers: {
+				'X-Requested-With': 'null'
+			},
+			success: function(html) {
+				token = html.match(/token="(\S+)"/)[1];
+			}
+		});
+	}
 
 	return {
 		load: function() {
