@@ -1,7 +1,6 @@
 SF.pl.auto_pager = new SF.plugin((function($) {
 	var browse = 'http://fanfou.com/browse';
-	if (location.href.indexOf(browse) === 0)
-		return;
+	if (location.href.indexOf(browse) === 0) return;
 	var $more = $('#pagination-more');
 	if (! $more.length) return;
 
@@ -20,12 +19,9 @@ SF.pl.auto_pager = new SF.plugin((function($) {
 	var onScroll = SF.fn.throttle(autoPager, 250);
 
 	function autoPager() {
-		if (! mousewheel_down)
-			return;
+		if (! mousewheel_down) return;
 		current_pos = body.scrollTop + docelem.clientHeight;
 		if (current_pos <= $more.offset().top - remain)
-			return;
-		if (current_pos >= body.clientHeight)
 			return;
 		if ($more.hasClass('loading'))
 			return;
