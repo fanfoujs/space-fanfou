@@ -55,6 +55,10 @@ SF.pl.friend_manage = new SF.plugin((function($) {
 								$t.parent().find('.actions').append($post_act);
 							}
 							FF.util.yFadeRemove($post_act.get(0), 'li');
+							var $count = $('.tabs ul li.current a');
+							var text = $count.text();
+							var count = +text.match(/\d+/)[0];
+							$count.text(text.replace(count, count - 1));
 						} else {
 							alert(data.msg);
 						}
