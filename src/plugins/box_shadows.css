@@ -1,9 +1,4 @@
-#navigation, #footer, #sign-up, #sign-in, #body {
+#navigation, #columns, #footer, #sign-up, #sign-in, #body {
 	border-radius: 10px;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
 }
- #columns {
-	box-shadow: 
-		0 2px 4px rgba(0, 0, 0, .2), 
-		0 -2px 5px rgba(255, 255, 255, .75) inset;
- }
