@@ -182,6 +182,11 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 			var url = this.longUrl || this.url;
 			this.status = 'loading';
 
+			function markAsIgnored() {
+				self.status = 'ignored';
+				SF.fn.setData('sf-url-' + self.url, self);
+			}
+
 			if (short_url_re.test(url)) {
 				expandUrl(url, function(long_url) {
 					self.longUrl = long_url;
@@ -196,12 +201,11 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 			}
 
 			if (! isPhotoLink(url) && ! isMusicLink(url)) {
-				self.status = 'ignored';
-				SF.fn.setData('sf-url-' + url, self);
+				markAsIgnored();
 				return;
 			}
 
-			var result = url.match(xiami_re);
+			var result = url.match(xiami_song_re);
 			if (result) {
 				var music_url = result[0];
 				self.data = {
@@ -211,19 +215,22 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 				};
 				$.get(music_url, function(html) {
 					var re = /<img class="cdCDcover185" src="(\S+)" \/>/;
-					var cover_url = html.match(re)[1];
-					self.data.cover_url = cover_url;
+					var cover_url = (html.match(re) || [])[1];
+					self.data.cover_url = cover_url || '';
 					self.data.cover_url_large = cover_url.replace(/_2\.jpg/, '.jpg');
-					getNaturalDimentions(cover_url, function(dimentions) {
-						self.cover_width = dimentions.width;
-						self.cover_height = dimentions.height;
-						self.status = 'completed';
-						SF.fn.setData('sf-url-' + self.url, self);
-						setTimeout(function() {
-							self.call();
+					if (cover_url) {
+						getNaturalDimentions(cover_url, function(dimentions) {
+							self.cover_width = dimentions.width;
+							self.cover_height = dimentions.height;
+							self.status = 'completed';
+							SF.fn.setData('sf-url-' + self.url, self);
+							setTimeout(function() {
+								self.call();
+							});
 						});
-					});
+					}
 				});
+				return;
 			}
 
 			var result = url.match(instagram_re);
@@ -233,13 +240,17 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 				image_url = image_url.replace('instagr.am', 'instagram.com');
 				$.get(original_url, function(html) {
 					var re = /<meta property="og:image" content="(\S+)" \/>/;
-					var large_url = html.match(re)[1];
-					loadImage({
-						url: self.url,
-						large_url: large_url,
-						thumbnail_url: image_url + '?size=t',
-						urlItem: self
-					});
+					var large_url = (html.match(re) || [])[1];
+					if (large_url) {
+						loadImage({
+							url: self.url,
+							large_url: large_url,
+							thumbnail_url: image_url + '?size=t',
+							urlItem: self
+						});
+					} else {
+						markAsIgnored();
+					}
 				});
 				return;
 			}
@@ -254,7 +265,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 					[].some.call($html.find('script'), function(script) {
 						var code = script.textContent;
 						if (code.indexOf('var mediaJson') > -1) {
-							code = code.match(/var mediaJson = ([^;]+);/)[1];
+							code = (code.match(/var mediaJson = ([^;]+);/) || [ null, '[]' ])[1];
 							var media_json = JSON.parse(code);
 							media_json.some(function(item) {
 								if (item.id === id) {
@@ -276,8 +287,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 							urlItem: self
 						});
 					} else {
-						self.status = 'ignored';
-						SF.fn.setData('sf-url-' + url, self);
+						markAsIgnored();
 					}
 				});
 				return;
@@ -299,28 +309,31 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 			if (result) {
 				$.get(url, function(html) {
 					var $html = $(html);
-					var full_url = $html.find('#button-fullview a').attr('href');
+					var full_url = $html.find('#button-fullview a').attr('href') || '';
 					$html.length = 0;
 					$html = null;
-					if (! /^http/.test(full_url)) {
-						full_url = 'http://img.ly' + full_url;
-					}
-					$.get(full_url, function(html) {
-						var $html = $(html);
-						var large_url = $html.find('#image-full img').attr('src');
-						$html.length = 0;
-						$html = null;
-						if (large_url) {
-							loadImage({
-								url: self.url,
-								large_url: large_url,
-								urlItem: self
-							});
-						} else {
-							self.status = 'ignored';
-							SF.fn.setData('sf-url-' + url, self);
+					if (full_url) {
+						if (! /^http/.test(full_url)) {
+							full_url = 'http://img.ly' + full_url;
 						}
-					})
+						$.get(full_url, function(html) {
+							var $html = $(html);
+							var large_url = $html.find('#image-full img').attr('src');
+							$html.length = 0;
+							$html = null;
+							if (large_url) {
+								loadImage({
+									url: self.url,
+									large_url: large_url,
+									urlItem: self
+								});
+							} else {
+								markAsIgnored();
+							}
+						});
+					} else {
+						markAsIgnored();
+					}
 				});
 				return;
 			}
@@ -339,8 +352,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 							urlItem: self
 						});
 					} else {
-						self.status = 'ignored';
-						SF.fn.setData('sf-url-' + url, self);
+						markAsIgnored();
 					}
 				});
 				return;
@@ -350,7 +362,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 			if (result) {
 				$.get(url, function(html) {
 					var $html = $(html);
-					var large_url = $html.find('#photo img').attr('src');
+					var large_url = $html.find('#photo img').attr('src') || '';
 					var thumbnail_url = large_url.replace('/n0/', '/m0/');
 					$html.length = 0;
 					$html = null;
@@ -362,8 +374,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 							urlItem: self
 						});
 					} else {
-						self.status = 'ignored';
-						SF.fn.setData('sf-url-' + url, self);
+						markAsIgnored();
 					}
 				});
 				return;
@@ -388,10 +399,12 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 					var base_url = result && result[1];
 					var result = html.match(/sizeMap: (\[[^\]]+\])/);
 					var size_map = result && JSON.parse(result[1]);
-					var size_t = size_map[0];
-					var size_l = size_map.reverse()[0];
-					var large_url = createPhotoURL(size_l);
-					var thumbnail_url = createPhotoURL(size_t);
+					if (size_map) {
+						var size_t = size_map[0];
+						var size_l = size_map.reverse()[0];
+						var large_url = createPhotoURL(size_l);
+						var thumbnail_url = createPhotoURL(size_t);
+					}
 					if (large_url) {
 						loadImage({
 							url: self.url,
@@ -400,8 +413,51 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 							urlItem: self
 						});
 					} else {
-						self.status = 'ignored';
-						lscache.set('sf-url-' + url, self);
+						markAsIgnored();
+					}
+				});
+				return;
+			}
+
+			var result = url.match(xiami_album_re);
+			if (result) {
+				var album_url = result[0];
+				$.get(album_url, function(html) {
+					var re = /<img class="cdCover185"\s+src="(\S+)"\s+rel="v:photo"\s+alt="/;
+					var cover_url = (html.match(re) || [])[1] || '';
+					var cover_url_large = cover_url.replace(/_2\.jpg/, '.jpg');
+					if (cover_url_large) {
+						loadImage({
+							url: self.url,
+							large_url: cover_url_large,
+							thumbnail_url: cover_url,
+							urlItem: self
+						});
+					} else {
+						markAsIgnored();
+					}
+				});
+				return;
+			}
+
+			var result = url.match(xiami_collection_re);
+			if (result) {
+				var collection_url = result[0];
+				$.get(collection_url, function(html) {
+					var $html = $(html);
+					var cover_url = $html.find('#cover_logo .bigImgCover img').attr('src') || '';
+					var cover_url_large = $html.find('#cover_logo .bigImgCover').attr('href') || '';
+					$html.length = 0;
+					$html = null;
+					if (cover_url_large) {
+						loadImage({
+							url: self.url,
+							large_url: cover_url_large,
+							thumbnail_url: cover_url,
+							urlItem: self
+						});
+					} else {
+						markAsIgnored();
 					}
 				});
 				return;
@@ -572,6 +628,8 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 		var lofter_re = /\.lofter\.com\/post\/[a-zA-Z0-9_]+/;
 		var fanfou_re = /https?:\/\/fanfou\.com\/photo\//;
 		var flickr_re = /https?:\/\/(?:www\.)?flickr\.com\/photos\//;
+		var xiami_album_re = /https?:\/\/(?:www\.)?xiami\.com\/album\/(\d+)/;
+		var xiami_collection_re = /https?:\/\/(?:www\.)?xiami\.com\/song\/showcollect\/id\/(\d+)/;
 		var picture_re = /\.(?:jpg|jpeg|png|gif|webp)(?:\??\S*)?$/i;
 
 		var photo_res = [
@@ -582,6 +640,8 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 			lofter_re,
 			fanfou_re,
 			flickr_re,
+			xiami_album_re,
+			xiami_collection_re,
 			picture_re
 		];
 
@@ -591,10 +651,10 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 				});
 		}
 
-		var xiami_re = /https?:\/\/(?:www\.)?xiami\.com\/song\/(\d+)/
+		var xiami_song_re = /https?:\/\/(?:www\.)?xiami\.com\/song\/(\d+)/;
 
 		var music_res = [
-			xiami_re
+			xiami_song_re
 		];
 
 		function isMusicLink(url) {
