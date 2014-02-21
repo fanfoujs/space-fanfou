@@ -14,7 +14,7 @@ SF.st.default_settings = {
 			float_message: false,
 				'float_message.notlostfocus': false,
 				'float_message.keepmentions': false,
-			disable_autocomplete: false,
+			disable_autocomplete: true,
 				'disable_autocomplete.sf_autocomplete': true,
 		/* 侧栏 */
 			fav_friends: false,
