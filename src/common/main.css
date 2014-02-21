@@ -666,20 +666,20 @@ p.pm-parent {
 	background: rgba(255, 255, 255, .4) !important;
 	-webkit-animation: jumpIn ease-in-out .7s;
 }
-	#sidebar .tags a:nth-of-type(1) {
-		-webkit-animation-delay: 0;
-	}
-	#sidebar .tags a:nth-of-type(2) {
-		-webkit-animation-delay: .3s;
-	}
-	#sidebar .tags a:nth-of-type(3) {
-		-webkit-animation-delay: .6s;
-	}
-	#sidebar .tags a:hover,
-	#sidebar .tags a:active {
-		border: 1px solid rgba(0, 0, 0, .5) !important;
-		background: rgba(255, 255, 255, .75) !important;
-	}
+#sidebar .tags a:nth-of-type(1) {
+	-webkit-animation-delay: 0;
+}
+#sidebar .tags a:nth-of-type(2) {
+	-webkit-animation-delay: .3s;
+}
+#sidebar .tags a:nth-of-type(3) {
+	-webkit-animation-delay: .6s;
+}
+#sidebar .tags a:hover,
+#sidebar .tags a:active {
+	border: 1px solid rgba(0, 0, 0, .5) !important;
+	background: rgba(255, 255, 255, .75) !important;
+}
 #sidebar .stabs li a .count {
 	font-weight: normal !important;
 }
