@@ -433,8 +433,6 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 							thumbnail_url: cover_url,
 							urlItem: self
 						});
-					} else {
-						markAsIgnored();
 					}
 				});
 				return;
@@ -456,8 +454,6 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 							thumbnail_url: cover_url,
 							urlItem: self
 						});
-					} else {
-						markAsIgnored();
 					}
 				});
 				return;
@@ -498,9 +494,6 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 			if (! data) return;
 			if (data.type === 'music') {
 				if (data.url.indexOf('xiami.com') > -1) {
-					var $existing_players = $item.find('.xiami-player-placeholder');
-					var $same_player = $existing_players.filter('[player-id^="' + data.id + '-"');
-					if ($same_player.length) return;
 					var id = data.id + '-' + Math.round(10000 * Math.random());
 					var code = '<embed src="http://www.xiami.com/widget/0_';
 					code += data.id + '/singlePlayer.swf" ';
@@ -526,6 +519,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 					}, function() {
 						$music_link.after($placeholder);
 						$('body').append($player);
+						removeRepeatingPlayers($item);
 					});
 					data = $.extend({ }, data);
 					data.type = 'photo';
@@ -734,6 +728,21 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 		if (e.key === 'short_url_services') {
 			cached_short_urls = SF.fn.getData('short_url_services');
 		}
+	}
+
+	function removeRepeatingPlayers($item) {
+		$item.find('.xiami-player-placeholder + .xiami-player-placeholder').remove();
+		var $players = $item.find('.xiami-player-placeholder');
+		var ids = [];
+		$players.each(function() {
+			var $player = $(this);
+			var id = $player.attr('player-id').split('-')[0];
+			if (ids.indexOf(id) === -1) {
+				ids.push(id);
+			} else {
+				$player.remove();
+			}
+		});
 	}
 
 	function setPlayerPosition() {
