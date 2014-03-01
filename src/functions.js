@@ -177,8 +177,34 @@ SF.fn.waitFor(function() {
 }, function() {
 	var body = document.body;
 	var s = 0;
-	var current;
-	SF.fn.goTop = function(e) {
+	var current, id;
+	var stop = function() { };
+	SF.fn.goTop = window.requestAnimationFrame ? function(e) {
+		stop();
+		stop = function() {
+			stop = function() { };
+			cancelAnimationFrame(id);
+		}
+		if (e) {
+			e.preventDefault && e.preventDefault();
+			s = body.scrollTop;
+		}
+		var breakpoint;
+		id = requestAnimationFrame(function(timestamp) {
+			if (breakpoint) {
+				current = body.scrollTop;
+				if (s != current) {
+					return stop();
+				}
+				var to = Math.floor(s / 1.15);
+				scrollTo(0, (s = to));
+			}
+			if (s >= 1 || ! breakpoint) {
+				breakpoint = timestamp;
+				id = requestAnimationFrame(arguments.callee);
+			};
+		});
+	} : function(e) {
 		if (e) {
 			e.preventDefault();
 			s = body.scrollTop;
@@ -186,9 +212,9 @@ SF.fn.waitFor(function() {
 		current = body.scrollTop;
 		if (s != current) return;
 		var to = Math.floor(s / 1.15);
-		window.scrollTo(0, (s = to));
+		scrollTo(0, (s = to));
 		if (s >= 1) setTimeout(SF.fn.goTop, 24);
-	}
+	};
 });
 
 SF.fn.getData = function(key) {
