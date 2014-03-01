@@ -320,7 +320,10 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 			// 添加悬浮
 			SF.fn.scrollHandler.addListener(onWinScroll);
 			// 清理按钮事件
-			var $items = $('>li', '.wa');
+			var $items = $('>li', '#stream ol.wa');
+			if (! $items.length) {
+				var $items = $('>li', '#stream ol.self');
+			}
 			$('>span.op>a.reply', $items).die('click');
 			$('>span.op>a.repost', $items).die('click');
 			$popup.detach();
