@@ -89,7 +89,8 @@
 			if (! f) return;
 			f.name = 'image-from-clipboard.' + f.type.replace('image/', '');
 
-			$('#upload-filename').text(f.name);
+			$('#upload-filename').text(f.name).show();
+			$('#ul_close').show();
 			$('#message').attr('action', '/home/upload').attr('enctype', 'multipart/form-data');
 			$('#phupdate input[name="action"]').val('photo.upload');
 			$textarea.attr('name', 'desc');
