@@ -48,13 +48,13 @@ function showNotification(options) {
 		clearTimeout(notification.timeout);
 		hideNotification(notification);
 	}, false);
-	notification.addEventListener('display', playSound, false);
+	notification.addEventListener('show', playSound, false);
 
 	notification.show();
 	notifications.push(notification);
 
 	if (options.timeout !== false) {
-		notification.addEventListener('display', function() {
+		notification.addEventListener('show', function() {
 			notification.timeout = setTimeout(function() {
 				hideNotification(notification);
 			}, options.timeout || 30000);

@@ -21,7 +21,7 @@ SF.pl.notification = new SF.plugin((function() {
 
 	var timer = {
 		interval: null,
-		setup: function() {
+		reset: function() {
 			this.cancel();
 			this.interval = setInterval(check, period);
 		},
@@ -55,6 +55,7 @@ SF.pl.notification = new SF.plugin((function() {
 	}
 
 	function check() {
+		timer.reset();
 		abort();
 		xhr.open('GET', wap_url, true);
 		xhr.onload = onload;
@@ -169,6 +170,7 @@ SF.pl.notification = new SF.plugin((function() {
 			}).
 			addEventListener('click', function(e) {
 				this.cancel();
+				setTimeout(check, 2500);
 				hideAllNotifications();
 				var url = web_url + path;
 				chrome.tabs.query({
@@ -218,7 +220,7 @@ SF.pl.notification = new SF.plugin((function() {
 			}
 		}
 		if (notifyonmentioned || notifyonsentmessage || notifyonfollowed) {
-			timer.setup();
+			timer.reset();
 			check();
 		}
 	}
