@@ -20,15 +20,18 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 		$update.removeClass('float-message');
 		$main.css('padding-top', main_padtop);
 	}
+	var is_floating;
 	function onWinScroll() {
-		if ($update.hasClass('float-message')) {
+		if (is_floating) {
 			if ($win.scrollTop() <= ud_top) {
+				is_floating = false;
 				resetFloat();
 				if ($msg.not(':focus') && $(':focus').is(':not(:input)'))
 					$msg.focus();
 			}
 		} else {
 			if ($win.scrollTop() > ud_top) {
+				is_floating = true;
 				$update.addClass('float-message');
 				$main.css('padding-top',
 						  $update.outerHeight() + parseInt(main_padtop) +
@@ -338,6 +341,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 			interval = setInterval(onInterval, 50);
 			$msg.focus(onMsgFocus).click(onMsgClick).change(onMsgClick);
 			// 设置初始状态
+			is_floating = false;
 			pushState();
 			// 修正拖拽上传图片
 			$msg.on('drop', onDrop);
