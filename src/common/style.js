@@ -112,7 +112,7 @@
 					showTotop();
 			}, 500);
 
-			$win.scroll(function() {
+			SF.fn.scrollHandler.addListener(function() {
 				hideTotop();
 				onscroll();
 			});

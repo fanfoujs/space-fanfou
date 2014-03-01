@@ -307,6 +307,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 		$act.css('display', 'block');
 	}
 
+
 	return {
 		update: function(is_notlostfocus, is_keepmentions) {
 			notlostfocus = is_notlostfocus;
@@ -314,7 +315,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 		},
 		load: function() {
 			// 添加悬浮
-			$win.scroll(onWinScroll);
+			SF.fn.scrollHandler.addListener(onWinScroll);
 			// 清理按钮事件
 			var $items = $('>li', '.wa');
 			$('>span.op>a.reply', $items).die('click');
@@ -343,7 +344,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 		},
 		unload: function() {
 			// 取消悬浮
-			$win.unbind('scroll', onWinScroll);
+			SF.fn.scrollHandler.removeListener(onWinScroll);
 			resetFloat();
 			// 清除绑定的事件
 			var $items = $('>li', '.wa');

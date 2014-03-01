@@ -118,6 +118,63 @@ SF.fn.throttle = function(func, delay) {
 SF.fn.waitFor(function() {
 	return document.body;
 }, function() {
+	SF.fn.scrollHandler = (function() {
+		function ScrollHandler(elem) {
+			this.elem = elem;
+			this._listeners = [];
+			this._interval = null;
+			this.start();
+		}
+
+		ScrollHandler.prototype = {
+			addListener: function(listener) {
+				if (this._listeners.indexOf(listener) === -1) {
+					this._listeners.push(listener);
+				}
+			},
+			removeListener: function(listener) {
+				var index = this._listeners.indexOf(listener);
+				if (index > -1) {
+					this._listeners.splice(index, 1);
+				}
+			},
+			start: function() {
+				this._interval = setInterval(this._check.bind(this), 100);
+			},
+			stop: function() {
+				clearInterval(this._interval);
+				this.interval = null;
+			},
+			_call: function() {
+				var elem = this.elem;
+				this._listeners.forEach(function(listener) {
+					listener.call(elem);
+				});
+			},
+			_check: function() {
+				var is_scrolled = false;
+				var scroll_top = this.elem.scrollTop;
+				var scroll_left = this.elem.scrollLeft;
+				if (scroll_top !== this.scrollTop) {
+					is_scrolled = true;
+				} else if (scroll_left !== this.scrollLeft) {
+					is_scrolled = true;
+				}
+				this.scrollTop = scroll_top;
+				this.scrollLeft = scroll_left;
+				if (is_scrolled) {
+					this._call();
+				}
+			}
+		};
+
+		return new ScrollHandler(document.body);
+	})();
+});
+
+SF.fn.waitFor(function() {
+	return document.body;
+}, function() {
 	var body = document.body;
 	var s = 0;
 	var current;

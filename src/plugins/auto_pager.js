@@ -57,14 +57,14 @@ SF.pl.auto_pager = new SF.plugin((function($) {
 		if (is_loaded) return;
 		is_loaded = true;
 
-		$win.bind('scroll', onScroll);
+		SF.fn.scrollHandler.addListener(onScroll);
 	}
 
 	function unload() {
 		if (! is_loaded) return;
 		is_loaded = false;
 
-		$win.unbind('scroll', onScroll);
+		SF.fn.scrollHandler.removeListener(onScroll);
 	}
 
 	return {

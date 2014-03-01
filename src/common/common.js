@@ -10,7 +10,7 @@
 		var pos = $textarea.offset().top + textarea.offsetHeight;
 		$textarea = null;
 		var focused = true;
-		addEventListener('scroll', SF.fn.throttle(function(e) {
+		SF.fn.scrollHandler.addListener(SF.fn.throttle(function() {
 			if (body.scrollTop > pos) {
 				focused && textarea.blur();
 				focused = false;
@@ -18,7 +18,7 @@
 				focused || textarea.focus();
 				focused = true;
 			}
-		}, 250), false);
+		}, 250));
 	})();
 
 	/* 修正放大图片时图片加载延迟的 bug */
