@@ -47,13 +47,13 @@ SF.pl.restoring_state = new SF.plugin((function($) {
 			init();
 			observer.observe($stream[0], { childList: true, subtree: true });
 			$form.on('submit', onSubmit);
-			SF.fn.scrollHandler.addListener(onWinScroll);
+			SF.fn.scrollHandler.addListener(onScroll);
 		},
 		unload: function() {
 			storage.value = '';
 			observer.disconnect();
 			$form.off('submit', onSubmit);
-			SF.fn.scrollHandler.removeListener(onWinScroll);
+			SF.fn.scrollHandler.removeListener(onScroll);
 		}
 	};
 })(jQuery));
