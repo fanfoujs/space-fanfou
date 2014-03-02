@@ -39,7 +39,7 @@
 				$img[0].onclick = function(e) {
 					var width = $img.width();
 					var height = $img.height();
-					if (width / height > 3 || height / width > 3) {
+					if (height / width > 3) {
 						e.stopImmediatePropagation();
 						e.preventDefault();
 						SF.fn.openURL(location.origin + $img.parent().attr('name'));
