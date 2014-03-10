@@ -49,8 +49,8 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 	function showBufferedStatuses() {
 		setTimeout(function() {
 			$('#stream li.buffered').removeClass('buffered');
-			$('.last-refresh').removeClass('last-refresh');
-			if ($last_refresh) {
+			if ($last_refresh && $last_refresh.length) {
+				$('.last-refresh').removeClass('last-refresh');
 				$last_refresh.addClass('last-refresh').removeAttr('last-refresh');
 			}
 			$last_refresh = null;
@@ -98,6 +98,9 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 				} else {
 					spans = content.substring(stamp_pos);
 					content = content.substring(0, stamp_pos);
+					if (content.indexOf('<span class="content">') === -1) {
+						content = '<span class="content">' + content + '</span>';
+					}
 					spans = spans.replace('redirect="/home" ', '');
 					avail = true;
 				}
@@ -106,8 +109,7 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 			if (avail) {
 				$li.attr('expended', 'expended');
 				$li.addClass('reply unlight');
-				$li.html(avatar + author +
-					'<span class="content">' + content + '</span>' + spans);
+				$li.html(avatar + author + content + spans);
 				FF.app.Stream.attach($li[0]);
 				if (content.indexOf('<img '))
 					FF.app.Zoom.init($li[0]);
