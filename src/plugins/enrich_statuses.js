@@ -723,8 +723,6 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 		if (! $item.is('li')) return;
 		if ($item.attr('enriched') == 'true') return;
 
-		if (! $item || ! $item.length) return;
-
 		enrichStatus($item);
 		$item.attr('enriched', 'true');
 	}
