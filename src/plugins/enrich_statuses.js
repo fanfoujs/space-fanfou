@@ -551,6 +551,12 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 			var thumb_height = Math.round(height) + 'px';
 			var $content = $item.find('.content');
 			if (! $content.length) return;
+			if (data.large_url) {
+				data.large_url = data.large_url.replace(/#\S*$/, '');
+			}
+			if (data.thumbnail_url) {
+				data.thumbnail_url = data.thumbnail_url.replace(/#\S*$/, '');
+			}
 			var $a = $('<a>');
 			$a.addClass('photo zoom');
 			$a.prop('href', data.large_url || data.thumbnail_url);
