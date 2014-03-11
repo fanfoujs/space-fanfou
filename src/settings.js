@@ -49,6 +49,7 @@ SF.st.default_settings = {
 			translucent_sidebar: true,
 			box_shadows: false,
 			logo_remove_beta: true,
+			rescale_background: true,
 		/* 更多设置 */
 			newstyle_trendlist: true,
 			newstyle_op_icons: true,

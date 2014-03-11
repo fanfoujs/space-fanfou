@@ -52,6 +52,11 @@ var plugins = [
 		js: 'emoji.js',
 		css: 'emoji.css'
 	},
+	{
+		name: 'rescale_background',
+		js: 'rescale_background.js',
+		earlyload: true
+	},
 
 	/* 页面功能性扩展 */
 
