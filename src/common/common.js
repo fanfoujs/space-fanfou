@@ -146,6 +146,9 @@
 			if (content.indexOf('\n') === -1) return;
 			var $photo = $content.find('.photo');
 			content = content.replace(/\n\s*/g, '<br />');
+			if (content.indexOf('<br />') !== 0) {
+				content = '<br />' + content;
+			}
 			$content.html(content);
 			$content.find('.photo').replaceWith($photo);
 		}
