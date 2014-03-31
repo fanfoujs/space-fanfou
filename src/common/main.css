@@ -516,6 +516,9 @@
 	border-bottom-color: rgba(0, 0, 0, .12) !important;
 	border-bottom-style: solid !important;
 }
+#requests h2 {
+	width: 500px;
+}
 #stream h3, #stream li {
 	border-bottom-color: rgba(0, 0, 0, .12) !important;
 	border-bottom-style: solid !important;
