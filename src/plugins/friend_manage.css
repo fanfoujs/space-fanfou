@@ -6,6 +6,17 @@
 	right: 5px;
 	bottom: 17px;
 }
+#requests #stream>ol>li>input[type=checkbox][userid] {
+	bottom: 15px;
+}
+#requests h2 {
+	position: relative;
+}
+#requests .batch-manage.requests {
+	position: absolute;
+	right: 0;
+	bottom: 5px;
+}
 #friends>.batch-manage.friends {
 	float: right;
 	margin-top: -27px;
