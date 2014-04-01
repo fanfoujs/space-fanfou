@@ -45,6 +45,22 @@ SF.pl.notification = new SF.plugin((function() {
 		}
 	})();
 
+	function onUpdated(tab_id, change_info) {
+		if (! change_info || ! change_info.url)
+			return;
+		for (var item in options) {
+			var url = web_url + options[item][0];
+			if (change_info.url === url) {
+				notifications.some(function(n) {
+					if (n.id === item) {
+						n.cancel();
+						return true;
+					}
+				});
+			}
+		}
+	}
+
 	function getUpdates() {
 		if (! updates) return;
 		if (updates.length === 1)
@@ -197,6 +213,8 @@ SF.pl.notification = new SF.plugin((function() {
 		if (notdisturb)
 			chrome.tabs.onActivated.addListener(onActivated);
 
+		chrome.tabs.onUpdated.addListener(onUpdated);
+
 		if (notifyonupdated && SF.updated) {
 			var updated_items = getUpdates();
 			if (updated_items) {
@@ -231,6 +249,7 @@ SF.pl.notification = new SF.plugin((function() {
 		reset();
 		hideAllNotifications();
 		chrome.tabs.onActivated.removeListener(onActivated);
+		chrome.tabs.onUpdated.removeListener(onUpdated);
 	}
 
 	return {
