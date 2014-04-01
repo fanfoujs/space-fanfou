@@ -146,7 +146,8 @@
 			if (content.indexOf('\n') === -1) return;
 			var $photo = $content.find('.photo');
 			content = content.replace(/\n\s*/g, '<br />');
-			if (content.indexOf('<br />') !== 0) {
+			if (content.indexOf('<br />') !== 0 &&
+				$item.find('.author').length) {
 				content = '<br />' + content;
 			}
 			$content.html(content);
