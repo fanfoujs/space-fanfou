@@ -145,8 +145,10 @@
 			var content = $content.html() || '';
 			if (content.indexOf('\n') === -1) return;
 			var $photo = $content.find('.photo');
+			content = content.replace(/<a href="http:\/\/fanfou.com\/n\/" class="nickquery"><\/a>/g, '');
+			content = content.replace(/@\n/g, '@');
 			content = content.replace(/\n\s*/g, '<br />');
-			if (content.indexOf('<br />') !== 0 &&
+			if (content.indexOf('<br />') > -1 &&
 				$item.find('.author').length) {
 				content = '<br />' + content;
 			}
