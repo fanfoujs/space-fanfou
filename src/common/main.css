@@ -359,6 +359,7 @@
 	background: rgba(255, 255, 255, .9) !important;
 	border-radius: 10px;
 	box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+	z-index: 3 !important;
 	-webkit-animation: fadeIn .1s;
 }
 #PopupUpdate {
