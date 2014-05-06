@@ -37,7 +37,7 @@ SF.pl.check_saved_searches = new SF.plugin((function() {
 					div.innerHTML = data.data.timeline;
 					var time = div.querySelector('li .stamp .time');
 					if (! time) return;
-					var timestamp;
+					var timestamp = 0;
 					var items = [].slice.call(div.querySelectorAll('li'));
 					items.some(function(li) {
 						var userid = li.querySelector('.author').
@@ -57,7 +57,7 @@ SF.pl.check_saved_searches = new SF.plugin((function() {
 						var time = li.querySelector('.stamp .time');
 						timestamp = Date.parse(time.title);
 						return true;
-					})
+					});
 					self.data = [ self.keyword, timestamp ];
 					broadcast(self.data);
 					if (timestamp && show_notification) {
@@ -96,7 +96,6 @@ SF.pl.check_saved_searches = new SF.plugin((function() {
 	function onCreated(tab) {
 		if (! checkURL(tab.url)) return;
 		var len = items_to_check.length;
-		var i = 0;
 		(function executeScript(i) {
 			var item = items_to_check[i];
 			if (! item) return;
@@ -109,7 +108,7 @@ SF.pl.check_saved_searches = new SF.plugin((function() {
 					executeScript(++i);
 				});
 			}
-		})(i);
+		})(0);
 	}
 
 	function onUpdated(tab_id, change_info, tab) {

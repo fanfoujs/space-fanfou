@@ -60,7 +60,6 @@ SF.pl.check_saved_searches = new SF.plugin((function($) {
 			saveTimestamp(keyword, timestamp);
 			return;
 		} else if (timestamp > last_timestamp) {
-			console.log($search)
 			$search.parent('a').addClass('new');
 		} else {
 			$search.parent('a').removeClass('new');
