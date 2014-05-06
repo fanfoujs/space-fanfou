@@ -105,6 +105,10 @@ SF.pl.user_switcher = new SF.plugin((function($) {
 			var $del = $('<span>');
 			$del.text('x');
 			$del.click(function() {
+				var tip = '确定要从用户列表中删除 @' +
+					user.nickname + '(' +
+					id + ') 吗？';
+				if (! confirm(tip)) return;
 				removeUser(id);
 				$item.remove();
 			});
