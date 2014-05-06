@@ -200,8 +200,7 @@ function buildPageCache() {
 			namespace: loadFile('namespace.js'),
 			functions: loadFile('functions.js'),
 			style: {
-				css: getURL('common/main.css'),
-				js: getURL('common/style.js')
+				css: getURL('common/main.css')
 			},
 			font: getURL('resources/fonts/Lato-Regular.css'),
 			common: getURL('common/common.js')

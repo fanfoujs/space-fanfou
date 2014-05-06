@@ -4,7 +4,7 @@
 	},
 	"content_scripts": [ {
 		"css": [ "common/main.css" ],
-		"js": [ "zepto.min.js", "namespace.js", "functions.js", "load.js" ],
+		"js": [ "zepto.min.js", "namespace.js", "functions.js", "style.js", "load.js" ],
 		"matches": [ "http://fanfou.com/*" ],
 		"run_at": "document_start"
 	} ],

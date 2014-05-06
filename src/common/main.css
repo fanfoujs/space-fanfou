@@ -486,7 +486,7 @@
 		left top,
 		left bottom,
 		from(rgba(255, 255, 255, 0)),
-		to(rgba(253, 230, 190, .25))
+		to(rgba(253, 230, 190, .4))
 	);
 }
 #timeline-notification.onpull a[data-pull-progress="1"]::before {
@@ -520,9 +520,13 @@
 #requests h2 {
 	width: 500px;
 }
-#stream h3, #stream li {
+#stream h3,
+#stream li {
 	border-bottom-color: rgba(0, 0, 0, .12) !important;
 	border-bottom-style: solid !important;
+}
+[self] #stream li {
+	padding-bottom: 20px !important;
 }
 #stream li.light:not(.latest) {
 	background-color: rgba(0, 0, 0, .04) !important;

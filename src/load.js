@@ -102,7 +102,6 @@ port.onMessage.addListener(function(msg) {
 		insertStyle(msg.common.style.css, 'common');
 		loadScript(msg.common.namespace, 'namespace');
 		loadScript(msg.common.functions, 'functions');
-		loadScript(msg.common.style.js, 'style');
 		apply(true);
 		scripts.push([msg.common.common, 'common']);
 		var load_plugins = [];
