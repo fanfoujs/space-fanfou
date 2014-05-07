@@ -37,6 +37,45 @@
 		display: none;
 	}
 }
+#user_top > a {
+	position: relative;
+}
+#user_top > a::after {
+	border-radius: 2px;
+	position: absolute;
+	z-index: 3;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	content: " ";
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .25) inset;
+	pointer-events: none;
+}
+#user_top > a img {
+	box-shadow: 0 1px 0 rgba(255, 255, 255, .5);
+}
 #sidebar .tags a {
 	box-shadow: 0 1px 0 rgba(255, 255, 255, .4);
+}
+#sidebar #friends li,
+#sidebar .fav_friends li {
+	position: relative;
+}
+#sidebar #friends li::after,
+#sidebar .fav_friends li::after {
+	border-radius: 2px;
+	width: 48px;
+	height: 48px;
+	position: absolute;
+	z-index: 2;
+	left: 0;
+	top: 0;
+	content: " ";
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .25) inset;
+	pointer-events: none;
+}
+#friends li img,
+#sidebar .fav_friends li img {
+	box-shadow: 0 1px 0 rgba(255, 255, 255, .5);
 }
