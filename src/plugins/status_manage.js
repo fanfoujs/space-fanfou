@@ -2,10 +2,9 @@ SF.pl.status_manage = new SF.plugin((function($) {
 	if (! SF.fn.isMyPage()) return;
 	if (! $('#stream li .op .delete').length) return;
 
-	var $paginator = $('ul.paginator');
 	var $li = $('#stream li:not(.reply)');
 
-	if (! $paginator.length || ! $li.length) return;
+	if (! $li.length) return;
 
 	var REPLY_ATTR = 'repost-status',
 		REPOST_ATTR = 'reply-status',
