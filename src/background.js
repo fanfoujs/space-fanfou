@@ -31,8 +31,18 @@ var notifications = [];
 function showNotification(options) {
 	var notification;
 
-	notification = Notifications.createNotification(options.icon || '/icons/icon-128.png',
-		options.title || '太空饭否', options.content);
+	options.icon = options.icon || '/icons/icon-128.png';
+	options.title = options.title || '太空饭否';
+
+	if (Notifications) {
+		notification = Notifications.createNotification(options.icon,
+			options.title, options.content);
+	} else {
+		notification = new Notification(options.title, {
+			icon: options.icon,
+			body: options.content
+		});
+	}
 
 	if (options.id) {
 		notification.id = options.id;
@@ -50,7 +60,8 @@ function showNotification(options) {
 	}, false);
 	notification.addEventListener('show', playSound, false);
 
-	notification.show();
+	notification.show && notification.show();
+	notification.cancel = notification.cancel || notification.close;
 	notifications.push(notification);
 
 	if (options.timeout !== false) {
