@@ -247,6 +247,9 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 			var result = url.match(instagram_re);
 			if (result) {
 				var original_url = result[0];
+				if (! original_url.match(/\/$/)) {
+					original_url += '/';
+				}
 				var image_url = original_url + 'media/';
 				image_url = image_url.replace('instagr.am', 'instagram.com');
 				$.get(original_url, function(html) {
@@ -632,7 +635,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 			});
 		}
 
-		var instagram_re = /https?:\/\/(instagram\.com|instagr.am)\/p\/[a-zA-Z0-9_\-]+\//;
+		var instagram_re = /https?:\/\/(?:instagram\.com|instagr.am)\/p\/[a-zA-Z0-9_\-]+\/?/;
 		var pinsta_re = /https?:\/\/pinsta\.me\/p\/([a-zA-Z0-9_\-]+)/;
 		var weibo_re = /https?:\/\/[w0-9]+\.sinaimg\.cn\/\S+\.jpg/;
 		var imgly_re = /https?:\/\/img\.ly\//;
