@@ -692,7 +692,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 					var $link = $item.find('.content [href="' + url + '"]');
 					if ($link.length) {
 						var text = $link.text();
-						if (/^http:\/\//.test(text)) {
+						if (/^https?:\/\//.test(text)) {
 							setLink($link, url);
 						}
 					}
@@ -725,6 +725,8 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 						return url_item.longUrl;
 					}, function() {
 						var $link = $('.content [href="' + url_item.url + '"]');
+						if ($link.find('img').length)
+							return;
 						var long_url = url_item.longUrl;
 						setLink($link, long_url);
 					});
