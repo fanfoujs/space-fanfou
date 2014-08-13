@@ -126,12 +126,12 @@ var updates = (function() {
 	var updated_items = [];
 	var old_version = fixVersionNum(SF.old_version || '0.6.4.0');
 
-	var updates = Object.keys(history).filter(function(version_num) {
+	var updates = Object.keys(update_history).filter(function(version_num) {
 		return fixVersionNum(version_num) > old_version;
 	});
 
 	updates.forEach(function(version) {
-		history[version].forEach(function(item) {
+		update_history[version].forEach(function(item) {
 			if (updated_items.indexOf(item) === -1)
 				updated_items.push(item);
 		});
