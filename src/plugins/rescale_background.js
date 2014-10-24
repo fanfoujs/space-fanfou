@@ -21,33 +21,17 @@ SF.pl.rescale_background = new SF.plugin((function($) {
 			var width = docelem.clientWidth;
 			var height = docelem.clientHeight;
 			var img_ratio = dimentions.width / dimentions.height;
-			var new_width, new_height;
+			var do_rescale = false;
 			if (width <= dimentions.width && height <= dimentions.height) {
 				$('body').css('background-size', '');
 				if (dimentions.width >= innerWidth &&
 					dimentions.height >= innerHeight) {
-					var ratio = innerWidth / innerHeight;
-					if (ratio > img_ratio) {
-						new_width = innerWidth;
-						new_height = new_width / dimentions.width * dimentions.height;
-					} else {
-						new_height = innerHeight;
-						new_width = new_height / dimentions.height * dimentions.width;
-					}
+					do_rescale = true;
 				}
-			} else if (dimentions.width > 500) {
-				var ratio = width / height;
-				if (ratio > img_ratio) {
-					new_width = width;
-					new_height = new_width / dimentions.width * dimentions.height;
-				} else {
-					new_height = height;
-					new_width = new_height / dimentions.height * dimentions.width;
-				}
+			} else if (dimentions.width >= 1280) {
+				do_rescale = true;
 			}
-			if (new_width && new_height) {
-				$('body').css('background-size', new_width + 'px ' + new_height + 'px');
-			}
+			do_rescale && $('body').css('background-size', 'cover');
 		}
 		var dimentions = SF.fn.getData('dimentions-' + img_url);
 		if (dimentions) {
