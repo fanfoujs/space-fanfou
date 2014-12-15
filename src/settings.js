@@ -53,7 +53,6 @@ SF.st.default_settings = {
 		/* 更多设置 */
 			newstyle_trendlist: true,
 			newstyle_op_icons: true,
-			repost_self_statuses: false,
 	/* 工具 */
 		/* 桌面通知 */
 			notification: true,

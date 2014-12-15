@@ -134,10 +134,6 @@ var plugins = [
 		js: 'unread_statuses.js'
 	},
 	{
-		name: 'repost_self_statuses',
-		js: 'repost_self_statuses.js'
-	},
-	{
 		name: 'friendship_check',
 		js: 'friendship_check.js'
 	},
