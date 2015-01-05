@@ -169,6 +169,9 @@
 * {
 	font-family: "Lucida Grande", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
+html {
+	text-rendering: optimizeLegibility;
+}
 ::selection {
 	color: rgba(255, 255, 255, .85);
 	background: rgba(83, 186, 237, .85);
