@@ -57,6 +57,10 @@ var plugins = [
 		js: 'rescale_background.js',
 		earlyload: true
 	},
+	{
+		name: 'relaxed_letter_spacing',
+		css: 'relaxed_letter_spacing.css'
+	},
 
 	/* 页面功能性扩展 */
 
