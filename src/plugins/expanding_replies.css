@@ -101,3 +101,6 @@
 	background: transparent !important;
 	color: #999 !important;
 }
+#stream>ol>li[expended="expended"] .content .photo.zoom {
+	margin-bottom: 15px;
+}
