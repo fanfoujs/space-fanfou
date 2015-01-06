@@ -5,6 +5,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 	if (! $update.length) return;
 	var $act = $('.act', $update);
 	var $button = $('.formbutton[type="submit"]', $act);
+	var $tip = $('.tip', $update);
 
 	var notlostfocus = false,
 		keepmentions = false;
@@ -96,7 +97,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 				location.pathname +
 				'?status=' + encodeURIComponent(msg) +
 				'&in_reply_to_status_id=' + ffid);
-		$msg.val(msg);
+		$msg.val(msg).trigger('change');
 		$msg.get(0).setSelectionRange(ffname.length + 2, select_end);
 		$msg.focus();
 		$in_reply.val(ffid);
@@ -115,7 +116,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 				'&repost_status_id=' + ffid);
 		$in_reply.val('');
 		$repost.val(ffid);
-		$msg.val(msg);
+		$msg.val(msg).trigger('change');
 		$msg.get(0).setSelectionRange(old_msg.length, old_msg.length);
 		$msg.focus();
 		return false;
@@ -231,7 +232,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 						msg = msg.join(' ');
 						if (msg) msg += ' ';
 					}
-					$msg.val(msg);
+					$msg.val(msg).trigger('change');
 					if (notlostfocus)
 						$msg.focus();
 					$in_reply.val('');

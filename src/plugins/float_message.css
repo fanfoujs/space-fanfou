@@ -66,6 +66,9 @@
 .float-message.msgempty .tip {
 	top: 67px !important;
 }
+.float-message:not(:hover) .tip {
+	-webkit-animation-duration: 0 !important;
+}
 .float-message .actpost .formbutton,
 .float-message #u_button,
 .float-message .upload-button-wrapper,
