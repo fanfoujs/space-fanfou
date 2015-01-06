@@ -21,3 +21,6 @@ h6 {
 	content: " ";
 	visibility: hidden;
 }
+#stream {
+	line-height: 1.4;
+}
