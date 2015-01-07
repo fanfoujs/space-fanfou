@@ -16,7 +16,7 @@ h6 {
 #main a[rel="nofollow"] {
 	letter-spacing: 0;
 }
-#main a[rel="nofollow"]::before,
+#main a[rel="nofollow"]:not([href^="https"])::before,
 #main a[rel="nofollow"]::after {
 	content: " ";
 	visibility: hidden;
