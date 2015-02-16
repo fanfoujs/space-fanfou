@@ -1,19 +1,19 @@
 #goodapp strong {
-	text-decoration: none !important;
+  text-decoration: none !important;
 }
 #goodapp > a > strong > span {
-	padding-left: 4px;
-	font-size: 14px;
-	font-weight: normal;
-	cursor: pointer;
-	display: inline;
+  padding-left: 4px;
+  font-size: 14px;
+  font-weight: normal;
+  cursor: pointer;
+  display: inline;
 }
 #goodapp, 
 #badge-sect, 
 #fanfou-ad-microwave-oven,
 .howto .paipai {
-	display: none;
+  display: none;
 }
 #footer .police-info {
-	display: none;
+  display: none;
 }

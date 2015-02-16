@@ -1,32 +1,32 @@
 #stream>ol>li {
-	position: relative;
+  position: relative;
 }
 #stream>ol>li>input[type=checkbox][userid] {
-	position: absolute;
-	right: 5px;
-	bottom: 17px;
+  position: absolute;
+  right: 5px;
+  bottom: 17px;
 }
 #requests #stream>ol>li>input[type=checkbox][userid] {
-	bottom: 15px;
+  bottom: 15px;
 }
 #requests h2 {
-	position: relative;
+  position: relative;
 }
 #requests .batch-manage.requests {
-	position: absolute;
-	right: 0;
-	bottom: 5px;
+  position: absolute;
+  right: 0;
+  bottom: 5px;
 }
 #friends>.batch-manage.friends {
-	float: right;
-	margin-top: -27px;
-	margin-right: 5px;
+  float: right;
+  margin-top: -27px;
+  margin-right: 5px;
 }
 #friends>.batch-manage.friends>input {
-	margin-left: 12px;
+  margin-left: 12px;
 }
 #friends>.batch-manage.friends>.friend-remove {
-	width: 85px;
-	display: inline-block;
-	float: none;
+  width: 85px;
+  display: inline-block;
+  float: none;
 }

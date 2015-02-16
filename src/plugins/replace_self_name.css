@@ -1,16 +1,16 @@
 #user_top:first-child > h3 {
-	font-size: 0;
+  font-size: 0;
 }
 #user_top:first-child > h3::before,
 #user_top:first-child > h3::after {
-	font-size: 18px;
+  font-size: 18px;
 }
 #user_top:first-child > h3::before {
-	content: '我';
+  content: '我';
 }
 #user_top:hover:first-child > h3 {
-	font-size: 18px;
+  font-size: 18px;
 }
 #user_top:hover:first-child > h3::before {
-	display: none;
+  display: none;
 }

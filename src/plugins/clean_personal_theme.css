@@ -1,28 +1,28 @@
 #sf_clean_personal_theme {
-	position: fixed;
-	bottom: 6px;
-	right: 6px;
-	display: block;
-	width: 35px;
-	height: 35px;
-	padding: 5px;
-	color: transparent;
-	text-indent: -9999px;
-	background: rgba(0, 0, 0, .25) url('/resources/images/default-style.png') no-repeat center 12px;
-	border-radius: 50px;
-	-webkit-animation: fadeIn .75s;
+  position: fixed;
+  bottom: 6px;
+  right: 6px;
+  display: block;
+  width: 35px;
+  height: 35px;
+  padding: 5px;
+  color: transparent;
+  text-indent: -9999px;
+  background: rgba(0, 0, 0, .25) url('/resources/images/default-style.png') no-repeat center 12px;
+  border-radius: 50px;
+  -webkit-animation: fadeIn .75s;
 }
 .sf_default_theme {
-	background: rgba(0, 0, 0, .25) url('/resources/images/personalized-style.png') no-repeat center 12px !important;
+  background: rgba(0, 0, 0, .25) url('/resources/images/personalized-style.png') no-repeat center 12px !important;
 }
 #sf_clean_personal_theme:hover {
-	background-color: rgba(0, 0, 0, .5) !important;
+  background-color: rgba(0, 0, 0, .5) !important;
 }
 
 @media (max-width: 990px) {
-	#sf_clean_personal_theme {
-		-webkit-animation: fadeOut .75s;
-		opacity: 0;
-		z-index: -100;
-	}
+  #sf_clean_personal_theme {
+    -webkit-animation: fadeOut .75s;
+    opacity: 0;
+    z-index: -100;
+  }
 }

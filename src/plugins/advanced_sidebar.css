@@ -1,52 +1,52 @@
 .advanced_group {
-	padding-bottom: 1em !important;
+  padding-bottom: 1em !important;
 }
 .advanced_title {
 }
 .advanced_group ul {
 }
 .advanced_group ul li {
-	padding: 0 15px;
-	font-size: 12px;
+  padding: 0 15px;
+  font-size: 12px;
 }
 .advanced_group ul li a {
-	padding: 0 !important;
-	background: none !important;
-	box-shadow: none !important;
-	font-weight: 400 !important;
+  padding: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  font-weight: 400 !important;
 }
 .advanced_group ul li a:hover {
-	text-decoration: underline !important;
+  text-decoration: underline !important;
 }
 .statbar {
-	display: block;
-	height: 5px;
-	background: rgba(0, 0, 0, .1);
+  display: block;
+  height: 5px;
+  background: rgba(0, 0, 0, .1);
 }
 .statbar div {
-	height: 5px;
-	background: rgba(0, 0, 0, .25);
-	width: 0;
-	-webkit-transition: width .75s ease-in-out;
+  height: 5px;
+  background: rgba(0, 0, 0, .25);
+  width: 0;
+  -webkit-transition: width .75s ease-in-out;
 }
 .statbar_a {
-	background: rgba(255, 42, 0, .1);
+  background: rgba(255, 42, 0, .1);
 }
 .statbar_a div {
-	background: rgba(255, 42, 0, .5);
+  background: rgba(255, 42, 0, .5);
 }
 .statbar_b {
-	background: rgba(136, 204, 0, .1);
+  background: rgba(136, 204, 0, .1);
 }
 .statbar_b div {
-	background: rgba(136, 204, 0, .5);
+  background: rgba(136, 204, 0, .5);
 }
 .statbar_c {
-	background: rgba(0, 170, 255, .1);
+  background: rgba(0, 170, 255, .1);
 }
 .statbar_c div {
-	background: rgba(0, 170, 255, .5);
+  background: rgba(0, 170, 255, .5);
 }
 .protected {
-	background: url('/resources/images/protected.png') 211px 9px no-repeat;
+  background: url('/resources/images/protected.png') 211px 9px no-repeat;
 }

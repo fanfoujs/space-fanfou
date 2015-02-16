@@ -10,53 +10,53 @@
     min-width: 120px;
     z-index: 110;
 }
-	.atwho-view .cur {
-	    background: #06c;
-	    color: white;
-	}
-		.atwho-view .cur small {
-		    color: white;
-		}
+  .atwho-view .cur {
+      background: #06c;
+      color: white;
+  }
+    .atwho-view .cur small {
+        color: white;
+    }
 .atwho-view strong {
     color: #06c;
     border-bottom: 1px solid #06c;
 }
-	.atwho-view .cur strong {
-	    color: white;
-	    font-weight: bold;
-	}
+  .atwho-view .cur strong {
+      color: white;
+      font-weight: bold;
+  }
 .atwho-view ul {
     /* width: 100px; */
     list-style:none;
     padding: 0;
     margin: auto;
 }
-	.atwho-view ul li {
-	    display: block;
-	    padding: 6px;
-	    border-bottom: 1px solid #e5e5e5;
-	    cursor: pointer;
-		line-height: 24px;
-		width: 300px;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		color: #000;
-	}
-		.atwho-view ul li:nth-child(1) {
-			border-top-left-radius: 3px;
-			border-top-right-radius: 3px;
-		}
-		.atwho-view ul li:last-child {
-			border-bottom: 0;
-			border-bottom-left-radius: 3px;
-			border-bottom-right-radius: 3px;
-		}
+  .atwho-view ul li {
+      display: block;
+      padding: 6px;
+      border-bottom: 1px solid #e5e5e5;
+      cursor: pointer;
+    line-height: 24px;
+    width: 300px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: #000;
+  }
+    .atwho-view ul li:nth-child(1) {
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+    }
+    .atwho-view ul li:last-child {
+      border-bottom: 0;
+      border-bottom-left-radius: 3px;
+      border-bottom-right-radius: 3px;
+    }
 .atwho-view img {
-	border-radius: 2px;
+  border-radius: 2px;
     width: 24px;
-	height: 24px;
-	display: inline-block;
-	margin-right: 10px;
+  height: 24px;
+  display: inline-block;
+  margin-right: 10px;
 }
 .atwho-view small {
     font-size: smaller;
