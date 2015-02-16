@@ -2,7 +2,7 @@ html,
 textarea,
 input,
 button {
-	letter-spacing: .5px;
+  letter-spacing: .5px;
 }
 h1,
 h2,
@@ -10,17 +10,17 @@ h3,
 h4,
 h5,
 h6 {
-	letter-spacing: 1px;
+  letter-spacing: 1px;
 }
 #user_stats .label,
 #main a[rel="nofollow"] {
-	letter-spacing: 0;
+  letter-spacing: 0;
 }
 #main a[rel="nofollow"]:not([href^="https"])::before,
 #main a[rel="nofollow"]::after {
-	content: " ";
-	visibility: hidden;
+  content: " ";
+  visibility: hidden;
 }
 #stream {
-	line-height: 1.4;
+  line-height: 1.4;
 }

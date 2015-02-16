@@ -826,34 +826,34 @@
 }).call(this);
 
 SF.pl.disable_autocomplete = new SF.plugin((function($) {
-	var $content = $('textarea[name="content"]');
-	if (! $content.length) return;
-	
-	var enable_sf_autocomplete;
-	
-	return {
-		load: function() {
-			SF.fn.waitFor(function() {
-				return $content.autocomplete &&
-					$content.autocomplete('option', 'disabled') === false;
-			}, function() {
-				$content.autocomplete('disable');
-			});
-			
-			if (enable_sf_autocomplete) {
-				$('textarea[name="content"]').atwho({
-					at: '@',
-					data: '/home.ac_friends',
-					search_key: 'label',
-					tpl: '<li data-value="${realname}"><img src="${photo_url}" />${realname} <small>(${loginname})</small></li>'
-				});
-			}
-		},
-		unload: function() {
-			$content.autocomplete && $content.autocomplete('enable');
-		},
-		update: function(enable) {
-			enable_sf_autocomplete = enable;
-		}
-	};
+  var $content = $('textarea[name="content"]');
+  if (! $content.length) return;
+  
+  var enable_sf_autocomplete;
+  
+  return {
+    load: function() {
+      SF.fn.waitFor(function() {
+        return $content.autocomplete &&
+          $content.autocomplete('option', 'disabled') === false;
+      }, function() {
+        $content.autocomplete('disable');
+      });
+      
+      if (enable_sf_autocomplete) {
+        $('textarea[name="content"]').atwho({
+          at: '@',
+          data: '/home.ac_friends',
+          search_key: 'label',
+          tpl: '<li data-value="${realname}"><img src="${photo_url}" />${realname} <small>(${loginname})</small></li>'
+        });
+      }
+    },
+    unload: function() {
+      $content.autocomplete && $content.autocomplete('enable');
+    },
+    update: function(enable) {
+      enable_sf_autocomplete = enable;
+    }
+  };
 })(jQuery));

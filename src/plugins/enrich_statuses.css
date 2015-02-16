@@ -1,32 +1,32 @@
 .xiami-player,
 .xiami-player-placeholder {
-	width: 18px;
-	height: 18px;
-	overflow: hidden;
-	display: inline-block;
-	margin: 0 4px -5px 4px;
-	border-radius: 9px;
-	cursor: pointer;
+  width: 18px;
+  height: 18px;
+  overflow: hidden;
+  display: inline-block;
+  margin: 0 4px -5px 4px;
+  border-radius: 9px;
+  cursor: pointer;
 }
 .xiami-player {
-	background-color: #e5e5e5;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: 12px;
-	opacity: .6;
-	position: absolute;
+  background-color: #e5e5e5;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px;
+  opacity: .6;
+  position: absolute;
 }
 .xiami-player:hover {
-	opacity: 1;
+  opacity: 1;
 }
 .xiami-player[status="playing"] {
-	background-image: url('/resources/images/pause.png');
+  background-image: url('/resources/images/pause.png');
 }
 .xiami-player[status="paused"] {
-	background-image: url('/resources/images/play.png');
+  background-image: url('/resources/images/play.png');
 }
 .xiami-player embed {
-	opacity: 0;
-	margin-left: -228px;
-	margin-top: -7px;
+  opacity: 0;
+  margin-left: -228px;
+  margin-top: -7px;
 }

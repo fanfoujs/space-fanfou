@@ -13,32 +13,32 @@ OTHERS:=$(filter-out %.js %.css,$(OTHERS))
 OTHERS_DEST:=$(patsubst src/%,$(BUILD_DIR)/%,$(OTHERS))
 
 all: build_dir \
-	other_files \
-	compress_scripts \
-	compress_styles \
+  other_files \
+  compress_scripts \
+  compress_styles \
 
 build_dir:
-	mkdir -p $(BUILD_DIR)
+  mkdir -p $(BUILD_DIR)
 
 compress_scripts: $(SCRIPTS_DEST)
 $(SCRIPTS_DEST): $(BUILD_DIR)/%: src/%
-	$(UGLIFYJS) -nc -o $@ $<
+  $(UGLIFYJS) -nc -o $@ $<
 
 compress_styles: $(STYLES_DEST)
 $(STYLES_DEST): $(BUILD_DIR)/%: src/%
-	$(UGLIFYCSS) $< >$@
+  $(UGLIFYCSS) $< >$@
 
 other_files: $(OTHERS_DEST)
 $(OTHERS_DEST): $(BUILD_DIR)/%: src/%
-	@if [ -d $< ]; \
-		then \
-		mkdir -p $@; \
-		echo "mkdir -p $@"; \
-	else \
-		cp $< $@; \
-		echo "cp $< $@"; \
-	fi
+  @if [ -d $< ]; \
+    then \
+    mkdir -p $@; \
+    echo "mkdir -p $@"; \
+  else \
+    cp $< $@; \
+    echo "cp $< $@"; \
+  fi
 
 .PHONY: clean
 clean:
-	-rm -rf $(BUILD_DIR)
+  -rm -rf $(BUILD_DIR)
