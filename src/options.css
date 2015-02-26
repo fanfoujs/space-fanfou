@@ -62,6 +62,7 @@ input, textarea, select {
   font: inherit;
   outline: none;
   vertical-align: middle;
+  font-family: "Lucida Grande", "Hevetica Neue", Hevetica, Tahoma, "Hiragino Sans GB", "Microsoft Yahei", "Wenquanyi MicroHei", "Segoe UI Symbol", sans-serif;;
 }
 
 /* Private */
