@@ -314,6 +314,7 @@ html {
   box-shadow: 0 2px 5px rgba(0, 0, 0, .075) inset !important;
   -webkit-transition-property: background, height, border, box-shadow;
   -webkit-transition-duration: 300ms;
+  font-family: "Lucida Grande", "Hevetica Neue", Hevetica, Tahoma, "Hiragino Sans GB", "Microsoft Yahei", "Wenquanyi MicroHei", "Segoe UI Symbol", sans-serif !important;
 }
 .formdisabled,
 .input_text[disabled] {
