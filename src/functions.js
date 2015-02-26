@@ -193,7 +193,7 @@ SF.fn.waitFor(function() {
     id = requestAnimationFrame(function(timestamp) {
       if (breakpoint) {
         current = body.scrollTop;
-        if (s != current) {
+        if (Math.abs(s - current) > 2) {
           return stop();
         }
         var to = Math.floor(s / 1.15);
@@ -210,7 +210,7 @@ SF.fn.waitFor(function() {
       s = body.scrollTop;
     }
     current = body.scrollTop;
-    if (s != current) return;
+    if (Math.abs(s - current) > 2) return;
     var to = Math.floor(s / 1.15);
     scrollTo(0, (s = to));
     if (s >= 1) setTimeout(SF.fn.goTop, 24);
