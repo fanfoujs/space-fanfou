@@ -167,7 +167,7 @@
 
 /* Global */
 * {
-  font-family: "Lucida Grande", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  font-family: "Lucida Grande", "Helvetica Neue", Helvetica, Arial, "Segoe UI Symbol", sans-serif !important;
 }
 html {
   text-rendering: optimizeLegibility;
