@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:cc="http://creativecommons.org/ns#"
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:svg="http://www.w3.org/2000/svg"
+xmlns="http://www.w3.org/2000/svg"
+xmlns:xlink="http://www.w3.org/1999/xlink"
+viewBox="0 0 146.66667 140"
+height="140"
+width="146.66667"
+xml:space="preserve"
+version="1.1"
+id="svg2">
+  <metadata
+  id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+      rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+        rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+  id="defs6">
+    <clipPath
+    id="clipPath22"
+    clipPathUnits="userSpaceOnUse">
+      <path
+      id="path24"
+      d="M 548.973,1045.29 682.73,660.793 1089.62,652.527 765.219,406.578 883.18,16.9648 548.973,249.465 214.812,16.9648 332.68,406.578 8.24219,652.527 415.266,660.793 548.973,1045.29 Z" />
+    </clipPath>
+  </defs>
+  <g
+  transform="matrix(1.3333333,0,0,-1.3333333,0,140)"
+  id="g10">
+    <g
+    transform="scale(0.1)"
+    id="g12">
+      <g
+      transform="matrix(1100,0,0,1050,0,-4.009e-5)"
+      id="g14">
+      </g>
+      <g
+      id="g18">
+        <g
+        clip-path="url(#clipPath22)"
+        id="g20">
+          <g
+          transform="matrix(1100,0,0,1050,0,-4.009e-5)"
+          id="g26">
+            <image
+            id="image28"
+            xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG4AAABpCAYAAADbXhZDAAAABHNCSVQICAgIfAhkiAAAAqtJREFUeJzt3aGyqlAYxfF17tywoxGbEZo0TiQajUajL+Ir8AhGIpFKk+aONok0afcGxzsiznFGuTKLvX4NxvDN/GfvLRj82m63fyB0fg09gLxG4UgpHCmFI6VwpBSOlMKRUjhSCkdK4UgpHCmFI6VwpBSOlMKRUjhSCkdK4UgpHCmFI6VwpBSOlMKRUjhSCkdK4UgpHCmFI6VwpBSOlMKRUjhSCkdK4UgpHCmFI6VwpBSOlMKRUjhSCkdK4UgpHCmFI6VwpH4PPcCrjDGYz+cAgDiOf/xsURQ4n8+w1qKu60+M999Rh3sW7CqKIgCXwNZa5HlOH9C5rdL3fazXa3ieN/Qob6FdcY/sdjscj8fWPd/3EQQBfN//d88Yg9VqhSRJ0DTNh6fsx6hW3KPtz1qLNE2RZVnr/u0ZyWhU4X5SlmVnNQZBMMwwPXAmHAAcDofWNfM551S4R1vpZDIZYJL3ORXuEX05IXC/NVZVpXAMwjBsXd+feUycCbdYLFrnWdM0KMtywIneM6oH8EeiKEIQBJ1tMk1T2m0SGFm4zWbz9DN1XSPLss4zHZtRhXvm+hZlDJw544DLe8vlcjn0GL0Y1YpLkqT1kO15HsIwbL2T9H0fcRwjz/MhRuzNqFdcVVXIsqwTKYoi2jcmV6MOd1UURed11/f390DT9MOJcACw3+9b17e/zzFyJtz9139jjH4dYFBVVefebDb7/CA9cSYc0I03nU4HmuR9ToW73y614kicTqfWNfM551Q4a23nxTLrqnMqHHCJdysMQxhjBprmdV/6A3dOzq24sVA4UgpHSuFIKRwphSOlcKQUjpTCkVI4UgpHSuFIKRwphSOlcKQUjpTCkVI4UgpHSuFIKRwphSOlcKQUjpTCkVI4UgpHSuFIKRwphSOlcKT+AnBkmOn8PNRvAAAAAElFTkSuQmCC"
+            transform="matrix(1,0,0,-1,0,1)"
+            preserveAspectRatio="none"
+            height="1"
+            width="1" />
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
