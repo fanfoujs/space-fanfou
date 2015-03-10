@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:cc="http://creativecommons.org/ns#"
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:svg="http://www.w3.org/2000/svg"
+xmlns="http://www.w3.org/2000/svg"
+xmlns:xlink="http://www.w3.org/1999/xlink"
+viewBox="0 0 136 92"
+height="92"
+width="136"
+xml:space="preserve"
+version="1.1"
+id="svg2">
+  <metadata
+  id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+      rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+        rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+  id="defs6">
+    <clipPath
+    id="clipPath22"
+    clipPathUnits="userSpaceOnUse">
+      <path
+      id="path24"
+      d="M 506.75,293.449 41.8867,680.723 c 2.5313,0.476 4.793,1.511 7.3555,1.511 l 915.0308,0 c 2.598,0 4.875,-1.035 7.391,-1.511 L 506.75,293.449 Z M 1003.84,48.3164 673.766,378.383 1003.34,653.012 c 1.31,-3.981 2.52,-8.028 2.52,-12.391 l 0,-582.1913 c 0,-3.5703 -1.18,-6.7852 -2.02,-10.1133 z M 9.68359,48.2852 c -0.8125,3.3281 -2.07031,6.5117 -2.07031,10.1445 l 0,582.1913 c 0,4.441 1.28906,8.426 2.56252,12.438 L 339.863,378.383 9.68359,48.2852 Z M 964.273,16.8438 l -915.0308,0 c -3.5352,0 -6.7852,1.1953 -10.082,2.0703 L 371.953,351.594 493.438,250.367 c 3.851,-3.246 8.597,-4.808 13.312,-4.808 4.762,0 9.461,1.562 13.281,4.808 L 641.645,351.645 974.469,18.9141 c -3.332,-0.875 -6.578,-2.0703 -10.196,-2.0703 z" />
+    </clipPath>
+  </defs>
+  <g
+  transform="matrix(1.3333333,0,0,-1.3333333,0,92)"
+  id="g10">
+    <g
+    transform="scale(0.1)"
+    id="g12">
+      <g
+      transform="matrix(1020,0,0,690,0,-1.285e-5)"
+      id="g14">
+      </g>
+      <g
+      id="g18">
+        <g
+        clip-path="url(#clipPath22)"
+        id="g20">
+          <g
+          transform="matrix(1020,0,0,690,0,-1.285e-5)"
+          id="g26">
+            <image
+            id="image28"
+            xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGYAAABFCAYAAAC455P6AAAABHNCSVQICAgIfAhkiAAAALtJREFUeJzt0cENwCAQwLDS4W9tWIA/edgTRMqamf2R878O4M6YKGOijIkyJsqYKGOijIkyJsqYKGOijIkyJsqYKGOijIkyJsqYKGOijIkyJsqYKGOijIkyJsqYKGOijIkyJsqYKGOijIkyJsqYKGOijIkyJsqYKGOijIkyJsqYKGOijIkyJsqYKGOijIkyJsqYKGOijIkyJsqYKGOijIkyJsqYKGOijIkyJsqYKGOijIkyJsqYKGOijIk6GnIDG0U8lu4AAAAASUVORK5CYII="
+            transform="matrix(1,0,0,-1,0,1)"
+            preserveAspectRatio="none"
+            height="1"
+            width="1" />
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -601,6 +601,9 @@ p.pm-parent {
 #iconset img {
   padding-top: 34px;
   opacity: .75;
+  height:16px !important;
+  background-size: 1.25em auto !important;
+  background-position:center center;
   -webkit-transition-property: opacity;
   -webkit-transition-duration: 300ms;
 }
@@ -609,19 +612,26 @@ p.pm-parent {
 }
 #iconset img[src$='ico-email-default.gif'],
 #iconset img[src$='ico-email-gmail.gif'] {
-  background: url('/resources/images/email.png') no-repeat 0 0;
+  background: url('/resources/images/mail.svg') no-repeat 0 3px;
 }
 #iconset img[src$='ico-wlm.gif'] {
-  background: url('/resources/images/wlm.png') no-repeat 0 0;
+  background: url('/resources/images/msn.svg') no-repeat 0 0;
+  background-size:17px 17px !important;
 }
 #iconset img[src$='ico-gtalk.gif'] {
-  background: url('/resources/images/gtalk.png') no-repeat 0 0;
+  background: url('/resources/images/gtalk.svg') no-repeat 1px 2px;
 }
 #iconset img[src$='ico-mobile.gif'] {
-  background: url('/resources/images/mobile.png') no-repeat 0 0;
+  background: url('/resources/images/mobile.svg') no-repeat 0 0;
+  background-size:17px 17px !important;
 }
 #iconset img[src$='ico-verify.png'] {
-  background: url('/resources/images/verify.png') no-repeat 0 0;
+  background: url('/resources/images/verify.svg') no-repeat 0 0;
+  background-size:17px 17px !important;
+}
+.rssfeed {
+  background: url(../resources/images/rss.svg) no-repeat 0 2px !important;
+  background-size: 13px 13px !important;
 }
 #user_infos {
   margin-bottom: .5em !important;
