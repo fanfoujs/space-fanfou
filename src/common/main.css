@@ -630,8 +630,8 @@ p.pm-parent {
   background-size:17px 17px !important;
 }
 .rssfeed {
-  background: url(../resources/images/rss.svg) no-repeat !important;
-  background-size: 15px 15px !important;
+  background: url(../resources/images/rss.svg) no-repeat 0 2px !important;
+  background-size: 13px 13px !important;
 }
 #user_infos {
   margin-bottom: .5em !important;
