@@ -206,7 +206,23 @@ addEventListener('SFMessage', function(e) {
   }
 });
 
-function cleanupLsCache() {
+function flushLocalStorageWhenFull() {
+  var testKey = '__detect_if_localStorage_is_full__';
+  try {
+    localStorage.setItem(testKey, testKey);
+  } catch(e) {
+    // http://stackoverflow.com/questions/3027142/calculating-usage-of-localstorage-space
+    if (e.name === 'QuotaExceededError') {
+      // 如果已经达到 localStorage 限额
+      // 直接清空 localStorage
+      localStorage.clear();
+    }
+  }
+  localStorage.removeItem(testKey);
+}
+flushLocalStorageWhenFull();
+
+function cleanupCacheInLocalStorage() {
   // 自动清理 localStorage 中的缓存
   // 每两次间隔至少 24 小时
   var LAST_CLEANUP_DATE_KEY = '__space-fanfou_locache_cleanup_date__';
@@ -219,4 +235,4 @@ function cleanupLsCache() {
   }
   locache.set(LAST_CLEANUP_DATE_KEY, Date.now());
 }
-cleanupLsCache();
+cleanupCacheInLocalStorage();
