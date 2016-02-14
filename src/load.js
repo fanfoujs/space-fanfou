@@ -218,7 +218,17 @@ function flushLocalStorageWhenFull() {
       // 因为此时 localStorage 已经不可写入数据，扩展处于不可用状态（？）
       // 所以采取较为暴力的处理方式
       // 相信这段代码最多只会被执行一次
-      localStorage.clear();
+      var length = localStorage.length();
+      // 由于旧代码在存储数据时没有在 key 上面添加 namespace
+      // 所以无法区分数据的写入者是否为太空饭否
+      // 这里针对消耗缓存较多的部分进行处理
+      var prefix = 'sf-url-';
+      for (var i = 0; i < len; i++) {
+        var key = localStorage.key(i);
+        if (key && key.indexOf(prefix) === 0) {
+          localStorage.removeItem(key);
+        }
+      }
     }
   }
   localStorage.removeItem(testKey);
