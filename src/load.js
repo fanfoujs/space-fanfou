@@ -219,7 +219,7 @@ function flushLocalStorageWhenFull() {
       // 这里针对消耗缓存较多的部分进行处理
       var length = localStorage.length;
       var prefix = 'sf-url-';
-      for (var i = len - 1; i >= 0; i--) {
+      for (var i = length - 1; i >= 0; i--) {
         var key = localStorage.key(i);
         if (key && key.indexOf(prefix) === 0) {
           localStorage.removeItem(key);
