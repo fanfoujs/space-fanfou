@@ -1,5 +1,5 @@
 SF.pl.enrich_statuses = new SF.plugin((function($) {
-  var WEEK_IN_SECONDS = 7 * 24 * 60 * 60;
+  var DAY_IN_SECONDS = 24 * 60 * 60;
 
   var is_status_page = location.href.indexOf('http://fanfou.com/statuses/') == 0;
 
@@ -196,7 +196,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 
       function markAsIgnored() {
         self.status = 'ignored';
-        locache.set('sf-url-' + self.url, self, WEEK_IN_SECONDS);
+        locache.set('sf-url-' + self.url, self, DAY_IN_SECONDS);
       }
 
       if (short_url_re.test(url)) {
