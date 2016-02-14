@@ -237,11 +237,12 @@ function cleanupCacheInLocalStorage() {
   var LAST_CLEANUP_DATE_KEY = '__space-fanfou_locache_cleanup_date__';
   var DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
   var lastCleanupDate = locache.get(LAST_CLEANUP_DATE_KEY);
-  if (lastCleanupDate) {
-    if (Date.now() - lastCleanupDate > DAY_IN_MILLISECONDS) {
-      locache.cleanup();
-    }
+  if (
+    !lastCleanupDate ||
+    Date.now() - lastCleanupDate > DAY_IN_MILLISECONDS
+  ) {
+    locache.cleanup();
+    locache.set(LAST_CLEANUP_DATE_KEY, Date.now());
   }
-  locache.set(LAST_CLEANUP_DATE_KEY, Date.now());
 }
 cleanupCacheInLocalStorage();
