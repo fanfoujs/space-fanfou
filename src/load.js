@@ -217,9 +217,9 @@ function flushLocalStorageWhenFull() {
       // 由于旧代码在存储数据时没有在 key 上面添加 namespace
       // 所以无法区分数据的写入者是否为太空饭否
       // 这里针对消耗缓存较多的部分进行处理
-      var length = localStorage.length();
+      var length = localStorage.length;
       var prefix = 'sf-url-';
-      for (var i = 0; i < len; i++) {
+      for (var i = 0; i < length; i++) {
         var key = localStorage.key(i);
         if (key && key.indexOf(prefix) === 0) {
           localStorage.removeItem(key);
