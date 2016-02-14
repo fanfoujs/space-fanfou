@@ -215,6 +215,9 @@ function flushLocalStorageWhenFull() {
     if (e.name === 'QuotaExceededError') {
       // 如果已经达到 localStorage 限额
       // 直接清空 localStorage
+      // 因为此时 localStorage 已经不可写入数据，扩展处于不可用状态（？）
+      // 所以采取较为暴力的处理方式
+      // 相信这段代码最多只会被执行一次
       localStorage.clear();
     }
   }
