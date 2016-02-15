@@ -205,3 +205,44 @@ addEventListener('SFMessage', function(e) {
     port.postMessage(msg);
   }
 });
+
+function flushLocalStorageWhenFull() {
+  var testKey = '__detect_if_localStorage_is_full__';
+  try {
+    localStorage.setItem(testKey, testKey);
+  } catch(e) {
+    // http://stackoverflow.com/questions/3027142/calculating-usage-of-localstorage-space
+    if (e.name === 'QuotaExceededError') {
+      // 如果已经达到 localStorage 限额，进行清理
+      // 由于旧代码在存储数据时没有在 key 上面添加 namespace
+      // 所以无法区分数据的写入者是否为太空饭否
+      // 这里针对消耗缓存较多的部分进行处理
+      var length = localStorage.length;
+      var prefix = 'sf-url-';
+      for (var i = length - 1; i >= 0; i--) {
+        var key = localStorage.key(i);
+        if (key && key.indexOf(prefix) === 0) {
+          localStorage.removeItem(key);
+        }
+      }
+    }
+  }
+  localStorage.removeItem(testKey);
+}
+flushLocalStorageWhenFull();
+
+function cleanupCacheInLocalStorage() {
+  // 自动清理 localStorage 中的缓存
+  // 每两次间隔至少 24 小时
+  var LAST_CLEANUP_DATE_KEY = '__space-fanfou_locache_cleanup_date__';
+  var DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
+  var lastCleanupDate = locache.get(LAST_CLEANUP_DATE_KEY);
+  if (
+    !lastCleanupDate ||
+    Date.now() - lastCleanupDate > DAY_IN_MILLISECONDS
+  ) {
+    locache.cleanup();
+    locache.set(LAST_CLEANUP_DATE_KEY, Date.now());
+  }
+}
+cleanupCacheInLocalStorage();
