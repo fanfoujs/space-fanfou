@@ -4,7 +4,14 @@
   },
   "content_scripts": [ {
     "css": [ "common/main.css" ],
-    "js": [ "vendors/zepto.min.js", "namespace.js", "functions.js", "style.js", "load.js" ],
+    "js": [
+      "vendors/locache.min.js",
+      "vendors/zepto.min.js",
+      "namespace.js",
+      "functions.js",
+      "style.js",
+      "load.js"
+    ],
     "matches": [ "http://fanfou.com/*" ],
     "run_at": "document_start"
   } ],

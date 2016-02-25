@@ -205,3 +205,18 @@ addEventListener('SFMessage', function(e) {
     port.postMessage(msg);
   }
 });
+
+function cleanupLsCache() {
+  // 自动清理 localStorage 中的缓存
+  // 每两次间隔至少 24 小时
+  var LAST_CLEANUP_DATE_KEY = '__space-fanfou_locache_cleanup_date__';
+  var DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
+  var lastCleanupDate = locache.get(LAST_CLEANUP_DATE_KEY);
+  if (lastCleanupDate) {
+    if (Date.now() - lastCleanupDate > DAY_IN_MILLISECONDS) {
+      locache.cleanup();
+    }
+  }
+  locache.set(LAST_CLEANUP_DATE_KEY, Date.now());
+}
+cleanupLsCache();

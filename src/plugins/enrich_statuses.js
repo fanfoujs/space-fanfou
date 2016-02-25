@@ -1,4 +1,6 @@
 SF.pl.enrich_statuses = new SF.plugin((function($) {
+  var WEEK_IN_SECONDS = 7 * 24 * 60 * 60;
+
   var is_status_page = location.href.indexOf('http://fanfou.com/statuses/') == 0;
 
   var $stream;
@@ -194,7 +196,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 
       function markAsIgnored() {
         self.status = 'ignored';
-        SF.fn.setData('sf-url-' + self.url, self);
+        locache.set('sf-url-' + self.url, self, WEEK_IN_SECONDS);
       }
 
       if (short_url_re.test(url)) {
@@ -706,7 +708,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
             return true;
           }
         });
-        var ls_cached = SF.fn.getData('sf-url-' + url);
+        var ls_cached = locache.get('sf-url-' + url);
         cached = cached || ls_cached;
         if (cached) {
           cached.__proto__ = UrlItem.prototype;
