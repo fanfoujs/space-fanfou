@@ -208,23 +208,35 @@ addEventListener('SFMessage', function(e) {
 
 function flushLocalStorageWhenFull() {
   var testKey = '__detect_if_localStorage_is_full__';
+  var testVal = Array(100).join(testKey);
   try {
-    localStorage.setItem(testKey, testKey);
+    localStorage.setItem(testKey, testVal);
   } catch(e) {
     // http://stackoverflow.com/questions/3027142/calculating-usage-of-localstorage-space
     if (e.name === 'QuotaExceededError') {
       // 如果已经达到 localStorage 限额，进行清理
       // 由于旧代码在存储数据时没有在 key 上面添加 namespace
       // 所以无法区分数据的写入者是否为太空饭否
-      // 这里针对消耗缓存较多的部分进行处理
-      var length = localStorage.length;
+      // 这里针对消耗缓存较多的短网址展开部分进行处理
+      // 考虑到记录数量非常大（可能大于十万条），速度非常慢
+      // 采取直接清空 localStorage 后再把不符合条件的记录添加回去的方式
       var prefix = 'sf-url-';
-      for (var i = length - 1; i >= 0; i--) {
+      var i = localStorage.length;
+      var temp = { keys: [], values: [] };
+      while (i--) {
         var key = localStorage.key(i);
-        if (key && key.indexOf(prefix) === 0) {
-          localStorage.removeItem(key);
+        if (key && key.indexOf(prefix) === -1) {
+          temp.keys.push(key);
+          temp.values.push(localStorage.getItem(key));
         }
       }
+      localStorage.clear();
+      temp.keys.forEach(function(key, idx) {
+        localStorage.setItem(
+          key,
+          temp.values[idx]
+        );
+      });
     }
   }
   localStorage.removeItem(testKey);
