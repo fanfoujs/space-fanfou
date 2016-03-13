@@ -1,8 +1,0 @@
-#main a[rel="nofollow"]:not([href^="https"])::before,
-#main a[rel="nofollow"]::after {
-  content: " ";
-  visibility: hidden;
-}
-#stream {
-  line-height: 1.4;
-}
