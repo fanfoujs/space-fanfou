@@ -40,7 +40,6 @@ SF.st.default_settings = {
       'disguise_username.fake_name': '\u7565',
       replace_self_name: false,
     /* 字体 */
-      relaxed_letter_spacing: true,
       emoji: true,
       font_reset_cn: false,
       counternum_font: true,

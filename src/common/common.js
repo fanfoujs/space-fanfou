@@ -104,7 +104,7 @@
     });
   })();
 
-  /* 让消息支持换行, 在 "转@" 前自动加空格 */
+  /* 让消息支持换行 */
 
   (function() {
     var $stream = $('#stream');
@@ -134,11 +134,10 @@
 
     function processItem($item) {
       if (! $item.is('li')) return;
-      if ($item.attr('content-processed') == 'true') return;
+      if ($item.attr('newline-replaced') == 'true') return;
 
-      addWhitespaceBeforeRepost($item);
       replaceNewline($item);
-      $item.attr('content-processed', 'true');
+      $item.attr('newline-replaced', 'true');
     }
 
     function replaceNewline($item) {
@@ -157,20 +156,7 @@
       $content.find('.photo').replaceWith($photo);
     }
 
-    function addWhitespaceBeforeRepost($item) {
-      var $content = $item.find('.content');
-      var content = $content.html() || '';
-      if (content.indexOf('@<a') === -1) return;
-      var $photo = $content.find('.photo');
-      content = content.replace(/<a href="http:\/\/fanfou.com\/n\/" class="nickquery"><\/a>/g, '');
-      content = content.replace(/\s*(转|RT|RP)( ?)@<a/ig, ' $1$2@<a');
-      content = content.replace(/^\s+/, '');
-      $content.html(content);
-      $content.find('.photo').replaceWith($photo);
-    }
-
     if (is_status_page) {
-      addWhitespaceBeforeRepost($('#latest'));
       replaceNewline($('#latest'));
     } else {
       observer.observe($stream[0], { childList: true, subtree: true });
