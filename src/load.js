@@ -225,7 +225,7 @@ function flushLocalStorageWhenFull() {
       var temp = { keys: [], values: [] };
       while (i--) {
         var key = localStorage.key(i);
-        if (key && key.indexOf(prefix) === -1) {
+        if (key && key.indexOf(prefix) !== 0) {
           temp.keys.push(key);
           temp.values.push(localStorage.getItem(key));
         }
