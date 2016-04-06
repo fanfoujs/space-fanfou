@@ -50,6 +50,9 @@ SF.st.default_settings = {
       box_shadows: false,
       logo_remove_beta: true,
       rescale_background: true,
+    /* 自定义CSS */
+      custom_style: false,
+      'custom_style.code_content': '',
     /* 更多设置 */
       newstyle_trendlist: true,
       newstyle_op_icons: true,
