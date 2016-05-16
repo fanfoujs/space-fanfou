@@ -4,7 +4,7 @@
 作者：@[太空小孩](http://fanfou.com/anegie)，@[锐风](http://fanfou.com/ruif)，@[Xidorn](http://fanfou.com/xidorn)（已退出）  
 协作作者：@[.rex](http://fanfou.com/zhasm)
 > 官方饭否：http://fanfou.com/spacefanfou  
-> 入门手册：http://anegie.com/blog/spacefanfou/
+> 入门手册：http://spacekid.me/spacefanfou
 
 ## 官方版本下载
 * **[Chrome 网上应用店](https://chrome.google.com/webstore/detail/mfofmcdbaeajgdeihmcjjohmhepcdcol)**
