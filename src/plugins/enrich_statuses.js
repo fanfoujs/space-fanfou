@@ -9,7 +9,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 
   var set_position_interval;
 
-  var short_url_re = /https?:\/\/(?:bit\.ly|goo\.gl|v\.gd|is\.gd|tinyurl\.com|to\.ly|yep\.it|j\.mp)\//;
+  var short_url_re = /https?:\/\/(?:bit\.ly|goo\.gl|v\.gd|is\.gd|tinyurl\.com|to\.ly|yep\.it|j\.mp|t.cn|t.co)\//;
   var fanfou_url_re = /^http:\/\/(?:\S+\.)?fanfou\.com\//;
 
   var MutationObserver = MutationObserver || WebKitMutationObserver;
@@ -98,34 +98,6 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
     $link.text(display_url);
   }
 
-  function initUrlExpand() {
-    var short_url_services = SF.fn.getData('short_url_services');
-    if (short_url_services) {
-      // 识别更多短链接
-      short_url_services['[a-z0-9]{1,5}\\.[a-z]{2,3}'] = true;
-      var re = '^https?:\\/\\/';
-      re += '(?:' + Object.keys(short_url_services).join('|') + ')';
-      re += '\\/\\S+';
-      re = re.replace(/\./g, '\\.');
-      short_url_re = new RegExp(re);
-      return;
-    }
-    $.ajax({
-      type: 'GET',
-      url: 'http://api.longurl.org/v2/services',
-      data: {
-        format: 'json'
-      },
-      success: function(data) {
-        SF.fn.setData('short_url_services', data);
-        initUrlExpand();
-      },
-      error: function(e) {
-        setTimeout(initUrlExpand, 60000);
-      }
-    });
-  }
-
   var cached_short_urls = SF.fn.getData('cached_short_urls') || { };
   function expandUrl(url, callback, original_url) {
     original_url = original_url || url;
@@ -134,47 +106,24 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
         callback(cached_short_urls[url]);
       });
     } else {
-      function cb(long_url) {
-        if (short_url_re.test(long_url) && url != long_url) {
-          return expandeUrl(long_url, callback, original_url);
-        }
-        if (long_url.indexOf('http') !== 0) {
-          setTimeout(function() {
-            expandUrl(url, callback, original_url);
-          }, 5000);
-          return;
-        }
-        cached_short_urls[original_url] = long_url;
-        SF.fn.setData('cached_short_urls', cached_short_urls);
-        callback(long_url);
-      }
-      var is_gd_re = /https?:\/\/is\.gd\/([a-zA-Z0-9\-\_]+)/;
-      if (is_gd_re.test(url)) {
-        $.ajax({
-          type: 'GET',
-          url: 'http://is.gd/forward.php',
-          data: {
-            shorturl: url.match(is_gd_re)[1],
-            format: 'simple'
-          },
-          success: function(data) {
-            var url = $temp.html(data).text();
-            return cb(url);
+      $.ajax({
+        type: 'GET',
+        url: 'http://urlex.org/txt/' + url,
+        success: function(long_url) {
+          if (short_url_re.test(long_url) && url != long_url) {
+            return expandUrl(long_url, callback, original_url);
           }
-        });
-      } else {
-        $.ajax({
-          type: 'GET',
-          url: 'http://api.longurl.org/v2/expand',
-          data: {
-            url: url,
-            format: 'json'
-          },
-          success: function(data) {
-            cb(data['long-url']);
+          if (long_url.indexOf('http') !== 0) {
+            setTimeout(function() {
+              expandUrl(url, callback, original_url);
+            }, 5000);
+            return;
           }
-        });
-      }
+          cached_short_urls[original_url] = long_url;
+          SF.fn.setData('cached_short_urls', cached_short_urls);
+          callback(long_url);
+        }
+      });
     }
   }
 
@@ -812,8 +761,6 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
       revertLinks($message_textarea, links);
     });
   }
-
-  initUrlExpand();
 
   return {
     load: function() {
