@@ -26,7 +26,6 @@ SF.st.default_settings = {
       friend_manage: true,
     /* 更多设置 */
       unread_statuses: true,
-        'unread_statuses.auto_show': true,
         'unread_statuses.playsound': false,
       user_switcher: true,
       friendship_check: false,

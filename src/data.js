@@ -128,7 +128,6 @@ var plugins = [
   {
     name: 'unread_statuses',
     options: [
-      'auto_show',
       'playsound'
     ],
     js: 'unread_statuses.js'
