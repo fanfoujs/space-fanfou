@@ -68,7 +68,6 @@ SF.st.default_settings = {
   /* 系统 */
     rating: true,
     backup_avatar: true,
-    restoring_state: true,
 };
 
 /* 读取选项 */

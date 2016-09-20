@@ -138,10 +138,6 @@ var plugins = [
     js: 'friendship_check.js'
   },
   {
-    name: 'restoring_state',
-    js: 'restoring_state.js'
-  },
-  {
     name: 'backup_avatar',
     js: 'backup_avatar.js'
   },
