@@ -358,28 +358,20 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
       var result = url.match(flickr_re);
       if (result) {
         $.get(url, function(html) {
-          function createPhotoURL(size) {
-            var url;
-            if (size.secret) {
-              url = base_url.replace(/_.*\.jpg$/, '_' + size.secret + size.fileExtension + '.jpg');
-            } else {
-              url = base_url.replace(/\.jpg$/, size.fileExtension + '.jpg');
+          var images = html.match(/<img.+>/g);
+          if (!images) return;
+          images = [].slice.call(images);
+          var thumbnail_url, large_url;
+          images.some(function(image) {
+            if (!large_url && image.indexOf('class="main-photo is-hidden"') > -1) {
+              var result = image.match(/src="(.+?)"/);
+              large_url = result && result[1];
+            } else if (!thumbnail_url && image.indexOf('class="low-res-photo"') > -1) {
+              var result = image.match(/src="(.+?)"/);
+              thumbnail_url = result && result[1];
             }
-            if (size.queryString) {
-              url += size.queryString;
-            }
-            return url;
-          }
-          var result = html.match(/baseURL: '(\S+)',/);
-          var base_url = result && result[1];
-          var result = html.match(/sizeMap: (\[[^\]]+\])/);
-          var size_map = result && JSON.parse(result[1]);
-          if (size_map) {
-            var size_t = size_map[0];
-            var size_l = size_map.reverse()[0];
-            var large_url = createPhotoURL(size_l);
-            var thumbnail_url = createPhotoURL(size_t);
-          }
+            return thumbnail_url && large_url;
+          });
           if (large_url) {
             loadImage({
               url: self.url,
