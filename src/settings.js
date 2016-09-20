@@ -19,7 +19,7 @@ SF.st.default_settings = {
     /* 侧栏 */
       fav_friends: false,
       check_saved_searches: true,
-        'check_saved_searches.show_notification': true,
+        'check_saved_searches.show_notification': false,
     /* 批量管理 */
       status_manage: true,
       privatemsg_manage: true,
