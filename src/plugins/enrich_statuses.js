@@ -86,13 +86,22 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
     });
   }
 
+  function findAndCount(text, pattern) {
+    var re = new RegExp(pattern, 'g');
+    var result = text.match(re);
+    return result ? result.length : 0;
+  }
+
   function setLink($link, url) {
     var original_url = $link.prop('href');
     $link.attr('original-url', original_url);
     $link.prop('title', url);
     $link.prop('href', url);
+    var trailing_slash_re = /\/$/;
     var display_url = url.replace(/^https?:\/\/(?:www\.)?/, '');
-    if (display_url.length > 25) {
+    if (findAndCount(display_url, '/') === 1 && trailing_slash_re.test(display_url)) {
+      display_url = display_url.replace(trailing_slash_re, '');
+    } else if (display_url.length > 25) {
       display_url = display_url.substring(0, 25) + '...';
     }
     $link.text(display_url);
@@ -110,14 +119,15 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
         type: 'GET',
         url: 'http://urlex.org/txt/' + url,
         success: function(long_url) {
-          if (short_url_re.test(long_url) && url != long_url) {
-            return expandUrl(long_url, callback, original_url);
-          }
-          if (long_url.indexOf('http') !== 0) {
+          long_url = long_url && long_url.trim();
+          if (! long_url || long_url.indexOf('http') !== 0) {
             setTimeout(function() {
               expandUrl(url, callback, original_url);
             }, 5000);
             return;
+          }
+          if (short_url_re.test(long_url) && url != long_url) {
+            return expandUrl(long_url, callback, original_url);
           }
           cached_short_urls[original_url] = long_url;
           SF.fn.setData('cached_short_urls', cached_short_urls);
@@ -151,7 +161,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
       if (short_url_re.test(url)) {
         expandUrl(url, function(long_url) {
           self.longUrl = long_url;
-          fetch.call(self);
+          self.fetch();
         });
         return;
       } else if (self.url.indexOf('fanfou.com') === -1 &&
@@ -629,15 +639,17 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
     }
 
     return function($item) {
-      var $links = $('.content a', $item);
-      var urls = [].map.call($links, function(link) {
-        return $(link).prop('href');
+      var $links = $('.content a', $item).filter(function() {
+        return this.href.indexOf('http') === 0;
       });
-      if (! urls.length)
-        return;
-      urls.forEach(function(url) {
+      $links.each(function() {
+        var $link = $(this);
+        var url = $link.prop('href');
         // 过滤掉形似 http://example.com/ 的 URL
-        if (! url.split('/')[3]) return;
+        if (! url.split('/')[3]) {
+          setLink($link, url);
+          return;
+        }
         // 过滤掉非饭否图片的饭否链接
         if (fanfou_url_re.test(url)) {
           var $link = $item.find('.content [href="' + url + '"]');
