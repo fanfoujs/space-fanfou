@@ -50,12 +50,6 @@ document.addEventListener('DOMContentLoaded', function() {
     $f.style.height = 'auto';
   });
 
-  /*document.body.classList.add('init');
-  forEach($$('.tabs ul'), function($ul) {
-    $ul.style.maxHeight = $ul.offsetHeight + 'px';
-  });
-  document.body.classList.remove('init');*/
-
   // 获取选项信息
   forEach($$('[key]'), function($t) {
     setValue($t, SF.st.settings[$t.getAttribute('key')]);
@@ -174,10 +168,6 @@ function current(target, self) {
   var ul = $$('#' + target + ' ul')[0];
   if (! ul) return;
   clearTimeout(ul.timeout);
-  /*ul.style.overflow = 'hidden';
-  ul.timeout = setTimeout(function() {
-    ul.style.overflow = '';
-  }, 250);*/
 
   forEach($$('button'), function(btn) {
     clearTimeout(btn.timeout);
