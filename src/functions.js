@@ -1,6 +1,6 @@
 SF.fn.waitFor = (function() {
   var waiting_list = [];
- 
+
   var interval = 0;
   var lock = false;
   function setWaiting() {
