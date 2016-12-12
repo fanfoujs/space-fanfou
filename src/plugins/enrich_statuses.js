@@ -1,4 +1,6 @@
 SF.pl.enrich_statuses = new SF.plugin((function($) {
+  var DAY_IN_SECONDS = 24 * 60 * 60;
+
   var is_status_page = location.href.indexOf('http://fanfou.com/statuses/') == 0;
 
   var $stream;
@@ -7,7 +9,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 
   var set_position_interval;
 
-  var short_url_re = /https?:\/\/(?:bit\.ly|goo\.gl|v\.gd|is\.gd|tinyurl\.com|to\.ly|yep\.it|j\.mp)\//;
+  var short_url_re = /https?:\/\/(?:bit\.ly|goo\.gl|v\.gd|is\.gd|tinyurl\.com|to\.ly|yep\.it|j\.mp|t.cn|t.co)\//;
   var fanfou_url_re = /^http:\/\/(?:\S+\.)?fanfou\.com\//;
 
   var MutationObserver = MutationObserver || WebKitMutationObserver;
@@ -84,44 +86,25 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
     });
   }
 
+  function findAndCount(text, pattern) {
+    var re = new RegExp(pattern, 'g');
+    var result = text.match(re);
+    return result ? result.length : 0;
+  }
+
   function setLink($link, url) {
     var original_url = $link.prop('href');
     $link.attr('original-url', original_url);
     $link.prop('title', url);
     $link.prop('href', url);
+    var trailing_slash_re = /\/$/;
     var display_url = url.replace(/^https?:\/\/(?:www\.)?/, '');
-    if (display_url.length > 25) {
+    if (findAndCount(display_url, '/') === 1 && trailing_slash_re.test(display_url)) {
+      display_url = display_url.replace(trailing_slash_re, '');
+    } else if (display_url.length > 25) {
       display_url = display_url.substring(0, 25) + '...';
     }
     $link.text(display_url);
-  }
-
-  function initUrlExpand() {
-    var short_url_services = SF.fn.getData('short_url_services');
-    if (short_url_services) {
-      // 识别更多短链接
-      short_url_services['[a-z0-9]{1,5}\\.[a-z]{2,3}'] = true;
-      var re = '^https?:\\/\\/';
-      re += '(?:' + Object.keys(short_url_services).join('|') + ')';
-      re += '\\/\\S+';
-      re = re.replace(/\./g, '\\.');
-      short_url_re = new RegExp(re);
-      return;
-    }
-    $.ajax({
-      type: 'GET',
-      url: 'http://api.longurl.org/v2/services',
-      data: {
-        format: 'json'
-      },
-      success: function(data) {
-        SF.fn.setData('short_url_services', data);
-        initUrlExpand();
-      },
-      error: function(e) {
-        setTimeout(initUrlExpand, 60000);
-      }
-    });
   }
 
   var cached_short_urls = SF.fn.getData('cached_short_urls') || { };
@@ -132,47 +115,25 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
         callback(cached_short_urls[url]);
       });
     } else {
-      function cb(long_url) {
-        if (short_url_re.test(long_url) && url != long_url) {
-          return expandeUrl(long_url, callback, original_url);
-        }
-        if (long_url.indexOf('http') !== 0) {
-          setTimeout(function() {
-            expandUrl(url, callback, original_url);
-          }, 5000);
-          return;
-        }
-        cached_short_urls[original_url] = long_url;
-        SF.fn.setData('cached_short_urls', cached_short_urls);
-        callback(long_url);
-      }
-      var is_gd_re = /https?:\/\/is\.gd\/([a-zA-Z0-9\-\_]+)/;
-      if (is_gd_re.test(url)) {
-        $.ajax({
-          type: 'GET',
-          url: 'http://is.gd/forward.php',
-          data: {
-            shorturl: url.match(is_gd_re)[1],
-            format: 'simple'
-          },
-          success: function(data) {
-            var url = $temp.html(data).text();
-            return cb(url);
+      $.ajax({
+        type: 'GET',
+        url: 'http://urlex.org/txt/' + url,
+        success: function(long_url) {
+          long_url = long_url && long_url.trim();
+          if (! long_url || long_url.indexOf('http') !== 0) {
+            setTimeout(function() {
+              expandUrl(url, callback, original_url);
+            }, 5000);
+            return;
           }
-        });
-      } else {
-        $.ajax({
-          type: 'GET',
-          url: 'http://api.longurl.org/v2/expand',
-          data: {
-            url: url,
-            format: 'json'
-          },
-          success: function(data) {
-            cb(data['long-url']);
+          if (short_url_re.test(long_url) && url != long_url) {
+            return expandUrl(long_url, callback, original_url);
           }
-        });
-      }
+          cached_short_urls[original_url] = long_url;
+          SF.fn.setData('cached_short_urls', cached_short_urls);
+          callback(long_url);
+        }
+      });
     }
   }
 
@@ -194,13 +155,13 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 
       function markAsIgnored() {
         self.status = 'ignored';
-        SF.fn.setData('sf-url-' + self.url, self);
+        locache.set('sf-url-' + self.url, self, DAY_IN_SECONDS);
       }
 
       if (short_url_re.test(url)) {
         expandUrl(url, function(long_url) {
           self.longUrl = long_url;
-          fetch.call(self);
+          self.fetch();
         });
         return;
       } else if (self.url.indexOf('fanfou.com') === -1 &&
@@ -397,28 +358,20 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
       var result = url.match(flickr_re);
       if (result) {
         $.get(url, function(html) {
-          function createPhotoURL(size) {
-            var url;
-            if (size.secret) {
-              url = base_url.replace(/_.*\.jpg$/, '_' + size.secret + size.fileExtension + '.jpg');
-            } else {
-              url = base_url.replace(/\.jpg$/, size.fileExtension + '.jpg');
+          var images = html.match(/<img.+>/g);
+          if (!images) return;
+          images = [].slice.call(images);
+          var thumbnail_url, large_url;
+          images.some(function(image) {
+            if (!large_url && image.indexOf('class="main-photo is-hidden"') > -1) {
+              var result = image.match(/src="(.+?)"/);
+              large_url = result && result[1];
+            } else if (!thumbnail_url && image.indexOf('class="low-res-photo"') > -1) {
+              var result = image.match(/src="(.+?)"/);
+              thumbnail_url = result && result[1];
             }
-            if (size.queryString) {
-              url += size.queryString;
-            }
-            return url;
-          }
-          var result = html.match(/baseURL: '(\S+)',/);
-          var base_url = result && result[1];
-          var result = html.match(/sizeMap: (\[[^\]]+\])/);
-          var size_map = result && JSON.parse(result[1]);
-          if (size_map) {
-            var size_t = size_map[0];
-            var size_l = size_map.reverse()[0];
-            var large_url = createPhotoURL(size_l);
-            var thumbnail_url = createPhotoURL(size_t);
-          }
+            return thumbnail_url && large_url;
+          });
           if (large_url) {
             loadImage({
               url: self.url,
@@ -678,15 +631,17 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
     }
 
     return function($item) {
-      var $links = $('.content a', $item);
-      var urls = [].map.call($links, function(link) {
-        return $(link).prop('href');
+      var $links = $('.content a', $item).filter(function() {
+        return this.href.indexOf('http') === 0;
       });
-      if (! urls.length)
-        return;
-      urls.forEach(function(url) {
+      $links.each(function() {
+        var $link = $(this);
+        var url = $link.prop('href');
         // 过滤掉形似 http://example.com/ 的 URL
-        if (! url.split('/')[3]) return;
+        if (! url.split('/')[3]) {
+          setLink($link, url);
+          return;
+        }
         // 过滤掉非饭否图片的饭否链接
         if (fanfou_url_re.test(url)) {
           var $link = $item.find('.content [href="' + url + '"]');
@@ -706,7 +661,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
             return true;
           }
         });
-        var ls_cached = SF.fn.getData('sf-url-' + url);
+        var ls_cached = locache.get('sf-url-' + url);
         cached = cached || ls_cached;
         if (cached) {
           cached.__proto__ = UrlItem.prototype;
@@ -810,8 +765,6 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
       revertLinks($message_textarea, links);
     });
   }
-
-  initUrlExpand();
 
   return {
     load: function() {

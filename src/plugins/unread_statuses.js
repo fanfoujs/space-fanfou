@@ -3,7 +3,7 @@ SF.pl.unread_statuses = new SF.plugin((function($) {
   if (! $notification_bar.length)
     return;
 
-  var auto_show, playsound;
+  var playsound;
 
   var button = $('a', $notification_bar)[0];
   var $counter = $('a strong', $notification_bar);
@@ -19,9 +19,8 @@ SF.pl.unread_statuses = new SF.plugin((function($) {
   var sound;
 
   return {
-    update: function(a, b) {
-      auto_show = a;
-      playsound = b;
+    update: function(ps) {
+      playsound = ps;
     },
     load: function() {
       if (playsound) {
@@ -45,12 +44,12 @@ SF.pl.unread_statuses = new SF.plugin((function($) {
           }
 
           if (counter > unread_counter &&
-            (! all_is_mine || ! auto_show) &&
+            ! all_is_mine &&
             playsound) {
             sound.play();
           }
 
-          if (auto_show && all_is_mine && scrollY <= ud_top) {
+          if (all_is_mine && scrollY <= ud_top) {
             SF.fn.emulateClick(button, true);
           }
         }

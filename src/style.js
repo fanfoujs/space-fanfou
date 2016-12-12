@@ -150,7 +150,7 @@
       $btn.data('pullProgress', count);
     }
 
-    $(window).on('mousewheel', function(e) {
+    $(document.documentElement).on('mousewheel', function(e) {
       if (waiting) return;
       if ($body[0].scrollTop) return;
       if (e.wheelDeltaY <= 0) return;

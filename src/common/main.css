@@ -167,10 +167,7 @@
 
 /* Global */
 * {
-  font-family: "Lucida Grande", "Helvetica Neue", Helvetica, Arial, "Segoe UI Symbol", sans-serif !important;
-}
-html {
-  text-rendering: optimizeLegibility;
+  font-family: "Segoe UI Emoji", "Segoe UI Symbol", "Lucida Grande", "Helvetica Neue", Helvetica, "Segoe UI", Arial, sans-serif !important;
 }
 ::selection {
   color: rgba(255, 255, 255, .85);
@@ -811,7 +808,7 @@ p.pm-parent {
 .pagination .more {
   color: #666 !important;
   text-shadow: 0 1px rgba(255, 255, 255, .9);
-  background: 
+  background:
     -webkit-linear-gradient(
       #f5f5f5,
       #e5e5e5

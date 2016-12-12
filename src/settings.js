@@ -19,14 +19,13 @@ SF.st.default_settings = {
     /* 侧栏 */
       fav_friends: false,
       check_saved_searches: true,
-        'check_saved_searches.show_notification': true,
+        'check_saved_searches.show_notification': false,
     /* 批量管理 */
       status_manage: true,
       privatemsg_manage: true,
       friend_manage: true,
     /* 更多设置 */
       unread_statuses: true,
-        'unread_statuses.auto_show': true,
         'unread_statuses.playsound': false,
       user_switcher: true,
       friendship_check: false,
@@ -40,7 +39,6 @@ SF.st.default_settings = {
       'disguise_username.fake_name': '\u7565',
       replace_self_name: false,
     /* 字体 */
-      relaxed_letter_spacing: true,
       emoji: true,
       font_reset_cn: false,
       counternum_font: true,
@@ -69,7 +67,6 @@ SF.st.default_settings = {
   /* 系统 */
     rating: true,
     backup_avatar: true,
-    restoring_state: true,
 };
 
 /* 读取选项 */

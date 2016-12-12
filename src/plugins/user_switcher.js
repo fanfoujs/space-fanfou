@@ -22,34 +22,41 @@ SF.pl.user_switcher = new SF.plugin((function($) {
 
   /* 初始化 Cookie */
   var domain = document.domain;
-  var cookie_strs = document.cookie.split(/\s*;\s*/);
-  var cookies = { };
-  for (var i = 0; i < cookie_strs.length; ++i) {
-    var cookie = cookie_strs[i];
-    var pos = cookie.indexOf('=');
-    if (pos < 0) continue;
-    cookies[cookie.substr(0, pos)] = cookie.substr(pos + 1);
+  var cookies;
+  function readCookies(){
+    var pairs = document.cookie.split(/; ?/);
+    cookies = {};
+    for (var i = 0; i < pairs.length; i++){
+      var pair = pairs[i].split('=');
+      var key = pair[0];
+      if (key) {
+        var value = unescape(pair[1]);
+        cookies[key] = value;
+      }
+    }
   }
 
   /* 初始化数据 */
   var data = SF.fn.getData('switcher') || { };
+  readCookies();
 
   /* Cookie 操作函数 */
   function deleteCookie(name) {
     document.cookie = name + '=;domain=.' + domain + ';' +
               'expires=Thu, 01 Jan 1970 00:00:00 GMT';
   }
-  function setLogin(al) {
+  function logout(callback) {
     stop();
     $.ajax({
       url: $logout.prop('href'),
       method: 'HEAD',
       complete: function() {
-        if (al) {
-          document.cookie = 'al=' + al + ';domain=.' + domain;
-          location.href = '/home';
+        readCookies();
+        if (cookies.u) {
+          var err = new Error('failed to logout');
+          callback(err);
         } else {
-          location.href = '/login';
+          callback(null);
         }
       }
     });
@@ -91,8 +98,15 @@ SF.pl.user_switcher = new SF.plugin((function($) {
       var $item = $('<li>');
       var $link = $('<a>');
       $link.click(function() {
-        removeUser(id);
-        setLogin(user.auto_login);
+        logout(function(err) {
+          if (err) {
+            alert('操作失败，请刷新页面后重试');
+          } else {
+            removeUser(id);
+            document.cookie = 'al=' + user.auto_login + ';domain=.' + domain;
+            location.href = '/home';
+          }
+        });
       });
       var $image = $('<img>');
       $image.attr('src', user.image);
@@ -119,7 +133,15 @@ SF.pl.user_switcher = new SF.plugin((function($) {
   var $another = $('<li>');
   $another.addClass('addnew');
   var $link = $('<a>');
-  $link.click(function() { setLogin(); });
+  $link.click(function() {
+    logout(function(err) {
+      if (err) {
+        alert('操作失败，请刷新页面后重试');
+      } else {
+        location.href = '/login';
+      }
+    })
+  });
   $link.text('登入另一个...');
   $another.append($link);
   $user_list.append($another);

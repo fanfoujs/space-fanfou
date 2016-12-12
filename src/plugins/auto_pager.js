@@ -71,12 +71,12 @@ SF.pl.auto_pager = new SF.plugin((function($) {
     load: function() {
       load();
       $win.bind('keypress', onKeypress);
-      $win.bind('mousewheel', onMousewheel);
+      $html.bind('mousewheel', onMousewheel);
     },
     unload: function() {
       unload();
       $win.unbind('keypress', onKeypress);
-      $win.unbind('mousewheel', onMousewheel);
+      $html.unbind('mousewheel', onMousewheel);
     }
   };
 })(jQuery));

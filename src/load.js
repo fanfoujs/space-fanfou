@@ -205,3 +205,70 @@ addEventListener('SFMessage', function(e) {
     port.postMessage(msg);
   }
 });
+
+function flushLocalStorageWhenFull() {
+  var testKey = '__detect_if_localStorage_is_full__';
+  var testVal = Array(100).join(testKey);
+  try {
+    localStorage.setItem(testKey, testVal);
+  } catch(e) {
+    // http://stackoverflow.com/questions/3027142/calculating-usage-of-localstorage-space
+    if (e.name === 'QuotaExceededError') {
+      // 如果已经达到 localStorage 限额，进行清理
+      // 由于旧代码在存储数据时没有在 key 上面添加 namespace
+      // 所以无法区分数据的写入者是否为太空饭否
+      // 这里针对消耗缓存较多的短网址展开部分进行处理
+      // 考虑到记录数量非常大（可能大于十万条），速度非常慢
+      // 采取直接清空 localStorage 后再把不符合条件的记录添加回去的方式
+      var prefix = 'sf-url-';
+      var i = localStorage.length;
+      var temp = { keys: [], values: [] };
+      while (i--) {
+        var key = localStorage.key(i);
+        if (key && key.indexOf(prefix) !== 0) {
+          temp.keys.push(key);
+          temp.values.push(localStorage.getItem(key));
+        }
+      }
+      localStorage.clear();
+      temp.keys.forEach(function(key, idx) {
+        localStorage.setItem(
+          key,
+          temp.values[idx]
+        );
+      });
+    }
+  }
+  localStorage.removeItem(testKey);
+}
+flushLocalStorageWhenFull();
+
+function cleanupCacheInLocalStorage() {
+  // 自动清理 localStorage 中的缓存
+  // 每两次间隔至少 24 小时
+  var LAST_CLEANUP_DATE_KEY = '__space-fanfou_locache_cleanup_date__';
+  var DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
+  var lastCleanupDate = locache.get(LAST_CLEANUP_DATE_KEY);
+  if (
+    !lastCleanupDate ||
+    Date.now() - lastCleanupDate > DAY_IN_MILLISECONDS
+  ) {
+    locache.cleanup();
+    locache.set(LAST_CLEANUP_DATE_KEY, Date.now());
+  }
+}
+cleanupCacheInLocalStorage();
+
+function setupGoogleAnalytics() {
+  function fn() {
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-84490018-1', 'auto');
+    ga('send', 'pageview');
+  }
+  loadScript('(' + fn.toString() + '());', 'ga');
+}
+setupGoogleAnalytics();

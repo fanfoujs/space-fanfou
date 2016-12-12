@@ -57,10 +57,6 @@ var plugins = [
     js: 'rescale_background.js',
     earlyload: true
   },
-  {
-    name: 'relaxed_letter_spacing',
-    css: 'relaxed_letter_spacing.css'
-  },
 
   /* 页面功能性扩展 */
 
@@ -132,7 +128,6 @@ var plugins = [
   {
     name: 'unread_statuses',
     options: [
-      'auto_show',
       'playsound'
     ],
     js: 'unread_statuses.js'
@@ -140,10 +135,6 @@ var plugins = [
   {
     name: 'friendship_check',
     js: 'friendship_check.js'
-  },
-  {
-    name: 'restoring_state',
-    js: 'restoring_state.js'
   },
   {
     name: 'backup_avatar',
