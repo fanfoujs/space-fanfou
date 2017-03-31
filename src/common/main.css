@@ -297,6 +297,7 @@ a:hover {
   border: 1px solid #bdbdbd !important;
   border-radius: 4px;
   box-shadow: none !important;
+  resize: none;
   -webkit-transition-property: background, height, border, box-shadow;
   -webkit-transition-duration: 250ms;
 }
@@ -619,24 +620,23 @@ p.pm-parent {
 }
 #searchr-form * {
   opacity: .5;
-  -webkit-transition-property: opacity;
-  -webkit-transition-duration: 300ms;
+  border-color: rgba(0, 0, 0, .25);
+  transition-property: opacity;
+  transition-duration: 200ms;
 }
-  #searchr-form:hover *,
-  #searchr-form *:focus,
-  #searchr-form *:focus + * {
-    opacity: 1;
-  }
-#searchr-input {
-  -webkit-transition-property: box-shadow;
-  -webkit-transition-duration: 200ms;
+#searchr-form:hover *,
+#searchr-form *:focus,
+#searchr-form *:focus + * {
+  opacity: 1;
 }
-  #searchr-input:focus {
-    outline: none;
-    box-shadow: 0 0 8px rgba(0, 0, 0, .15);
-  }
+#searchr-input:focus,
+#searchr-input:focus + #searchr-submit {
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 0, 0, .075);
+}
 #searchr-submit {
   text-shadow: 0 1px 0 #fff;
+  background: #eee !important;
 }
 #sidebar .trendtabs ul li .spinner {
   top: 5px;
@@ -649,6 +649,7 @@ p.pm-parent {
   padding: 4px 8px !important;
   background: rgba(0, 0, 0, .05) !important;
   border: 0 !important;
+  border-radius: 4px;
 }
 #sidebar .tags a:hover,
 #sidebar .tags a:active {
@@ -1034,6 +1035,15 @@ a.bh:focus {
   outline: none;
   border-color: rgba(83, 186, 237, 1) !important;
   box-shadow: 0 0 8px rgba(83, 186, 237, .6);
+}
+select {
+  height: 25px;
+  border-radius: 5px;
+  border-color: #bdbdbd;
+}
+select:focus {
+  outline: none;
+  border-color: #2196f3;
 }
 #phupdate .formbutton,
 #update .formbutton,
