@@ -63,20 +63,20 @@
 #stream>ol>li.reply.notavail:active {
   box-shadow: 0 1px 3px rgba(0, 0, 0, .25) inset;
 }
-#stream>ol>li[type="转发"].reply.more,
-#stream>ol>li[type="转发"].reply.hide,
-#stream>ol>li[type="转发"].reply.waiting,
-#stream>ol>li[type="转发"].reply.notavail {
+#stream>ol>li[type="repost"].reply.more,
+#stream>ol>li[type="repost"].reply.hide,
+#stream>ol>li[type="repost"].reply.waiting,
+#stream>ol>li[type="repost"].reply.notavail {
   width: 45px !important;
   padding: 0 0 0 21px !important;
   background-image: url('/resources/images/repost.png');
   background-position: 9px center;
   background-repeat: no-repeat;
 }
-#stream>ol>li[type="回复"].reply.more,
-#stream>ol>li[type="回复"].reply.hide,
-#stream>ol>li[type="回复"].reply.waiting,
-#stream>ol>li[type="回复"].reply.notavail {
+#stream>ol>li[type="reply"].reply.more,
+#stream>ol>li[type="reply"].reply.hide,
+#stream>ol>li[type="reply"].reply.waiting,
+#stream>ol>li[type="reply"].reply.notavail {
   width: 45px !important;
   padding: 0 0 0 21px !important;
   background-image: url('/resources/images/reply.png');

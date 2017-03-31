@@ -161,7 +161,7 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
     var $link = $('a', $reply);
     var type = $link.text().indexOf('转自') == 0;
     $expand
-    .attr('type', type ? '转发' : '回复')
+    .attr('type', type ? 'repost' : 'reply')
     .attr('href', $link.attr('href'))
     .addClass('reply more first')
     .text(type ? '转自' : '展开')
