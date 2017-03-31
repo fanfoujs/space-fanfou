@@ -1,7 +1,7 @@
 #user_switcher {
   display: none;
   position: relative;
-  margin-top: 2px;
+  margin-top: 4px;
   border-top: 1px solid #e5e5e5;
 }
 #user_top.switcher:hover #user_switcher {
@@ -28,8 +28,8 @@
   width: 202px;
   z-index: 2;
   border-radius: 3px;
-  margin: -2px 11px 9px -2px;
-  padding: 2px;
+  margin: -4px 11px 9px -4px;
+  padding: 4px;
 }
 #user_top.switcher:hover > a::after {
   display: none;

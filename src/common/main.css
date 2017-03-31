@@ -562,6 +562,9 @@ p.pm-parent {
 #user_top:first-child > h3 {
   /* font-family: Lato, "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "WenQuanYi Micro Hei", "Microsoft Yahei", sans-serif !important; */
   font-weight: 300 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   -webkit-font-smoothing: antialiased;
 }
 #user_top img {

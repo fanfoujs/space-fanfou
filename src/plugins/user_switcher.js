@@ -117,7 +117,7 @@ SF.pl.user_switcher = new SF.plugin((function($) {
       $link.append($name);
       $item.append($link);
       var $del = $('<span>');
-      $del.text('x');
+      $del.text('×');
       $del.click(function() {
         var tip = '确定要从用户列表中删除 @' +
           user.nickname + '(' +
@@ -145,12 +145,6 @@ SF.pl.user_switcher = new SF.plugin((function($) {
   $link.text('登入另一个...');
   $another.append($link);
   $user_list.append($another);
-
-  /* 调整样式 */
-  var bordercolor = $('#sidebar').css('border-left-color');
-  $user_list.css('border-top-color', bordercolor);
-  $another.css('border-top-color', bordercolor);
-  $user_top.css('border-color', bordercolor);
 
   return {
     load: function() {

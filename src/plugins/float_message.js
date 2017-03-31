@@ -5,7 +5,6 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
   if (! $update.length) return;
   var $act = $('.act', $update);
   var $button = $('.formbutton[type="submit"]', $act);
-  var $tip = $('.tip', $update);
 
   var notlostfocus = false,
     keepmentions = false;

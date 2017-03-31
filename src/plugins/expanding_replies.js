@@ -139,7 +139,9 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
           $li.addClass('last');
           $before.remove();
         } else {
-          displayReplyList(url, before, num - 1);
+          $li.one('animationend', function() {
+            displayReplyList(url, before, num - 1);
+          });
         }
       } else {
         $li.addClass('reply notavail');
