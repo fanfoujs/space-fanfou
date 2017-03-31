@@ -6,11 +6,11 @@
 }
 #stream>ol>li.reply {
   min-height: 38px;
-  padding: 6px 50px 6px 52px !important;
+  padding: 6px 30px 6px 52px !important;
   border-left: 3px solid #e5e5e5;
   font-size: 12px;
   margin-left: 30px;
-  width: 365px !important;
+  width: 385px !important;
   -webkit-animation: fadeIn .4s;
 }
 #stream>ol>li.reply.last {
@@ -55,7 +55,7 @@
 #stream>ol>li.reply.hide:hover,
 #stream>ol>li.reply.waiting:hover,
 #stream>ol>li.reply.notavail:hover {
-  background: rgba(0, 0, 0, .075);
+  background-color: rgba(0, 0, 0, .075) !important;
 }
 #stream>ol>li.reply.more:active,
 #stream>ol>li.reply.hide:active,
