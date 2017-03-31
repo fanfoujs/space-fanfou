@@ -124,7 +124,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
           )
           .append(
             $('<li />').addClass('advanced')
-            .text('饭粒：' + infIndex + ' 个')
+            .text('饭香：' + infIndex + ' 公里')
             .prop('title', '影响力')
             .append(
               $('<div />')

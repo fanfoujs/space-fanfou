@@ -30,22 +30,22 @@
   -webkit-transition: width .75s ease-in-out;
 }
 .statbar_a {
-  background: rgba(255, 42, 0, .1);
+  background: rgba(244, 67, 54, .1);
 }
 .statbar_a div {
-  background: rgba(255, 42, 0, .5);
+  background: rgba(244, 67, 54, 1);
 }
 .statbar_b {
-  background: rgba(136, 204, 0, .1);
+  background: rgba(76, 175, 80, .1);
 }
 .statbar_b div {
-  background: rgba(136, 204, 0, .5);
+  background: rgba(76, 175, 80, 1);
 }
 .statbar_c {
-  background: rgba(0, 170, 255, .1);
+  background: rgba(33, 150, 243, .1);
 }
 .statbar_c div {
-  background: rgba(0, 170, 255, .5);
+  background: rgba(33, 150, 243, 1);
 }
 .protected {
   background: url('/resources/images/protected.png') 211px 9px no-repeat;
