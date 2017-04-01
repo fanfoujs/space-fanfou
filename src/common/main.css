@@ -350,12 +350,10 @@ a:hover, .light .stamp .reply a {
   border-style: solid;
   border-color: #FDE6BE transparent #E3CEAB #FDE0B0;
   border-radius: 2px 0 0 2px;
-  background: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    from(rgba(255, 255, 255, 0)),
-    to(rgba(253, 230, 190, .4))
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0),
+    rgba(253, 230, 190, .4)
   );
 }
 #timeline-notification.onpull a[data-pull-progress="1"]::before {
@@ -681,7 +679,7 @@ p.pm-parent {
   color: #666 !important;
   text-shadow: 0 1px rgba(255, 255, 255, .9);
   background:
-    -webkit-linear-gradient(
+    linear-gradient(
       #f5f5f5,
       #e5e5e5
     ) !important;
@@ -694,7 +692,7 @@ p.pm-parent {
 }
   .pagination .more:hover {
     background:
-      -webkit-linear-gradient(
+      linear-gradient(
         #f2f2f2,
         #e0e0e0
       ) !important;
@@ -722,12 +720,10 @@ p.pm-parent {
 }
   .tabs li a {
     background:
-      -webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        from(#fff),
-        to(#eee)
+      linear-gradient(
+        to bottom,
+        #fff,
+        #eee
       ) !important;
     border: 1px solid rgba(0, 0, 0, .12) !important;
     border-bottom-color: rgba(0, 0, 0, .15) !important;
@@ -743,12 +739,10 @@ p.pm-parent {
   }
   .tabs li a:hover {
     background:
-      -webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        from(#eee),
-        to(#ddd)
+      linear-gradient(
+        to bottom,
+        #eee,
+        #ddd
       ) !important;
   }
   .tabs li.current a:hover {
@@ -756,12 +750,10 @@ p.pm-parent {
   }
 .tabs li a:active {
   background:
-    -webkit-gradient(
-      linear,
-      left top,
-      left bottom,
-      from(#ddd),
-      to(#eee)
+    linear-gradient(
+      to bottom,
+      #ddd,
+      #eee
     ) !important;
 }
 #footer p {
@@ -860,14 +852,12 @@ input.inlinebutton,
   height: 19px !important;
   color: #333 !important;
   background:
-    -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0, #ebebeb),
-      color-stop(.5, #ececec),
-      color-stop(.5, #f3f3f3),
-      color-stop(1, #fff)
+    linear-gradient(
+      to top,
+      #ebebeb 0%,
+      #ececec 50%,
+      #f3f3f3 50%,
+      #fff 100%
     ) !important;
   text-shadow: 0px 1px 0 rgba(255, 255, 255, .25);
   text-decoration: none !important;
@@ -921,14 +911,12 @@ a.bh {
   height: 19px !important;
   color: #333 !important;
   background:
-    -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0, #d3f7fd),
-      color-stop(.5, #87c5fb),
-      color-stop(.5, #a1d1f9),
-      color-stop(1, #d4e9fc)
+    linear-gradient(
+      to top,
+      #d3f7fd 0%,
+      #87c5fb 50%,
+      #a1d1f9 50%,
+      #d4e9fc 100%
     ) !important;
   text-shadow: 0px 1px 0 rgba(255, 255, 255, .25);
   white-space: nowrap;
@@ -974,14 +962,12 @@ select:focus {
   color: #333 !important;
   letter-spacing: 0 !important;
   background:
-    -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0, #ebebeb),
-      color-stop(.5, #ececec),
-      color-stop(.5, #f3f3f3),
-      color-stop(1, #fff)
+    linear-gradient(
+      to top,
+      #ebebeb 0%,
+      #ececec 50%,
+      #f3f3f3 50%,
+      #fff 100%
     ) !important;
   text-shadow: 0px 1px 0 rgba(255, 255, 255, .25);
   white-space: nowrap;
@@ -1026,14 +1012,12 @@ a.bh:active {
   border-left-color: #56578f !important;
   border-right-color: #56578f !important;
   background:
-    -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0, #d3f7fd),
-      color-stop(.5, #87c5fb),
-      color-stop(.5, #a1d1f9),
-      color-stop(1, #d4e9fc)
+    linear-gradient(
+      to top,
+      #d3f7fd 0%,
+      #87c5fb 50%,
+      #a1d1f9 50%,
+      #d4e9fc 100%
     ) !important;
   box-shadow:
     0 999px 0 rgba(0, 115, 215, .3) inset,

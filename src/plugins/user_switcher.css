@@ -96,14 +96,12 @@
   height: 19px !important;
   color: #333 !important;
   background:
-    -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0, #ebebeb),
-      color-stop(.5, #ececec),
-      color-stop(.5, #f3f3f3),
-      color-stop(1, #fff)
+    linear-gradient(
+      to top,
+      #ebebeb 0%,
+      #ececec 50%,
+      #f3f3f3 50%,
+      #fff 100%
     ) !important;
   text-shadow: 0px 1px 0 rgba(255, 255, 255, .25);
   white-space: nowrap;
@@ -126,14 +124,12 @@
   border-left-color: #56578f !important;
   border-right-color: #56578f !important;
   background:
-    -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0, #d3f7fd),
-      color-stop(.5, #87c5fb),
-      color-stop(.5, #a1d1f9),
-      color-stop(1, #d4e9fc)
+    linear-gradient(
+      to top,
+      #d3f7fd 0%,
+      #87c5fb 50%,
+      #a1d1f9 50%,
+      #d4e9fc 100%
     ) !important;
   box-shadow:
     0 999px 0 rgba(0, 115, 215, .3) inset,

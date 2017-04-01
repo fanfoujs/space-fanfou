@@ -6,10 +6,10 @@
   background-color: #ffa !important;
 }
 #stream>ol>li[batch-manage-upward] {
-  background: -webkit-linear-gradient(top, #fff, #ffc 40px);
+  background: linear-gradient(to bottom, #fff, #ffc 40px);
 }
 #stream>ol>li[batch-manage-downward] {
-  background: -webkit-linear-gradient(bottom, #fff, #ffc 40px);
+  background: linear-gradient(to top, #fff, #ffc 40px);
 }
 #stream>ol>li[highlighted] {
   background-color: #ffc !important;
