@@ -7,16 +7,16 @@ SF.pl.counternum_font = new SF.plugin((function() {
     '#phupdate .tip .counter, ' +
     '#update .tip .counter, ' +
     '#PopupBox .tip .counter {' +
-      'font-family: #fontname#, Helvetica, Arial, sans-serif !important;' +
+      'font-family: #fontname#, "Avenir Next", "Avenir", "Segoe UI", "Helvetica Neue", "Helvetica", sans-serif !important;' +
     '} ' +
     '#user_top:first-child>h3 {' +
-      'font-family: #fontname2#, Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "WenQuanYi Micro Hei", "Microsoft Yahei", sans-serif !important;' +
+      'font-family: #fontname2#, "Avenir Next", "Avenir", "Segoe UI", "Helvetica Neue", "Helvetica", sans-serif !important;' +
     '} ' +
     '#user_stats .count {' +
-      'font-family: #fontname#, "Helvetica Neue", Helvetica, Arial, sans-serif !important;' +
+      'font-family: #fontname#, "Avenir Next", "Avenir", "Segoe UI", "Helvetica Neue", "Helvetica", sans-serif !important;' +
     '} ' +
     '#panel h1 {' +
-      'font-family: #fontname2#, Helvetica, Arial, "Hiragino Sans GB W3", "WenQuanYi Micro Hei", "Microsoft Yahei", sans-serif !important;' +
+      'font-family: #fontname2#, "Avenir Next", "Avenir", "Segoe UI", "Helvetica Neue", "Helvetica", sans-serif !important;' +
     '}';
 
   return {

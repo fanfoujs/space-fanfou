@@ -34,14 +34,14 @@ SF.st.default_settings = {
     /* 功能 */
       clean_personal_theme: false,
       remove_app_recom: true,
-        'remove_app_recom.completely_remove': false,
+        'remove_app_recom.completely_remove': true,
       disguise_username: false,
       'disguise_username.fake_name': '\u7565',
       replace_self_name: false,
     /* 字体 */
-      emoji: true,
+      emoji: false,
       font_reset_cn: false,
-      counternum_font: true,
+      counternum_font: false,
         'counternum_font.fontname': navigator.platform == 'Win32' ?
           'Lato' : 'Helvetica Neue',
     /* 细节 */
