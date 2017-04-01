@@ -70,7 +70,7 @@ body {
   font: 400 12px/1.5 "Lucida Grande", "Hevetica Neue", Hevetica, Tahoma, "Hiragino Sans GB", "Microsoft Yahei", "Wenquanyi MicroHei", sans-serif;
   -webkit-user-select: none;
 }
-::selection { 
+::selection {
   background: rgba(0, 0, 0, .1);
   text-shadow: none;
 }
@@ -270,7 +270,7 @@ select {
   color: #555;
 }
 [foldable_tgt] {
-  /* -webkit-transition: height .2s linear; */
+  /* transition: height .2s linear; */
   overflow: hidden;
 }
 [foldable].folded [foldable_tgt],
@@ -294,7 +294,7 @@ select {
   box-shadow:
     0 -1px 1px 1px #fff inset,
     0 1px 3px rgba(0, 0, 0, .1);
-  -webkit-transition: opacity .2s ease-in;
+  transition: opacity .2s ease-in;
   color: #333;
   text-shadow: 0 1px 0 white;
   pointer-events: none;
@@ -598,7 +598,7 @@ input:disabled:-webkit-any([type='password'],
          input[type='button'],
          input[type='submit']):not(.custom-appearance):not(.link-button)) {
   /* OVERRIDE */
-  -webkit-transition: border-color 200ms;
+  transition: border-color 200ms;
   /* We use border color because it follows the border radius (unlike outline).
    * This is particularly noticeable on mac. */
   border-color: rgb(77, 144, 254);
@@ -608,7 +608,7 @@ input:disabled:-webkit-any([type='password'],
 /* Link buttons ***************************************************************/
 
 .link-button {
-  -webkit-box-shadow: none;
+  box-shadow: none;
   background: transparent none;
   border: none;
   color: rgb(17, 85, 204);

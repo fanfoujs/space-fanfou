@@ -44,7 +44,7 @@
           visibility: 'hidden',
           opacity: 0,
           cursor: 'default',
-          '-webkit-transition': '',
+          'transition': '',
           'transition': '',
         });
         hidden = true;
@@ -59,7 +59,7 @@
             visibility: 'visible',
             opacity: .5,
             cursor: 'pointer',
-            '-webkit-transition': 'opacity .4s ease-in-out',
+            'transition': 'opacity .4s ease-in-out',
             'transition': 'opacity .4s ease-in-out',
           });
         }, 0);

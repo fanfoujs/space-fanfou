@@ -1,24 +1,24 @@
 /* Lib */
-@-webkit-keyframes reveal {
+@keyframes reveal {
   0% {
-    -webkit-transform: translate3d(0, -60px, 0);
+    transform: translate3d(0, -60px, 0);
   }
   86% {
-    -webkit-transform: translate3d(0, -2px, 0);
+    transform: translate3d(0, -2px, 0);
   }
   100% {
-    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
   }
 }
-@-webkit-keyframes acceleratedReveal {
+@keyframes acceleratedReveal {
   0% {
-    -webkit-transform: translate3d(0, -10px, 0);
+    transform: translate3d(0, -10px, 0);
   }
   100% {
-    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
   }
 }
-@-webkit-keyframes fadeIn {
+@keyframes fadeIn {
   from {
     opacity: 0;
   }
@@ -26,7 +26,7 @@
     opacity: 1;
   }
 }
-@-webkit-keyframes fadeOut {
+@keyframes fadeOut {
   from {
     opacity: 1;
   }
@@ -34,7 +34,7 @@
     opacity: 0;
   }
 }
-@-webkit-keyframes tipfadeIn {
+@keyframes tipfadeIn {
   from {
     top: 77px;
     opacity: 0;
@@ -44,7 +44,7 @@
     opacity: 1;
   }
 }
-@-webkit-keyframes colorfadeIn {
+@keyframes colorfadeIn {
   from {
     color: rgba(255, 255, 255, 0);
   }
@@ -52,7 +52,7 @@
     color: rgba(255, 255, 255, 1);
   }
 }
-@-webkit-keyframes bl-blinking {
+@keyframes bl-blinking {
   from {
     box-shadow:
       0 999px 0 rgba(172, 172, 172, 0) inset,
@@ -72,7 +72,7 @@
       0 1px 0 rgba(0, 0, 0, .09);
   }
 }
-@-webkit-keyframes bh-blinking {
+@keyframes bh-blinking {
   from {
     box-shadow:
       0 999px 0 rgba(0, 115, 215, 0) inset,
@@ -179,7 +179,7 @@ a:hover, .light .stamp .reply a {
 #phupdate .tip {
   top: 112px;
   right: 125px;
-  -webkit-animation: tipfadeIn 300ms;
+  animation: tipfadeIn 300ms;
 }
 #phupdate .tip .counter,
 #update .tip .counter,
@@ -188,7 +188,7 @@ a:hover, .light .stamp .reply a {
   font-weight: 300 !important;
 }
 #phupdate .act .loading {
-  -webkit-transform: translateX(-40px);
+  transform: translateX(-40px);
 }
 #phupdate textarea {
   width: 490px !important;
@@ -226,8 +226,8 @@ a:hover, .light .stamp .reply a {
   border-radius: 4px;
   box-shadow: none !important;
   resize: none;
-  -webkit-transition-property: background, height, border, box-shadow;
-  -webkit-transition-duration: 250ms;
+  transition-property: background, height, border, box-shadow;
+  transition-duration: 250ms;
 }
 .formdisabled,
 .input_text[disabled] {
@@ -271,7 +271,7 @@ a:hover, .light .stamp .reply a {
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
   z-index: 3 !important;
-  -webkit-animation: fadeIn .1s;
+  animation: fadeIn .1s;
 }
 #PopupUpdate {
   left: 37px !important;
@@ -307,7 +307,7 @@ a:hover, .light .stamp .reply a {
 .upload-button-wrapper,
 .emoji-button-wrapper,
 .location-button-wrapper {
-  -webkit-transition: opacity .3s;
+  transition: opacity .3s;
 }
 .upload-button-wrapper:hover #upload-button {
   background-position: top right !important;
@@ -330,7 +330,7 @@ a:hover, .light .stamp .reply a {
 }
 .ui-autocomplete {
   background: rgba(255, 255, 255, .95) !important;
-  -webkit-animation: fadeIn .2s;
+  animation: fadeIn .2s;
 }
 #main.privatemsg #update .act .loading {
   display: none;
@@ -517,8 +517,8 @@ p.pm-parent {
   height:16px !important;
   background-size: 1.25em auto !important;
   background-position:center center;
-  -webkit-transition-property: opacity;
-  -webkit-transition-duration: 300ms;
+  transition-property: opacity;
+  transition-duration: 300ms;
 }
 #iconset img:hover {
   opacity: 1;
@@ -915,10 +915,10 @@ input.formbutton:hover,
 .batch-manage .friend-remove:hover,
 .batch-manage .delete-privatemsg:hover,
 #setmobile input[type="submit"]:hover {
-  -webkit-animation-name: bl-blinking;
-  -webkit-animation-timing-function: ease-in-out;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-duration: 1s;
+  animation-name: bl-blinking;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-duration: 1s;
 }
 .bl:focus,
 .bl-long:focus,
@@ -963,10 +963,10 @@ a.bh {
   -webkit-user-select: none;
 }
 a.bh:hover {
-  -webkit-animation-name: bh-blinking;
-  -webkit-animation-timing-function: ease-in-out;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-duration: 1s;
+  animation-name: bh-blinking;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-duration: 1s;
 }
 a.bh:focus {
   outline: none;
@@ -1013,10 +1013,10 @@ select:focus {
 #phupdate .formbutton:hover,
 #update .formbutton:hover,
 #PopupBox .formbutton:hover {
-  -webkit-animation-name: bl-blinking;
-  -webkit-animation-timing-function: ease-in-out;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-duration: 1s;
+  animation-name: bl-blinking;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-duration: 1s;
 }
 #phupdate .formbutton:focus,
 #update .formbutton:focus,
@@ -1058,7 +1058,7 @@ a.bh:active {
     0 999px 0 rgba(0, 115, 215, .3) inset,
     0 1px 0 rgba(255, 255, 255, 1) inset,
     0 1px 0 rgba(0, 0, 0, .09);
-  -webkit-animation-name: none;
+  animation-name: none;
 }
 .post_act.friend-deny, .post_act.follower-remove {
   width: 75px;

@@ -115,10 +115,10 @@
 }
 #user_switcher .addnew a:hover {
   text-decoration: none;
-  -webkit-animation-name: bl-blinking;
-  -webkit-animation-timing-function: ease-in-out;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-duration: 1s;
+  animation-name: bl-blinking;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-duration: 1s;
 }
 #user_switcher .addnew a:active {
   border-top-color: #5a5caf !important;
@@ -139,7 +139,7 @@
     0 999px 0 rgba(0, 115, 215, .3) inset,
     0 1px 0 rgba(255, 255, 255, 1) inset,
     0 1px 0 rgba(0, 0, 0, .09);
-  -webkit-animation-name: none;
+  animation-name: none;
 }
 #user_top.switcher + #reminder {
   margin-top: 47px;

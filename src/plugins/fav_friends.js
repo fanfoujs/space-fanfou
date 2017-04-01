@@ -186,7 +186,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
               if (! e.shiftKey) return;
               e.preventDefault();
               e.stopPropagation();
-              var t = parseFloat($li.css('-webkit-transition-duration')) * 1000;
+              var t = parseFloat($li.css('transition-duration')) * 1000;
               $li.css('opacity', 0);
               setTimeout(function() {
                 $li.remove();

@@ -10,7 +10,7 @@
   text-indent: -9999px;
   background: rgba(0, 0, 0, .25) url('/resources/images/default-style.png') no-repeat center 12px;
   border-radius: 50px;
-  -webkit-animation: fadeIn .75s;
+  animation: fadeIn .75s;
 }
 .sf_default_theme {
   background: rgba(0, 0, 0, .25) url('/resources/images/personalized-style.png') no-repeat center 12px !important;
@@ -21,7 +21,7 @@
 
 @media (max-width: 990px) {
   #sf_clean_personal_theme {
-    -webkit-animation: fadeOut .75s;
+    animation: fadeOut .75s;
     opacity: 0;
     z-index: -100;
   }

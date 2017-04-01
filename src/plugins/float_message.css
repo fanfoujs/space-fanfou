@@ -1,12 +1,12 @@
 .actpost .formbutton,
 .tip,
 #u_button {
-  -webkit-transition-property: opacity, top;
-  -webkit-transition-duration: 300ms;
+  transition-property: opacity, top;
+  transition-duration: 300ms;
 }
 #phupdate textarea {
-  -webkit-transition-property: all;
-  -webkit-transition-duration: 300ms;
+  transition-property: all;
+  transition-duration: 300ms;
 }
 .float-message {
   position: fixed;
@@ -67,7 +67,7 @@
   top: 67px !important;
 }
 .float-message:not(:hover) .tip {
-  -webkit-animation-duration: 0 !important;
+  animation-duration: 0 !important;
 }
 .float-message .actpost .formbutton,
 .float-message #u_button,
@@ -95,5 +95,5 @@
   position: absolute;
   top: 0;
   right: 0;
-  -webkit-transform: translateX(0);
+  transform: translateX(0);
 }

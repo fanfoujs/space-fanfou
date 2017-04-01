@@ -27,7 +27,7 @@
   height: 5px;
   background: rgba(0, 0, 0, .25);
   width: 0;
-  -webkit-transition: width .75s ease-in-out;
+  transition: width .75s ease-in-out;
 }
 .statbar_a {
   background: rgba(244, 67, 54, .1);

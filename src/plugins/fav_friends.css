@@ -15,14 +15,14 @@
   display: inline-block;
   pointer-events: none;
   background: url('/resources/images/star.png') right top no-repeat;
-  -webkit-transform: translate(16px, -16px);
-  -webkit-transition-property: -webkit-transform, opacity;
-  -webkit-transition-duration: .2s;
-  -webkit-transition-timing-function: linear;
+  transform: translate(16px, -16px);
+  transition-property: transform, opacity;
+  transition-duration: .2s;
+  transition-timing-function: linear;
 }
 #info.faved #avatar span.fav_friends {
   opacity: .85;
-  -webkit-transform: translate(0, 0);
+  transform: translate(0, 0);
 }
 #info #panel h1 a {
   cursor: pointer;
@@ -32,7 +32,7 @@
   opacity: 0;
   display: inline-block;
   background: url('/resources/images/op-icons.png') 0 -16px no-repeat;
-  -webkit-transition: opacity .2s ease-in-out;
+  transition: opacity .2s ease-in-out;
 }
 #info:hover #panel h1 a {
   opacity: 1;
@@ -59,7 +59,7 @@
   margin-right: 15px;
 }
 #sidebar .fav_friends ul li {
-  -webkit-transition: opacity .2s ease-in-out;
+  transition: opacity .2s ease-in-out;
 }
 #sidebar .fav_friends li.drag-source,
 #sidebar .fav_friends li.dragover {
