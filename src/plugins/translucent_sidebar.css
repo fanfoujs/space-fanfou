@@ -1,5 +1,5 @@
 #sidebar {
-  background-color: rgba(255, 255, 255, .85) !important;
+  background-color: rgba(255, 255, 255, .9) !important;
 }
 @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
   #sidebar {

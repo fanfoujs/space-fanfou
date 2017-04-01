@@ -52,66 +52,6 @@
     color: rgba(255, 255, 255, 1);
   }
 }
-@-webkit-keyframes popIn {
-  from {
-    opacity: 0;
-    -webkit-transform: scale(.8) translateY(5px);
-  }
-  90% {
-    opacity: 1;
-    -webkit-transform: scale(1.01);
-  }
-  to {
-    -webkit-transform: scale(1);
-  }
-}
-@-webkit-keyframes jumpIn {
-  from {
-    opacity: 0;
-  }
-  50% {
-    -webkit-transform: translateY(-10px);
-  }
-  70% {
-    -webkit-transform: translateY(0);
-  }
-  90% {
-    -webkit-transform: translateY(-2px);
-  }
-  to {
-    opacity: 1;
-    -webkit-transform: translateY(0)
-  }
-}
-@-webkit-keyframes bomb {
-  from {
-    -webkit-transform: translateY(-15px) scale(.85);
-  }
-  35% {
-    -webkit-transform: translateY(0) scale(.85);
-  }
-  42.5% {
-    -webkit-transform: rotateX(30deg) scale(.85);
-  }
-  47.5% {
-    -webkit-transform: rotateX(10deg) scale(.85);
-  }
-  65% {
-    -webkit-transform: rotateX(0) translateY(-8px) scale(.85);
-  }
-  82.5% {
-    -webkit-transform: translateY(0) scale(.85);
-  }
-  85% {
-    -webkit-transform: rotateX(25deg) scale(.85);
-  }
-  92.5% {
-    -webkit-transform: rotateX(0) translateY(-2px) scale(.85);
-  }
-  to {
-    -webkit-transform: translateY(0) scale(.85);
-  }
-}
 @-webkit-keyframes bl-blinking {
   from {
     box-shadow:
@@ -150,18 +90,6 @@
       0 999px 0 rgba(0, 115, 215, 0) inset,
       0 1px 0 rgba(255, 255, 255, 1) inset,
       0 1px 0 rgba(0, 0, 0, .09);
-  }
-}
-@-webkit-keyframes wobbleIn {
-  0% {
-    -webkit-transform: perspective(300px) rotateX(90deg) scale(.8);
-    opacity: .5;
-  }
-  75% {
-    opacity: 1;
-  }
-  100% {
-    -webkit-transform: perspective(300px) rotateX(0) scale(1);
   }
 }
 
@@ -905,9 +833,15 @@ p.pm-parent {
 }
 #sidebar .stabs li {
   position: relative;
+  margin-bottom: 0 !important;
+  line-height: 32px !important;
 }
 #sidebar .stabs li a {
   border-radius: 0;
+}
+#sidebar .stabs li.current a,
+#sidebar .stabs li a:hover {
+  background: rgba(255, 255, 255, .5) !important;
 }
 #navtabs a[href="/privatemsg"] .count,
 #navtabs a[href="/mentions"] .count {

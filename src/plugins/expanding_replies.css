@@ -7,7 +7,7 @@
 #stream>ol>li.reply {
   min-height: 38px;
   padding: 6px 30px 6px 52px !important;
-  border-left: 3px solid #e5e5e5;
+  border-left: 1px solid #eee;
   font-size: 12px;
   margin-left: 30px;
   width: 385px !important;
