@@ -1,23 +1,4 @@
 /* Lib */
-@keyframes reveal {
-  0% {
-    transform: translate3d(0, -60px, 0);
-  }
-  86% {
-    transform: translate3d(0, -2px, 0);
-  }
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
-}
-@keyframes acceleratedReveal {
-  0% {
-    transform: translate3d(0, -10px, 0);
-  }
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
-}
 @keyframes fadeIn {
   from {
     opacity: 0;
