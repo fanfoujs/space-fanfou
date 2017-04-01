@@ -430,7 +430,7 @@ a:hover, .light .stamp .reply a {
   max-height: 100px;
   padding: 0 !important;
   border: 0 !important;
-  cursor: -webkit-zoom-in;
+  cursor: zoom-in;
 }
 #stream li span.content a.zoom.gif span {
   right: 0 !important;
@@ -782,7 +782,7 @@ p.pm-parent {
 }
 #ZoomImage {
   box-shadow: 0 0 15px rgba(0, 0, 0, .5);
-  cursor: -webkit-zoom-out !important;
+  cursor: zoom-out !important;
 }
 #sharer:first-child span {
   margin-top: -24px;
