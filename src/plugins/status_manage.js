@@ -52,7 +52,7 @@ SF.pl.status_manage = new SF.plugin((function($) {
     if ($(e.target).is('input')) return;
     if (! e.shiftKey) return;
     e.preventDefault();
-    getSelection().collapse();
+    getSelection().collapse(document.body, 0);
     var $current_li = $(e.currentTarget);
     if ($start) {
       if ($start[0] !== e.currentTarget) {
