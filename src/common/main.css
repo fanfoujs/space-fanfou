@@ -100,8 +100,8 @@
 a {
   text-decoration: none;
 }
-a:hover {
-  background-color: transparent !important;
+a:hover, .light .stamp .reply a {
+  background-color: transparent;
   color: currentColor;
 }
 .ui-roundedbox {
@@ -331,6 +331,9 @@ a:hover {
 .ui-autocomplete {
   background: rgba(255, 255, 255, .95) !important;
   -webkit-animation: fadeIn .2s;
+}
+#main.privatemsg #update .act .loading {
+  display: none;
 }
 #timeline-notification,
 .sysnotice {
@@ -1071,6 +1074,9 @@ a.bh:active {
 }
 .overlay-report {
   z-index: 3 !important;
+}
+#search-switch .current:hover {
+  background-color: white;
 }
 
 /* Simplified */
