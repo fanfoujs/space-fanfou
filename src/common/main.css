@@ -355,6 +355,7 @@ a:hover, .light .stamp .reply a {
     rgba(255, 255, 255, 0),
     rgba(253, 230, 190, .4)
   );
+  transition: width ease 100ms;
 }
 #timeline-notification.onpull a[data-pull-progress="1"]::before {
   width: 33%;
