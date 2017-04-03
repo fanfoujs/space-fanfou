@@ -338,7 +338,7 @@ a:hover, .light .stamp .reply a {
   background: #ffecb3 !important;
   color: #795548;
 }
-#timeline-notification.onpull a::before {
+#timeline-notification a::before {
   position: absolute;
   left: -1px;
   top: -1px;
@@ -346,6 +346,10 @@ a:hover, .light .stamp .reply a {
   content: " ";
   height: 100%;
   width: 0;
+  transition: width ease 100ms;
+  -webkit-user-select: none;
+}
+#timeline-notification.onpull a::before {
   border-width: 1px;
   border-style: solid;
   border-color: #FDE6BE transparent #E3CEAB #FDE0B0;
@@ -355,7 +359,6 @@ a:hover, .light .stamp .reply a {
     rgba(255, 255, 255, 0),
     rgba(253, 230, 190, .4)
   );
-  transition: width ease 100ms;
 }
 #timeline-notification.onpull a[data-pull-progress="1"]::before {
   width: 33%;
