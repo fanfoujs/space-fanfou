@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }, false);
 
   $('version').textContent = localStorage['sf_version'];
+  $('current_year').textContent = new Date().getFullYear();
 
   var $wrapper = $('wrapper');
   var $screenshots = $$('.screenshot');
