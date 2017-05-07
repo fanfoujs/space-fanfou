@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     switch ($elem.type) {
       case 'checkbox':
         return $elem.checked;
+      case 'textarea':
       case 'text':
       case 'select':
       case 'select-one':
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if ($elem.checked !== value)
           SF.fn.emulateClick($elem);
         break;
+      case 'textarea':
       case 'text':
       case 'number':
       case 'select':

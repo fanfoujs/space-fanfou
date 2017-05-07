@@ -40,6 +40,14 @@ var plugins = [
     sync: true
   },
   {
+    name: 'custom_style',
+    js: 'custom_style.js',
+    earlyload: true,
+    options: [
+      'code_content'
+    ]
+  },
+  {
     name: 'remove_app_recom',
     js: 'remove_app_recom.js',
     css: 'remove_app_recom.css',
