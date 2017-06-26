@@ -648,17 +648,11 @@ p.pm-parent {
   float: left;
   margin: 0 3px !important;
 }
-.paginator li a {
+.paginator li a,
+.paginator li a:hover {
   padding: 5px 8px !important;
-  border: 1px solid #ddd !important;
+  border: 1px solid #eee !important;
 }
-  .paginator li a:hover {
-    padding: 6px 9px !important;
-    border: 0 !important;
-  }
-  .paginator li a:active {
-    box-shadow: 0 2px 5px rgba(0, 0, 0, .25) inset;
-  }
 #pagination-totop {
   position: fixed;
   display: block;
