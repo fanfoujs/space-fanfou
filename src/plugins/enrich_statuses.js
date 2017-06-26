@@ -1,7 +1,7 @@
 SF.pl.enrich_statuses = new SF.plugin((function($) {
   var DAY_IN_SECONDS = 24 * 60 * 60;
 
-  var is_status_page = location.href.indexOf('http://fanfou.com/statuses/') == 0;
+  var is_status_page = location.pathname.indexOf('/statuses/') == 0;
 
   var $stream;
 
@@ -10,7 +10,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
   var set_position_interval;
 
   var short_url_re = /https?:\/\/(?:bit\.ly|goo\.gl|v\.gd|is\.gd|tinyurl\.com|to\.ly|yep\.it|j\.mp|t.cn|t.co)\//;
-  var fanfou_url_re = /^http:\/\/(?:\S+\.)?fanfou\.com\//;
+  var fanfou_url_re = /^https?:\/\/(?:\S+\.)?fanfou\.com\//;
 
   var MutationObserver = MutationObserver || WebKitMutationObserver;
   var slice = Array.prototype.slice;
@@ -462,7 +462,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
       if (data.type === 'music') {
         if (data.url.indexOf('xiami.com') > -1) {
           var id = data.id + '-' + Math.round(10000 * Math.random());
-          var code = '<embed src="http://www.xiami.com/widget/0_';
+          var code = '<embed src="https://www.xiami.com/widget/0_';
           code += data.id + '/singlePlayer.swf" ';
           code += 'type="application/x-shockwave-flash" ';
           code += 'width="257" height="33" wmode="transparent"></embed>'
@@ -539,7 +539,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
       $a.append('<span>');
       $content.prepend($a);
       if (fanfou_re.test(data.url)) {
-        $a.attr('name', data.url.replace('http://fanfou.com', ''))
+        $a.attr('name', data.url.replace(/^https?:\/\/fanfou\.com\//, ''))
       } else if (width / height > 3 || height / width > 3 ||
           ! picture_re.test(data.large_url)) {
         $img.click(function(e) {

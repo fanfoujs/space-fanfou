@@ -4,7 +4,7 @@ SF.pl.share_to_fanfou = new SF.plugin((function() {
   function onClick(info, tab) {
     var select = info.selectionText;
     var encode = encodeURIComponent;
-    window.open('http://fanfou.com/sharer?' +
+    window.open('https://fanfou.com/sharer?' +
           'u=' + encode(tab.url) +
           '&t=' + encode(tab.title) +
           '&s=bm' +

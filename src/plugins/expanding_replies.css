@@ -90,7 +90,7 @@
 #stream>ol>li.reply.waiting,
 #stream>ol>li.reply.waiting:hover,
 #stream>ol>li.reply.waiting:active {
-  background: url("http://static1.fanfou.com/img/ajax.gif") no-repeat center center !important;
+  background: url("https://static1.fanfou.com/img/ajax.gif") no-repeat center center !important;
   cursor: progress;
 }
 #stream>ol>li.reply.waiting,

@@ -28,8 +28,7 @@ SF.pl.check_saved_searches = new SF.plugin((function() {
     check: function() {
       var self = this;
       request({
-        url: 'http://fanfou.com/q/' + 
-          encodeURIComponent(this.keyword),
+        url: '/q/' + encodeURIComponent(this.keyword),
         ajax: true,
         success: function(data) {
           data = JSON.parse(data);
@@ -48,9 +47,9 @@ SF.pl.check_saved_searches = new SF.plugin((function() {
             }
             var content = li.querySelector('.content');
             var html = content.innerHTML;
-            var pattern = '<a href="http://fanfou.com/' +
+            var pattern = new RegExp('<a href="https?:\\/\\/fanfou\\.com\\/' +
               current_userid +
-              '" class="former">';
+              '" class="former">');
             if (html.indexOf(pattern) > -1) {
               return false;
             }
@@ -70,7 +69,7 @@ SF.pl.check_saved_searches = new SF.plugin((function() {
                 timeout: 30000
               }).addEventListener('click', function(e) {
                 this.cancel();
-                createTab('http://fanfou.com/q/' + self.keyword);
+                createTab('https://fanfou.com/q/' + self.keyword);
               });
             }
           }
@@ -139,14 +138,14 @@ SF.pl.check_saved_searches = new SF.plugin((function() {
   function getKeywordList() {
     reset();
     request({
-      url: 'http://fanfou.com/home',
+      url: 'https://fanfou.com/home',
       responseType: 'document',
       success: function(document) {
         var selector = '#navigation ul li:nth-of-type(2) a';
         var userpage = document.querySelector(selector);
         if (userpage) {
           var url = userpage.href;
-          current_userid = url.replace('http://fanfou.com/', '');
+          current_userid = url.replace(/https?:\/\/fanfou\.com\//, '');
           current_userid = decodeURIComponent(current_userid);
           extractKeywords(document);
         } else {

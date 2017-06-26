@@ -1,6 +1,5 @@
 SF.pl.auto_pager = new SF.plugin((function($) {
-  var browse = 'http://fanfou.com/browse';
-  if (location.href.indexOf(browse) === 0) return;
+  if (location.pathname === '/browse') return;
   var $more = $('#pagination-more');
   if (! $more.length) return;
 

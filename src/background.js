@@ -25,7 +25,6 @@ SF.contentScripts = manifest['content_scripts'][0];
 
 /* 通知 */
 
-window.Notifications = window.Notifications || window.webkitNotifications;
 var notifications = [];
 
 function showNotification(options) {
@@ -34,15 +33,10 @@ function showNotification(options) {
   options.icon = options.icon || '/icons/icon-128.png';
   options.title = options.title || '太空饭否';
 
-  if (Notifications) {
-    notification = Notifications.createNotification(options.icon,
-      options.title, options.content);
-  } else {
-    notification = new Notification(options.title, {
-      icon: options.icon,
-      body: options.content
-    });
-  }
+  notification = new Notification(options.title, {
+    icon: options.icon,
+    body: options.content
+  });
 
   if (options.id) {
     notification.id = options.id;
@@ -75,9 +69,8 @@ function showNotification(options) {
   return notification;
 }
 function hideAllNotifications() {
-  notifications.
-  slice(0, notifications.length).
-  forEach(hideNotification);
+  notifications.forEach(hideNotification);
+  notifications.length = 0;
 }
 function hideNotification(notification) {
   notification.cancel();
@@ -255,7 +248,7 @@ var ports = { };
 
 function checkURL(url) {
   if (typeof url != 'string') return false;
-  return url.substr(0, 18) == 'http://fanfou.com/';
+  return /^https?:\/\/fanfou\.com\//.test(url);
 }
 
 // 等待页面连接
@@ -425,7 +418,7 @@ addEventListener('storage', updateSettings, false);
 
 if (! SF.old_version) {
   // 首次使用太空饭否
-  createTab('http://fanfou.com/home');
+  createTab('https://fanfou.com/home');
   setTimeout(function() {
     var text = '太空饭否已经安装到您的浏览器! ' +
       '请注意地址栏右端的 "饭" 字图标, 点击它将会弹出设置界面, ' +

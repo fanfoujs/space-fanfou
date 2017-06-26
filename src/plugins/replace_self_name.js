@@ -1,17 +1,18 @@
 SF.pl.replace_self_name = new SF.plugin((function($) {
   var $style = $('<style>');
   var code = '.author[href="/#escaped_id"],' +
-    '.content [href="http://fanfou.com/#id"] {' +
+    '.content [href="#user_url"] {' +
     'font-size: 0;' +
     '}' +
     '.author[href="/#escaped_id"]::after,' +
-    '.content [href="http://fanfou.com/#id"]::after {' +
+    '.content [href="#user_url"]::after {' +
     'content: "我";' +
     'margin-right: .3em;' +
     'font-size: 14px;' +
+    'background: inherit;' +
     '}'+
     '.reply .author[href="/#escaped_id"]::after,' +
-    '.reply .content [href="http://fanfou.com/#id"]::after {' +
+    '.reply .content [href="#user_url"]::after {' +
     'font-size: 12px;' +
     '}'+
     '.author[href="/#id"]::after {' +
@@ -25,11 +26,12 @@ SF.pl.replace_self_name = new SF.plugin((function($) {
       SF.fn.waitFor(function() {
         return url = SF.fn.getMyPageURL();
       }, function() {
-        var id = url.replace('http://fanfou.com/', '');
+        var id = url.replace(/^https?:\/\/fanfou\.com\//, '');
         var escaped_id = escape(id);
         $style.text(
           code.replace(/#id/g, id)
             .replace(/#escaped_id/g, escaped_id)
+            .replace(/#user_url/g, location.protocol + '//fanfou.com/' + id)
         );
         $style.appendTo('head');
         if (SF.fn.isMyPage()) {

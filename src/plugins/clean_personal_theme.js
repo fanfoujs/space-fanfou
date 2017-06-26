@@ -3,7 +3,7 @@ SF.pl.clean_personal_theme = new SF.plugin((function($) {
 
   var default_style =
       'body{background-color:#acdae5;' +
-      'background-image:url(http://static.fanfou.com/img/bg/0.png);' +
+      'background-image:url(//static.fanfou.com/img/bg/0.png);' +
       'background-repeat:no-repeat;background-attachment:fixed;' +
       'background-position:top left;color:#222222}' +
       'a,#sidebar a:hover,.pagination .more:hover,.stamp a:hover,' +

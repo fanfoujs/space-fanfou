@@ -1,5 +1,5 @@
 SF.pl.friend_manage = new SF.plugin((
-  location.href == 'http://fanfou.com/friend.request' ?
+  location.pathname == '/friend.request' ?
   function($) {
     var token = $('[token]').attr('token');
 

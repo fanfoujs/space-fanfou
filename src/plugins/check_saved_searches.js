@@ -1,8 +1,7 @@
 SF.pl.check_saved_searches = new SF.plugin((function($) {
   var saved_searches = { };
 
-  var is_home = (location.origin + location.pathname) ===
-    'http://fanfou.com/home';
+  var is_home = location.pathname === '/home';
   if (is_home) {
     var $saved_searches = { };
     $('#savedsearchs ul li a span').each(function() {
@@ -11,7 +10,7 @@ SF.pl.check_saved_searches = new SF.plugin((function($) {
       $saved_searches[keyword] = $search;
       $search.parents('li').click(function(e) {
         $.get(
-          'http://fanfou.com/q/' + encodeURIComponent(keyword),
+          '/q/' + encodeURIComponent(keyword),
           function(data) {
             $search.parent('a').removeClass('new');
             data = JSON.parse(data);
@@ -27,7 +26,7 @@ SF.pl.check_saved_searches = new SF.plugin((function($) {
     });
   }
 
-  var is_search_page = location.href.indexOf('http://fanfou.com/q/') === 0;
+  var is_search_page = location.pathname.indexOf('/q/') === 0;
   if (is_search_page) {
     var keyword = decodeURIComponent(location.pathname.replace('/q/', ''));
     var $time = $('#stream li .stamp .time');

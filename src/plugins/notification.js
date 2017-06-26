@@ -6,9 +6,9 @@ SF.pl.notification = new SF.plugin((function() {
   var data, old_data;
   var username;
 
-  var web_url = 'http://fanfou.com/';
-  var wap_url = 'http://m.fanfou.com/home';
-  var xhr = new XMLHttpRequest;
+  var web_url = 'https://fanfou.com/';
+  var wap_url = 'https://m.fanfou.com/home';
+  var xhr = new XMLHttpRequest();
 
   var visiting_ff = false;
 

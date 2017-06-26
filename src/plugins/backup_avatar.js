@@ -2,7 +2,7 @@ SF.pl.backup_avatar = new SF.plugin((function($) {
   var avatar_data = SF.fn.getData('sf_avatar');
   localStorage.removeItem('sf_avatar');
 
-  if (location.href != 'http://fanfou.com/settings')
+  if (location.pathname !== '/settings')
     return;
 
   var $form = $('#setpicture');
@@ -34,7 +34,7 @@ SF.pl.backup_avatar = new SF.plugin((function($) {
         action: 'photo.upload',
         ajax: 'yes'
       };
-      $.ajax('http://fanfou.com/home/upload', {
+      $.ajax('/home/upload', {
         data: data,
         type: 'POST',
         success: function(e) {

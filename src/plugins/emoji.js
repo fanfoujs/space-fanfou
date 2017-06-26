@@ -896,7 +896,7 @@ return jEmoji;
 });
 
 SF.pl.emoji = new SF.plugin((function($) {
-  var is_status_page = location.href.indexOf('http://fanfou.com/statuses/') == 0;
+  var is_status_page = location.pathname.indexOf('/statuses/') == 0;
   var $stream = $('#stream');
   if (! is_status_page && ! $stream.length) return;
 
@@ -1022,7 +1022,7 @@ SF.pl.emoji = new SF.plugin((function($) {
   function insertText(text) {
     var start = textarea.selectionStart,
       end = textarea.selectionEnd;
-    textarea.value = textarea.value.substring(0, start) + 
+    textarea.value = textarea.value.substring(0, start) +
       text + textarea.value.substring(end, textarea.value.length);
     textarea.selectionStart = textarea.selectionEnd = start + text.length;
   }
