@@ -117,7 +117,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
     } else {
       $.ajax({
         type: 'GET',
-        url: 'http://urlex.org/txt/' + url,
+        url: '//unshorten.me/s/' + url,
         success: function(long_url) {
           long_url = long_url && long_url.trim();
           if (! long_url || long_url.indexOf('http') !== 0) {
@@ -137,6 +137,10 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
     }
   }
 
+  function processUrlProtocol(resourceUrl) {
+    return resourceUrl.replace(/^http:/, location.protocol)
+  }
+
   var enrichStatus = (function() {
     var lib = [];
 
@@ -151,6 +155,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
     UrlItem.prototype.fetch = function fetch() {
       var self = this;
       var url = this.longUrl || this.url;
+      var result;
       this.status = 'loading';
 
       function markAsIgnored() {
@@ -164,12 +169,6 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
           self.fetch();
         });
         return;
-      } else if (self.url.indexOf('fanfou.com') === -1 &&
-        ! self.longUrl) {
-        setTimeout(function() {
-          self.longUrl = self.url;
-          markAsIgnored();
-        });
       }
 
       if (! isPhotoLink(url) && ! isMusicLink(url)) {
@@ -177,20 +176,19 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
         return;
       }
 
-      var result = url.match(xiami_song_re);
+      result = url.match(xiami_song_re);
       if (result) {
-        var music_url = result[0];
         self.data = {
           type: 'music',
-          url: music_url,
-          id: music_url.match(/\d+$/)[0]
+          url: url,
+          id: result[1]
         };
-        $.get(music_url, function(html) {
-          var re = /<img class="cdCDcover185" src="(\S+)" \/>/;
+        $.get(processUrlProtocol(url), function(html) {
+          var re = /<img\s+class="cdCDcover185"\s+src="([^"]+)"/;
           var cover_url = (html.match(re) || [])[1];
-          self.data.cover_url = cover_url || '';
-          self.data.cover_url_large = cover_url.replace(/_2\.jpg/, '.jpg');
           if (cover_url) {
+            self.data.cover_url = cover_url || '';
+            self.data.cover_url_large = cover_url.replace(/@.+$/, '');
             getNaturalDimentions(cover_url, function(dimentions) {
               self.cover_width = dimentions.width;
               self.cover_height = dimentions.height;
@@ -205,15 +203,15 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
         return;
       }
 
-      var result = url.match(instagram_re);
+      result = url.match(instagram_re);
       if (result) {
-        var original_url = result[0];
+        var original_url = url;
         if (! original_url.match(/\/$/)) {
           original_url += '/';
         }
         var image_url = original_url + 'media/';
         image_url = image_url.replace('instagr.am', 'instagram.com');
-        $.get(original_url, function(html) {
+        $.get(processUrlProtocol(original_url), function(html) {
           var re = /<meta property="og:image" content="(\S+)" \/>/;
           var large_url = (html.match(re) || [])[1];
           if (large_url) {
@@ -230,10 +228,10 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
         return;
       }
 
-      var result = url.match(pinsta_re);
+      result = url.match(pinsta_re);
       if (result) {
         var id = result[1];
-        $.get(url, function(html) {
+        $.get(processUrlProtocol(url), function(html) {
           var $html = $(html);
           var large_url;
           var thumbnail_url;
@@ -268,7 +266,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
         return;
       }
 
-      var result = url.match(weibo_re);
+      result = url.match(weibo_re);
       if (result) {
         var large_url = url.replace(/\/(?:mw1024|bmiddle|thumbnail)\//, '/large/');
         loadImage({
@@ -280,9 +278,9 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
         return;
       }
 
-      var result = url.match(imgly_re);
+      result = url.match(imgly_re);
       if (result) {
-        $.get(url, function(html) {
+        $.get(processUrlProtocol(url), function(html) {
           var $html = $(html);
           var full_url = $html.find('#button-fullview a').attr('href') || '';
           $html.length = 0;
@@ -313,9 +311,9 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
         return;
       }
 
-      var result = url.match(lofter_re);
+      result = url.match(lofter_re);
       if (result) {
-        $.get(url, function(html) {
+        $.get(processUrlProtocol(url), function(html) {
           var $html = $(html);
           var large_url = $html.find('[bigimgsrc]').attr('bigimgsrc');
           $html.length = 0;
@@ -333,13 +331,12 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
         return;
       }
 
-      var result = url.match(fanfou_re);
+      result = url.match(fanfou_re);
       if (result) {
-        $.get(url, function(html) {
+        $.get(processUrlProtocol(url), function(html) {
           var $html = $(html);
           var large_url = $html.find('#photo img').attr('src') || '';
-          var thumbnail_url = large_url.replace('/n0/', '/m0/');
-          $html.length = 0;
+          var thumbnail_url = large_url.replace(/@.+$/, '@100w_100h_1l.jpg');
           $html = null;
           if (large_url) {
             loadImage({
@@ -355,9 +352,9 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
         return;
       }
 
-      var result = url.match(flickr_re);
+      result = url.match(flickr_re);
       if (result) {
-        $.get(url, function(html) {
+        $.get(processUrlProtocol(url), function(html) {
           var images = html.match(/<img.+>/g);
           if (!images) return;
           images = [].slice.call(images);
@@ -386,13 +383,12 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
         return;
       }
 
-      var result = url.match(xiami_album_re);
+      result = url.match(xiami_album_re);
       if (result) {
-        var album_url = result[0];
-        $.get(album_url, function(html) {
+        $.get(processUrlProtocol(url), function(html) {
           var re = /<img class="cdCover185"\s+src="(\S+)"\s+rel="v:photo"\s+alt="/;
           var cover_url = (html.match(re) || [])[1] || '';
-          var cover_url_large = cover_url.replace(/_2\.jpg/, '.jpg');
+          var cover_url_large = cover_url.replace(/@.+$/, '');
           if (cover_url_large) {
             loadImage({
               url: self.url,
@@ -405,10 +401,9 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
         return;
       }
 
-      var result = url.match(xiami_collection_re);
+      result = url.match(xiami_collection_re);
       if (result) {
-        var collection_url = result[0];
-        $.get(collection_url, function(html) {
+        $.get(processUrlProtocol(url), function(html) {
           var $html = $(html);
           var cover_url = $html.find('#cover_logo .bigImgCover img').attr('src') || '';
           var cover_url_large = $html.find('#cover_logo .bigImgCover').attr('href') || '';
@@ -426,7 +421,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
         return;
       }
 
-      var result = picture_re.test(url);
+      result = picture_re.test(url);
       if (result) {
         loadImage({
           url: self.url,
@@ -462,7 +457,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
       if (data.type === 'music') {
         if (data.url.indexOf('xiami.com') > -1) {
           var id = data.id + '-' + Math.round(10000 * Math.random());
-          var code = '<embed src="https://www.xiami.com/widget/0_';
+          var code = '<embed src="' + location.protocol + '//www.xiami.com/widget/351011_';
           code += data.id + '/singlePlayer.swf" ';
           code += 'type="application/x-shockwave-flash" ';
           code += 'width="257" height="33" wmode="transparent"></embed>'
@@ -519,10 +514,10 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
       var $content = $item.find('.content');
       if (! $content.length) return;
       if (data.large_url) {
-        data.large_url = data.large_url.replace(/#\S*$/, '');
+        data.large_url = processUrlProtocol(data.large_url.replace(/#\S*$/, ''));
       }
       if (data.thumbnail_url) {
-        data.thumbnail_url = data.thumbnail_url.replace(/#\S*$/, '');
+        data.thumbnail_url = processUrlProtocol(data.thumbnail_url.replace(/#\S*$/, ''));
       }
       var $a = $('<a>');
       $a.addClass('photo zoom');
@@ -571,7 +566,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
     function loadImage(options) {
       var url_item = options.urlItem;
       var url = options.thumbnail_url || options.large_url;
-      getNaturalDimentions(url, function(dimentions) {
+      getNaturalDimentions(processUrlProtocol(url), function(dimentions) {
         url_item.data = {
           url: options.url,
           large_url: options.large_url,
@@ -588,14 +583,14 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
       });
     }
 
-    var instagram_re = /https?:\/\/(?:instagram\.com|instagr.am)\/p\/[a-zA-Z0-9_\-]+\/?/;
+    var instagram_re = /https?:\/\/(?:www\.)?(?:instagram\.com|instagr.am)\/p\/[a-zA-Z0-9_\-]+\/?/;
     var pinsta_re = /https?:\/\/pinsta\.me\/p\/([a-zA-Z0-9_\-]+)/;
     var weibo_re = /https?:\/\/[w0-9]+\.sinaimg\.cn\/\S+\.jpg/;
     var imgly_re = /https?:\/\/img\.ly\//;
     var lofter_re = /\.lofter\.com\/post\/[a-zA-Z0-9_\-]+/;
     var fanfou_re = /https?:\/\/fanfou\.com\/photo\//;
     var flickr_re = /https?:\/\/(?:www\.)?flickr\.com\/photos\//;
-    var xiami_album_re = /https?:\/\/(?:www\.)?xiami\.com\/album\/(\d+)/;
+    var xiami_album_re = /https?:\/\/(?:www\.)?xiami\.com\/album\/([0-9a-zA-Z-]+)/;
     var xiami_collection_re = /https?:\/\/(?:www\.)?xiami\.com\/song\/showcollect\/id\/(\d+)/;
     var picture_re = /\.(?:jpg|jpeg|png|gif|webp)(?:\??\S*)?$/i;
 
@@ -618,7 +613,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
         });
     }
 
-    var xiami_song_re = /https?:\/\/(?:www\.)?xiami\.com\/song\/(\d+)/;
+    var xiami_song_re = /https?:\/\/(?:www\.)?xiami\.com\/song\/([0-9a-zA-Z-]+)/;
 
     var music_res = [
       xiami_song_re
