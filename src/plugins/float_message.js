@@ -9,7 +9,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
   var notlostfocus = false,
     keepmentions = false;
 
-  var is_home = location.pathname.indexOf('/home') === 0;
+  var is_home = SF.fn.isHomePage();
 
   /* 处理悬浮 */
   var $msg = $('textarea', $update);

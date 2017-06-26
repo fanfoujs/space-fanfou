@@ -1,6 +1,6 @@
 SF.pl.fav_friends = new SF.plugin((function($) {
   var is_user_page = SF.fn.isUserPage() || SF.fn.isMyPage();
-  var is_home_page = location.pathname === '/home';
+  var is_home_page = SF.fn.isHomePage();
 
   var FAVED_TIP = '从有爱饭友列表去除';
   var UNFAVED_TIP = '加入有爱饭友列表';

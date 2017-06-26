@@ -87,6 +87,10 @@ SF.fn.getMyPageURL = function() {
   return my_page_url;
 }
 
+SF.fn.isHomePage = function() {
+  return location.pathname === '/home'
+}
+
 SF.fn.isUserPage = function() {
   return !! document.getElementById('overlay-report');
 }

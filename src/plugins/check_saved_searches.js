@@ -1,7 +1,7 @@
 SF.pl.check_saved_searches = new SF.plugin((function($) {
   var saved_searches = { };
 
-  var is_home = location.pathname === '/home';
+  var is_home = SF.fn.isHomePage();
   if (is_home) {
     var $saved_searches = { };
     $('#savedsearchs ul li a span').each(function() {
