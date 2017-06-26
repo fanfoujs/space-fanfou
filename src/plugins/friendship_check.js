@@ -10,14 +10,14 @@ SF.pl.friendship_check = new SF.plugin((function($) {
   }
 
   var $insert = $('#relation, #userview_link').first();
-  if (! $insert.length) 
+  if (! $insert.length)
     return;
 
   var my_url = SF.fn.getMyPageURL();
   if (! my_url) return;
 
   var my_id = getIdFromURL(my_url);
-  var follower_list_url = 'http://fanfou.com/followers/' + encodeURIComponent(my_id) + '/p.';
+  var follower_list_url = '/followers/' + encodeURIComponent(my_id) + '/p.';
 
   var $check = $('<span />');
 
@@ -35,7 +35,7 @@ SF.pl.friendship_check = new SF.plugin((function($) {
   }
 
   function getIdFromURL(url) {
-    return decodeURIComponent(url.replace('http://fanfou.com/', ''));
+    return decodeURIComponent(url.replace(/https?:\/\/fanfou\.com\//, ''));
   }
 
   function check() {

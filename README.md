@@ -6,10 +6,10 @@
 
 ## 团队
 
-* [@太空小孩](http://fanfou.com/anegie)
-* [@锐风](http://fanfou.com/ruif)
-* [@Xidorn](http://fanfou.com/xidorn)
-* [@.rex](http://fanfou.com/zhasm)
+* [@太空小孩](https://fanfou.com/anegie)
+* [@锐风](https://fanfou.com/ruif)
+* [@Xidorn](https://fanfou.com/xidorn)
+* [@.rex](https://fanfou.com/zhasm)
 
 ## 使用方法
 
@@ -20,15 +20,15 @@
 
 ### 非官方版本
 
-* [0.5.3.1 Safari 精简版](https://dl.dropbox.com/u/2912260/apps/space_fanfou_safari_0531.safariextz)（by [@太空小孩](http://fanfou.com/anegie)）
-* [0.6.4.0 Fantom / Opera 版太空饭否](https://addons.opera.com/zh-cn/extensions/details/fantom)（by [@锐风](http://fanfou.com/ruif)）
-* [0.2.0.0 Firefox 精简移植版](http://userstyles.org/styles/44399/fanfou-style
-)（by [@fanzeyi](http://fanfou.com/fanzeyi))
+* [0.5.3.1 Safari 精简版](https://dl.dropbox.com/u/2912260/apps/space_fanfou_safari_0531.safariextz)（by [@太空小孩](https://fanfou.com/anegie)）
+* [0.6.4.0 Fantom / Opera 版太空饭否](https://addons.opera.com/zh-cn/extensions/details/fantom)（by [@锐风](https://fanfou.com/ruif)）
+* [0.2.0.0 Firefox 精简移植版](https://userstyles.org/styles/44399/fanfou-style
+)（by [@fanzeyi](https://fanfou.com/fanzeyi))
 
 ## 参阅
 
-* 官方饭否：[http://fanfou.com/spacefanfou](http://fanfou.com/spacefanfou )
-* 入门手册：[https://spacekid.me/spacefanfou/](http://spacekid.me/spacefanfou/)
+* 官方饭否：[https://fanfou.com/spacefanfou](https://fanfou.com/spacefanfou )
+* 入门手册：[https://spacekid.me/spacefanfou/](https://spacekid.me/spacefanfou/)
 
 ## 协议
 

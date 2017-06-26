@@ -18,7 +18,11 @@ SF.pl.user_switcher = new SF.plugin((function($) {
   var $user_top = $('#user_top');
   if (! $user_top.length) return;
 
-  var $logout = $('a[href^="http://fanfou.com/logout/"]');
+  var $logout = $('a[href^="//fanfou.com/logout/"]');
+  if (!$logout.length) {
+    // 尝试 http
+    $logout = $('a[href^="http://fanfou.com/logout/"]');
+  }
 
   /* 初始化 Cookie */
   var domain = document.domain;

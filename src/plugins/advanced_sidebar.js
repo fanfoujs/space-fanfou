@@ -159,7 +159,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 
       function init() {
         var script = document.createElement('script');
-        script.src = 'http://api.fanfou.com/users/show.json?id=' +
+        script.src = '//api.fanfou.com/users/show.json?id=' +
           encodeURIComponent(userid) +
           '&callback=SF.cb.advanced_sidebar' +
           '&unique=' + (new Date().getTime());

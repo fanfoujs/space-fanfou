@@ -12,7 +12,7 @@
       "style.js",
       "load.js"
     ],
-    "matches": [ "http://fanfou.com/*" ],
+    "matches": [ "http://fanfou.com/*", "https://fanfou.com/*" ],
     "run_at": "document_start"
   } ],
   "web_accessible_resources": [

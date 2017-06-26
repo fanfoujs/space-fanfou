@@ -540,11 +540,6 @@
   color: rgba(230, 50, 0, 1) !important;
   font-weight: bold !important;
 }
-#stream .content a[href^="https"]::before {
-  content: url('/resources/images/protected.png');
-  margin-right: 5px;
-  pointer-events: none;
-}
 .stamp a,
 .light .stamp .reply a {
   border-bottom: 1px solid rgba(0, 0, 0, .09) !important;
@@ -719,7 +714,7 @@ p.pm-parent {
   border-radius: 2px;
 }
 #sidebar .user-op a {
-  background: rgba(0, 0, 0, .05) url(http://static2.fanfou.com/img/icon-block-user.gif?v=001) no-repeat 1px -14px !important;
+  background: rgba(0, 0, 0, .05) url(https://static2.fanfou.com/img/icon-block-user.gif?v=001) no-repeat 1px -14px !important;
 }
 #info #avatar {
   border: none !important;
@@ -834,7 +829,7 @@ p.pm-parent {
   }
 .pagination .loading,
 .pagination .loading:hover {
-  background: transparent url(http://static1.fanfou.com/img/ajax.gif) no-repeat 50% 50% !important;
+  background: transparent url(https://static1.fanfou.com/img/ajax.gif) no-repeat 50% 50% !important;
 }
 .pagination .more-left {
   width: 100% !important;

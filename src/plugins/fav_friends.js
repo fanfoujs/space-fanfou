@@ -1,6 +1,6 @@
 SF.pl.fav_friends = new SF.plugin((function($) {
   var is_user_page = SF.fn.isUserPage() || SF.fn.isMyPage();
-  var is_home_page = location.href.indexOf('http://fanfou.com/home') === 0;
+  var is_home_page = location.pathname === '/home';
 
   var FAVED_TIP = '从有爱饭友列表去除';
   var UNFAVED_TIP = '加入有爱饭友列表';
@@ -18,9 +18,9 @@ SF.pl.fav_friends = new SF.plugin((function($) {
       userid: SF.fn.isMyPage() ?
         (my_page_url || '').split('/').reverse()[0] : decodeURIComponent(avatar_link_url.split('/').reverse()[0]),
       nickname:  $('#panel h1').text(),
-      avatar_url: $avatar_link.find('img').prop('src')
+      avatar_url: $avatar_link.find('img').prop('src').replace(/^https?:/, '')
     };
-    user_data.user_url = 'http://fanfou.com/' + user_data.userid;
+    user_data.user_url = '/' + user_data.userid;
 
     var $fav = $('<span />');
     $fav.addClass('fav_friends');
@@ -247,8 +247,8 @@ SF.pl.fav_friends = new SF.plugin((function($) {
     var default_data = [ {
       userid: 'fanfou',
       nickname:  '饭否',
-      avatar_url: 'http://avatar1.fanfou.com/l0/00/37/9g.jpg?1181650871',
-      user_url: 'http://fanfou.com/fanfou'
+      avatar_url: '//avatar1.fanfou.com/l0/00/37/9g.jpg?1181650871',
+      user_url: '/fanfou'
     } ];
 
     return SF.fn.getData('fav_friends') || default_data;
