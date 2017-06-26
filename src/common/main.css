@@ -628,6 +628,7 @@ p.pm-parent {
   }
 #panel {
   padding: 0 !important;
+  margin: 0 0 0 12px;
 }
 #panel h1 {
   font-size: 24px !important;
@@ -753,6 +754,12 @@ p.pm-parent {
       #ddd,
       #eee
     ) !important;
+}
+#body .tabs {
+  margin-bottom: 8px;
+}
+#main.privatemsg .tabs {
+  margin-bottom: 0;
 }
 #footer p {
   margin-right: 0 !important;
@@ -1037,6 +1044,11 @@ a.bh:active {
 }
 .overlay-report {
   z-index: 3 !important;
+}
+#search-switch a {
+  border-width: 1px 0;
+  border-style: solid;
+  border-color: transparent;
 }
 #search-switch .current:hover {
   background-color: white;

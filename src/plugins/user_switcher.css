@@ -21,7 +21,7 @@
   display: inline-block;
 }
 #user_switcher li:not(.addnew):hover {
-  background-color: rgba(0, 0, 0, .05);
+  background-color: rgba(0, 0, 0, .025);
 }
 #user_top.switcher {
   position: absolute;
