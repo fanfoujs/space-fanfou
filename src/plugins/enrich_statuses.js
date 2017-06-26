@@ -121,9 +121,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
         success: function(long_url) {
           long_url = long_url && long_url.trim();
           if (! long_url || long_url.indexOf('http') !== 0) {
-            setTimeout(function() {
-              expandUrl(url, callback, original_url);
-            }, 5000);
+            console.warn(`Failed to expand shorturl: ${url}`, long_url);
             return;
           }
           if (short_url_re.test(long_url) && url != long_url) {
