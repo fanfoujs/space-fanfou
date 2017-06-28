@@ -109,6 +109,10 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 
   var cached_short_urls = SF.fn.getData('cached_short_urls') || { };
   function expandUrl(url, callback, original_url) {
+    if (location.protocal !== 'http') {
+      // 暂时没有支持 HTTPS 的短网址展开服务，所以在 HTTPS 模式下禁用掉
+      return
+    }
     original_url = original_url || url;
     if (cached_short_urls[url]) {
       setTimeout(function() {
@@ -117,7 +121,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
     } else {
       $.ajax({
         type: 'GET',
-        url: '//urlxray.com/display.php',
+        url: 'http://urlxray.com/display.php',
         data: { url: url },
         success: function(html) {
           var re = /<div class= "resultURL2"><a href="([^"]+)">/;
