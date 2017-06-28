@@ -247,7 +247,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
     var default_data = [ {
       userid: 'fanfou',
       nickname:  '饭否',
-      avatar_url: '//avatar1.fanfou.com/l0/00/37/9g.jpg?1181650871',
+      avatar_url: '//s3.meituan.net/v1/mss_3d027b52ec5a4d589e68050845611e68/avatar/l0/00/37/9g.jpg?1181650871',
       user_url: '/fanfou'
     } ];
 
