@@ -28,7 +28,7 @@ SF.pl.check_saved_searches = new SF.plugin((function() {
     check: function() {
       var self = this;
       request({
-        url: '/q/' + encodeURIComponent(this.keyword),
+        url: 'https://fanfou.com/q/' + encodeURIComponent(this.keyword),
         ajax: true,
         success: function(data) {
           data = JSON.parse(data);
@@ -47,9 +47,7 @@ SF.pl.check_saved_searches = new SF.plugin((function() {
             }
             var content = li.querySelector('.content');
             var html = content.innerHTML;
-            var pattern = new RegExp('<a href="https?:\\/\\/fanfou\\.com\\/' +
-              current_userid +
-              '" class="former">');
+            var pattern = '<a href="https://fanfou.com/' + current_userid + '" class="former">';
             if (html.indexOf(pattern) > -1) {
               return false;
             }
