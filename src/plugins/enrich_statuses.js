@@ -117,9 +117,12 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
     } else {
       $.ajax({
         type: 'GET',
-        url: '//unshorten.me/s/' + url,
-        success: function(long_url) {
-          long_url = long_url && long_url.trim();
+        url: '//urlxray.com/display.php',
+        data: { url: url },
+        success: function(html) {
+          var re = /<div class= "resultURL2"><a href="([^"]+)">/;
+          var matched = html.match(re)
+          var long_url = matched && matched[1];
           if (! long_url || long_url.indexOf('http') !== 0) {
             console.warn(`Failed to expand shorturl: ${url}`, long_url);
             return;
@@ -428,7 +431,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
       result = url.match(netease_cloud_music_playlist_re);
       if (result) {
         $.get(processUrlProtocol(url.replace('/#/', '/')), function(html) {
-          var re = /<img\s+src="[^"]+"\s+class="j-img"\s+data-src="([^"]+)">/;
+          var re = /<img\s+src="[^"]+"\s+class="j-img"\s+data-src="([^"]+)"/;
           var cover_url_large = (html.match(re) || [])[1];
           if (cover_url_large) {
             var cover_url = cover_url_large + '?param=200y200';
