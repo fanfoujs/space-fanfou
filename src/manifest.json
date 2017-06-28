@@ -36,6 +36,6 @@
   },
   "permissions": [ "*://*/", "tabs", "notifications", "contextMenus" ],
   "content_security_policy": "script-src 'self'; object-src 'self'",
-  "version": "0.9.6.2",
+  "version": "0.9.6.4",
   "manifest_version": 2
 }
