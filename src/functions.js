@@ -183,7 +183,7 @@ SF.fn.waitFor(function() {
   var s = 0;
   var current, id;
   var stop = function() { };
-  SF.fn.goTop = window.requestAnimationFrame ? function(e) {
+  SF.fn.goTop = function(e) {
     stop();
     stop = function() {
       stop = function() { };
@@ -208,16 +208,6 @@ SF.fn.waitFor(function() {
         id = requestAnimationFrame(arguments.callee);
       };
     });
-  } : function(e) {
-    if (e) {
-      e.preventDefault();
-      s = body.scrollTop;
-    }
-    current = body.scrollTop;
-    if (Math.abs(s - current) > 2) return;
-    var to = Math.floor(s / 1.15);
-    scrollTo(0, (s = to));
-    if (s >= 1) setTimeout(SF.fn.goTop, 24);
   };
 });
 
