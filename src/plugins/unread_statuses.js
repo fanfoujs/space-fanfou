@@ -36,10 +36,13 @@ SF.pl.unread_statuses = new SF.plugin((function($) {
           counter = parseInt($counter.text(), 10) || 0;
 
           if (counter) {
+            // 查找缓存了的未读消息
+            // 当未读消息数量超过一定值时，饭否不会缓存消息（点击新消息提示条会直接刷新页面）
+            // 对于未读消息较多的情况，我们不予自动处理
             var $unread_statuses = $('#stream li.buffered');
-            all_is_mine = ! [].some.call($unread_statuses, function($item) {
-              var avatar = $('.avatar', $item)[0];
-              return avatar.href != my_page_url;
+            all_is_mine = $unread_statuses.length > 0 && [].every.call($unread_statuses, function($item) {
+              var statusAuthorUrl = $('.avatar', $item).prop('href');
+              return statusAuthorUrl === my_page_url;
             });
           }
 
