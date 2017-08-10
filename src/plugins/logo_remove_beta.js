@@ -11,9 +11,8 @@ SF.pl.logo_remove_beta = new SF.plugin((function($) {
 
   return {
     load: function() {
-      $('#sf_style_logo_remove_beta').remove();
-      if (beta_re.test(origin)) {
-        $header.css('background-image', 'url(//static2.fanfou.com/img/fanfou.png)');
+      if (! beta_re.test(origin)) {
+        $('#sf_style_logo_remove_beta').remove();
       }
     },
     unload: function() {
