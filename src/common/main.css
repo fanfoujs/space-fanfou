@@ -573,6 +573,14 @@ p.pm-parent {
 #sidebar .stabs li a .count {
   font-weight: normal !important;
 }
+#sidebar .colltab b {
+   background-image: url(/resources/images/toggle_down.svg) !important;
+   background-size: contain !important;
+}
+#sidebar .colltab b.collapse {
+  background-image: url(/resources/images/toggle_up.svg) !important;
+  background-size: contain !important;
+}
 #savedsearchs li,
 #trendtabs li,
 #birthday li {
