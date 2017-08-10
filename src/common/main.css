@@ -550,6 +550,7 @@ p.pm-parent {
 #searchr-submit {
   text-shadow: 0 1px 0 #fff;
   background: #eee !important;
+  border-radius: 0 5px 5px 0;
 }
 #sidebar .trendtabs ul li .spinner {
   top: 5px;
