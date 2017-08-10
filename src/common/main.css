@@ -626,7 +626,8 @@ p.pm-parent {
 }
 #profile-protected {
   border: 0 !important;
-  background: rgba(0, 0, 0, .05) url('/resources/images/protected-large.png') no-repeat 30px 20px !important;
+  background: rgba(0, 0, 0, .05) url('/resources/images/protected.svg') no-repeat 40px 30px !important;
+  background-size: 40px 50px !important;
   border-radius: 10px;
   text-shadow: 0 1px 0 #fff;
   box-shadow: 0 0 5px rgba(0, 0, 0, .2) inset;
