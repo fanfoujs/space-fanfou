@@ -459,7 +459,7 @@ a:hover, .light .stamp .reply a {
   height: 32px !important;
   top: -2px !important;
   right: -5px !important;
-  background: url('/resources/images/star.png') 0 0 no-repeat !important;
+  background: url('/resources/images/star.svg') 0 0 no-repeat !important;
 }
 span.ajaxprompt {
   padding: .6em 1em !important;
