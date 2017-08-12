@@ -1,6 +1,6 @@
 span.op a.reply, span.op a.share, span.op a.repost, span.op a.delete {
   width: 20px !important;
-  background: url('/resources/images/op-icons.png') no-repeat !important;
+  background: no-repeat !important;
   color: transparent !important;
   overflow: hidden;
 }
@@ -39,7 +39,7 @@ span.op a.faved:hover {
   background-image: url('../resources/images/fav-grey.svg') !important;
 }
 span.op a.faved:active {
-  background-image: url('../resources/images/fav-blue.svg') !important;
+  background-image: url('../resources/images/fav-grey.svg') !important;
 }
 span.op a.repost {
   background-image: url('../resources/images/repost-grey.svg') !important;
