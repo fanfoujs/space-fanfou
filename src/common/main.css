@@ -574,11 +574,11 @@ p.pm-parent {
   font-weight: normal !important;
 }
 #sidebar .colltab b {
-   background-image: url(/resources/images/toggle_down.svg) !important;
+   background-image: url(/resources/images/toggle_up.svg) !important;
    background-size: contain !important;
 }
 #sidebar .colltab b.collapse {
-  background-image: url(/resources/images/toggle_up.svg) !important;
+  background-image: url(/resources/images/toggle_down.svg) !important;
   background-size: contain !important;
 }
 #savedsearchs li,

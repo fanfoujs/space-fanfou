@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg width="280" height="280" xmlns="http://www.w3.org/2000/svg">
-  <g transform="matrix(-1, 0, 0, -1, 280, 280)">
-    <title>background</title>
-    <rect fill="none" id="canvas_background" height="282" width="282" y="-1" x="-1"/>
-    <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
-      <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
-    </g>
-  </g>
-  <g transform="matrix(-1, 0, 0, -1, 280, 280)">
-    <title>Layer 1</title>
-    <ellipse ry="130" rx="130" id="svg_2" cy="140" cx="140" stroke-width="20" stroke="#d7d7d7" fill="none"/>
-    <path stroke="#fff" id="svg_5" d="m44.000006,174.500001l95.999994,-87.000002l95.999994,87.000002l-191.999988,0z" stroke-width="0" fill="#b2b2b2"/>
-  </g>
+<svg viewBox="0 0 13 13" width="13" height="13" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+  <image width="13" height="13" style="visibility: hidden;" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -2.220446049250313e-16, -2.220446049250313e-16)" xlink:href="data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAMJJREFUeNqcktsKwjAQRJMUUTFaH7wgCH6R//8Dvig+GKiXIrbOhgnEkCi4cCibznTTSbT6rDmogQVD0IIGOHAJIs3nAKwpdBS27C0/JP0RPIN5S5NW+dJ8LzpVcUtTcAC9KtcNLEVjONplDPuk76mrDffcFAypUXTWRCmVJsS9D8dEKeUMqdEPkFR24ArO6nctwMSEn/sSdxy7D00if4gbjBlrybBigqeKi3cw4znIWgdeYMRz3NAgN6LT/9y9twADALObLPXqUJ2JAAAAAElFTkSuQmCC"/>
+  <ellipse transform="matrix(-0.9999999999999999, 0.00004200000330456532, -0.00004100000296602956, -0.9999999999999999, 15.425344467163086, 14.897624969482422)" cx="8.925" cy="8.398" rx="6" ry="6" style="fill: none; stroke: rgb(215, 215, 215);"/>
+  <path d="M -6.5 -9 L -2.5 -5 L -10.5 -5 L -6.5 -9 Z" style="fill: rgb(178, 178, 178);" transform="matrix(-0.9999999999999999, 0, 0, -0.9999999999999999, -2.220446049250313e-16, -2.220446049250313e-16)" bx:shape="triangle -10.5 -9 8 4 0.5 0 1@8ea8d3ed"/>
 </svg>
