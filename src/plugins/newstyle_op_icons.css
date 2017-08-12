@@ -36,7 +36,7 @@ span.op a.faved {
   background-image: url('../resources/images/faved-yellow.svg') !important;
 }
 span.op a.faved:hover {
-  background-image: url('../resources/images/fav-grey.svg') !important;
+  background-image: url('../resources/images/faved-grey.svg') !important;
 }
 span.op a.faved:active {
   background-image: url('../resources/images/fav-grey.svg') !important;
