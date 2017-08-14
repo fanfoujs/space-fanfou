@@ -270,7 +270,7 @@ a:hover, .light .stamp .reply a {
 #upload-button {
   width: 23px;
   height: 17px;
-  background: url('/resources/images/uploading-image-icons.png') !important;
+  background: url('/resources/images/uploading-image-icons.svg') !important;
   background-repeat: no-repeat;
   background-position: top left !important;
 }
