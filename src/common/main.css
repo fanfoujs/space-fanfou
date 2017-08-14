@@ -277,7 +277,7 @@ a:hover, .light .stamp .reply a {
 #location-button {
   width: 14px;
   height: 21px;
-  background: url('/resources/images/location.png') !important;
+  background: url('/resources/images/location.svg') !important;
   background-repeat: no-repeat;
   background-position: top left;
 }
