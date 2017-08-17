@@ -181,7 +181,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
           url: url,
           id: result[1]
         };
-        $.get(processUrlProtocol(url.replace('/#/', '/')), function(html) {
+        $.get(processUrlProtocol(url.replace('/#/', '/').replace('.com/m/', '.com/')), function(html) {
           var re = /<img\s+src="[^"]+"\s+class="j-img"\s+data-src="([^"]+)">/;
           var cover_url = (html.match(re) || [])[1];
           if (cover_url) {
@@ -409,7 +409,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 
       result = url.match(netease_cloud_music_album_re);
       if (result) {
-        $.get(processUrlProtocol(url.replace('/#/', '/')), function(html) {
+        $.get(processUrlProtocol(url.replace('/#/', '/').replace('.com/m/', '.com/')), function(html) {
           var re = /<img\s+src="[^"]+"\s+class="j-img"\s+data-src="([^"]+)">/;
           var cover_url_large = (html.match(re) || [])[1];
           if (cover_url_large) {
@@ -427,7 +427,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 
       result = url.match(netease_cloud_music_playlist_re);
       if (result) {
-        $.get(processUrlProtocol(url.replace('/#/', '/')), function(html) {
+        $.get(processUrlProtocol(url.replace('/#/', '/').replace('.com/m/', '.com/')), function(html) {
           var re = /<img\s+src="[^"]+"\s+class="j-img"\s+data-src="([^"]+)"/;
           var cover_url_large = (html.match(re) || [])[1];
           if (cover_url_large) {
@@ -672,8 +672,8 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
     var lofter_re = /\.lofter\.com\/post\/[a-zA-Z0-9_\-]+/;
     var fanfou_re = /https?:\/\/fanfou\.com\/photo\//;
     var flickr_re = /https?:\/\/(?:www\.)?flickr\.com\/photos\//;
-    var netease_cloud_music_album_re = /https?:\/\/music\.163\.com\/(?:#\/)?album\?id=(\d+)/;
-    var netease_cloud_music_playlist_re = /https?:\/\/music\.163\.com\/(?:#\/)?playlist\?id=(\d+)/;
+    var netease_cloud_music_album_re = /https?:\/\/music\.163\.com\/(?:#\/)?(?:m\/)?album\?id=(\d+)/;
+    var netease_cloud_music_playlist_re = /https?:\/\/music\.163\.com\/(?:#\/)?(?:m\/)?playlist\?id=(\d+)/;
     var xiami_album_re = /https?:\/\/(?:www\.)?xiami\.com\/album\/([0-9a-zA-Z-]+)/;
     var xiami_collection_re = /https?:\/\/(?:www\.)?xiami\.com\/song\/showcollect\/id\/(\d+)/;
     var picture_re = /\.(?:jpg|jpeg|png|gif|webp)(?:\??\S*)?$/i;
@@ -699,7 +699,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
         });
     }
 
-    var netease_cloud_music_song_re = /https?:\/\/music\.163\.com\/(?:#\/)?song\?id=(\d+)/;
+    var netease_cloud_music_song_re = /https?:\/\/music\.163\.com\/(?:#\/)?(?:m\/)?song\?id=(\d+)/;
     var xiami_song_re = /https?:\/\/(?:www\.)?xiami\.com\/song\/([0-9a-zA-Z-]+)/;
 
     var music_res = [
