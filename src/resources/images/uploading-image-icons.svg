@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="0 0 46 34" width="46" height="34" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+<svg viewBox="0 0 46 34" width="46" height="34" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
   <defs>
     <bx:guide x="22.815" y="19.476" angle="0"/>
     <bx:guide x="20.033" y="16.638" angle="90"/>
   </defs>
-  <image width="46" height="34" transform="matrix(1, 0, 0, 1, 0, 0)" style="visibility: hidden;" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAiCAMAAAAXpRt+AAAA7VBMVEX+/v7////+/v4AmQAOng4ZoxkZoxo5uNdOuE5VVVVaw957e3t+fn7A5sDk9foAo8y+vr5fX18TqdBhYWFwcHBzzONIscwNpcyGzoaHz4eO0o6Q1+mRkZGa2uuioqKzs7O0tLS2yMwPqM9ZvFnExMTU1NQurMzt7e3w+vz19fVeXl5paWkAmhYertIJkgmZmZkzrTOf2Z+h2qELpJyl3+2o4O6pqaljY2NlwWVmyOC35fG8vLy95/KK1eg8udjA6PI/sj/K7PTPz8/T7tNIbUjc3NwUiRTn9vrq9+p+0OXv7+9/zIUVq9D2+/YAmzBV0y0EAAAAAnRSTlMAAHaTzTgAAAFoSURBVHhevZPVbsQwEEV3x2FeZGYoMzPT/39OPW6TZpyutJGq3sej8zC69s0EztyMZ+4EWZ5eueLHUyn3EGeKAdB0i8jHLQk3xkI3QcrMRO7LeOp/6zNyS6RP/Vj6RB/dC7ftUP3yWrglXdJvhO7AkOonQr+AfarzNLvm4QvAQjrGavhvjwDrkr4JMBxhLVQ/Btg74/ic6u2oFqKXolqIfgBR4vrzD+6nLzLtM6X/BGm/WHbl/IM+aRbI7YXmBLln5cntecsTun0KNB0buZ5oRv+DeeTSzMNGfdV52DBEfaV5dMzCBGCRS8wj7y2fR+fOUDcMNzGPXUNbQyzNo8pE3Aydx2uI6TzcL1wFEPOQcA2AFvkQ2nVS5Edo1+k8FDbYRvtI8RO4hph+AkV5gluOmaK3fsX8i+Xix2y9I2ZXntWPHRNhOg+XsQHsYAdLsDQPXqSK1WRpaoxpWE1iHq6hqvgeCaxpiD8B5HRBiO1X28QAAAAASUVORK5CYII="/>
   <g>
     <g transform="matrix(1, 0, 0, 1, -13.419002, -9.935001)">
       <path d="M 31.666 9.935 C 32.172 9.935 32.581 10.443 32.581 11.069 C 32.581 13.668 32.581 20.332 32.581 22.931 C 32.581 23.557 32.172 24.065 31.666 24.065 C 28.017 24.065 17.983 24.065 14.334 24.065 C 13.828 24.065 13.419 23.557 13.419 22.931 C 13.419 20.332 13.419 13.668 13.419 11.069 C 13.419 10.443 13.828 9.935 14.334 9.935 C 17.983 9.935 28.017 9.935 31.666 9.935 Z" id="" style="fill: rgb(82, 82, 82);"/>
