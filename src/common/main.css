@@ -270,14 +270,14 @@ a:hover, .light .stamp .reply a {
 #upload-button {
   width: 23px;
   height: 17px;
-  background: url('/resources/images/uploading-image-icons.png') !important;
+  background: url('/resources/images/uploading-image-icons.svg') !important;
   background-repeat: no-repeat;
   background-position: top left !important;
 }
 #location-button {
   width: 14px;
   height: 21px;
-  background: url('/resources/images/location.png') !important;
+  background: url('/resources/images/location.svg') !important;
   background-repeat: no-repeat;
   background-position: top left;
 }
@@ -459,7 +459,7 @@ a:hover, .light .stamp .reply a {
   height: 32px !important;
   top: -2px !important;
   right: -5px !important;
-  background: url('/resources/images/star.png') 0 0 no-repeat !important;
+  background: url('/resources/images/star.svg') 0 0 no-repeat !important;
 }
 span.ajaxprompt {
   padding: .6em 1em !important;
@@ -573,6 +573,14 @@ p.pm-parent {
 #sidebar .stabs li a .count {
   font-weight: normal !important;
 }
+#sidebar .colltab b {
+   background-image: url(/resources/images/toggle_up.svg) !important;
+   background-size: contain !important;
+}
+#sidebar .colltab b.collapse {
+  background-image: url(/resources/images/toggle_down.svg) !important;
+  background-size: contain !important;
+}
 #savedsearchs li,
 #trendtabs li,
 #birthday li {
@@ -618,7 +626,8 @@ p.pm-parent {
 }
 #profile-protected {
   border: 0 !important;
-  background: rgba(0, 0, 0, .05) url('/resources/images/protected-large.png') no-repeat 30px 20px !important;
+  background: rgba(0, 0, 0, .05) url('/resources/images/protected.svg') no-repeat 40px 30px !important;
+  background-size: 40px 50px !important;
   border-radius: 10px;
   text-shadow: 0 1px 0 #fff;
   box-shadow: 0 0 5px rgba(0, 0, 0, .2) inset;

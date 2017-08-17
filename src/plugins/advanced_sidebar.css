@@ -48,5 +48,6 @@
   background: rgba(33, 150, 243, 1);
 }
 .protected {
-  background: url('/resources/images/protected.png') 211px 9px no-repeat;
+  background: url('/resources/images/protected.svg') 211px 9px no-repeat;
+  background-size: 8px 10px;
 }
