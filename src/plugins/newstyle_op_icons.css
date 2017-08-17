@@ -1,53 +1,55 @@
 span.op a.reply, span.op a.share, span.op a.repost, span.op a.delete {
   width: 20px !important;
-  background: url('/resources/images/op-icons.png') no-repeat !important;
+  background: no-repeat !important;
   color: transparent !important;
   overflow: hidden;
 }
 span.op a.reply {
-  background-position: 0 0 !important;
+  background-image: url('../resources/images/reply-grey.svg') !important;
+  background-position-y: 2px !important;
 }
 span.op a.reply:hover {
-  background-position: -20px 0 !important;
+  background-image: url('../resources/images/reply-dark.svg') !important;
 }
 span.op a.reply:active {
-  background-position: -40px 0 !important;
+  background-image: url('../resources/images/reply-blue.svg') !important;
 }
 span.op a.share {
-  background-position: 0 -16px !important;
+  background-image: url('../resources/images/fav-grey.svg') !important;
 }
 span.op a.share:hover {
-  background-position: -20px -16px !important;
+  background-image: url('../resources/images/fav-dark.svg') !important;
 }
 span.op a.share:active {
-  background-position: -40px -16px !important;
+  background-image: url('../resources/images/fav-blue.svg') !important;
 }
 span.op a.delete {
-  background-position: 0 -32px !important;
+  background-image: url('../resources/images/delete-grey.svg') !important;
 }
 span.op a.delete:hover {
-  background-position: -20px -32px !important;
+  background-image: url('../resources/images/delete-dark.svg') !important;
 }
 span.op a.delete:active {
-  background-position: -40px -32px !important;
+  background-image: url('../resources/images/delete-blue.svg') !important;
 }
 span.op a.faved {
-  background-position: 0 -48px !important;
+  background-image: url('../resources/images/faved-yellow.svg') !important;
 }
 span.op a.faved:hover {
-  background-position: -20px -48px !important;
+  background-image: url('../resources/images/faved-grey.svg') !important;
 }
 span.op a.faved:active {
-  background-position: -40px -48px !important;
+  background-image: url('../resources/images/fav-grey.svg') !important;
 }
 span.op a.repost {
-  background-position: 0 -64px !important;
+  background-image: url('../resources/images/repost-grey.svg') !important;
+  background-position-x: 1px !important;
 }
 span.op a.repost:hover {
-  background-position: -20px -64px !important;
+  background-image: url('../resources/images/repost-dark.svg') !important;
 }
 span.op a.repost:active {
-  background-position: -40px -64px !important;
+  background-image: url('../resources/images/repost-blue.svg') !important;
 }
 #stream li {
   width: 465px !important;
