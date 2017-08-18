@@ -25,6 +25,7 @@ span.op a.share:active {
 }
 span.op a.delete {
   background-image: url('../resources/images/delete-grey.svg') !important;
+  background-position-x: 1px !important;
 }
 span.op a.delete:hover {
   background-image: url('../resources/images/delete-dark.svg') !important;

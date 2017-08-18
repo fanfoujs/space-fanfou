@@ -48,7 +48,6 @@
 #stream>ol>li.reply.notavail {
   background: rgba(0, 0, 0, .05);
   color: #666;
-  text-shadow: 0 1px 0 white;
   cursor: pointer;
 }
 #stream>ol>li.reply.more:hover,
@@ -61,7 +60,7 @@
 #stream>ol>li.reply.hide:active,
 #stream>ol>li.reply.waiting:active,
 #stream>ol>li.reply.notavail:active {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, .25) inset;
+  background-color: rgba(0, 0, 0, .125) !important;
 }
 #stream>ol>li[type="repost"].reply.more,
 #stream>ol>li[type="repost"].reply.hide,
