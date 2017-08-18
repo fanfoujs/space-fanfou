@@ -6,7 +6,7 @@
   margin: 1px 10px 0 0;
   width: 18px;
   height: 18px;
-  background: url('/resources/images/emoji.png') no-repeat left top;
+  background: url('/resources/images/emoji.svg') no-repeat left top;
   cursor: pointer;
 }
 #emoji-button:hover {
