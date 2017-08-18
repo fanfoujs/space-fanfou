@@ -15,8 +15,9 @@
   box-shadow: none !important;
   font-weight: 400 !important;
 }
-.advanced_group ul li a:hover {
+#sidebar .advanced_group ul li a:hover {
   text-decoration: underline !important;
+  background: none !important;
 }
 .statbar {
   display: block;

@@ -39,7 +39,7 @@ SF.st.default_settings = {
       'disguise_username.fake_name': '\u7565',
       replace_self_name: false,
     /* 字体 */
-      emoji: false,
+      emoji_selector: true,
       font_reset_cn: false,
       counternum_font: false,
         'counternum_font.fontname': navigator.platform == 'Win32' ?

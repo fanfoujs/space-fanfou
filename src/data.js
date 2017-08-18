@@ -48,9 +48,9 @@ var plugins = [
     ]
   },
   {
-    name: 'emoji',
-    js: 'emoji.js',
-    css: 'emoji.css'
+    name: 'emoji_selector',
+    js: 'emoji_selector.js',
+    css: 'emoji_selector.css'
   },
   {
     name: 'rescale_background',
