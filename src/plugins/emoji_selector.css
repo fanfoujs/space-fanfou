@@ -6,7 +6,7 @@
   margin: 1px 10px 0 0;
   width: 18px;
   height: 18px;
-  background: url('/resources/images/emoji.png') no-repeat left top;
+  background: url('/resources/images/emoji.svg') no-repeat left top;
   cursor: pointer;
 }
 #emoji-button:hover {
@@ -69,23 +69,24 @@
   height: 20px;
   line-height: 20px;
   padding-left: 22px;
-  background-image: url('/resources/images/emoji-categories.png');
+  background-size: 16px 16px;
   background-repeat: no-repeat;
+  background-position: left center;
 }
 #emoji-selector .categories li span.people {
-  background-position: 0 0;
+  background-image: url('/resources/images/human.png');
 }
 #emoji-selector .categories li span.nature {
-  background-position: 0 -20px;
+  background-image: url('/resources/images/nature.png');
 }
 #emoji-selector .categories li span.object {
-  background-position: 0 -40px;
+  background-image: url('/resources/images/objects.png');
 }
 #emoji-selector .categories li span.location {
-  background-position: 0 -60px;
+  background-image: url('/resources/images/places.png');
 }
 #emoji-selector .categories li span.symbol {
-  background-position: 0 -80px;
+  background-image: url('/resources/images/symbol.png');
 }
 #emoji-selector .list {
   clear: both;
