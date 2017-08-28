@@ -686,3 +686,7 @@ body.uber-frame footer {
 body.uber-frame #tabs3 footer {
         margin-top: 0;
 }
+
+.avatar img {
+  border-radius: 3px;
+}

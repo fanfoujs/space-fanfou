@@ -8,6 +8,7 @@
 
 * [@太空小孩](https://fanfou.com/anegie)
 * [@锐风](https://fanfou.com/ruif)
+* [@饭小默](https://fanfou.com/lito)
 * [@Xidorn](https://fanfou.com/xidorn)
 * [@.rex](https://fanfou.com/zhasm)
 
