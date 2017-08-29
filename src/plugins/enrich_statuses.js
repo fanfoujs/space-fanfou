@@ -545,10 +545,10 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
           data.height = data.cover_height;
         } else if (data.url.indexOf('163.com') > -1) {
           var id = data.id + '-' + Math.round(10000 * Math.random());
-          var code = '<embed src="//music.163.com/style/swf/widget.swf';
-          code += '?sid=' + data.id + '&type=2&auto=0&width=278&height=32" ';
-          code += 'width="298" height="52" ';
-          code += 'allowNetworking="all" wmode="transparent"></embed>';
+          var code = '<iframe src="//music.163.com/outchain/player'
+          code += '?type=2&id=' + data.id + '&auto=0&height=32" frameborder="no"'
+          code += ' border="0" marginwidth="0" marginheight="0"'
+          code += ' width=260 height=52></iframe>'
           var $player = $('<span>');
           $player.addClass('netease-cloud-music-player');
           $player.attr('player-id', id);
