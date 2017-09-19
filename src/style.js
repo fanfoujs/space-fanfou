@@ -152,7 +152,7 @@
 
     $(document.documentElement).on('mousewheel', function(e) {
       if (waiting) return;
-      if ($body[0].scrollTop) return;
+      if (document.documentElement.scrollTop) return;
       if (e.wheelDeltaY <= 0) return;
       if (input_tags.indexOf(e.target.tagName) > -1) return;
       if ($notif.css('display') === 'none') return;

@@ -5,13 +5,12 @@
   (function() {
     var $textarea = $('#phupdate textarea');
     if (! $textarea.length) return;
-    var body = document.body;
     var textarea = $textarea[0];
     var pos = $textarea.offset().top + textarea.offsetHeight;
     $textarea = null;
     var focused = true;
     SF.fn.scrollHandler.addListener(SF.fn.throttle(function() {
-      if (body.scrollTop > pos) {
+      if (document.documentElement.scrollTop > pos) {
         focused && textarea.blur();
         focused = false;
       } else {

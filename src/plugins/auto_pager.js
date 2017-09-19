@@ -7,8 +7,6 @@ SF.pl.auto_pager = new SF.plugin((function($) {
 
   var $win = $(window);
   var $html = $('html');
-  var body = document.body;
-  var docelem = document.documentElement;
   var $totop = $('#pagination-totop');
 
   var current_pos;
@@ -19,7 +17,7 @@ SF.pl.auto_pager = new SF.plugin((function($) {
 
   function autoPager() {
     if (! mousewheel_down) return;
-    current_pos = body.scrollTop + docelem.clientHeight;
+    current_pos = document.documentElement.scrollTop + document.documentElement.clientHeight;
     if (current_pos <= $more.offset().top - remain)
       return;
     if ($more.hasClass('loading'))
@@ -34,7 +32,7 @@ SF.pl.auto_pager = new SF.plugin((function($) {
   }
 
   function onKeypress(e) {
-    if (e.target !== body) return;
+    if (e.target !== document.body) return;
     if (e.ctrlKey || e.altKey) return;
     var key = e.which;
     switch (key) {

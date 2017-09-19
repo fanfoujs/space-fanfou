@@ -172,31 +172,31 @@ SF.fn.waitFor(function() {
       }
     };
 
-    return new ScrollHandler(document.body);
+    return new ScrollHandler(document.documentElement);
   })();
 });
 
 SF.fn.waitFor(function() {
   return document.body;
 }, function() {
-  var body = document.body;
   var s = 0;
   var current, id;
-  var stop = function() { };
+  var stop = function() {
+    if (id) {
+      cancelAnimationFrame(id);
+      id = null;
+    }
+  };
   SF.fn.goTop = function(e) {
     stop();
-    stop = function() {
-      stop = function() { };
-      cancelAnimationFrame(id);
-    }
     if (e) {
       e.preventDefault && e.preventDefault();
-      s = body.scrollTop;
+      s = document.documentElement.scrollTop;
     }
     var breakpoint;
     id = requestAnimationFrame(function(timestamp) {
       if (breakpoint) {
-        current = body.scrollTop;
+        current = document.documentElement.scrollTop;
         if (Math.abs(s - current) > 2) {
           return stop();
         }
