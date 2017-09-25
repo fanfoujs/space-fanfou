@@ -150,7 +150,7 @@
 
     $(document.documentElement).on('mousewheel', function(e) {
       if (waiting) return;
-      if (document.documentElement.scrollTop) return;
+      if (SF.fn.scrollHandler.getScrollTop()) return;
       if (e.wheelDeltaY <= 0) return;
       if (input_tags.indexOf(e.target.tagName) > -1) return;
       if ($notif.css('display') === 'none') return;

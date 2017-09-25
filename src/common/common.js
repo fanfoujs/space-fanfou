@@ -10,7 +10,7 @@
     $textarea = null;
     var focused = true;
     SF.fn.scrollHandler.addListener(SF.fn.throttle(function() {
-      if (document.documentElement.scrollTop > pos) {
+      if (SF.fn.scrollHandler.getScrollTop() > pos) {
         focused && textarea.blur();
         focused = false;
       } else {

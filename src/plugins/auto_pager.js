@@ -17,7 +17,7 @@ SF.pl.auto_pager = new SF.plugin((function($) {
 
   function autoPager() {
     if (! mousewheel_down) return;
-    current_pos = document.documentElement.scrollTop + document.documentElement.clientHeight;
+    current_pos = SF.fn.scrollHandler.getScrollTop() + document.documentElement.clientHeight;
     if (current_pos <= $more.offset().top - remain)
       return;
     if ($more.hasClass('loading'))
