@@ -46,12 +46,12 @@ SF.pl.user_switcher = new SF.plugin((function($) {
 
   /* Cookie 操作函数 */
   function setCookie(key, val, expires) {
-    var value = key + '=' + val + ';' + 'domain=.fanfou.com';
-    if (expires) value += ';expires=' + expires;
+    var value = key + '=' + val + '; domain=.fanfou.com';
+    if (expires) value += '; expires=' + expires.toUTCString();
     document.cookie = value;
   }
   function deleteCookie(key) {
-    setCookie(key, '', 'Thu, 01 Jan 1970 00:00:00 GMT');
+    setCookie(key, '', new Date(0));
   }
   function logout(callback) {
     $.ajax({
@@ -73,9 +73,13 @@ SF.pl.user_switcher = new SF.plugin((function($) {
     SF.fn.setData('switcher', data);
   }
   function setUserCookies(id) {
-    // data 字段可能是不存在的
-    var user_data = data[id].data || {};
-    for (var key in user_data) setCookie(key, user_data[key]);
+    var user_cookies = data[id].cookies;
+    var expires = new Date();
+    // 设置为一个月后过期
+    // 实际上这样处理不是很妥当，我们写 cookies 应该按照服务端原样来写
+    // 然而前端缺少一个直接的方式获取后端设置的 cookies 过期日期
+    expires.setMonth(expires.getMonth() + 1);
+    for (var key in user_cookies) setCookie(key, user_cookies[key], expires);
   }
   function redirectToHomePage() {
     location.href = '/home';
@@ -86,17 +90,20 @@ SF.pl.user_switcher = new SF.plugin((function($) {
   var nickname = $('h3', $user_top).text();
   var avatar = $('img', $user_top).attr('src');
   /* 添加当前用户 */
-  if (cookies.al) { // 只有登录并且勾选“自动登录”才会存在这个 cookie
-    var user_data = {};
+  if (cookies.al) {
+    // 只有登录并且勾选“自动登录”才会存在 al 这个 cookie
+    // 实际上这里最好用 PHPSESSID 这个字段作为判断依据
+    // 然而退登之后饭否后端并不会删掉这个字段的 cookie
+    var user_cookies = {};
     for (var key in cookies) {
-      if (cookies.hasOwnProperty(key) && key.charAt(0) !== '_') {
-        user_data[key] = cookies[key];
+      if (cookies.hasOwnProperty(key) && key.charAt(0) !== '_' && key !== 'uuid') {
+        user_cookies[key] = cookies[key];
       }
     }
     data[user_id] = {
-      'image': avatar,
-      'nickname': nickname,
-      'data': user_data
+      image: avatar,
+      nickname: nickname,
+      cookies: user_cookies
     };
     SF.fn.setData('switcher', data);
   }
@@ -112,6 +119,7 @@ SF.pl.user_switcher = new SF.plugin((function($) {
   $user_list.attr('id', 'user_switcher');
   for (var id in data) {
     if (! data.hasOwnProperty(id)) continue;
+    if (! data[id].cookies) continue; // 旧版本太空饭否存储的数据不包含 cookies 这个字段
     var user = data[id];
     if (id == user_id) continue;
     (function(user, id) {
@@ -147,13 +155,8 @@ SF.pl.user_switcher = new SF.plugin((function($) {
   $another.addClass('addnew');
   var $link = $('<a>');
   $link.click(function() {
-    logout(function(err) {
-      if (err) {
-        alert('操作失败，请刷新页面后重试');
-      } else {
-        location.href = '/login';
-      }
-    })
+    deleteCookie('PHPSESSID');
+    location.href = '/login';
   });
   $link.text('登入另一个...');
   $another.append($link);
