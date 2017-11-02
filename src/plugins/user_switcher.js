@@ -155,7 +155,9 @@ SF.pl.user_switcher = new SF.plugin((function($) {
   $another.addClass('addnew');
   var $link = $('<a>');
   $link.click(function() {
-    deleteCookie('PHPSESSID');
+    [ 'u', 'm', 'al', 'PHPSESSID' ].forEach(function (key) {
+      deleteCookie(key);
+    });
     location.href = '/login';
   });
   $link.text('登入另一个...');
