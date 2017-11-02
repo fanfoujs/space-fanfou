@@ -1,6 +1,7 @@
 SF.pl.user_switcher = new SF.plugin((function($) {
   var $login = $('form#login');
   if ($login.length) {
+    // 登录页面
     var $al = $('#autologin');
     return {
       load: function() {
@@ -25,7 +26,6 @@ SF.pl.user_switcher = new SF.plugin((function($) {
   }
 
   /* 初始化 Cookie */
-  var domain = document.domain;
   var cookies;
   function readCookies(){
     var pairs = document.cookie.split(/; ?/);
@@ -45,12 +45,15 @@ SF.pl.user_switcher = new SF.plugin((function($) {
   readCookies();
 
   /* Cookie 操作函数 */
-  function deleteCookie(name) {
-    document.cookie = name + '=;domain=.' + domain + ';' +
-              'expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  function setCookie(key, val, expires) {
+    var value = key + '=' + val + ';' + 'domain=.fanfou.com';
+    if (expires) value += ';expires=' + expires;
+    document.cookie = value;
+  }
+  function deleteCookie(key) {
+    setCookie(key, '', 'Thu, 01 Jan 1970 00:00:00 GMT');
   }
   function logout(callback) {
-    stop();
     $.ajax({
       url: $logout.prop('href'),
       method: 'HEAD',
@@ -66,21 +69,34 @@ SF.pl.user_switcher = new SF.plugin((function($) {
     });
   }
   function removeUser(id) {
-    data[id] = undefined;
+    delete data[id];
     SF.fn.setData('switcher', data);
+  }
+  function setUserCookies(id) {
+    // data 字段可能是不存在的
+    var user_data = data[id].data || {};
+    for (var key in user_data) setCookie(key, user_data[key]);
+  }
+  function redirectToHomePage() {
+    location.href = '/home';
   }
 
   /* 获取当前用户的信息 */
   var user_id = cookies.u;
   var nickname = $('h3', $user_top).text();
-  var image = $('img', $user_top).attr('src');
-  var auto_login = cookies.al;
+  var avatar = $('img', $user_top).attr('src');
   /* 添加当前用户 */
-  if (auto_login) {
+  if (cookies.al) { // 只有登录并且勾选“自动登录”才会存在这个 cookie
+    var user_data = {};
+    for (var key in cookies) {
+      if (cookies.hasOwnProperty(key) && key.charAt(0) !== '_') {
+        user_data[key] = cookies[key];
+      }
+    }
     data[user_id] = {
-      'image': image,
+      'image': avatar,
       'nickname': nickname,
-      'auto_login': auto_login,
+      'data': user_data
     };
     SF.fn.setData('switcher', data);
   }
@@ -102,15 +118,8 @@ SF.pl.user_switcher = new SF.plugin((function($) {
       var $item = $('<li>');
       var $link = $('<a>');
       $link.click(function() {
-        logout(function(err) {
-          if (err) {
-            alert('操作失败，请刷新页面后重试');
-          } else {
-            removeUser(id);
-            document.cookie = 'al=' + user.auto_login + ';domain=.' + domain;
-            location.href = '/home';
-          }
-        });
+        setUserCookies(id);
+        redirectToHomePage();
       });
       var $image = $('<img>');
       $image.attr('src', user.image);
