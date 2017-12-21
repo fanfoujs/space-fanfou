@@ -9,7 +9,7 @@ SF.pl.enrich_statuses = new SF.plugin((function($) {
 
   var set_position_interval;
 
-  var short_url_re = /https?:\/\/(?:bit\.ly|goo\.gl|v\.gd|is\.gd|tinyurl\.com|to\.ly|yep\.it|j\.mp|t.cn|t.co)\//;
+  var short_url_re = /https?:\/\/(?:bit\.ly|goo\.gl|v\.gd|is\.gd|tinyurl\.com|to\.ly|yep\.it|j\.mp|t\.cn|t\.co|fan\.fo)\//;
   var fanfou_url_re = /^https?:\/\/(?:\S+\.)?fanfou\.com\//;
 
   var MutationObserver = MutationObserver || WebKitMutationObserver;
