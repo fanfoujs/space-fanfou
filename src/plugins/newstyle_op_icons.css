@@ -44,7 +44,7 @@ span.op a.faved:active {
 }
 span.op a.repost {
   background-image: url('../resources/images/repost-grey.svg') !important;
-  background-position-x: 1px !important;
+  background-position: 1px 1px !important;
 }
 span.op a.repost:hover {
   background-image: url('../resources/images/repost-dark.svg') !important;
