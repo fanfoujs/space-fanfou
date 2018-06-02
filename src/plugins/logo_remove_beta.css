@@ -1,4 +1,4 @@
 .global-header-content:not([data-original-logo]) {
-  background-image: url('/resources/images/fanfou-logo@2x.png');
+  background-image: url('/resources/images/fanfou-logo.svg');
   background-size: 188px 42px;
 }
