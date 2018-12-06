@@ -14,7 +14,7 @@
   border-top-right-radius: 2px;
   display: inline-block;
   pointer-events: none;
-  background: url('/resources/images/star.png') right top no-repeat;
+  background: url('/resources/images/star.svg') right top no-repeat;
   transform: translate(16px, -16px);
   transition-property: transform, opacity;
   transition-duration: .2s;
@@ -28,29 +28,29 @@
   cursor: pointer;
   width: 20px;
   height: 16px;
-  margin: 2px 0 2px 4px;
+  margin: 3px 0 1px 4px;
   opacity: 0;
   display: inline-block;
-  background: url('/resources/images/op-icons.png') 0 -16px no-repeat;
+  background: url('/resources/images/fav-grey.svg');
   transition: opacity .2s ease-in-out;
 }
 #info:hover #panel h1 a {
   opacity: 1;
 }
 #info:not(.faved) #panel h1 a:hover {
-  background-position: -20px -16px;
+  background: url('/resources/images/fav-dark.svg') !important;
 }
-#info #panel h1 a:active {
-  background-position: -40px -16px;
+#info:not(.faved) #panel h1 a:active {
+  background: url('/resources/images/fav-blue.svg') !important;
 }
 #info.faved #panel h1 a {
-  background-position: 0 -48px !important;
+  background: url('/resources/images/faved-yellow.svg') !important;
 }
 #info.faved #panel h1 a:hover {
   opacity: .75;
 }
 #info.faved #panel h1 a:active {
-  background-position: -40px -48px !important;
+  background: url('/resources/images/fav-blue.svg') !important;
 }
 #sidebar .fav_friends {
   margin-bottom: 15px;

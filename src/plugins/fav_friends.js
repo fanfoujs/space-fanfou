@@ -29,11 +29,13 @@ SF.pl.fav_friends = new SF.plugin((function($) {
     $star
     .attr('href', 'javascript:void(0)')
     .attr('title', UNFAVED_TIP)
+    .append($fav)
     .click(function(e) {
       e.stopPropagation();
       var faved = toggle(user_data);
       process(faved);
     });
+    
   }
 
   if (is_home_page) {
