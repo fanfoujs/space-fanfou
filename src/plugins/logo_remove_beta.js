@@ -3,7 +3,7 @@ SF.pl.logo_remove_beta = new SF.plugin((function($) {
   if (! $header.length) return;
 
   var attr = 'data-original-logo';
-  var beta_re = /url\("?https?:\/\/static\d?\.fanfou\.com\/img\/fanfou_beta\.png"?\)/;
+  var beta_re = /url\("?https?:\/\/static\d?\.fanfou\.com\/img\/fanfou_beta\.(png|svg)"?\)/;
 
   $header.attr(attr, true);
   var origin = $header.css('background-image');
