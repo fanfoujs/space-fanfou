@@ -44,14 +44,22 @@ module.exports = (env, { mode } = defaultArgv) => ({
   ],
 
   optimization: {
-    // 保留代码中的变量名等，方便用户反馈 bug
+    // 使代码保持在可读的状态，方便用户反馈 bug 后 debug
     minimizer: [
       new TerserWebpackPlugin({
         terserOptions: {
-          ecma: 2019,
+          ecma: 8,
+          compress: {
+            defaults: false,
+            dead_code: true, // eslint-disable-line camelcase
+            evaluate: true,
+            unused: true,
+          },
           mangle: false,
-          keep_classnames: false, // eslint-disable-line camelcase
-          keep_fnames: false, // eslint-disable-line camelcase
+          output: {
+            beautify: true,
+            indent_level: 2, // eslint-disable-line camelcase
+          },
         },
         parallel: true,
       }),

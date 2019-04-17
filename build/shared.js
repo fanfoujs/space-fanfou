@@ -2,7 +2,7 @@ const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const approot = require('approot')(path.resolve(__dirname, '..'))
 
-const BUNDLE_SIZE_LIMIT = 568 * 1024 // in bytes
+const BUNDLE_SIZE_LIMIT = 768 * 1024 // in bytes
 
 // 用于 jest-webpack-resolver
 const defaultArgv = {
