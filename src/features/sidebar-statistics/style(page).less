@@ -1,0 +1,80 @@
+.sf-sidebar-statistics {
+  padding-bottom: 1em !important;
+}
+
+.sf-sidebar-statistics-item {
+  margin: 0 15px;
+  font-size: 12px;
+
+  &.sf-is-protected {
+    background: url("~@assets/images/protected.svg") no-repeat;
+    background-position: right 1px center;
+    background-size: 8px 10px;
+  }
+
+  .sf-tip {
+    @size: 10px;
+
+    width: @size;
+    float: right;
+    // 来自 https://www.flaticon.com/packs/extended-ui
+    background: url("~@assets/images/question-mark.svg") center no-repeat;
+    background-size: @size;
+    color: transparent;
+    opacity: 0;
+    transition: 200ms opacity;
+  }
+
+  &:hover .sf-tip {
+    opacity: 1;
+    cursor: help;
+  }
+
+  a {
+    padding: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    font-weight: normal !important;
+  }
+}
+
+.sf-sidebar-statistics-progressbar {
+  @height: 5px;
+  @red: #f44336;
+  @green: #4caf50;
+  @blue: #2196f3;
+
+  display: block;
+  height: @height;
+
+  > span {
+    display: block;
+    height: @height;
+    width: 0;
+    transition: width 750ms ease-in-out;
+  }
+
+  &.sf-red {
+    background: fade(@red, 10);
+
+    > span {
+      background: @red;
+    }
+  }
+
+  &.sf-green {
+    background: fade(@green, 10);
+
+    > span {
+      background: @green;
+    }
+  }
+
+  &.sf-blue {
+    background: fade(@blue, 10);
+
+    > span {
+      background: @blue;
+    }
+  }
+}

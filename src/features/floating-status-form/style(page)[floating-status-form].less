@@ -1,0 +1,70 @@
+@transitionDuration: 300ms;
+
+#phupdate textarea {
+  transition: all @transitionDuration;
+}
+
+// #sf-counter 在 status-form-enhancements 里设置过了
+.actpost .formbutton,
+#u_button {
+  transition-property: opacity;
+  transition-duration: 300ms;
+}
+
+.sf-floating-status-form {
+  position: fixed;
+  top: 0;
+  z-index: 6;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0.9) 30%,
+      rgba(255, 255, 255, 0.9) 75%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  border-bottom: none;
+  padding: 10px 0;
+  transition: background-image @transitionDuration;
+
+  &.sf-status-form-textarea-empty:not(.sf-status-form-textarea-focused) {
+    background:
+      linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 255, 255, 0.9) 30%,
+        rgba(255, 255, 255, 0.9) 60%,
+        rgba(255, 255, 255, 0) 80%
+      );
+
+    body:not(.sf-show-dnd-upload-tip) & textarea {
+      height: 20px !important;
+    }
+  }
+
+  &.sf-status-form-textarea-focused textarea {
+    height: 4.6em !important;
+  }
+
+  #sf-counter {
+    text-shadow: 0 1px 1px #fff;
+  }
+}
+
+.actpost .formbutton,
+#u_button,
+.upload-button-wrapper,
+.location-button-wrapper,
+#sf-counter {
+  .sf-floating-status-form & {
+    opacity: 0;
+  }
+
+  .sf-floating-status-form:hover & {
+    opacity: 1;
+  }
+}
+
+#phupdate.sf-floating-status-form .act {
+  display: block;
+}

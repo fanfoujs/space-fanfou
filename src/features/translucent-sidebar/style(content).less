@@ -1,0 +1,12 @@
+#sidebar {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+  #sidebar {
+    background-color: rgba(255, 255, 255, 0.75);
+    /* stylelint-disable-next-line property-no-vendor-prefix */ /* autoprefixer: ignore next */
+    -webkit-backdrop-filter: blur(30px);
+    backdrop-filter: blur(30px);
+  }
+}

@@ -1,5 +1,12 @@
+dist
+
 .DS_Store
 .gitconfig
+
+node_modules
+*.log
+
 .project
 .vscode
-build
+
+.cache-loader

@@ -1,0 +1,62 @@
+@import "shared";
+
+#sf-favorite-fanfouers-list {
+  margin-bottom: 15px;
+
+  p {
+    margin-right: 15px;
+  }
+
+  ul li {
+    transition: opacity @transitionDuration;
+  }
+
+  ul li.drag-source,
+  ul li.dragover {
+    opacity: 0.5;
+  }
+
+  a {
+    cursor: pointer;
+  }
+
+  .sf-tip {
+    @size: 10px;
+
+    margin-right: 15px;
+    width: @size;
+    float: right;
+    // 来自 https://www.flaticon.com/packs/extended-ui
+    background: url("~@assets/images/question-mark.svg") center no-repeat;
+    background-size: @size;
+    color: transparent;
+    cursor: help;
+  }
+}
+
+// 修正拖拽过程的样式
+.sf-favorite-fanfouer-item {
+  list-style: none;
+
+  a {
+    display: block;
+    width: 48px;
+    height: 72px;
+    overflow: hidden;
+  }
+
+  img {
+    width: 100%;
+  }
+
+  span {
+    white-space: nowrap;
+  }
+}
+
+.sf-favorite-fanfouers-tooltip {
+  .react-tooltip-lite {
+    // 使气泡和箭头稍稍偏离一点，避免箭头正好处在气泡右下角
+    margin-left: 5px;
+  }
+}

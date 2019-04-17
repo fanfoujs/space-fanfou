@@ -1,0 +1,31 @@
+@top: #FDE6BE;
+@right: #FDE0B0;
+@bottom: #E3CEAB;
+@left: #FDE0B0;
+
+#timeline-notification.sf-is-scrolling a::before {
+  border-width: 1px;
+  border-style: solid;
+  border-color: @top transparent @bottom @left;
+  border-radius: 2px 0 0 2px;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0),
+      fade(@top, 40%)
+    );
+}
+
+#timeline-notification.sf-is-scrolling a[data-scroll-count="1"]::before {
+  width: 33%;
+}
+
+#timeline-notification.sf-is-scrolling a[data-scroll-count="2"]::before {
+  width: 66%;
+}
+
+#timeline-notification.sf-is-scrolling a[data-scroll-count="3"]::before {
+  width: 100%;
+  border-radius: 2px;
+  border-right-color: @right;
+}
