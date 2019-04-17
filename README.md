@@ -18,7 +18,7 @@
 请使用 Chrome 浏览器访问网上应用店获取插件下载。
 
 <a href="https://chrome.google.com/webstore/detail/mfofmcdbaeajgdeihmcjjohmhepcdcol">
-  <img src="https://raw.githubusercontent.com/ispacekid/space-fanfou/master/ChromeWebStore_Badge_v2_496x150_Modified.png" alt="Download on the Chrome Web Store" width="248px" height="75px" />
+  <img src="https://raw.githubusercontent.com/ispacekid/space-fanfou/master/media/chrome-web-store-badge.png" alt="Download on the Chrome Web Store" width="248px" height="75px" />
 </a>
 
 ### 参阅
