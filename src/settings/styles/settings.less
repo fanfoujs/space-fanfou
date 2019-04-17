@@ -1,0 +1,303 @@
+@dividerColor: #eee;
+@dimmedColor: #999;
+@dimmedElementOpacity: 0.5;
+
+body {
+  color: #555;
+  font: normal 12px/1.5 "Lucida Grande", "Hevetica Neue", Hevetica, Tahoma, "Hiragino Sans GB", "Microsoft Yahei", "Wenquanyi MicroHei", sans-serif;
+  user-select: none;
+}
+
+::selection {
+  background: rgba(0, 0, 0, 0.1);
+  text-shadow: none;
+}
+
+a {
+  color: #06c;
+  text-decoration: underline;
+
+  &:link {
+    -webkit-tap-highlight-color: #ff5e99;
+  }
+
+  &:hover,
+  &:active {
+    outline: none;
+  }
+}
+
+em {
+  font-style: italic;
+}
+
+h1 {
+  font-size: 1.8em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+h3 {
+  font-size: 1.2em;
+}
+
+h4 {
+  font-size: 1.2em;
+}
+
+.left {
+  float: left;
+}
+
+.clear {
+  clear: both;
+}
+
+.hide {
+  display: none !important;
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 120px;
+  z-index: 100;
+}
+
+nav h1 {
+  margin: 15px 0 15px 18px;
+  color: rgb(92, 97, 102);
+  font-size: 1.5em;
+  line-height: 1.5;
+}
+
+nav ul {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+nav ul li {
+  border-left: 6px solid transparent;
+  padding: 0;
+  cursor: pointer;
+  user-select: none;
+
+  &.current {
+    border-left-color: rgb(78, 87, 100);
+  }
+
+  &:nth-last-of-type(2) {
+    margin-top: 26px;
+  }
+
+  a {
+    display: block;
+    border: 0;
+    color: #999;
+    cursor: pointer;
+    line-height: 20px;
+    padding: 6px 0 6px 18px;
+    text-decoration: none;
+  }
+
+  &.current a {
+    color: rgb(70, 78, 90);
+  }
+}
+
+#tabs {
+  margin-left: 155px;
+  box-sizing: border-box;
+  max-width: 718px;
+  min-width: 420px;
+  padding-top: 53px;
+}
+
+#tabs header {
+  position: fixed;
+  top: 0;
+  left: 155px;
+  right: 0;
+  max-width: 718px;
+  min-width: 420px;
+  border-bottom: 1px solid @dividerColor;
+  padding: 15px 0 10px;
+  z-index: 3;
+  background-image:
+    linear-gradient(
+      to bottom,
+      #fff,
+      #fff 40%,
+      rgba(255, 255, 255, 0.92)
+    );
+}
+
+#tabs h2 {
+  margin: 0;
+  line-height: inherit;
+}
+
+#tabs h3 {
+  margin: 12px 0 6px;
+  line-height: inherit;
+
+  .sub {
+    color: #999;
+    font-size: 12px;
+  }
+}
+
+#tabs ul {
+  padding: 0;
+  margin: 0 0 4px;
+
+  li {
+    display: block;
+    margin-left: 16px;
+  }
+
+  label {
+    color: inherit; // 覆盖掉 ui-kit-for-chrome-extensions 设置的 :hover 样式
+    cursor: pointer;
+
+    &.is-disabled {
+      cursor: default;
+      color: @dimmedColor;
+
+      input[type="checkbox"] {
+        opacity: @dimmedElementOpacity;
+      }
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+
+  .is-sub-option {
+    padding-left: 21px;
+  }
+
+  .comment {
+    @commentMarginLeft: 3em;
+
+    position: relative;
+    margin-left: 3em;
+    color: @dimmedColor;
+
+    &::before {
+      @dashWidth: 2em;
+
+      position: absolute;
+      left: -(@dashWidth + (@commentMarginLeft - @dashWidth) / 2);
+      top: 50%;
+      width: @dashWidth;
+      height: 1px;
+      content: "";
+      background: @dividerColor;
+    }
+  }
+}
+
+.cloud-syncing-disabled {
+  margin-left: 2px;
+}
+
+.icon-cloud-syncing-disabled {
+  @size: 12px;
+
+  display: inline-block;
+  margin-bottom: -8px;
+  padding: 6px;
+  box-sizing: content-box;
+  width: @size;
+  height: @size;
+  // https://icons8.com/icon/69338/unavailable-cloud
+  background-image: url("~@assets/images/cloud-off.svg");
+  background-size: @size;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: help;
+  opacity: 0.2;
+}
+
+#version-history {
+  ul {
+    padding-left: 8px;
+  }
+
+  ul li {
+    display: list-item;
+    list-style: disc;
+  }
+}
+
+footer {
+  padding-top: 10px;
+  border-top: 1px solid @dividerColor;
+}
+
+#tabs a img {
+  cursor: pointer;
+}
+
+.tab {
+  margin-bottom: 20px;
+
+  .info {
+    margin-left: 15px;
+    margin-bottom: 15px;
+  }
+
+  h4 {
+    margin: 0;
+    font-weight: normal;
+  }
+}
+
+input[type="number"] {
+  width: 45px;
+}
+
+select {
+  color: #555;
+}
+
+@media (max-width: 775px) {
+  html {
+    width: 560px;
+    height: 600px;
+    overflow-y: hidden;
+  }
+
+  #tabs {
+    margin-left: 120px;
+    max-width: 440px;
+    min-width: 420px;
+    height: 600px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  #tabs header {
+    left: 120px;
+    max-width: 420px;
+    min-width: 420px;
+  }
+
+  #tabs ul {
+    max-width: 420px;
+  }
+
+  :-webkit-any(.checkbox, .radio) label {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+}

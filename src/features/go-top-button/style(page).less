@@ -1,0 +1,30 @@
+#pagination-totop {
+  @size: 45px;
+  @iconSize: 27px;
+
+  position: fixed;
+  display: block;
+  bottom: 15px;
+  transform: translateX(768px);
+  width: @size;
+  height: @size;
+  padding: 0;
+  margin: 0;
+  // 注意不是正圆
+  border-radius: 50px;
+  background-color: rgba(0, 0, 0, 0.5);
+  // Icon made by Freepik from www.flaticon.com
+  // https://www.flaticon.com/free-icon/arrow-pointing-to-up_1139
+  background-image: url("~@assets/images/arrow-up.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: @iconSize;
+  border: 0 !important;
+  cursor: pointer;
+  color: transparent !important;
+  text-indent: -9999px;
+
+  &:hover {
+    background-color: #000;
+  }
+}

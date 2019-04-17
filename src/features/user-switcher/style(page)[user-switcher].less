@@ -1,0 +1,102 @@
+#user_top.sf-is-ready {
+  @padding: 5px;
+
+  position: absolute;
+  width: 202px;
+  z-index: 2;
+  border-radius: 3px;
+  margin: -@padding 0 0 -@padding;
+  padding: @padding;
+
+  &:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+  }
+
+  & + #reminder {
+    // 设置 position: absolute 后，在原位置占用的空间变为 0
+    // 所以它后面的元素得额外保留空间，避免内容重叠
+    margin-top: 47px;
+  }
+}
+
+#user_top > a img {
+  width: 32px;
+  height: 32px;
+  margin-right: 10px;
+}
+
+#user_top > h3::after {
+  content: "\25BE";
+  margin-left: 7px;
+  opacity: 0.5;
+}
+
+#sf-user-switcher {
+  display: none;
+  position: relative;
+  margin-top: 6px;
+  border-top: 1px solid #e5e5e5;
+  font-size: 12px;
+  line-height: 24px;
+
+  #user_top:hover & {
+    display: block;
+  }
+}
+
+#sf-user-switcher a:hover {
+  cursor: pointer;
+}
+
+#sf-user-switcher .sf-user-item {
+  display: table;
+  width: 100%;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.025);
+  }
+
+  .sf-user-info,
+  .sf-del-icon {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .sf-user-info {
+    width: 100%;
+    height: auto;
+
+    img {
+      float: left;
+      width: 16px;
+      height: 16px;
+      margin: 5px;
+    }
+  }
+
+  .sf-del-icon {
+    width: 12px;
+    margin: 0 4px;
+    cursor: pointer;
+    visibility: hidden;
+  }
+
+  &:hover .sf-del-icon {
+    visibility: visible;
+  }
+}
+
+#sf-user-switcher .sf-add-new-user {
+  padding: 4px 0 1px;
+
+  // 只有列表不为空的时候才添加分割线
+  &:not(:first-child) {
+    border-top: 1px solid #e5e5e5;
+  }
+
+  .formbutton {
+    letter-spacing: 0;
+    padding: 3px 6px;
+  }
+}

@@ -1,0 +1,100 @@
+.sf-contextual-statuses-container {
+  li.buffered + & {
+    display: none;
+  }
+
+  .sf-contextual-statuses {
+    padding-left: 30px;
+  }
+}
+
+.sf-contextual-statuses-container .sf-toggle,
+.sf-contextual-statuses-container .sf-indicator {
+  @height: 1.8em;
+
+  position: relative; // 解决被 li 遮挡无法点击的问题
+  margin-left: 81%;
+  margin-top: -@height;
+  width: 65px;
+  height: @height;
+  border: 0;
+  border-radius: 3px 3px 0 0;
+  border-top-right-radius: 3px;
+  font-size: 90%;
+  line-height: @height;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #666;
+  cursor: pointer;
+  animation: sf-fade-in 400ms;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.075);
+  }
+
+  &:active {
+    background-color: rgba(0, 0, 0, 0.125);
+  }
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+.sf-contextual-statuses-container .sf-toggle {
+  &.sf-repost,
+  &.sf-reply {
+    padding: 0 0 0 21px;
+    background-position: 9px center;
+    background-repeat: no-repeat;
+  }
+
+  &.sf-repost {
+    background-image: url("~@assets/images/repost.base64.svg");
+  }
+
+  &.sf-reply {
+    background-image: url("~@assets/images/reply.base64.svg");
+  }
+}
+
+.sf-contextual-statuses-container .sf-indicator {
+  &.sf-waiting {
+    background-image: url("https://static2.fanfou.com/img/ajax.gif");
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: progress;
+  }
+
+  &.sf-not-available {
+    text-decoration: line-through;
+    cursor: not-allowed;
+  }
+}
+
+#stream ol .sf-contextual-statuses-container li {
+  min-height: 38px;
+  width: 100%;
+  padding: 6px 30px 6px 52px;
+  border-left: 1px solid #eee;
+  font-size: 12px;
+  animation: sf-fade-in 400ms;
+
+  &.sf-last {
+    border-bottom-color: #ddd;
+  }
+
+  .avatar {
+    margin-left: -41px;
+  }
+
+  .avatar img {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+// “展开”按钮可能会遮挡住原消息的图片，额外添加 margin 以避免重合
+li[sf-contextual-statuses] .content .photo.zoom {
+  margin-bottom: 18px;
+}

@@ -1,0 +1,64 @@
+@import "shared";
+
+#avatar {
+  position: relative;
+  overflow: hidden;
+}
+
+#sf-favorited-status-indicator {
+  @size: 32px;
+
+  position: absolute;
+  content: "";
+  width: @size;
+  height: @size;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  opacity: 0;
+  border-top-right-radius: 2px;
+  display: inline-block;
+  pointer-events: none;
+  background: url("~@assets/images/star.svg") right top no-repeat;
+  transform: translate(@size / 2, -(@size / 2));
+  transition-property: transform, opacity;
+  transition-duration: @transitionDuration;
+
+  &.sf-is-favorited {
+    opacity: 0.85;
+    transform: translate(0, 0);
+  }
+}
+
+#sf-favorited-status-toggler {
+  cursor: pointer;
+  width: 20px;
+  height: 16px;
+  margin: 3px 0 1px 4px;
+  opacity: 0;
+  display: inline-block;
+  background: url("~@assets/images/fav-grey.base64.svg");
+  transition: opacity @transitionDuration;
+
+  #info:hover & {
+    opacity: 1;
+  }
+
+  &:not(.sf-is-favorited):hover {
+    background: url("~@assets/images/fav-dark.base64.svg");
+  }
+
+  &.sf-is-favorited {
+    background: url("~@assets/images/faved-yellow.base64.svg");
+  }
+
+  &.sf-is-favorited:hover {
+    // 覆盖掉上面 #info 的选择度
+    opacity: 0.75 !important;
+  }
+
+  &:active {
+    // 覆盖掉上面多类的选择度
+    background: url("~@assets/images/fav-blue.base64.svg") !important;
+  }
+}

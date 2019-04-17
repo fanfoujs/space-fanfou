@@ -1,0 +1,93 @@
+// 这里使用到的图片会通过 base64 的方式内嵌在最终的 CSS 代码中
+// 好处是，:hover 状态不会再出现图标闪烁的问题
+
+span.op a.reply,
+span.op a.share,
+span.op a.repost,
+span.op a.delete {
+  width: 20px !important;
+  background: no-repeat !important;
+  color: transparent !important;
+  overflow: hidden;
+}
+
+span.op a.reply {
+  background-image: url("~@assets/images/reply-grey.base64.svg") !important;
+  background-position-y: 2px !important;
+
+  &:hover {
+    background-image: url("~@assets/images/reply-dark.base64.svg") !important;
+  }
+
+  &:active {
+    background-image: url("~@assets/images/reply-blue.base64.svg") !important;
+  }
+}
+
+span.op a.share {
+  background-image: url("~@assets/images/fav-grey.base64.svg") !important;
+
+  &:hover {
+    background-image: url("~@assets/images/fav-dark.base64.svg") !important;
+  }
+
+  &:active {
+    background-image: url("~@assets/images/fav-blue.base64.svg") !important;
+  }
+}
+
+span.op a.delete {
+  background-image: url("~@assets/images/delete-grey.base64.svg") !important;
+  background-position-x: 1px !important;
+
+  &:hover {
+    background-image: url("~@assets/images/delete-dark.base64.svg") !important;
+  }
+
+  &:active {
+    background-image: url("~@assets/images/delete-blue.base64.svg") !important;
+  }
+}
+
+span.op a.faved {
+  background-image: url("~@assets/images/faved-yellow.base64.svg") !important;
+
+  &:hover {
+    background-image: url("~@assets/images/faved-grey.base64.svg") !important;
+  }
+
+  &:active {
+    background-image: url("~@assets/images/fav-grey.base64.svg") !important;
+  }
+}
+
+span.op a.repost {
+  background-image: url("~@assets/images/repost-grey.base64.svg") !important;
+  background-position: 1px 1px !important;
+
+  &:hover {
+    background-image: url("~@assets/images/repost-dark.base64.svg") !important;
+  }
+
+  &:active {
+    background-image: url("~@assets/images/repost-blue.base64.svg") !important;
+  }
+}
+
+#stream ol:not(.wa) li {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 33px 12px 8px;
+}
+
+#stream .wa li {
+  // "wa" 大概是 "with avatar" 的意思
+  // 用户个人页面的消息是没有头像的，因此没有这个类名
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 33px 9px 67px;
+
+  .avatar {
+    margin-left: -58px;
+  }
+}
