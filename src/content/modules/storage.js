@@ -1,6 +1,6 @@
+import messaging from '../environment/messaging'
 import wrapper from '@libs/wrapper'
 import { STORAGE_READ, STORAGE_WRITE, STORAGE_DELETE } from '@constants'
-import messaging from '../environment/messaging'
 
 export default wrapper({
   install() {

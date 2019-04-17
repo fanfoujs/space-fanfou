@@ -1,6 +1,6 @@
+import bridge from './bridge'
 import wrapper from '@libs/wrapper'
 import { SETTINGS_READ_ALL } from '@constants'
-import bridge from './bridge'
 
 const settings = wrapper({
   async install() {

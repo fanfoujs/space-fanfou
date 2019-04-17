@@ -1,6 +1,6 @@
+import messaging from './messaging'
 import wrapper from '@libs/wrapper'
 import { SETTINGS_READ_ALL } from '@constants'
-import messaging from './messaging'
 
 const settings = wrapper({
   async install() {

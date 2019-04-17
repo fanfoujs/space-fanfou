@@ -1,10 +1,10 @@
 import simpleMemoize from 'just-once'
-import safelyInvokeFns from '@libs/safelyInvokeFns'
-import arrayUniquePush from '@libs/arrayUniquePush'
-import arrayRemove from '@libs/arrayRemove'
 import initLocalStorage from './localStorage'
 import initSyncStorage from './syncStorage'
 import initSessionStorage from './sessionStorage'
+import safelyInvokeFns from '@libs/safelyInvokeFns'
+import arrayUniquePush from '@libs/arrayUniquePush'
+import arrayRemove from '@libs/arrayRemove'
 
 // 这里必须使用工厂函数，避免在非 background script 环境因为 import 而被意外执行，然后报错
 export default simpleMemoize(() => {

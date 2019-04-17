@@ -4,6 +4,8 @@ import defined from 'defined'
 import simpleMemoize from 'just-once'
 import mapValues from 'just-map-values'
 import features from '@features'
+import messaging from './messaging'
+import storage from './storage'
 import isFanfouWebUrl from '@libs/isFanfouWebUrl'
 import migrate from '@libs/migrate'
 import { readJSONFromLocalStorage } from '@libs/localStorageWrappers'
@@ -19,8 +21,6 @@ import {
   IS_EXTENSION_UPGRADED_STORAGE_KEY,
   IS_EXTENSION_UPGRADED_STORAGE_AREA_NAME,
 } from '@constants'
-import messaging from './messaging'
-import storage from './storage'
 
 const SETTINGS_STORAGE_KEY = 'settings'
 const SETTINGS_VERSION_STORAGE_KEY = 'settings/version'

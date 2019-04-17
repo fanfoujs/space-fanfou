@@ -1,6 +1,6 @@
+import bridge from '../environment/bridge'
 import wrapper from '@libs/wrapper'
 import { PROXIFIED_AUDIO } from '@constants'
-import bridge from '../environment/bridge'
 
 export default wrapper({
   install() {

@@ -1,6 +1,6 @@
+import messaging from './messaging'
 import wrapper from '@libs/wrapper'
 import { BRIDGE_EVENT_TYPE, BROADCASTING_MESSAGE } from '@constants'
-import messaging from './messaging'
 
 async function eventHandler(event) {
   const { from, senderId, message } = event.detail

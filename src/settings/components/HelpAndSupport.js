@@ -1,6 +1,6 @@
 import { h, Component } from 'preact'
-import getExtensionVersion from '@libs/getExtensionVersion'
 import ExternalLink from './ExternalLink'
+import getExtensionVersion from '@libs/getExtensionVersion'
 
 const URL_OFFICIAL_FANFOU = 'https://fanfou.com/spacefanfou'
 const URL_GITHUB = 'https://github.com/ispacekid/space-fanfou'

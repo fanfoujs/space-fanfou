@@ -1,6 +1,6 @@
+import bridge from '../environment/bridge'
 import wrapper from '@libs/wrapper'
 import { STORAGE_READ, STORAGE_WRITE, STORAGE_DELETE } from '@constants'
-import bridge from '../environment/bridge'
 
 export default wrapper({
   install() {

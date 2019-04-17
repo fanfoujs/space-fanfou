@@ -1,8 +1,5 @@
 import select from 'select-dom'
 import { on, off } from 'delegated-events'
-import bridge from '@page/environment/bridge'
-import getLoggedInUserId from '@libs/getLoggedInUserId'
-import { STORAGE_CHANGED } from '@constants'
 import {
   NEW_TIMESTAMP_STORAGE_KEY,
   NEW_TIMESTAMP_STORAGE_AREA_NAME,
@@ -11,6 +8,9 @@ import {
   SAVED_SEARCHES_READ,
   SAVED_SEARCHES_WRITE,
 } from './constants'
+import bridge from '@page/environment/bridge'
+import getLoggedInUserId from '@libs/getLoggedInUserId'
+import { STORAGE_CHANGED } from '@constants'
 
 const CLASSNAME_INDICATOR = 'sf-new'
 const SELECTOR_KEYWORD_LINK = '#savedsearchs > ul > li > a'

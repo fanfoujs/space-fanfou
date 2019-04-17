@@ -1,11 +1,11 @@
 import { h } from 'dom-chef'
+import fanfouDefaultThemeCss from './fanfou-default-theme'
 import findUserThemeStyleElement from '@libs/findUserThemeStyleElement'
 import keepRetry from '@libs/keepRetry'
 import safeElementReady from '@libs/safeElementReady'
 import getLoggedInUserId from '@libs/getLoggedInUserId'
 import arrayUniquePush from '@libs/arrayUniquePush'
 import arrayRemove from '@libs/arrayRemove'
-import fanfouDefaultThemeCss from './fanfou-default-theme'
 
 const STORAGE_KEY = 'remove-personalized-theme/userIdList'
 const STORAGE_AREA_NAME = 'sync'

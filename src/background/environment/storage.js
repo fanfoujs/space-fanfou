@@ -1,7 +1,7 @@
-import { isLooseKebabCase, isLooseCamelCase } from '@libs/stringCases'
-import { STORAGE_READ, STORAGE_WRITE, STORAGE_DELETE, STORAGE_CHANGED } from '@constants'
 import messaging from './messaging'
 import initStorageAreas from './storage-areas'
+import { isLooseKebabCase, isLooseCamelCase } from '@libs/stringCases'
+import { STORAGE_READ, STORAGE_WRITE, STORAGE_DELETE, STORAGE_CHANGED } from '@constants'
 
 let storageAreas
 

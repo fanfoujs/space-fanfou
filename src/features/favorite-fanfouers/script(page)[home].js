@@ -1,15 +1,15 @@
 import { h, Component } from 'preact'
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc'
-import Tooltip from '@libs/Tooltip'
 import cx from 'classnames'
 import sleep from 'p-sleep'
 import arrayMove from 'array-move'
+import { createFriendsListReader, createFriendsListWriter, createStorageChangeHandler } from './shared'
+import Tooltip from '@libs/Tooltip'
 import { isHomePage } from '@libs/pageDetect'
 import { fadeOut } from '@libs/fade'
 import preactRender from '@libs/preactRender'
 import { readJSONFromLocalStorage } from '@libs/localStorageWrappers'
 import arrayRemove from '@libs/arrayRemove'
-import { createFriendsListReader, createFriendsListWriter, createStorageChangeHandler } from './shared'
 
 const USER_GUIDE = [
   '1. 在用户个人页面通过点击名字右方的星形图标添加饭友到列表',

@@ -2,12 +2,6 @@ import wretch from 'wretch'
 import select from 'select-dom'
 import dotProp from 'dot-prop'
 import arrayLast from 'array-last'
-import messaging from '@background/environment/messaging'
-import parseHTML from '@libs/parseHTML'
-import asyncSingleton from '@libs/asyncSingleton'
-import findElementWithSpecifiedContentInArray from '@libs/findElementWithSpecifiedContentInArray'
-import isNaN from '@libs/isNaN'
-import log from '@libs/log'
 import {
   NEW_TIMESTAMP_STORAGE_KEY,
   NEW_TIMESTAMP_STORAGE_AREA_NAME,
@@ -16,6 +10,12 @@ import {
   SAVED_SEARCHES_READ,
   SAVED_SEARCHES_WRITE,
 } from './constants'
+import messaging from '@background/environment/messaging'
+import parseHTML from '@libs/parseHTML'
+import asyncSingleton from '@libs/asyncSingleton'
+import findElementWithSpecifiedContentInArray from '@libs/findElementWithSpecifiedContentInArray'
+import isNaN from '@libs/isNaN'
+import log from '@libs/log'
 
 const CHECKING_INTERVAL = 5 * 60 * 1000
 const MAX_PAGES_TO_SEARCH = 10
