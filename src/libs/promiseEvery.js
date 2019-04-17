@@ -1,6 +1,6 @@
 import isPromise from 'is-promise'
 
-// 类似于 Array.prototype.every()，总是 resolve 返回布尔值
+// 类似于 Array#every，总是 resolve 返回布尔值
 export default iterable => {
   return new Promise(resolve => {
     const total = iterable.length
