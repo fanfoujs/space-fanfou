@@ -20,6 +20,11 @@ export default rawVersionHistory => {
     }
     continousBlankLines = 0
 
+    // 注释
+    if (currentLine.startsWith('#')) {
+      continue
+    }
+
     // 版本号（必选）
     if (currentLine.startsWith('v')) {
       const versionTag = currentLine.substr(1)

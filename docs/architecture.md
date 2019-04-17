@@ -1,4 +1,6 @@
-## 架构
+# 架构
+
+### 太空饭否分为哪几个部分？
 
 太空饭否分为四个部分：
 
@@ -9,15 +11,15 @@
 
 以上四部分的 webpack entry 文件位于 `src/entries` 目录中，而前三者共用了同一个 entry 文件。原因是，它们都负责实现太空饭否的各种功能，因此会引用 `src/features` 中的文件，共用一个 entry 可以避免重复打包这部分代码。
 
-#### Background Scripts 是做什么的？
+### Background Scripts 是做什么的？
 
 部分功能如检查是否有新 @ 提醒需要持续运行，所以放置在 Background Scripts 中。这部分不能直接与饭否页面接触。
 
-#### Content Scripts 和 Page Scripts 是做什么的？
+### Content Scripts 和 Page Scripts 是做什么的？
 
 负责在饭否网页上实现太空饭否的样式与功能，即与页面接触的部分。这两者实际上是非常相似的，但是也存在一些差别。
 
-#### 为什么同时存在 Content Scripts 和 Page Scripts？
+### 为什么同时存在 Content Scripts 和 Page Scripts？
 
 一般情况下，修改页面或添加内容以实现功能，只需要 Content Scripts 就足够了。但是太空饭否某些功能必须调用饭否页面的 JS 接口才可以实现（比如要用到 jQuery 和 YUI 来禁用掉饭否原有的一些功能）。但是 Content Scripts 是在一个隔离的环境中执行的，无法访问页面这一侧的对象，也就无法调用饭否自己的 JS 接口。而 Page Scripts 就没有了这些限制。
 
