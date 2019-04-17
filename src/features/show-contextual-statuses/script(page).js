@@ -4,6 +4,7 @@ import select from 'select-dom'
 import cx from 'classnames'
 import arrayLast from 'array-last'
 import sleep from 'p-sleep'
+import { CLASSNAME_CONTAINER } from './constants'
 import { isTimelinePage } from '@libs/pageDetect'
 import requireFanfouLib from '@libs/requireFanfouLib'
 import extractText from '@libs/extractText'
@@ -12,11 +13,11 @@ import isStatusElement from '@libs/isStatusElement'
 import isElementInDocument from '@libs/isElementInDocument'
 import every from '@libs/promiseEvery'
 
+const ATTRIBUTE_CACHE_ID = 'sf-contextual-statuses'
+
 export default context => {
   const { readOptionValue, requireModules, elementCollection } = context
   const { timelineElementObserver } = requireModules([ 'timelineElementObserver' ])
-
-  const ATTRIBUTE_CACHE_ID = 'sf-contextual-statuses'
 
   const cacheMap = new Map()
   let cacheIdGen = 0
@@ -167,7 +168,7 @@ export default context => {
 
     render() {
       return (
-        <div className="sf-contextual-statuses-container">
+        <div className={CLASSNAME_CONTAINER}>
           { this.renderToggle() }
           { this.renderStatuses() }
           { this.renderIndicator() }
@@ -248,7 +249,7 @@ export default context => {
       const aliveInstance = cacheMap.get(cacheId)
       const maybeDeadInstance = li.nextElementSibling
 
-      if (maybeDeadInstance?.matches('.sf-contextual-statuses-container')) {
+      if (maybeDeadInstance?.matches(`.${CLASSNAME_CONTAINER}`)) {
         maybeDeadInstance.replaceWith(aliveInstance)
       }
 
@@ -336,7 +337,7 @@ export default context => {
         li.removeAttribute(ATTRIBUTE_CACHE_ID)
       }
 
-      for (const container of select.all('.sf-contextual-statuses-container')) {
+      for (const container of select.all(`.${CLASSNAME_CONTAINER}`)) {
         container.remove()
       }
     },
