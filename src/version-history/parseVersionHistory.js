@@ -15,8 +15,12 @@ export default rawVersionHistory => {
     currentLine = lines.shift().trimEnd()
 
     // 跳过空行
-    if (!currentLine && ++continousBlankLines > MAX_CONTINOUS_BLANK_LINES) {
-      throw new Error(`连续空行不该超过 ${MAX_CONTINOUS_BLANK_LINES} 行`)
+    if (!currentLine) {
+      if (++continousBlankLines > MAX_CONTINOUS_BLANK_LINES) {
+        throw new Error(`连续空行不该超过 ${MAX_CONTINOUS_BLANK_LINES} 行`)
+      } else {
+        continue
+      }
     }
     continousBlankLines = 0
 
@@ -69,6 +73,8 @@ export default rawVersionHistory => {
 
       continue
     }
+
+    throw new Error(`无法识别：${currentLine}`)
   }
 
   return parsed
