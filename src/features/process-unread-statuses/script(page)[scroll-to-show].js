@@ -72,7 +72,7 @@ export default context => {
     if (scrollManager.getScrollTop()) return
     // 如果是在发送消息输入框内滑动滚轮时触发了事件，忽略之
     if (event.target.tagName === 'TEXTAREA') return
-    // 如果“新增 X 条最新消息，点击查看”通知条未显示，忽略之
+    // 如果「新增 X 条最新消息，点击查看」通知条未显示，忽略之
     if (!hasNewStatuses()) return
 
     timeout.cancel()

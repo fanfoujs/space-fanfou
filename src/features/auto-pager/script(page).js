@@ -4,7 +4,7 @@ import { isPublicTimelinePage } from '@libs/pageDetect'
 import every from '@libs/promiseEvery'
 import neg from '@libs/neg'
 
-// “更多”按钮与可视区域底部距离缩小到该值时即自动加载
+// 「更多」按钮与可视区域底部距离缩小到该值时即自动加载
 const BUFFER = 500
 const SCROLL_DEBOUNCE_WAIT = 250
 

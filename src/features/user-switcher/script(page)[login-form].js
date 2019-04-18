@@ -18,7 +18,7 @@ export default context => {
     onLoad() {
       elementCollection.get('al').checked = true
       originalAutoLoginLabel = elementCollection.get('al').nextSibling.textContent
-      elementCollection.get('al').nextSibling.textContent = ' 保存到“多账户切换列表”'
+      elementCollection.get('al').nextSibling.textContent = ' 保存到「多账户切换列表」'
     },
 
     onUnload() {
