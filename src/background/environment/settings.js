@@ -68,8 +68,8 @@ function mergeSettings(map) {
 
 async function migrateSettings() {
   // 下面被注释掉的有两种情况：
-  //   1. 已经转换成 soldered feature（不提供设置项，强制开启），使用“*”标记
-  //   2. 不打算再实现了或者设置项被去掉了，使用“-”标记
+  //   1. 已经转换成 soldered feature（不提供设置项，强制开启），使用「*」标记
+  //   2. 不打算再实现了或者设置项被去掉了，使用「-」标记
   const optionNameMap = {
     // * 'advanced_sidebar': true,
     'auto_pager': 'auto-pager',

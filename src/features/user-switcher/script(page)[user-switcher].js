@@ -136,8 +136,8 @@ export default context => {
       nickname: select('#user_top h3').textContent,
       avatarUrl: select('#user_top img').src,
       cookies: omitBy(allCookies, (_, key) => (
-        key.startsWith('_') || // 跳过键名以“_”开头的 cookie
-        key === 'uuid' // 跳过键名为“uuid”的 cookie
+        key.startsWith('_') || // 跳过键名以「_」开头的 cookie
+        key === 'uuid' // 跳过键名为「uuid」的 cookie
       )),
     }
 
@@ -246,7 +246,7 @@ export default context => {
     applyWhen: () => elementCollection.ready('usertop'),
 
     async onLoad() {
-      // 登录时若勾选了“保存到切换列表”（即原本的“自动登录”），则存在这个 cookie
+      // 登录时若勾选了「保存到切换列表」（即原本的「自动登录」），则存在这个 cookie
       if (Cookies.get('al')) {
         await addOrUpdateCurrentUser()
       } else {

@@ -101,7 +101,7 @@ class SidebarStatistics extends Component {
 
     // 背景图片
     const backgroundImageUrl = userProfile.profile_background_image_url
-    // 需要检测用户是否在“设置→模板”中选择了“不要背景图片”
+    // 需要检测用户是否在「设置 → 模板」中选择了「不要背景图片」
     const isBackgroundImageDisabled = getComputedStyle(document.body).backgroundImage === 'none'
 
     this.setState({

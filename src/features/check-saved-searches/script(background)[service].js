@@ -117,7 +117,7 @@ export default context => {
         ? extractStatusTime(latestStatusMatchingKeyword)
         : 0 // 表示没有任何消息，但是也没有报错
     } catch (error) {
-      log.info(`获取关键字“${keyword}”的搜索结果出错`, error)
+      log.info(`获取关键字「${keyword}」的搜索结果出错`, error)
       // 返回 undefined，将无法通过 isValidTimestamp() 检查
     }
   }
@@ -214,7 +214,7 @@ export default context => {
 
       notification.create({
         id: `saved-searches/${userId}/${keyword}`,
-        message: `您关注的话题“${keyword}”有了新消息`,
+        message: `您关注的话题「${keyword}」有了新消息`,
         onClick,
         buttonDefs: [ {
           title: '查看',

@@ -29,7 +29,7 @@ function createMessageHandler(port) {
         port.postMessage({ senderId, message: respondedMessage })
       }
     } else {
-      throw new Error(`未知消息类型 “${message.action}”`)
+      throw new Error(`未知消息类型 「${message.action}」`)
     }
   }
 }
@@ -49,7 +49,7 @@ const messaging = {
 
   registerHandler(actionType, handler) {
     if (messageHandlers[actionType]) {
-      throw new Error(`重复注册 “${actionType}” 类型的消息处理器`)
+      throw new Error(`重复注册 「${actionType}」 类型的消息处理器`)
     } else {
       messageHandlers[actionType] = handler
     }
@@ -57,7 +57,7 @@ const messaging = {
 
   unregisterHandler(actionType) {
     if (!delete messageHandlers[actionType]) {
-      throw new Error(`不存在 “${actionType}” 类型的消息处理器，因此取消注册失败`)
+      throw new Error(`不存在 「${actionType}」 类型的消息处理器，因此取消注册失败`)
     }
   },
 

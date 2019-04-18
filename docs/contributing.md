@@ -18,4 +18,4 @@
 - 尽量不去调用饭否的 jQuery / YUI
 - 使用图片素材时应考虑到 HiDPI 显示器的适配
 - SVG 图片应该使用 [svgo](https://github.com/svg/svgo) 作优化处理
-- 在 merge pull request 时应选择“Squash and merge”
+- 在 merge pull request 时应选择「Squash and merge」

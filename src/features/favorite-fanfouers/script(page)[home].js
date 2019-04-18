@@ -15,7 +15,7 @@ const USER_GUIDE = [
   '1. 在用户个人页面通过点击名字右方的星形图标添加饭友到列表',
   '2. 拖拽头像重新排序',
   '3. 按住 Shift 键点击头像删除',
-  '4. 右击“有爱饭友”清空列表',
+  '4. 右击「有爱饭友」清空列表',
 ].join('\n')
 const CONFIRMING_MESSAGE = '确定要清空有爱饭友列表吗？请注意这个操作无法撤回。'
 const CLASSNAME_ITEM = 'sf-favorite-fanfouer-item'
@@ -271,8 +271,8 @@ export default context => {
       const { friends } = elementCollection.getAll()
 
       unmount = preactRender(<FavoriteFanfouers />, root => {
-        // 插入到“我关注的人”之前
-        // 因为假定“有爱饭友”的使用频率更高，所以显示靠前一些这样更方便
+        // 插入到「我关注的人」之前
+        // 因为假定「有爱饭友」的使用频率更高，所以显示靠前一些这样更方便
         friends.before(root)
       })
     },

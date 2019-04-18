@@ -59,9 +59,9 @@ export const isLoggedInUserFollowersListPage = simpleMemoize(async () => {
 // 是否为用户 timeline 页面
 export const isUserProfilePage = simpleMemoize(() => {
   return any([
-    // 只有用户个人页面中才存在“投诉”对话框
+    // 只有用户个人页面中才存在「投诉」对话框
     safeElementReady('#overlay-report'),
-    // 但是当前登录用户的个人页面中没有“投诉”对话框，需要额外判断
+    // 但是当前登录用户的个人页面中没有「投诉」对话框，需要额外判断
     isLoggedInUserProfilePage(),
   ])
 })

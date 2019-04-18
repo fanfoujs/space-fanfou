@@ -243,7 +243,7 @@ export default context => {
     // 饭否在加载下一页消息后，会直接使用 innerHTML 的方式覆写当前 HTML
     // 这就导致原本存在的 DOM 结构被替换掉
     // MutationObserver 的 mutationRecord.addedNodes 中会包含旧消息
-    // 而这些旧消息中已经展开了的部分所绑定的监听事件会丢失，也就是“dead instance”
+    // 而这些旧消息中已经展开了的部分所绑定的监听事件会丢失，也就是「dead instance」
     // 我们用原来可以交互的实例（alive instance）替换掉新的实例
     if (cacheMap.has(cacheId)) {
       const aliveInstance = cacheMap.get(cacheId)
