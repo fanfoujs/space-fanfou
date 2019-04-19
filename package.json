@@ -18,8 +18,8 @@
     "cleanup": "rimraf dist && mkdirp dist",
     "dev": "npm run cleanup && webpack --watch --mode development --config build/webpack.config.js",
     "build": "npm run cleanup && webpack --mode production --config build/webpack.config.js",
-    "zip": "node build/zip.js",
-    "release": "npm run build && npm run zip"
+    "pack": "node build/pack.js",
+    "release": "npm run build && npm run pack"
   },
   "license": "GPL v3",
   "private": true,
