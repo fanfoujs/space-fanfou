@@ -1,4 +1,5 @@
 dist
+*.zip
 
 .DS_Store
 .gitconfig

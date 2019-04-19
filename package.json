@@ -9,15 +9,17 @@
     "Rex Zhang <rex.zhasm@gmail.com> (https://fanfou.com/zhasm)"
   ],
   "scripts": {
-    "cleanup": "rimraf dist && mkdirp dist",
-    "dev": "npm run cleanup && webpack --watch --mode development --config build/webpack.config.js",
-    "build": "npm run cleanup && webpack --mode production --config build/webpack.config.js",
     "test": "npm run lint && npm run unit",
     "lint": "npm run lint:js && npm run lint:css",
     "lint:js": "eslint .",
     "lint:css": "stylelint '**/*.(less|css)'",
     "unit": "jest",
-    "unit:dev": "jest --watch"
+    "unit:dev": "jest --watch",
+    "cleanup": "rimraf dist && mkdirp dist",
+    "dev": "npm run cleanup && webpack --watch --mode development --config build/webpack.config.js",
+    "build": "npm run cleanup && webpack --mode production --config build/webpack.config.js",
+    "zip": "node build/zip.js",
+    "release": "npm run build && npm run zip"
   },
   "license": "GPL v3",
   "private": true,
@@ -88,6 +90,7 @@
     "babel-jest": "^24.7.1",
     "babel-loader": "^8.0.4",
     "cache-loader": "^2.0.0",
+    "chalk": "^2.4.2",
     "copy-webpack-plugin": "^5.0.2",
     "css-loader": "^2.1.1",
     "eslint": "^5.16.0",
