@@ -38,6 +38,10 @@ export default context => {
     }
   }
 
+  function extractStatusId(li) {
+    return select('.stamp .time', li).getAttribute('ffid')
+  }
+
   function extractStatusContent(li) {
     // 不使用 select('.content', li).textContent.trim() 的方式
     // 因为 .content 的内容可能会被修改（比如展开短链接），也可能包含被截断的链接
@@ -84,8 +88,7 @@ export default context => {
     const { form, textarea } = elementCollection.getAll()
     const li = event.path.find(element => element.tagName.toLowerCase() === 'li')
     const authorElement = select('.author', li)
-    const contentElement = select('.content', li)
-    const targetStatusId = contentElement.getAttribute('id')
+    const targetStatusId = extractStatusId(li)
     const targetStatusAuthorNickname = '@' + authorElement.textContent
     const targetStatusText = extractStatusContent(li)
     const oldStatusContent = textarea.value.trim()
