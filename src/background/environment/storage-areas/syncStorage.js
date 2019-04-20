@@ -36,6 +36,18 @@ export default simpleMemoize(() => {
       }
     },
 
+    async writeAll(object) {
+      const oldValue = {}
+
+      for (const key of Object.keys(object)) {
+        oldValue[key] = await get(key)
+      }
+
+      if (!deepEqual(oldValue, object)) {
+        await set(object)
+      }
+    },
+
     async delete(key) {
       await remove(key)
     },
