@@ -27,6 +27,7 @@ export default context => {
     textarea: '#phupdate textarea',
     uploadCloseHandle: '#phupdate .upload-close-handle',
     submitButton: '#phupdate input[type="submit"]',
+    popupBox: '#PopupBox',
   })
 
   registerDOMEventListener('form', 'submit', onFormSubmit)
@@ -49,10 +50,15 @@ export default context => {
   }
 
   function resetReplyAndRepost() {
-    const { form } = elementCollection.getAll()
+    const { form, popupBox } = elementCollection.getAll()
 
     form.elements.in_reply_to_status_id.value = ''
     form.elements.repost_status_id.value = ''
+
+    // #PopupBox 为饭否原始的用于回复或转发的弹框
+    // 如果开启了浮动输入框，虽然这个弹框不可见，但是也手工把它关闭一下
+    // 避免关闭浮动输入框插件一瞬间这个弹框又莫名其妙冒出来
+    popupBox.style.display = 'none'
   }
 
   function resetForm() {
