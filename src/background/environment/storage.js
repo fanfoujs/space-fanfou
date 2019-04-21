@@ -71,11 +71,28 @@ const storage = {
   },
 }
 
+// 方便测试
 if (process.env.NODE_ENV === 'development') {
-  // 方便测试
-  storage.readAll = (storageArea = 'local') => {
-    return storageAreas[storageArea].readAll()
-  }
+  Object.assign(storage, {
+    readAll(storageArea = 'local') {
+      return storageAreas[storageArea].readAll()
+    },
+
+    async import({ sync, local }) {
+      await Promise.all([
+        storageAreas.sync.writeAll(sync),
+        storageAreas.local.writeAll(local),
+      ])
+    },
+
+    async export() {
+      return {
+        sync: await storage.readAll('sync'),
+        local: await storage.readAll('local'),
+        // session 不需要导出
+      }
+    },
+  })
 
   window.storage = storage
 }

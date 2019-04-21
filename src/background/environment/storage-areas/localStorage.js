@@ -28,6 +28,10 @@ export default simpleMemoize(() => {
       await set({ [key]: value })
     },
 
+    async writeAll(object) {
+      await set(object)
+    },
+
     async delete(key) {
       await remove(key)
     },
