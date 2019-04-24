@@ -19,3 +19,4 @@
 - 使用图片素材时应考虑到 HiDPI 显示器的适配
 - SVG 图片应该使用 [svgo](https://github.com/svg/svgo) 作优化处理
 - 在 merge pull request 时应选择「Squash and merge」
+- 代码注释和 git commit message 应使用中文
