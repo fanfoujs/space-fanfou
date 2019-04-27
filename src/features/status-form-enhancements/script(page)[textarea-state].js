@@ -24,7 +24,7 @@ export default context => {
   registerDOMEventListener('textarea', 'focus', onFocusedStateChanged)
   registerDOMEventListener('textarea', 'change', onChange)
   registerDOMEventListener('textarea', 'input', onChange)
-  registerDOMEventListener('textarea', 'keyup', onKeyUp)
+  registerDOMEventListener('textarea', 'keydown', onKeyDown)
   registerDOMEventListener('textarea', 'blur', onFocusedStateChanged)
 
   function onFocusedStateChanged() {
@@ -48,7 +48,7 @@ export default context => {
     counter.classList.toggle(CLASSNAME_EXCEEDED, hasExceeded)
   }
 
-  function onKeyUp(event) {
+  function onKeyDown(event) {
     const { textarea } = elementCollection.getAll()
 
     if (document.activeElement !== textarea) return
