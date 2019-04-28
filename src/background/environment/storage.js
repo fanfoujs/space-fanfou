@@ -1,5 +1,6 @@
 import messaging from './messaging'
 import initStorageAreas from './storage-areas'
+import exposeMethods from '@libs/exposeMethods'
 import { isLooseKebabCase, isLooseCamelCase } from '@libs/stringCases'
 import { STORAGE_READ, STORAGE_WRITE, STORAGE_DELETE, STORAGE_CHANGED } from '@constants'
 
@@ -71,9 +72,8 @@ const storage = {
   },
 }
 
-// 方便测试
-if (process.env.NODE_ENV === 'development') {
-  Object.assign(storage, {
+exposeMethods({
+  storage: {
     readAll(storageArea = 'local') {
       return storageAreas[storageArea].readAll()
     },
@@ -87,14 +87,12 @@ if (process.env.NODE_ENV === 'development') {
 
     async export() {
       return {
-        sync: await storage.readAll('sync'),
-        local: await storage.readAll('local'),
+        sync: await storageAreas.sync.readAll(),
+        local: await storageAreas.local.readAll(),
         // session 不需要导出
       }
     },
-  })
-
-  window.storage = storage
-}
+  },
+})
 
 export default storage
