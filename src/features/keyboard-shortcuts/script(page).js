@@ -24,30 +24,35 @@ export default context => {
 
     for (const [ hotkeyOpts, handler ] of hotkeyHandlers) {
       if (isHotkey(event, hotkeyOpts)) {
-        event.preventDefault()
-        handler()
+        handler(event)
 
         break
       }
     }
   }
 
-  function goPrevPage() {
+  function goPrevPage(event) {
     const prevPageButton = (
       getPagerButtonsByText('上一页') ||
       getPhotoPagerButtonByText('上一张')
     )
 
-    if (prevPageButton) prevPageButton.click()
+    if (prevPageButton) {
+      event.preventDefault()
+      prevPageButton.click()
+    }
   }
 
-  function goNextPage() {
+  function goNextPage(event) {
     const nextPageButton = (
       getPagerButtonsByText('下一页') ||
       getPhotoPagerButtonByText('下一张')
     )
 
-    if (nextPageButton) nextPageButton.click()
+    if (nextPageButton) {
+      event.preventDefault()
+      nextPageButton.click()
+    }
   }
 
   function getPagerButtonsByText(text) {
@@ -66,10 +71,14 @@ export default context => {
     }
   }
 
-  function focusTextarea() {
+  function focusTextarea(event) {
+    const form = select('#phupdate form')
     const textarea = select('#phupdate textarea')
+    const isTriggeredOutsideTheForm = form && !form.contains(event.target)
+    const isTextareaVisible = textarea && isElementInViewport(textarea)
 
-    if (textarea && isElementInViewport(textarea)) {
+    if (isTriggeredOutsideTheForm && isTextareaVisible) {
+      event.preventDefault()
       textarea.focus()
     }
   }
