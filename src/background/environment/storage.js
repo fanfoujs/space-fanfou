@@ -74,6 +74,8 @@ const storage = {
 
 expose({
   storage: {
+    ...(process.env.NODE_ENV === 'development' ? storage : {}),
+
     readAll(storageAreaName) {
       return storageAreas[storageAreaName].readAll()
     },
