@@ -1,8 +1,8 @@
 import versionHistory from '@version-history'
 import getExtensionVersion from '@libs/getExtensionVersion'
 import {
-  IS_EXTENSION_UPGRADED_STORAGE_KEY,
-  IS_EXTENSION_UPGRADED_STORAGE_AREA_NAME,
+  STORAGE_KEY_IS_EXTENSION_UPGRADED,
+  STORAGE_AREA_NAME_IS_EXTENSION_UPGRADED,
 } from '@constants'
 
 const NOTIFICATION_TIMEOUT = 15 * 1000
@@ -13,8 +13,8 @@ export default context => {
 
   function isExtensionUpgraded() {
     return storage.read(
-      IS_EXTENSION_UPGRADED_STORAGE_KEY,
-      IS_EXTENSION_UPGRADED_STORAGE_AREA_NAME,
+      STORAGE_KEY_IS_EXTENSION_UPGRADED,
+      STORAGE_AREA_NAME_IS_EXTENSION_UPGRADED,
     )
   }
 
