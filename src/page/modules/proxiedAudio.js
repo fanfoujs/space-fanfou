@@ -1,6 +1,6 @@
 import bridge from '../environment/bridge'
 import wrapper from '@libs/wrapper'
-import { PROXIFIED_AUDIO } from '@constants'
+import { PROXIED_AUDIO } from '@constants'
 
 export default wrapper({
   install() {
@@ -9,7 +9,7 @@ export default wrapper({
 
   play(audioUrl) {
     return bridge.postMessage({
-      action: PROXIFIED_AUDIO,
+      action: PROXIED_AUDIO,
       payload: { audioUrl },
     })
   },

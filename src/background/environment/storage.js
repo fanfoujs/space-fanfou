@@ -1,6 +1,6 @@
 import messaging from './messaging'
 import initStorageAreas from './storage-areas'
-import exposeMethods from '@libs/exposeMethods'
+import expose from '@libs/expose'
 import { isLooseKebabCase, isLooseCamelCase } from '@libs/stringCases'
 import { STORAGE_READ, STORAGE_WRITE, STORAGE_DELETE, STORAGE_CHANGED } from '@constants'
 
@@ -8,22 +8,22 @@ let storageAreas
 
 function registerHandlers() {
   messaging.registerHandler(STORAGE_READ, async payload => {
-    const { storageArea, key } = payload
-    const value = await storage.read(key, storageArea)
+    const { storageAreaName, key } = payload
+    const value = await storage.read(key, storageAreaName)
 
     return { value }
   })
 
   messaging.registerHandler(STORAGE_WRITE, async payload => {
-    const { storageArea, key, value } = payload
+    const { storageAreaName, key, value } = payload
 
-    await storage.write(key, value, storageArea)
+    await storage.write(key, value, storageAreaName)
   })
 
   messaging.registerHandler(STORAGE_DELETE, async payload => {
-    const { storageArea, key } = payload
+    const { storageAreaName, key } = payload
 
-    await storage.delete(key, storageArea)
+    await storage.delete(key, storageAreaName)
   })
 
   storageAreas.listen(changeDetails => {
@@ -55,29 +55,29 @@ const storage = {
     registerHandlers()
   },
 
-  read(key, storageArea = 'local') {
-    return storageAreas[storageArea].read(key)
+  read(key, storageAreaName) {
+    return storageAreas[storageAreaName].read(key)
   },
 
-  write(key, value, storageArea = 'local') {
-    if (process.env.NODE_ENV === 'development' && storageArea !== 'session') {
+  write(key, value, storageAreaName) {
+    if (process.env.NODE_ENV === 'development' && storageAreaName !== 'session') {
       verifyStorageKeyFormat(key)
     }
 
-    return storageAreas[storageArea].write(key, value)
+    return storageAreas[storageAreaName].write(key, value)
   },
 
-  delete(key, storageArea = 'local') {
-    return storageAreas[storageArea].delete(key)
+  delete(key, storageAreaName) {
+    return storageAreas[storageAreaName].delete(key)
   },
 }
 
-exposeMethods({
+expose({
   storage: {
     ...(process.env.NODE_ENV === 'development' ? storage : {}),
 
-    readAll(storageArea = 'local') {
-      return storageAreas[storageArea].readAll()
+    readAll(storageAreaName) {
+      return storageAreas[storageAreaName].readAll()
     },
 
     async import({ sync, local }) {

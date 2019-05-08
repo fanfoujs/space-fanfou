@@ -20,7 +20,7 @@ const USER_GUIDE = [
 const CONFIRMING_MESSAGE = '确定要清空有爱饭友列表吗？请注意这个操作无法撤回。'
 const CLASSNAME_ITEM = 'sf-favorite-fanfouer-item'
 const STORAGE_KEY_COLLAPSED_STATE = 'favorite-fanfouers/isCollapsed'
-const STORAGE_AREA_COLLAPSED_STATE = 'local'
+const STORAGE_AREA_NAME_COLLAPSED_STATE = 'local'
 
 export default context => {
   const {
@@ -40,11 +40,15 @@ export default context => {
   })
 
   function readCollapsedState() {
-    return storage.read(STORAGE_KEY_COLLAPSED_STATE, STORAGE_AREA_COLLAPSED_STATE)
+    return storage.read(STORAGE_KEY_COLLAPSED_STATE, STORAGE_AREA_NAME_COLLAPSED_STATE)
   }
 
   async function writeCollapsedState(newValue) {
-    await storage.write(STORAGE_KEY_COLLAPSED_STATE, newValue, STORAGE_AREA_COLLAPSED_STATE)
+    await storage.write(STORAGE_KEY_COLLAPSED_STATE, newValue, STORAGE_AREA_NAME_COLLAPSED_STATE)
+  }
+
+  function getProfilePageUrl(userId) {
+    return `${window.location.protocol}//fanfou.com/${userId}`
   }
 
   const SortableList = sortableContainer(({ items, instance }) => (
@@ -57,7 +61,7 @@ export default context => {
 
   const SortableItem = sortableElement(({ item, instance }) => (
     <li key={item.userId} className={CLASSNAME_ITEM}>
-      <a href={item.profilePageUrl} title={item.nickname}>
+      <a href={getProfilePageUrl(item.userId)} title={item.nickname}>
         <DragHandle item={item} instance={instance} />
         <span>{item.nickname}</span>
       </a>
@@ -205,7 +209,7 @@ export default context => {
     openAll = async () => {
       for (const friendData of this.state.friendsData) {
         proxiedCreateTab.create({
-          url: window.location.origin + friendData.profilePageUrl,
+          url: getProfilePageUrl(friendData.userId),
           openInBackgroundTab: true,
         })
         await sleep(1000)
@@ -259,7 +263,6 @@ export default context => {
           userId: item.userid,
           nickname: item.nickname,
           avatarUrl: item.avatar_url,
-          profilePageUrl: `/${item.userid}`,
         }))
 
         await writeFriendsList(newData)

@@ -9,5 +9,5 @@ export const RE_THUMBNAIL_PHOTO_PARAMS = new RegExp(`@${THUMBNAIL_PHOTO_WIDTH_LI
 // 比如 <input type="number" /> 可以出现在 label 文本中部
 export const CONTROL_PLACEHOLDER = '<CONTROL_PLACEHOLDER>'
 
-export const IS_EXTENSION_UPGRADED_STORAGE_KEY = 'is-extension-upgraded'
-export const IS_EXTENSION_UPGRADED_STORAGE_AREA_NAME = 'session'
+export const STORAGE_KEY_IS_EXTENSION_UPGRADED = 'is-extension-upgraded'
+export const STORAGE_AREA_NAME_IS_EXTENSION_UPGRADED = 'session'

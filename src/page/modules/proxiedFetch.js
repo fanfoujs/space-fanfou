@@ -1,6 +1,6 @@
 import bridge from '../environment/bridge'
 import wrapper from '@libs/wrapper'
-import { PROXIFIED_FETCH_GET } from '@constants'
+import { PROXIED_FETCH_GET } from '@constants'
 
 export default wrapper({
   install() {
@@ -9,7 +9,7 @@ export default wrapper({
 
   get(args) {
     return bridge.postMessage({
-      action: PROXIFIED_FETCH_GET,
+      action: PROXIED_FETCH_GET,
       payload: args,
     })
   },

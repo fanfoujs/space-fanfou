@@ -7,26 +7,26 @@ export default wrapper({
     return messaging.ready()
   },
 
-  async read(key, storageArea) {
+  async read(key, storageAreaName) {
     const { value } = await messaging.postMessage({
       action: STORAGE_READ,
-      payload: { storageArea, key },
+      payload: { storageAreaName, key },
     })
 
     return value
   },
 
-  async write(key, value, storageArea) {
+  async write(key, value, storageAreaName) {
     await messaging.postMessage({
       action: STORAGE_WRITE,
-      payload: { storageArea, key, value },
+      payload: { storageAreaName, key, value },
     })
   },
 
-  async delete(key, storageArea) {
+  async delete(key, storageAreaName) {
     await messaging.postMessage({
       action: STORAGE_DELETE,
-      payload: { storageArea, key },
+      payload: { storageAreaName, key },
     })
   },
 })
