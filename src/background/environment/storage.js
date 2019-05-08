@@ -55,11 +55,11 @@ const storage = {
     registerHandlers()
   },
 
-  read(key, storageAreaName = 'local') {
+  read(key, storageAreaName) {
     return storageAreas[storageAreaName].read(key)
   },
 
-  write(key, value, storageAreaName = 'local') {
+  write(key, value, storageAreaName) {
     if (process.env.NODE_ENV === 'development' && storageAreaName !== 'session') {
       verifyStorageKeyFormat(key)
     }
@@ -67,14 +67,14 @@ const storage = {
     return storageAreas[storageAreaName].write(key, value)
   },
 
-  delete(key, storageAreaName = 'local') {
+  delete(key, storageAreaName) {
     return storageAreas[storageAreaName].delete(key)
   },
 }
 
 expose({
   storage: {
-    readAll(storageAreaName = 'local') {
+    readAll(storageAreaName) {
       return storageAreas[storageAreaName].readAll()
     },
 
