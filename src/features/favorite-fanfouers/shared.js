@@ -7,7 +7,6 @@ const createDefaultData = () => [ {
   userId: 'fanfou',
   nickname: '饭否',
   avatarUrl: '//s3.meituan.net/v1/mss_3d027b52ec5a4d589e68050845611e68/avatar/l0/00/37/9g.jpg?1181650871',
-  profilePageUrl: '/fanfou',
 } ]
 
 export const createFriendsListReader = storage => async () => {

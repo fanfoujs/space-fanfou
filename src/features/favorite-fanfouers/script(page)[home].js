@@ -47,6 +47,10 @@ export default context => {
     await storage.write(STORAGE_KEY_COLLAPSED_STATE, newValue, STORAGE_AREA_COLLAPSED_STATE)
   }
 
+  function getProfilePageUrl(userId) {
+    return `${window.location.protocol}//fanfou.com/${userId}`
+  }
+
   const SortableList = sortableContainer(({ items, instance }) => (
     <ul ref={instance.setListRef} className="alist">
       { items.map((item, index) => (
@@ -57,7 +61,7 @@ export default context => {
 
   const SortableItem = sortableElement(({ item, instance }) => (
     <li key={item.userId} className={CLASSNAME_ITEM}>
-      <a href={item.profilePageUrl} title={item.nickname}>
+      <a href={getProfilePageUrl(item.userId)} title={item.nickname}>
         <DragHandle item={item} instance={instance} />
         <span>{item.nickname}</span>
       </a>
@@ -205,7 +209,7 @@ export default context => {
     openAll = async () => {
       for (const friendData of this.state.friendsData) {
         proxiedCreateTab.create({
-          url: window.location.origin + friendData.profilePageUrl,
+          url: getProfilePageUrl(friendData.userId),
           openInBackgroundTab: true,
         })
         await sleep(1000)
@@ -259,7 +263,6 @@ export default context => {
           userId: item.userid,
           nickname: item.nickname,
           avatarUrl: item.avatar_url,
-          profilePageUrl: `/${item.userid}`,
         }))
 
         await writeFriendsList(newData)

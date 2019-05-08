@@ -49,7 +49,6 @@ export default context => {
       userId,
       nickname: select('#panel h1').textContent,
       avatarUrl: select('#avatar img').src.replace(/^https?:/, ''),
-      profilePageUrl: `/${userId}`,
     }
 
     if (existingIndex === -1) {
