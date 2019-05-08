@@ -5,10 +5,10 @@
 
 import wretch from 'wretch'
 import messaging from './messaging'
-import { PROXIFIED_FETCH_GET } from '@constants'
+import { PROXIED_FETCH_GET } from '@constants'
 
 function registerHandler() {
-  messaging.registerHandler(PROXIFIED_FETCH_GET, async payload => {
+  messaging.registerHandler(PROXIED_FETCH_GET, async payload => {
     const { url, query, responseType = 'text' } = payload
     let error, responseText, responseJSON
     let w = wretch(url)

@@ -3,10 +3,10 @@
 
 import messaging from './messaging'
 import playSound from '@libs/playSound'
-import { PROXIFIED_AUDIO } from '@constants'
+import { PROXIED_AUDIO } from '@constants'
 
 function registerHandler() {
-  messaging.registerHandler(PROXIFIED_AUDIO, payload => {
+  messaging.registerHandler(PROXIED_AUDIO, payload => {
     const { audioUrl } = payload
 
     playSound(audioUrl)
