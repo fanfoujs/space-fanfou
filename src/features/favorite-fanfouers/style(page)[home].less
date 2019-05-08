@@ -1,14 +1,8 @@
-@import "shared";
-
 #sf-favorite-fanfouers-list {
   margin-bottom: 15px;
 
   p {
     margin-right: 15px;
-  }
-
-  ul li {
-    transition: opacity @transitionDuration;
   }
 
   ul li.drag-source,
@@ -34,28 +28,66 @@
   }
 }
 
-// 修正拖拽过程的样式
 .sf-favorite-fanfouer-item {
-  list-style: none;
-  z-index: 10;
-
   a {
-    display: block;
-    width: 48px;
-    height: 72px;
-    overflow: hidden;
+    position: relative;
   }
 
-  img {
-    border-radius: 4px;
-    width: 100%;
+  // 因为这个元素尺寸比较小，使实际响应区域大于可见区域，避免用户难以点击到
+  .sf-drag-handle {
+    @offset: 2px;
+    @height: 7px;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: @height + @offset * 2;
+    opacity: 0;
+    cursor: grab;
+
+    &::before,
+    &::after {
+      content: "";
+      display: block;
+      position: absolute;
+    }
+
+    &::before {
+      top: @offset;
+      left: @offset;
+      right: @offset;
+      height: @height;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 4px;
+    }
+
+    &::after {
+      @dotsSize: 3px;
+      @dotsOffset: 4px;
+
+      left: @offset + @dotsOffset;
+      right: @offset + @dotsOffset;
+      height: 100%;
+      background-position: center;
+      background-image: url("~@assets/images/drag-handle-dots.png");
+      background-repeat: repeat-x;
+      background-size: @dotsSize;
+      opacity: 0.25;
+    }
   }
 
-  span {
-    display: block;
-    line-height: 175%;
-    white-space: nowrap;
-    text-align: center;
+  &:hover .sf-drag-handle {
+    opacity: 1;
+  }
+}
+
+.sf-favorite-fanfouer-sortable-helper {
+  pointer-events: auto !important;
+
+  .sf-drag-handle {
+    opacity: 1;
+    cursor: grabbing !important;
   }
 }
 

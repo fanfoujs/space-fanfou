@@ -19,6 +19,7 @@ const USER_GUIDE = [
 ].join('\n')
 const CONFIRMING_MESSAGE = '确定要清空有爱饭友列表吗？请注意这个操作无法撤回。'
 const CLASSNAME_ITEM = 'sf-favorite-fanfouer-item'
+const CLASSNAME_SORTABLE_HELPER = 'sf-favorite-fanfouer-sortable-helper'
 const STORAGE_KEY_COLLAPSED_STATE = 'favorite-fanfouers/isCollapsed'
 const STORAGE_AREA_NAME_COLLAPSED_STATE = 'local'
 
@@ -62,14 +63,15 @@ export default context => {
   const SortableItem = sortableElement(({ item, instance }) => (
     <li key={item.userId} className={CLASSNAME_ITEM}>
       <a href={getProfilePageUrl(item.userId)} title={item.nickname}>
-        <DragHandle item={item} instance={instance} />
+        <DragHandle />
+        <img src={item.avatarUrl} alt={`@${item.nickname} 的头像`} onClick={event => instance.onClickAvatar(event, item)} />
         <span>{item.nickname}</span>
       </a>
     </li>
   ))
 
-  const DragHandle = sortableHandle(({ item, instance }) => (
-    <img src={item.avatarUrl} alt={item.nickname} onClick={event => instance.onClickAvatar(event, item)} />
+  const DragHandle = sortableHandle(() => (
+    <div className="sf-drag-handle" />
   ))
 
   class FavoriteFanfouers extends Component {
@@ -161,14 +163,12 @@ export default context => {
         instance: this,
         items: this.state.friendsData,
         axis: 'xy',
-        distance: 5,
+        helperContainer: this.getSortableHelperContainer,
+        helperClass: CLASSNAME_SORTABLE_HELPER,
         lockToContainerEdges: true,
         useDragHandle: true,
-        onSortEnd: ({ oldIndex, newIndex }) => {
-          const newValue = arrayMove(this.state.friendsData, oldIndex, newIndex)
-
-          this.setFriendsList(newValue)
-        },
+        transitionDuration: 200,
+        onSortEnd: this.onSortEnd,
       }
 
       return (
@@ -178,6 +178,16 @@ export default context => {
 
     setListRef = element => {
       this.list = element
+    }
+
+    getSortableHelperContainer = () => {
+      return this.list
+    }
+
+    onSortEnd = ({ oldIndex, newIndex }) => {
+      const newValue = arrayMove(this.state.friendsData, oldIndex, newIndex)
+
+      this.setFriendsList(newValue)
     }
 
     onClickAvatar = async (event, item) => {
