@@ -20,7 +20,7 @@ const USER_GUIDE = [
 const CONFIRMING_MESSAGE = '确定要清空有爱饭友列表吗？请注意这个操作无法撤回。'
 const CLASSNAME_ITEM = 'sf-favorite-fanfouer-item'
 const STORAGE_KEY_COLLAPSED_STATE = 'favorite-fanfouers/isCollapsed'
-const STORAGE_AREA_COLLAPSED_STATE = 'local'
+const STORAGE_AREA_NAME_COLLAPSED_STATE = 'local'
 
 export default context => {
   const {
@@ -40,11 +40,11 @@ export default context => {
   })
 
   function readCollapsedState() {
-    return storage.read(STORAGE_KEY_COLLAPSED_STATE, STORAGE_AREA_COLLAPSED_STATE)
+    return storage.read(STORAGE_KEY_COLLAPSED_STATE, STORAGE_AREA_NAME_COLLAPSED_STATE)
   }
 
   async function writeCollapsedState(newValue) {
-    await storage.write(STORAGE_KEY_COLLAPSED_STATE, newValue, STORAGE_AREA_COLLAPSED_STATE)
+    await storage.write(STORAGE_KEY_COLLAPSED_STATE, newValue, STORAGE_AREA_NAME_COLLAPSED_STATE)
   }
 
   function getProfilePageUrl(userId) {

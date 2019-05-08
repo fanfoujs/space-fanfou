@@ -1,7 +1,7 @@
 import { STORAGE_CHANGED } from '@constants'
 
 const STORAGE_KEY_FRIENDS_DATA = 'favorite-fanfouers/friendsData'
-const STORAGE_AREA_FRIENDS_DATA = 'sync'
+const STORAGE_AREA_NAME_FRIENDS_DATA = 'sync'
 
 const createDefaultData = () => [ {
   userId: 'fanfou',
@@ -10,11 +10,11 @@ const createDefaultData = () => [ {
 } ]
 
 export const createFriendsListReader = storage => async () => {
-  return await storage.read(STORAGE_KEY_FRIENDS_DATA, STORAGE_AREA_FRIENDS_DATA) || createDefaultData()
+  return await storage.read(STORAGE_KEY_FRIENDS_DATA, STORAGE_AREA_NAME_FRIENDS_DATA) || createDefaultData()
 }
 
 export const createFriendsListWriter = storage => async data => {
-  await storage.write(STORAGE_KEY_FRIENDS_DATA, data, STORAGE_AREA_FRIENDS_DATA)
+  await storage.write(STORAGE_KEY_FRIENDS_DATA, data, STORAGE_AREA_NAME_FRIENDS_DATA)
 }
 
 export const createStorageChangeHandler = callback => message => {
