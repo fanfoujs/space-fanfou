@@ -74,6 +74,8 @@ const storage = {
 
 exposeMethods({
   storage: {
+    ...(process.env.NODE_ENV === 'development' ? storage : {}),
+
     readAll(storageArea = 'local') {
       return storageAreas[storageArea].readAll()
     },
