@@ -29,7 +29,7 @@ export default context => {
     unregisterBroadcastListener,
     elementCollection,
   } = context
-  const { storage } = requireModules([ 'storage' ])
+  const { storage, proxiedCreateTab } = requireModules([ 'storage', 'proxiedCreateTab' ])
 
   let unmount
   const readFriendsList = createFriendsListReader(storage)
@@ -203,8 +203,11 @@ export default context => {
     }
 
     openAll = async () => {
-      for (const friendData of this.states.friendsData) {
-        window.open(friendData.profilePageUrl)
+      for (const friendData of this.state.friendsData) {
+        proxiedCreateTab.create({
+          url: window.location.origin + friendData.profilePageUrl,
+          openInBackgroundTab: true,
+        })
         await sleep(1000)
       }
     }
