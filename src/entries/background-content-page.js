@@ -18,6 +18,8 @@ import pageModules from '@page/modules'
 import safelyInvokeFn from '@libs/safelyInvokeFn'
 import detectEnv from '@libs/detectEnv'
 
+import { ENV_BACKGROUND, ENV_CONTENT, ENV_PAGE } from '@constants'
+
 async function load(createEnvironment, modules, createFeature, createSubfeature) {
   const environment = await createEnvironment()
   const Feature = createFeature({ ...environment, modules })
@@ -40,9 +42,9 @@ async function load(createEnvironment, modules, createFeature, createSubfeature)
 
 function bootstrap() {
   switch (detectEnv()) {
-  case 'background': return load(createBackgroundEnvironment, backgroundModules, createBackgroundFeature, createBackgroundSubfeature)
-  case 'content': return load(createContentEnvironment, contentModules, createContentFeature, createContentSubfeature)
-  case 'page': return load(createPageEnvironment, pageModules, createPageFeature, createPageSubfeature)
+  case ENV_BACKGROUND: return load(createBackgroundEnvironment, backgroundModules, createBackgroundFeature, createBackgroundSubfeature)
+  case ENV_CONTENT: return load(createContentEnvironment, contentModules, createContentFeature, createContentSubfeature)
+  case ENV_PAGE: return load(createPageEnvironment, pageModules, createPageFeature, createPageSubfeature)
   default:
   }
 }
