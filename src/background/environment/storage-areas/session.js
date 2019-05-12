@@ -1,6 +1,4 @@
-import simpleMemoize from 'just-once'
-
-export default simpleMemoize(() => {
+function initSessionStorage() {
   const memoryStorage = {}
 
   return {
@@ -24,4 +22,6 @@ export default simpleMemoize(() => {
       delete memoryStorage[key]
     },
   }
-})
+}
+
+export default initSessionStorage()

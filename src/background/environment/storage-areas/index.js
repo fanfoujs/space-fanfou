@@ -1,20 +1,13 @@
-import simpleMemoize from 'just-once'
-import initLocalStorage from './localStorage'
-import initSyncStorage from './syncStorage'
-import initSessionStorage from './sessionStorage'
+import local from './local'
+import sync from './sync'
+import session from './session'
 import safelyInvokeFns from '@libs/safelyInvokeFns'
 import arrayUniquePush from '@libs/arrayUniquePush'
 import arrayRemove from '@libs/arrayRemove'
 
-// 这里必须使用工厂函数，避免在非 background script 环境因为 import 而被意外执行，然后报错
-export default simpleMemoize(() => {
-  const storageAreas = {
-    local: initLocalStorage(),
-    sync: initSyncStorage(),
-    session: initSessionStorage(),
-  }
+function initStorageAreas() {
+  const storageAreas = { local, sync, session }
   const listeners = []
-
   const createListener = storageAreaName => changes => {
     for (const [ key, { oldValue, newValue } ] of Object.entries(changes)) {
       safelyInvokeFns({
@@ -39,4 +32,6 @@ export default simpleMemoize(() => {
     listen: fn => arrayUniquePush(listeners, fn),
     unlisten: fn => arrayRemove(listeners, fn),
   }
-})
+}
+
+export default initStorageAreas()

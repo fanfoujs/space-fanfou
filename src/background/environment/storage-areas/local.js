@@ -1,8 +1,7 @@
-import simpleMemoize from 'just-once'
 import promisifyChromeApi from '@libs/promisifyChromeApi'
 import safelyInvokeFns from '@libs/safelyInvokeFns'
 
-export default simpleMemoize(() => {
+function initLocalStorage() {
   const get = promisifyChromeApi(::chrome.storage.local.get)
   const set = promisifyChromeApi(::chrome.storage.local.set)
   const remove = promisifyChromeApi(::chrome.storage.local.remove)
@@ -40,4 +39,6 @@ export default simpleMemoize(() => {
       listeners.push(fn)
     },
   }
-})
+}
+
+export default initLocalStorage()

@@ -1,9 +1,8 @@
 import deepEqual from 'fast-deep-equal'
-import simpleMemoize from 'just-once'
 import promisifyChromeApi from '@libs/promisifyChromeApi'
 import safelyInvokeFns from '@libs/safelyInvokeFns'
 
-export default simpleMemoize(() => {
+function initSyncStorage() {
   const get = promisifyChromeApi(::chrome.storage.sync.get)
   const set = promisifyChromeApi(::chrome.storage.sync.set)
   const remove = promisifyChromeApi(::chrome.storage.sync.remove)
@@ -56,4 +55,6 @@ export default simpleMemoize(() => {
       listeners.push(fn)
     },
   }
-})
+}
+
+export default initSyncStorage()

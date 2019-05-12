@@ -1,5 +1,6 @@
 import dotProp from 'dot-prop'
 import pick from 'just-pick'
+import casey from 'casey-js'
 import replaceExtensionOrigin from '@libs/replaceExtensionOrigin'
 
 const componentPathRe = do {
@@ -30,7 +31,7 @@ const componentPathRe = do {
   ].join(''))
 }
 
-function loadComponent(key, module) {
+function loadComponent(key, loadModule) {
   const result = (key.match(componentPathRe) || {}).groups
   const { featureName, subfeatureName = 'default', envType } = result || {}
 
@@ -39,7 +40,7 @@ function loadComponent(key, module) {
   if (result.isMetadata) return {
     featureName,
     type: 'metadata',
-    module,
+    loadModule,
   }
 
   if (result.isScript) return {
@@ -47,7 +48,7 @@ function loadComponent(key, module) {
     subfeatureName,
     type: 'script',
     envType,
-    module: module.default,
+    loadModule: () => loadModule().default,
   }
 
   if (result.isStyle) return {
@@ -55,7 +56,7 @@ function loadComponent(key, module) {
     subfeatureName,
     type: 'style',
     envType,
-    module: replaceExtensionOrigin(module),
+    loadModule: () => replaceExtensionOrigin(loadModule()),
   }
 }
 
@@ -66,7 +67,7 @@ function loadComponents() {
     // webpack 要求这里的正则表达式必须使用字面量
     /\/(metadata\.js|(script|style)\((background|content|page)\)(\[.+\])?\.(js|css|less))$/,
   )
-  const components = context.keys().map(key => loadComponent(key, context(key)))
+  const components = context.keys().map(key => loadComponent(key, () => context(key)))
 
   return components
 }
@@ -131,12 +132,12 @@ function processMetadata(featureName, metadata) {
 function loadFeatures() {
   const features = {}
 
-  for (const { featureName, subfeatureName, type, envType, module } of loadComponents()) {
+  for (const { featureName, subfeatureName, type, envType, loadModule } of loadComponents()) {
     if (type === 'metadata') {
       dotProp.set(
         features,
         `${featureName}.metadata`,
-        processMetadata(featureName, module),
+        processMetadata(featureName, loadModule()),
       )
     } else {
       dotProp.set(
@@ -146,8 +147,8 @@ function loadFeatures() {
       )
       dotProp.set(
         features,
-        `${featureName}.subfeatures.${subfeatureName}.${type}`,
-        module,
+        `${featureName}.subfeatures.${subfeatureName}.${casey.toCamelCase(`load-${type}`)}`,
+        loadModule,
       )
     }
   }
