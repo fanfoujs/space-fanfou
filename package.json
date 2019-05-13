@@ -39,6 +39,7 @@
     "dom-element-is-natively-editable": "^1.0.4",
     "dom-loaded": "^1.2.0",
     "dot-prop": "^5.0.0",
+    "easings-css": "^1.0.0",
     "element-ready": "^3.1.0",
     "element-visible": "^1.0.2",
     "fast-deep-equal": "^2.0.1",

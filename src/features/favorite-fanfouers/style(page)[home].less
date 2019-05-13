@@ -1,17 +1,10 @@
+@import "~easings-css/easings.less";
+
 #sf-favorite-fanfouers-list {
   margin-bottom: 15px;
 
   p {
     margin-right: 15px;
-  }
-
-  ul li.drag-source,
-  ul li.dragover {
-    opacity: 0.5;
-  }
-
-  a {
-    cursor: pointer;
   }
 
   .sf-tip {
@@ -29,13 +22,16 @@
 }
 
 .sf-favorite-fanfouer-item {
+  transition-timing-function: @ease-out-cubic;
+
   a {
+    cursor: pointer;
     position: relative;
   }
 
   // 因为这个元素尺寸比较小，使实际响应区域大于可见区域，避免用户难以点击到
   .sf-drag-handle {
-    @offset: 2px;
+    @offset: 3px;
     @height: 7px;
 
     position: absolute;
@@ -73,7 +69,7 @@
       background-image: url("~@assets/images/drag-handle-dots.png");
       background-repeat: repeat-x;
       background-size: @dotsSize;
-      opacity: 0.25;
+      opacity: 0.3;
     }
   }
 
@@ -83,6 +79,14 @@
 }
 
 .sf-favorite-fanfouer-sortable-helper {
+  @paddingSize: 4px;
+
+  margin: -@paddingSize 0 0 -@paddingSize !important;
+  padding: @paddingSize;
+  width: 48px + (@paddingSize * 2) !important;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   pointer-events: auto !important;
 
   .sf-drag-handle {
