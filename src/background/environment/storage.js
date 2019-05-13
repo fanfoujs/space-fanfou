@@ -1,10 +1,8 @@
 import messaging from './messaging'
-import initStorageAreas from './storage-areas'
+import storageAreas from './storage-areas'
 import expose from '@libs/expose'
 import { isLooseKebabCase, isLooseCamelCase } from '@libs/stringCases'
 import { STORAGE_READ, STORAGE_WRITE, STORAGE_DELETE, STORAGE_CHANGED } from '@constants'
-
-let storageAreas
 
 function registerHandlers() {
   messaging.registerHandler(STORAGE_READ, async payload => {
@@ -51,7 +49,6 @@ function verifyStorageKeyFormat(key) {
 
 const storage = {
   install() {
-    storageAreas = initStorageAreas()
     registerHandlers()
   },
 
