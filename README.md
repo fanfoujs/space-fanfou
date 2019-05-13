@@ -1,6 +1,10 @@
 <img src="https://raw.githubusercontent.com/ispacekid/space-fanfou/master/static/icons/icon-256.png" alt="太空饭否 logo" align="right" width="82px" />
 
-# 太空饭否 [![Build](https://badgen.now.sh/circleci/github/ispacekid/space-fanfou)](https://circleci.com/gh/ispacekid/space-fanfou/tree/master)
+# 太空饭否
+
+[![](https://badgen.now.sh/circleci/github/ispacekid/space-fanfou)](https://circleci.com/gh/ispacekid/space-fanfou/tree/master)
+[![](https://img.shields.io/github/release/ispacekid/space-fanfou.svg)](https://github.com/ispacekid/space-fanfou/releases)
+[![](https://img.shields.io/github/license/ispacekid/space-fanfou.svg)](https://github.com/ispacekid/space-fanfou/blob/master/LICENSE)
 
 ### 简介
 
