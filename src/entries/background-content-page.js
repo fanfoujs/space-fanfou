@@ -3,10 +3,10 @@ import safelyInvokeFn from '@libs/safelyInvokeFn'
 import detectEnv from '@libs/detectEnv'
 import { ENV_BACKGROUND, ENV_CONTENT, ENV_PAGE } from '@constants'
 
-async function init({ createEnvironment, modules, createFeature, createSubfeature }) {
+async function init({ createEnvironment, modules, createFeatureClass, createSubfeatureClass }) {
   const environment = await createEnvironment()
-  const Feature = createFeature({ ...environment, modules })
-  const Subfeature = createSubfeature({ ...environment, modules })
+  const Feature = createFeatureClass({ ...environment, modules })
+  const Subfeature = createSubfeatureClass({ ...environment, modules })
 
   for (const [ featureName, { metadata, subfeatures } ] of Object.entries(features)) {
     const feature = new Feature({

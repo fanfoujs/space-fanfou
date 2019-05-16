@@ -1,4 +1,4 @@
 export { default as createEnvironment } from './environment'
-export { default as createFeature } from './feature/Feature'
-export { default as createSubfeature } from './feature/Subfeature'
+export { default as createFeatureClass } from './feature/createFeatureClass'
+export { default as createSubfeatureClass } from './feature/createSubfeatureClass'
 export { default as modules } from './modules'
