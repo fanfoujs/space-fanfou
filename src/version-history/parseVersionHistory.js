@@ -1,28 +1,28 @@
 import splitLines from 'split-lines'
+import stringWidth from 'string-width'
 
-const MAX_CONTINOUS_BLANK_LINES = 1
-const SUMMARY_LENGTH_LIMIT = 120
+const MAX_CONTINOUS_BLANK_LINE_NUMBER = 1
+const MAX_SUMMARY_LENGTH = 120
 
 export default rawVersionHistory => {
   const lines = splitLines(rawVersionHistory)
   const parsed = []
   let currentLine
-  let continousBlankLines = 0
-  let current
+  let continousBlankLineNumber = 0
+  let currentVersionItem
 
   while (lines.length) {
-    // 保留每行行首的空格
-    currentLine = lines.shift().trimEnd()
+    currentLine = lines.shift().trim()
 
     // 跳过空行
     if (!currentLine) {
-      if (++continousBlankLines > MAX_CONTINOUS_BLANK_LINES) {
-        throw new Error(`连续空行不该超过 ${MAX_CONTINOUS_BLANK_LINES} 行`)
+      if (++continousBlankLineNumber > MAX_CONTINOUS_BLANK_LINE_NUMBER) {
+        throw new Error(`连续空行不该超过 ${MAX_CONTINOUS_BLANK_LINE_NUMBER} 行`)
       } else {
         continue
       }
     }
-    continousBlankLines = 0
+    continousBlankLineNumber = 0
 
     // 注释
     if (currentLine.startsWith('#')) {
@@ -33,12 +33,13 @@ export default rawVersionHistory => {
     if (currentLine.startsWith('v')) {
       const versionTag = currentLine.substr(1)
 
-      current = {
+      currentVersionItem = {
         version: versionTag,
+        releaseDate: '0000-00-00',
         summary: '',
         updateDetails: [],
       }
-      parsed.push(current)
+      parsed.push(currentVersionItem)
 
       continue
     }
@@ -47,7 +48,7 @@ export default rawVersionHistory => {
     if (currentLine.startsWith('@')) {
       const releaseDate = currentLine.substr(1)
 
-      current.releaseDate = releaseDate
+      currentVersionItem.releaseDate = releaseDate
 
       continue
     }
@@ -56,11 +57,11 @@ export default rawVersionHistory => {
     if (currentLine.startsWith('~ ')) {
       const summary = currentLine.substr(2)
 
-      if (summary.length > SUMMARY_LENGTH_LIMIT) {
-        throw new Error(`摘要不该长于 ${SUMMARY_LENGTH_LIMIT} 字`)
+      if (stringWidth(summary) > MAX_SUMMARY_LENGTH) {
+        throw new Error(`摘要不该长于 ${MAX_SUMMARY_LENGTH} 字`)
       }
 
-      current.summary = summary
+      currentVersionItem.summary = summary
 
       continue
     }
@@ -69,7 +70,7 @@ export default rawVersionHistory => {
     if (currentLine.startsWith('- ')) {
       const updateDetail = currentLine.substr(2)
 
-      current.updateDetails.push(updateDetail)
+      currentVersionItem.updateDetails.push(updateDetail)
 
       continue
     }
