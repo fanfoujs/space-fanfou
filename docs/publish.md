@@ -22,6 +22,6 @@
 ### 如何发布新版？
 
 1. 修改 `static/manifest.json` 中的版本号
-1. 在 `src/version-history/versionHistory` 中添加更新说明（详见[这里](https://github.com/ispacekid/space-fanfou/blob/master/src/version-history/README.md)，可选）
+1. 在 `src/version-history/versionHistory` 中添加更新说明（可选）
 1. 构建 `npm run release`
 1. 将自动打包生成的 zip 文件提交到商店审核
