@@ -1,8 +1,10 @@
+import select from 'select-dom'
 import triggerEvent from 'compat-trigger-event'
 import objectToFormData from 'object-to-formdata'
 import safeJSONParse from 'safe-json-parse'
 import flush from 'just-flush'
 import { isHomePage } from '@libs/pageDetect'
+import parseHTML from '@libs/parseHTML'
 import isHotkey from '@libs/isHotkey'
 import { POST_STATUS_SUCCESS_EVENT_TYPE } from '@constants'
 
@@ -10,13 +12,17 @@ const API_URL_PLAIN_MESSAGE = '/home'
 const API_URL_UPLOAD_IMAGE = '/home/upload'
 const API_ACTION_PLAIN_MESSAGE = 'msg.post'
 const API_ACTION_UPLOAD_IMAGE = 'photo.upload'
+const URL_FANFOU_M_HOME = `${window.location.protocol}//m.fanfou.com/home`
+
+const ERROR_FAILED_REFRESHING_TOKEN = new Error('刷新 token 失败')
 
 export default context => {
   const { requireModules, registerDOMEventListener, elementCollection } = context
-  const { notification, scrollManager, checkMyNewStatus } = requireModules([
+  const { notification, scrollManager, checkMyNewStatus, proxiedFetch } = requireModules([
     'notification',
     'scrollManager',
     'checkMyNewStatus',
+    'proxiedFetch',
   ])
 
   let isSubmitting = false
@@ -68,6 +74,25 @@ export default context => {
     triggerEvent(textarea, 'change')
     uploadCloseHandle.click()
     submitButton.value = '发送'
+  }
+
+  async function refreshToken() {
+    const { error: ajaxError, responseText: html } = await proxiedFetch.get({
+      url: URL_FANFOU_M_HOME,
+    })
+
+    if (ajaxError) {
+      throw ERROR_FAILED_REFRESHING_TOKEN
+    }
+
+    const document = parseHTML(html)
+    const token = select('input[name="token"]', document)?.value
+
+    if (!token) {
+      throw ERROR_FAILED_REFRESHING_TOKEN
+    }
+
+    elementCollection.get('form').elements.token.value = token
   }
 
   function extractFormData() {
@@ -142,6 +167,9 @@ export default context => {
   async function postMessage() {
     if (isSubmitting) return
     toggleState(true)
+
+    // 总是先刷新 token，避免因 token 过期导致发送消息失败
+    await refreshToken()
 
     const { isImageAttached, formDataJson } = extractFormData()
     const url = isImageAttached ? API_URL_UPLOAD_IMAGE : API_URL_PLAIN_MESSAGE
