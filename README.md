@@ -2,7 +2,7 @@
 
 # 太空饭否
 
-[![](https://badgen.now.sh/circleci/github/ispacekid/space-fanfou)](https://circleci.com/gh/ispacekid/space-fanfou/tree/master)
+[![](https://img.shields.io/circleci/build/github/ispacekid/space-fanfou/master.svg)](https://circleci.com/gh/ispacekid/space-fanfou/tree/master)
 [![](https://img.shields.io/github/release/ispacekid/space-fanfou.svg)](https://github.com/ispacekid/space-fanfou/releases)
 [![](https://img.shields.io/github/license/ispacekid/space-fanfou.svg)](https://github.com/ispacekid/space-fanfou/blob/master/LICENSE)
 
