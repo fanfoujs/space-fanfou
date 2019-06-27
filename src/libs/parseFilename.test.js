@@ -5,4 +5,8 @@ test('parseFilename', () => {
     basename: 'abc',
     extname: '.edf',
   })
+  expect(parseFilename('abc')).toEqual({
+    basename: 'abc',
+    extname: '',
+  })
 })
