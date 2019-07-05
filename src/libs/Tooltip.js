@@ -1,4 +1,4 @@
-import { h } from 'preact'
+import { createElement as h } from 'preact/compat'
 import Tooltip from 'react-tooltip-lite'
 
 function patch() {

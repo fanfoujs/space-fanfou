@@ -1,4 +1,4 @@
-import { h, Component, render } from 'preact'
+import { h, Component } from 'preact'
 import wretch from 'wretch'
 import select from 'select-dom'
 import cx from 'classnames'
@@ -7,6 +7,7 @@ import sleep from 'p-sleep'
 import { CLASSNAME_CONTAINER } from './constants'
 import { isTimelinePage } from '@libs/pageDetect'
 import requireFanfouLib from '@libs/requireFanfouLib'
+import preactRender from '@libs/preactRender'
 import extractText from '@libs/extractText'
 import { fadeOut } from '@libs/fade'
 import isStatusElement from '@libs/isStatusElement'
@@ -263,11 +264,12 @@ export default context => {
         : 'reply',
       initialStatusId: arrayLast(replyLink.href.split('/')),
     }
-    const instance = render(<ContextualStatuses {...props} />, document.body)
 
-    // 调整插入位置
-    li.after(instance)
-    cacheMap.set(cacheId, instance)
+    preactRender(<ContextualStatuses {...props} />, instance => {
+      // 调整插入位置
+      li.after(instance)
+      cacheMap.set(cacheId, instance)
+    })
   }
 
   async function onStatusRemoved(li) {

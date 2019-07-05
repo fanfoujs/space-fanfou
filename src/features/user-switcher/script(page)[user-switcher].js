@@ -28,7 +28,6 @@ export default context => {
       super(...args)
 
       this.state = {
-        isReady: false,
         allUserData: [],
       }
 
@@ -37,7 +36,6 @@ export default context => {
 
     loadData = async () => {
       this.setState({
-        isReady: true,
         allUserData: await readAllUserData(),
       })
 
@@ -90,9 +88,9 @@ export default context => {
     }
 
     render() {
-      const { isReady, allUserData } = this.state
+      const { allUserData } = this.state
 
-      return isReady && (
+      return (
         <ul id="sf-user-switcher">
           { allUserData.map(this.renderItem, this) }
           { this.renderAddNew() }
@@ -192,9 +190,9 @@ export default context => {
   }
 
   function renderUserSwitcher() {
-    const userTop = select('#user_top')
-
-    unmountUserSwitcher = preactRender(<UserSwitcher />, userTop)
+    unmountUserSwitcher = preactRender(<UserSwitcher />, rendered => {
+      elementCollection.get('usertop').appendChild(rendered)
+    })
   }
 
   function getLogoutLink() {

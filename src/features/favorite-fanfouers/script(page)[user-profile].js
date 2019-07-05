@@ -1,5 +1,4 @@
-import { h, Component } from 'preact'
-import Portal from 'preact-portal'
+import { h, render, Component } from 'preact'
 import select from 'select-dom'
 import cx from 'classnames'
 import { createFriendsListReader, createFriendsListWriter, createStorageChangeHandler } from './shared'
@@ -107,10 +106,10 @@ export default context => {
         'sf-is-favorited': this.state.isFavorited,
       })
 
-      return (
-        <Portal into="#avatar">
-          <span id={id} className={className} />
-        </Portal>
+      render(
+        <span id={id} className={className} />,
+        this.favoritedStatusIndicator.parentElement,
+        this.favoritedStatusIndicator,
       )
     }
 
@@ -123,27 +122,36 @@ export default context => {
         'sf-is-favorited': this.state.isFavorited,
       })
 
-      return (
-        <Portal into="#panel h1">
-          <a id={id} className={className} title={title} onClick={this.toggleFavoritedStatus} />
-        </Portal>
+      render(
+        <a id={id} className={className} title={title} onClick={this.toggleFavoritedStatus} />,
+        this.favoritedStatusToggler.parentElement,
+        this.favoritedStatusToggler,
       )
     }
 
     render() {
-      return (
-        <>
-          {this.renderFavoritedStatusIndicator()}
-          {this.renderFavoritedStatusToggler()}
-        </>
-      )
+      this.renderFavoritedStatusIndicator()
+      this.renderFavoritedStatusToggler()
+
+      return null
     }
 
-    componentDidMount() {
+    componentWillMount() {
+      this.favoritedStatusIndicator = document.createElement('span')
+      this.favoritedStatusToggler = document.createElement('a')
+
+      select('#avatar').appendChild(this.favoritedStatusIndicator)
+      select('#panel h1').appendChild(this.favoritedStatusToggler)
+
       registerBroadcastListener(this.onStorageChange)
     }
 
     componentWillUnmount() {
+      this.favoritedStatusIndicator.remove()
+      this.favoritedStatusToggler.remove()
+
+      this.favoritedStatusIndicator = this.favoritedStatusToggler = null
+
       unregisterBroadcastListener(this.onStorageChange)
     }
   }
@@ -154,7 +162,7 @@ export default context => {
     waitReady: () => elementCollection.ready('info'),
 
     async onLoad() {
-      unmount = preactRender(<FavoriteFriend />, elementCollection.get('info'))
+      unmount = preactRender(<FavoriteFriend />)
 
       if (await isFavorited()) {
         addToOrUpdateFriendsList()
@@ -163,6 +171,7 @@ export default context => {
 
     onUnload() {
       unmount()
+      unmount = null
     },
   }
 }

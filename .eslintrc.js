@@ -20,7 +20,7 @@ module.exports = {
 
     react: {
       pragma: 'h',
-      version: require('preact-compat').version,
+      version: require('preact/compat').version,
     },
   },
 
