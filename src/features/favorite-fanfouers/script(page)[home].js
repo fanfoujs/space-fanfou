@@ -1,4 +1,4 @@
-import { h, Component } from 'preact'
+import { createElement as h, Component } from 'preact/compat'
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc'
 import cx from 'classnames'
 import sleep from 'p-sleep'
@@ -108,8 +108,13 @@ export default context => {
     })
 
     render() {
-      return this.state.isReady && (
-        <div id="sf-favorite-fanfouers-list" className="colltab">
+      const classNames = cx({
+        'colltab': true,
+        'sf-is-ready': this.state.isReady,
+      })
+
+      return (
+        <div id="sf-favorite-fanfouers-list" className={classNames}>
           {this.renderToggle()}
           {this.renderTitle()}
           {this.renderFriendsList()}
@@ -286,15 +291,16 @@ export default context => {
     onLoad() {
       const { friends } = elementCollection.getAll()
 
-      unmount = preactRender(<FavoriteFanfouers />, root => {
+      unmount = preactRender(<FavoriteFanfouers />, rendered => {
         // 插入到「我关注的人」之前
         // 因为假定「有爱饭友」的使用频率更高，所以显示靠前一些这样更方便
-        friends.before(root)
+        friends.before(rendered)
       })
     },
 
     onUnload() {
       unmount()
+      unmount = null
     },
   }
 }

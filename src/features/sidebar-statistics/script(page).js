@@ -195,8 +195,8 @@ export default context => {
     waitReady: () => elementCollection.ready('stabs'),
 
     onLoad() {
-      unmount = preactRender(<SidebarStatistics />, root => {
-        elementCollection.get('stabs').after(root)
+      unmount = preactRender(<SidebarStatistics />, rendered => {
+        elementCollection.get('stabs').after(rendered)
       })
     },
 

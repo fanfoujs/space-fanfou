@@ -2,8 +2,6 @@ module.exports = {
   plugins: [
     [ '@babel/plugin-transform-react-jsx', {
       pragma: 'h',
-      // https://github.com/developit/preact/issues/946#issuecomment-348733763
-      pragmaFrag: '"span"',
     } ],
     [ '@babel/plugin-proposal-class-properties', {
       loose: true,

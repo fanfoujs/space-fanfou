@@ -16,8 +16,8 @@ const generateBaseConfig = mode => ({
     extensions: [ '.js', '.json', '.css', '.less' ],
     alias: {
       // 我们使用的是 Preact，借助这个模块可以使用 npm 上的 React 组件
-      'react': 'preact-compat',
-      'react-dom': 'preact-compat',
+      'react': 'preact/compat',
+      'react-dom': 'preact/compat',
       // 定义 alias，避免 `../../libs` 这种过长且容易出错的相对路径
       '@background': approot('src/background'),
       '@content': approot('src/content'),
