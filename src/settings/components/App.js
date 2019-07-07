@@ -1,10 +1,10 @@
 import { h, Component } from 'preact'
 import cx from 'classnames'
-import { SETTINGS_WRITE_ALL, CONTROL_PLACEHOLDER } from '@constants'
 import getTabDefs from '../getTabDefs'
 import messaging from '../messaging'
 import settings from '../settings'
 import CloudSyncingDisabledTip from './CloudSyncingDisabledTip'
+import { SETTINGS_WRITE_ALL, CONTROL_PLACEHOLDER } from '@constants'
 
 const LAST_TAB_ID_STORAGE_KEY = 'settings/lastTabId'
 
