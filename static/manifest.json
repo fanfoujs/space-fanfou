@@ -27,7 +27,7 @@
   },
   "options_page": "settings.html",
   "permissions": [ "http://*.fanfou.com/", "https://*.fanfou.com/", "https://setq.me/", "tabs", "notifications", "contextMenus", "storage" ],
-  "content_security_policy": "script-src 'self'; object-src 'none'; connect-src 'self' https://fanfou.com https://*.fanfou.com https://setq.me",
+  "content_security_policy": "script-src 'self'; object-src 'none'; connect-src 'self' https://fanfou.com https://*.fanfou.com http://fanfou.com http://*.fanfou.com https://setq.me",
   "web_accessible_resources": [
     "background-content-page.js",
     "page.css",
