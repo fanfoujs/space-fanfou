@@ -143,11 +143,15 @@ export default context => {
 
   async function removeStatus(li) {
     const button = select(':scope > .op > .delete', li)
+    // 删除普通消息时 `actionType` 为 "msg.del"，删除图片消息时为 "photo.del"
+    // 相应的 `fieldName` 分别应为 "msg" 和 "photo"
+    const [ id, actionType ] = button.href.split('/').reverse()
+    const fieldName = actionType.split('.')[0]
     const url = window.location.href
     const data = {
       ajax: 'yes',
-      action: 'msg.del',
-      msg: button.href.split('/').pop(),
+      action: actionType,
+      [fieldName]: id,
       token: button.getAttribute('token'),
     }
     const response = await wretch(url).formUrl(data).post().json()
