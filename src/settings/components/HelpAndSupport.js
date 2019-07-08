@@ -32,16 +32,6 @@ const authors = [ {
     </span>
   ),
 }, {
-  id: 'lito',
-  nickname: '饭小默',
-  avatar: 'https://s3.meituan.net/v1/mss_3d027b52ec5a4d589e68050845611e68/avatar/l0/00/9f/1m.jpg',
-  desc: (
-    <span>
-      太空饭否开发者。<br />
-      目前负责太空饭否主要开发和维护工作。
-    </span>
-  ),
-}, {
   id: 'xidorn',
   nickname: 'Xidorn',
   avatar: 'https://s3.meituan.net/v1/mss_3d027b52ec5a4d589e68050845611e68/avatar/l0/00/vq/0q.jpg',
