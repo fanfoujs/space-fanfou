@@ -25,12 +25,8 @@ module.exports = {
   },
 
   rules: {
-    'import/no-extraneous-dependencies': 0,
     'react/no-unknown-property': [ 2, { ignore: [ 'class' ] }],
     'react/prop-types': 0,
-    'no-unused-vars': [ 2, {
-      varsIgnorePattern: '^h$',
-    } ],
     'no-warning-comments': 0,
   },
 

@@ -1,4 +1,3 @@
-import { h } from 'dom-chef'
 import transformUrl from 'transform-url'
 import loadAsset, { injectBeforeFirstScriptOrAppendToHead } from '@libs/loadAsset'
 import Deferred from '@libs/Deferred'

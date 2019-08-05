@@ -1,5 +1,4 @@
 import select from 'select-dom'
-import { h } from 'dom-chef'
 import { showElement } from '@libs/toggleVisibility'
 import blobToBase64 from '@libs/blobToBase64'
 
