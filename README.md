@@ -1,10 +1,10 @@
-<img src="https://raw.githubusercontent.com/ispacekid/space-fanfou/master/static/icons/icon-256.png" alt="太空饭否 logo" align="right" width="82px" />
+<img src="https://raw.githubusercontent.com/fanfoujs/space-fanfou/master/static/icons/icon-256.png" alt="太空饭否 logo" align="right" width="82px" />
 
 # 太空饭否
 
-[![](https://img.shields.io/circleci/build/github/ispacekid/space-fanfou/master.svg)](https://circleci.com/gh/ispacekid/space-fanfou/tree/master)
-[![](https://img.shields.io/github/release/ispacekid/space-fanfou.svg)](https://github.com/ispacekid/space-fanfou/releases)
-[![](https://img.shields.io/github/license/ispacekid/space-fanfou.svg)](https://github.com/ispacekid/space-fanfou/blob/master/LICENSE)
+[![](https://img.shields.io/circleci/build/github/fanfoujs/space-fanfou/master.svg)](https://circleci.com/gh/fanfoujs/space-fanfou/tree/master)
+[![](https://img.shields.io/github/release/fanfoujs/space-fanfou.svg)](https://github.com/fanfoujs/space-fanfou/releases)
+[![](https://img.shields.io/github/license/fanfoujs/space-fanfou.svg)](https://github.com/fanfoujs/space-fanfou/blob/master/LICENSE)
 
 ### 简介
 
@@ -22,7 +22,7 @@
 请使用 Chrome 浏览器访问网上应用店获取插件下载。
 
 <a href="https://chrome.google.com/webstore/detail/mfofmcdbaeajgdeihmcjjohmhepcdcol">
-  <img src="https://raw.githubusercontent.com/ispacekid/space-fanfou/master/media/chrome-web-store-badge.png" alt="Download on the Chrome Web Store" width="248px" height="75px" />
+  <img src="https://raw.githubusercontent.com/fanfoujs/space-fanfou/master/media/chrome-web-store-badge.png" alt="Download on the Chrome Web Store" width="248px" height="75px" />
 </a>
 
 ### 参阅
@@ -34,4 +34,4 @@
 
 ### 协议
 
-基于 [GPL v3](COPYING) 协议发布。版权所有 &copy; 2011-2019 太空饭否开发组。
+基于 [GPL v3](COPYING) 协议发布。版权所有 © 2011-2019 太空饭否开发组。
