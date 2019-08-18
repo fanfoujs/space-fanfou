@@ -28,6 +28,7 @@ module.exports = {
     'react/no-unknown-property': [ 2, { ignore: [ 'class' ] }],
     'react/prop-types': 0,
     'no-warning-comments': 0,
+    'require-atomic-updates': 0,
   },
 
   overrides: [ {
