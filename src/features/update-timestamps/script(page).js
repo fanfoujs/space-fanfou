@@ -1,6 +1,6 @@
 import select from 'select-dom'
+import elementReady from 'element-ready'
 import requireFanfouLib from '@libs/requireFanfouLib'
-import safeElementReady from '@libs/safeElementReady'
 import every from '@libs/promiseEvery'
 
 const INTERVAL_DURATION = 15 * 1000
@@ -22,7 +22,7 @@ export default () => {
   }
 
   return {
-    applyWhen: () => safeElementReady('#stream'),
+    applyWhen: () => elementReady('#stream'),
 
     waitReady: () => every([
       requireFanfouLib('FF.util.parseDate'),

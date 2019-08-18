@@ -1,6 +1,6 @@
 import select from 'select-dom'
+import elementReady from 'element-ready'
 import wrapper from '@libs/wrapper'
-import safeElementReady from '@libs/safeElementReady'
 import safelyInvokeFns from '@libs/safelyInvokeFns'
 import arrayUniquePush from '@libs/arrayUniquePush'
 import arrayRemove from '@libs/arrayRemove'
@@ -64,7 +64,7 @@ function getStatuses() {
 
 export default wrapper({
   async install() {
-    stream = await safeElementReady('#stream')
+    stream = await elementReady('#stream')
 
     if (stream) {
       observer = new MutationObserver(streamMutationObserver)

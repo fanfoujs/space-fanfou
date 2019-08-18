@@ -1,8 +1,8 @@
 import { h } from 'dom-chef'
 import select from 'select-dom'
+import elementReady from 'element-ready'
 import wretch from 'wretch'
 import { isPrivateMessagePage } from '@libs/pageDetect'
-import safeElementReady from '@libs/safeElementReady'
 import untilElementRemoved from '@libs/untilElementRemoved'
 
 const CLASSNAME_CHECKBOX = 'sf-private-message-checkbox'
@@ -99,7 +99,7 @@ export default context => {
   return {
     applyWhen: () => isPrivateMessagePage(),
 
-    waitReady: () => safeElementReady('#footer'),
+    waitReady: () => elementReady('#footer'),
 
     onLoad() {
       createMasterCheckbox()

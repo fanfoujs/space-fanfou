@@ -1,8 +1,8 @@
 import { h } from 'dom-chef'
 import select from 'select-dom'
+import elementReady from 'element-ready'
 import wretch from 'wretch'
 import { isLoggedInUserFriendsListPage, isLoggedInUserFollowersListPage, isFriendsListPage } from '@libs/pageDetect'
-import safeElementReady from '@libs/safeElementReady'
 import untilElementRemoved from '@libs/untilElementRemoved'
 import promiseAny from '@libs/promiseAny'
 
@@ -121,7 +121,7 @@ export default context => {
       isLoggedInUserFollowersListPage(),
     ]),
 
-    waitReady: () => safeElementReady('#footer'),
+    waitReady: () => elementReady('#footer'),
 
     onLoad() {
       createMasterCheckbox()

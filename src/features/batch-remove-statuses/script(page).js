@@ -1,8 +1,8 @@
 import { h } from 'dom-chef'
 import select from 'select-dom'
+import elementReady from 'element-ready'
 import wretch from 'wretch'
 import { isLoggedInUserProfilePage } from '@libs/pageDetect'
-import safeElementReady from '@libs/safeElementReady'
 import collapseSelection from '@libs/collapseSelection'
 import noop from '@libs/noop'
 
@@ -258,7 +258,7 @@ export default context => {
   return {
     applyWhen: () => isLoggedInUserProfilePage(),
 
-    waitReady: () => safeElementReady('#footer'),
+    waitReady: () => elementReady('#footer'),
 
     onLoad() {
       createContainer()

@@ -1,7 +1,7 @@
 import select from 'select-dom'
+import elementReady from 'element-ready'
 import { h } from 'dom-chef'
 import debounce from 'just-debounce-it'
-import safeElementReady from '@libs/safeElementReady'
 import animatedScrollTop from '@libs/animatedScrollTop'
 import any from '@libs/promiseAny'
 
@@ -78,8 +78,8 @@ export default context => {
 
   return {
     applyWhen: () => any([
-      safeElementReady('#stream'),
-      safeElementReady('.inner-content'),
+      elementReady('#stream'),
+      elementReady('.inner-content'),
     ]),
 
     onLoad() {

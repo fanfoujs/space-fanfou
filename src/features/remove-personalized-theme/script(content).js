@@ -1,8 +1,8 @@
 import { h } from 'dom-chef'
+import elementReady from 'element-ready'
 import fanfouDefaultThemeCss from './fanfou-default-theme'
 import findUserThemeStyleElement from '@libs/findUserThemeStyleElement'
 import keepRetry from '@libs/keepRetry'
-import safeElementReady from '@libs/safeElementReady'
 import getLoggedInUserId from '@libs/getLoggedInUserId'
 import arrayUniquePush from '@libs/arrayUniquePush'
 import arrayRemove from '@libs/arrayRemove'
@@ -30,7 +30,7 @@ export default context => {
   }
 
   async function extractUserIdFromMeta() {
-    const meta = await safeElementReady('meta[name="author"]')
+    const meta = await elementReady('meta[name="author"]')
 
     if (meta) {
       const rawValue = meta.getAttribute('content')

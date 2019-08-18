@@ -1,7 +1,7 @@
 import { h } from 'dom-chef'
 import select from 'select-dom'
+import elementReady from 'element-ready'
 import wretch from 'wretch'
-import safeElementReady from '@libs/safeElementReady'
 import { isFriendRequestPage } from '@libs/pageDetect'
 import untilElementRemoved from '@libs/untilElementRemoved'
 import neg from '@libs/neg'
@@ -131,7 +131,7 @@ export default context => {
   return {
     applyWhen: () => isFriendRequestPage(),
 
-    waitReady: () => safeElementReady('#footer'),
+    waitReady: () => elementReady('#footer'),
 
     onLoad() {
       createContainer()

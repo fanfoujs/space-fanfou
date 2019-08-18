@@ -1,8 +1,8 @@
 import createActivityDetector from 'activity-detector'
 import select from 'select-dom'
+import elementReady from 'element-ready'
 import isVisible from 'is-visible'
 import getLoggedInUserProfilePageUrl from '@libs/getLoggedInUserProfilePageUrl'
-import safeElementReady from '@libs/safeElementReady'
 
 export default context => {
   const { readOptionValue, requireModules, elementCollection, registerDOMEventListener } = context
@@ -83,7 +83,7 @@ export default context => {
   return {
     applyWhen: () => elementCollection.ready('timelineNotification'),
 
-    waitReady: () => safeElementReady('#stream'),
+    waitReady: () => elementReady('#stream'),
 
     onLoad() {
       statusFormIntersectionObserver.addListener(intersectionObserverCallback)

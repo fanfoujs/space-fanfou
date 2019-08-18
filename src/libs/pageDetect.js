@@ -1,6 +1,6 @@
 import select from 'select-dom'
 import simpleMemoize from 'just-once'
-import safeElementReady from '@libs/safeElementReady'
+import elementReady from 'element-ready'
 import getLoggedInUserId from '@libs/getLoggedInUserId'
 import getLoggedInUserProfilePageUrl from '@libs/getLoggedInUserProfilePageUrl'
 import any from '@libs/promiseAny'
@@ -36,7 +36,7 @@ export function isLoggedInUserProfilePage() {
 export const isLoggedInUserFriendsListPage = simpleMemoize(async () => {
   if (!isFriendsListPage()) return false
 
-  await safeElementReady('#stream')
+  await elementReady('#stream')
 
   const urlA = select('.tabs .crumb').href
   const urlB = getLoggedInUserProfilePageUrl()
@@ -48,7 +48,7 @@ export const isLoggedInUserFriendsListPage = simpleMemoize(async () => {
 export const isLoggedInUserFollowersListPage = simpleMemoize(async () => {
   if (!isFollowersListPage()) return false
 
-  await safeElementReady('#stream')
+  await elementReady('#stream')
 
   const urlA = select('.tabs .crumb').href
   const urlB = getLoggedInUserProfilePageUrl()
@@ -60,7 +60,7 @@ export const isLoggedInUserFollowersListPage = simpleMemoize(async () => {
 export const isUserProfilePage = simpleMemoize(() => {
   return any([
     // 只有用户个人页面中才存在「投诉」对话框
-    safeElementReady('#overlay-report'),
+    elementReady('#overlay-report'),
     // 但是当前登录用户的个人页面中没有「投诉」对话框，需要额外判断
     isLoggedInUserProfilePage(),
   ])
@@ -133,7 +133,7 @@ export function isFriendRequestPage() {
 // 判断是否为 timeline 页面，例如首页、用户个人页面、随便看看页面等
 export const isTimelinePage = simpleMemoize(() => every([
   // timeline 的页面都有 #stream 元素
-  safeElementReady('#stream'),
+  elementReady('#stream'),
   // 管理关注请求页面也有 #stream 元素，而且 DOM 结构和一般 timeline 页面难以区分，排除之
   neg(isFriendRequestPage()),
 ]))

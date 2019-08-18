@@ -1,6 +1,6 @@
+import elementReady from 'element-ready'
 import requireFanfouLib from '@libs/requireFanfouLib'
 import keepRetry from '@libs/keepRetry'
-import safeElementReady from '@libs/safeElementReady'
 
 export default () => {
   let $textarea
@@ -8,7 +8,7 @@ export default () => {
   return {
     async applyWhen() {
       const $ = await requireFanfouLib('jQuery')
-      const textarea = await safeElementReady('#phupdate textarea')
+      const textarea = await elementReady('#phupdate textarea')
 
       return textarea && ($textarea = $(textarea))
     },

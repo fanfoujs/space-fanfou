@@ -1,7 +1,7 @@
 import { h } from 'dom-chef'
 import select from 'select-dom'
+import elementReady from 'element-ready'
 import sleep from 'p-sleep'
-import safeElementReady from '@libs/safeElementReady'
 import { fadeIn, fadeOut } from '@libs/fade'
 
 const FADE_DURATION = 500
@@ -39,8 +39,8 @@ async function animate(element) {
 
 export default {
   async ready() {
-    container = await safeElementReady('#container')
-    header = await safeElementReady('#header')
+    container = await elementReady('#container')
+    header = await elementReady('#header')
 
     return container && header
   },

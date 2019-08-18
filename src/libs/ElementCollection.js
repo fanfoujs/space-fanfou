@@ -1,5 +1,5 @@
 import select from 'select-dom'
-import safeElementReady from '@libs/safeElementReady'
+import elementReady from 'element-ready'
 
 export default class ElementCollection {
   constructor() {
@@ -84,7 +84,7 @@ export default class ElementCollection {
     }
 
     if (!entry.promise) {
-      entry.promise = safeElementReady(entry.selector)
+      entry.promise = elementReady(entry.selector)
     }
 
     return entry.promise

@@ -1,8 +1,8 @@
 import select from 'select-dom'
-import safeElementReady from '@libs/safeElementReady'
+import elementReady from 'element-ready'
 
 async function removeBrackets(selector) {
-  const found = await safeElementReady(selector)
+  const found = await elementReady(selector)
   if (!found) return
 
   for (const element of select.all(selector)) {
