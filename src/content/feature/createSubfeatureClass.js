@@ -36,12 +36,10 @@ export default ({ messaging, bridge, modules }) => class Subfeature {
       ])
     }
 
-    this.isApplicable = simpleMemoize(async () => {
-      const applyWhen = this.script?.applyWhen
-
-      // eslint-disable-next-line no-return-await
-      return applyWhen ? await applyWhen() : true
-    })
+    this.isApplicable = simpleMemoize(
+      this.script?.applyWhen ||
+      (() => Promise.resolve(true)),
+    )
   }
 
   get transport() {
