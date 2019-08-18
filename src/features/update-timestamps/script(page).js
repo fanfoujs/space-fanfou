@@ -27,6 +27,7 @@ export default () => {
     waitReady: () => every([
       requireFanfouLib('FF.util.parseDate'),
       requireFanfouLib('FF.util.getRelativeTime'),
+      requireFanfouLib('FF.app.Timeline'),
     ]),
 
     onLoad() {

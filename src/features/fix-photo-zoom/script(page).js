@@ -1,9 +1,10 @@
 import select from 'select-dom'
+import elementReady from 'element-ready'
 import { isTimelinePage } from '@libs/pageDetect'
 
 // TODO: 可以改为取消绑定原来的事件
 
-function onClick(event) {
+async function onClick(event) {
   const img = event.target
   const link = img.parentElement
 
@@ -20,7 +21,12 @@ function onClick(event) {
     // 饭否似乎是等待图片预加载完才会把图片显示出来
     // 因此偶尔出现点击图片显示的是前一次点击的图片的情况
     // 在用户点击缩略图后立即修改大图的地址，以解决这个问题
-    select('#ZoomImage').src = link.href
+    const zoomImage = await elementReady('#ZoomImage', {
+      stopOnDomReady: false,
+      timeout: 5 * 1000,
+    })
+
+    if (zoomImage) zoomImage.src = link.href
   }
 }
 
