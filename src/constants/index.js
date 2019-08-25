@@ -8,4 +8,4 @@ function loadConstants() {
   }, {})
 }
 
-Object.assign(exports, loadConstants())
+module.exports = Object.assign(exports, loadConstants())

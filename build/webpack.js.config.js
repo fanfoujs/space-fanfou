@@ -11,12 +11,11 @@ const {
   generateFileLoaderForOtherAssets,
 } = require('./shared')
 
-module.exports = (env, { mode } = defaultArgv) => ({
+module.exports = (id, entryFile) => (_, { mode } = defaultArgv) => ({
   name: 'js',
 
   entry: {
-    'background-content-page': approot('src/entries/background-content-page.js'),
-    'settings': approot('src/entries/settings.js'),
+    [id]: approot(`src/entries/${entryFile}.js`),
   },
 
   output: {
@@ -28,7 +27,28 @@ module.exports = (env, { mode } = defaultArgv) => ({
 
   module: {
     rules: [
-      { test: /\.js$/, use: [ 'cache-loader', 'babel-loader' ] },
+      {
+        test: /\.js$/,
+        use: [
+          {
+            loader: 'cache-loader',
+            options: {
+              cacheIdentifier: require('cache-loader/package').version + mode + id,
+            },
+          },
+          'babel-loader',
+          {
+            loader: 'ifdef-loader',
+            options: {
+              DEVELOPMENT: mode === 'development',
+              PRODUCTION: mode === 'production',
+              ENV_BACKGROUND: id === 'background',
+              ENV_CONTENT: id === 'content',
+              ENV_PAGE: id === 'page',
+            },
+          },
+        ],
+      },
       generateStyleLoader({ mode }),
       generateUrlLoaderForImages(),
       generateFileLoaderForImages({ publicPath: `${EXTENSION_ORIGIN_PLACEHOLDER}/` }),

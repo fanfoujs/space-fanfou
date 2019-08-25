@@ -7,7 +7,7 @@ export default filename => {
     extname = ''
   } else {
     basename = filename.substring(0, index)
-    extname = filename.substring(index, filename.length)
+    extname = filename.substring(index)
   }
 
   return { basename, extname }

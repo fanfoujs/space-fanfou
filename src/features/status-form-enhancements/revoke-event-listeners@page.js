@@ -16,7 +16,7 @@ export default context => {
     textarea: { selector: '#phupdate textarea' },
   })
 
-  function backupEvents() {
+  function backupEventListeners() {
     const { Event } = window.YAHOO.util
     let formSubmit, textareaKeyup
 
@@ -39,7 +39,7 @@ export default context => {
     })
   }
 
-  function restoreEvents() {
+  function restoreEventListeners() {
     const { Event } = window.YAHOO.util
 
     Event.addListener(elementCollection.get('form'), 'submit', eventsBackup.formSubmit)
@@ -57,11 +57,11 @@ export default context => {
     waitReady: () => requireFanfouLib('YAHOO'),
 
     onLoad() {
-      backupEvents()
+      backupEventListeners()
     },
 
     onUnload() {
-      restoreEvents()
+      restoreEventListeners()
     },
   }
 }

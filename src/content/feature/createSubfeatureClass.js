@@ -7,7 +7,7 @@ import every from '@libs/promiseEvery'
 import log from '@libs/log'
 
 export default ({ messaging, bridge, modules }) => class Subfeature {
-  constructor({ featureName, subfeatureName, script, style, parent }) {
+  constructor({ featureName, subfeatureName, style, script, parent }) {
     this.featureName = featureName
     this.subfeatureName = subfeatureName
     this.parent = parent

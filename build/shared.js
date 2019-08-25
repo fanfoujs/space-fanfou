@@ -95,7 +95,7 @@ const generateFileLoaderForImages = ({ publicPath }) => ({
 // 大部分文件不应进行编码，因为可能降低页面加载性能
 const generateUrlLoaderForImages = () => ({
   test: input => reImageExt.test(input) && reBase64.test(input),
-  use: [ {
+  use: [ 'cache-loader', {
     loader: 'url-loader',
     options: {
       limit: 2048,

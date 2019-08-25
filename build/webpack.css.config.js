@@ -10,7 +10,7 @@ const {
   generateUrlLoaderForImages,
 } = require('./shared')
 
-module.exports = (env, { mode } = defaultArgv) => ({
+module.exports = (_, { mode } = defaultArgv) => ({
   name: 'css',
 
   entry: {

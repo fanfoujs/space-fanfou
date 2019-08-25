@@ -10,6 +10,7 @@ module.exports = {
     '@babel/plugin-proposal-do-expressions',
     '@babel/plugin-proposal-export-default-from',
     '@babel/plugin-proposal-function-bind',
+    'macros',
   ],
 
   env: {
