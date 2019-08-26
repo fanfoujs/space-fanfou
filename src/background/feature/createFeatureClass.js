@@ -23,10 +23,6 @@ export default ({ messaging, bridge, settings, modules }) => class Feature {
   }
 
   async init() {
-    if (!this.subfeatures.length) {
-      return
-    }
-
     await this.loadOptionValues()
     await this.migrate()
 

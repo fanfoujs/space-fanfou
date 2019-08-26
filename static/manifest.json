@@ -14,10 +14,10 @@
     "256": "icons/icon-256.png"
   },
   "background": {
-    "scripts": [ "background-content-page.js" ]
+    "scripts": [ "background.js" ]
   },
   "content_scripts": [ {
-    "js": [ "background-content-page.js" ],
+    "js": [ "content.js" ],
     "matches": [ "http://fanfou.com/*", "https://fanfou.com/*" ],
     "run_at": "document_start"
   } ],
@@ -29,7 +29,9 @@
   "permissions": [ "http://*.fanfou.com/", "https://*.fanfou.com/", "https://setq.me/", "tabs", "notifications", "contextMenus", "storage" ],
   "content_security_policy": "script-src 'self'; object-src 'none'; connect-src 'self' https://fanfou.com https://*.fanfou.com http://fanfou.com http://*.fanfou.com https://setq.me",
   "web_accessible_resources": [
-    "background-content-page.js",
+    "background.js",
+    "content.js",
+    "page.js",
     "page.css",
     "assets/*"
   ]

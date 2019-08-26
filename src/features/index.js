@@ -1,73 +1,54 @@
+import importAll from 'import-all.macro'
 import dotProp from 'dot-prop'
 import pick from 'just-pick'
-import casey from 'casey-js'
+import parseFilename from '@libs/parseFilename'
 import replaceExtensionOrigin from '@libs/replaceExtensionOrigin'
 
-const componentPathRe = do {
-  const beginning = String.raw`^\.`
-  const ending = '$'
-  const slash = String.raw`/`
+function loadComponent(path, module) {
+  const [ , featureName, filename ] = path.split('/')
 
-  const metadata = '(?<isMetadata>metadata)'
-  const script = '(?<isScript>script)'
-  const style = '(?<isStyle>style)'
-
-  const featureName = '(?<featureName>[a-z-]+)'
-  const subfeatureName = String.raw`\[(?<subfeatureName>[a-z-]+)\]`
-
-  const envType = String.raw`\((?<envType>background|content|page)\)`
-  const extName = String.raw`\.(js|css|less)`
-
-  const or = (...branches) => `(?:${branches.join('|')})`
-  const optional = x => `(?:${x})?`
-
-  new RegExp([
-    beginning + slash + featureName + slash,
-    or(
-      metadata,
-      or(script, style) + envType + optional(subfeatureName),
-    ),
-    extName + ending,
-  ].join(''))
-}
-
-function loadComponent(key, loadModule) {
-  const result = (key.match(componentPathRe) || {}).groups
-  const { featureName, subfeatureName = 'default', envType } = result || {}
-
-  if (!result) throw new Error(`非法路径：${key}`)
-
-  if (result.isMetadata) return {
+  if (filename === 'metadata.js') return {
     featureName,
     type: 'metadata',
-    loadModule,
+    module,
   }
 
-  if (result.isScript) return {
-    featureName,
-    subfeatureName,
-    type: 'script',
-    envType,
-    loadModule: () => loadModule().default,
-  }
+  const { basename, extname } = parseFilename(filename)
+  const atPos = basename.lastIndexOf('@')
+  const subfeatureName = atPos === 0
+    ? 'default'
+    : basename.substring(0, atPos)
 
-  if (result.isStyle) return {
+  if ([ '.less', '.css' ].includes(extname)) return {
     featureName,
     subfeatureName,
     type: 'style',
-    envType,
-    loadModule: () => replaceExtensionOrigin(loadModule()),
+    module: replaceExtensionOrigin(module),
+  }
+
+  if (extname === '.js') return {
+    featureName,
+    subfeatureName,
+    type: 'script',
+    module: module.default,
   }
 }
 
 function loadComponents() {
-  const context = require.context(
-    './',
-    true,
-    // webpack 要求这里的正则表达式必须使用字面量
-    /\/(metadata\.js|(script|style)\((background|content|page)\)(\[.+\])?\.(js|css|less))$/,
-  )
-  const components = context.keys().map(key => loadComponent(key, () => context(key)))
+  const modules = {
+    ...importAll.sync('./*/metadata.js'),
+    /// #if ENV_BACKGROUND
+    ...importAll.sync('./*/*@background.js'),
+    /// #elif ENV_CONTENT
+    ...importAll.sync('./*/*@content.{less,css}'),
+    ...importAll.sync('./*/*@content.js'),
+    /// #elif ENV_PAGE
+    ...importAll.sync('./*/*@page.{less,css}'),
+    ...importAll.sync('./*/*@page.js'),
+    /// #endif
+  }
+  const components = Object.entries(modules)
+    .map(([ path, module ]) => loadComponent(path, module))
 
   return components
 }
@@ -132,23 +113,18 @@ function processMetadata(featureName, metadata) {
 function loadFeatures() {
   const features = {}
 
-  for (const { featureName, subfeatureName, type, envType, loadModule } of loadComponents()) {
+  for (const { featureName, subfeatureName, type, module } of loadComponents()) {
     if (type === 'metadata') {
       dotProp.set(
         features,
         `${featureName}.metadata`,
-        processMetadata(featureName, loadModule()),
+        processMetadata(featureName, module),
       )
     } else {
       dotProp.set(
         features,
-        `${featureName}.subfeatures.${subfeatureName}.envType`,
-        envType,
-      )
-      dotProp.set(
-        features,
-        `${featureName}.subfeatures.${subfeatureName}.${casey.toCamelCase(`load-${type}`)}`,
-        loadModule,
+        `${featureName}.subfeatures.${subfeatureName}.${type}`,
+        module,
       )
     }
   }
