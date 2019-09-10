@@ -2,7 +2,7 @@
   "name": "太空饭否",
   "description": "太空饭否是一个免费、用心的开源项目，是目前最强大最好用的饭否浏览器扩展。可以给饭否添加回复和转发展开、桌面通知、浮动输入框、多用户切换、消息批量管理、自动翻页等功能，并且使饭否页面变得更美更舒心，符合您的使用习惯。",
   "version": "1.0.0",
-  "version_name": "1.0.0-beta.7",
+  "version_name": "1.0.0-beta.8",
   "manifest_version": 2,
   "minimum_chrome_version": "73",
   "icons": {
