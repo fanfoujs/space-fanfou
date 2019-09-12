@@ -8,6 +8,7 @@ import storage from './storage'
 import features from '@features'
 import isFanfouWebUrl from '@libs/isFanfouWebUrl'
 import migrate from '@libs/migrate'
+import isExtensionUpgraded from '@libs/isExtensionUpgraded'
 import { readJSONFromLocalStorage } from '@libs/localStorageWrappers'
 import getExtensionVersion from '@libs/getExtensionVersion'
 import omitBy from '@libs/omitBy'
@@ -189,10 +190,6 @@ async function checkIfExtensionUpgraded() {
     PREVIOUS_EXTENSION_VERSION_STORAGE_AREA_NAME,
   )
   const currentVersion = getExtensionVersion()
-  const isExtensionUpgraded = (
-    !!previousVersion &&
-    semver.gt(currentVersion, previousVersion)
-  )
 
   await storage.write(
     PREVIOUS_EXTENSION_VERSION_STORAGE_KEY,
@@ -201,7 +198,7 @@ async function checkIfExtensionUpgraded() {
   )
   await storage.write(
     STORAGE_KEY_IS_EXTENSION_UPGRADED,
-    isExtensionUpgraded,
+    isExtensionUpgraded(previousVersion, currentVersion),
     STORAGE_AREA_NAME_IS_EXTENSION_UPGRADED,
   )
 }
