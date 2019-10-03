@@ -1,5 +1,4 @@
-import Tribute from 'tributejs/src' // 使用 ESM 版本，否则无法 patch
-import TributeSearch from 'tributejs/src/TributeSearch'
+import Tribute from 'tributejs'
 import triggerEvent from 'compat-trigger-event'
 import replaceExtensionOrigin from '@libs/replaceExtensionOrigin'
 import getLoggedInUserId from '@libs/getLoggedInUserId'
@@ -8,7 +7,6 @@ import unknownUserAvatar_ from '@assets/images/unknown-user.jpg'
 const STORAGE_KEY = 'friends-list'
 const STORAGE_AREA_NAME = 'session'
 const EXPIRES = 5 * 60 * 1000
-const MENU_LENGTH_LIMIT = 7
 
 export default context => {
   const { requireModules, elementCollection, registerDOMEventListener } = context
@@ -16,27 +14,12 @@ export default context => {
 
   const unknownUserAvatar = replaceExtensionOrigin(unknownUserAvatar_)
   let tribute
-  let originalFilter
 
   elementCollection.add({
     textarea: '#phupdate textarea',
   })
 
   registerDOMEventListener('textarea', 'tribute-replaced', onReplaced)
-
-  function patchTribute() {
-    // Tribute 没有提供限制搜索结果数量的参数，patch 之
-    originalFilter = TributeSearch.prototype.filter
-
-    TributeSearch.prototype.filter = function filter(...args) {
-      return originalFilter.apply(this, args).slice(0, MENU_LENGTH_LIMIT)
-    }
-  }
-
-  function unpatchTribute() {
-    TributeSearch.prototype.filter = originalFilter
-    originalFilter = null
-  }
 
   function getStorageKeyForCurrentUser() {
     return STORAGE_KEY + '/' + getLoggedInUserId()
@@ -84,8 +67,6 @@ export default context => {
     applyWhen: () => elementCollection.ready('textarea'),
 
     async onLoad() {
-      patchTribute()
-
       tribute = new Tribute({
         values: await readFriendsListFromCache() || await fetchFriendsList(),
         lookup: 'label',
@@ -102,6 +83,7 @@ export default context => {
           pre: '<strong>',
           post: '</strong>',
         },
+        menuItemLimit: 7,
       })
 
       tribute.attach(elementCollection.get('textarea'))
@@ -110,8 +92,6 @@ export default context => {
     onUnload() {
       tribute.detach(elementCollection.get('textarea'))
       tribute = null
-
-      unpatchTribute()
     },
   }
 }

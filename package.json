@@ -71,7 +71,7 @@
     "string-width": "^4.1.0",
     "tinydate": "^1.0.1",
     "transform-url": "^1.0.1",
-    "tributejs": "3.7.2",
+    "tributejs": "^4.0.0",
     "webext-inject-on-install": "^1.0.2",
     "wretch": "^1.5.1"
   },
