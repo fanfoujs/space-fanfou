@@ -28,15 +28,15 @@ export default opts => queue.add(async () => {
   const migrated = await storage.read(STORAGE_KEY, storageAreaName) || []
 
   if (typeof storageAreaName !== 'string') {
-    throw new Error('必须指定 storageAreaName')
+    throw new TypeError('必须指定 storageAreaName')
   }
 
   if (typeof migrationId !== 'string') {
-    throw new Error('必须指定 migrationId')
+    throw new TypeError('必须指定 migrationId')
   }
 
   if (typeof executor !== 'function') {
-    throw new Error('必须指定 executor')
+    throw new TypeError('必须指定 executor')
   }
 
   if (process.env.NODE_ENV === 'development') {

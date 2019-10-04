@@ -85,7 +85,7 @@ export default context => {
       <input type="checkbox" className={CLASSNAME_CHECKBOX} />
     )
 
-    li.appendChild(checkbox)
+    li.append(checkbox)
   }
 
   function getAllCheckboxes() {
@@ -117,7 +117,7 @@ export default context => {
 
     if (/^给.+的回复/.test(text)) {
       type = 'reply'
-    } else if (/^转自/.test(text)) {
+    } else if (text.startsWith('转自')) {
       type = 'repost'
     }
 
@@ -267,7 +267,7 @@ export default context => {
         addCheckbox(li)
       }
 
-      select('#info').appendChild(container)
+      select('#info').append(container)
     },
 
     onUnload() {

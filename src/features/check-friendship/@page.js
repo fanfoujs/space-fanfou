@@ -38,7 +38,7 @@ export default context => {
       // eslint-disable-next-line no-script-url
       <a href="javascript:void(0)" className="label" onClick={checkFriendship} />
     )
-    userviewLink.appendChild(checkButton)
+    userviewLink.append(checkButton)
 
     setText(TEXT_INITIAL)
   }

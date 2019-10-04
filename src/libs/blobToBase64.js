@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/prefer-add-event-listener */
+
 export default blob => new Promise((resolve, reject) => {
   const fr = new FileReader()
 

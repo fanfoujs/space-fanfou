@@ -140,8 +140,8 @@ export default context => {
       this.favoritedStatusIndicator = document.createElement('span')
       this.favoritedStatusToggler = document.createElement('a')
 
-      select('#avatar').appendChild(this.favoritedStatusIndicator)
-      select('#panel h1').appendChild(this.favoritedStatusToggler)
+      select('#avatar').append(this.favoritedStatusIndicator)
+      select('#panel h1').append(this.favoritedStatusToggler)
 
       registerBroadcastListener(this.onStorageChange)
     }

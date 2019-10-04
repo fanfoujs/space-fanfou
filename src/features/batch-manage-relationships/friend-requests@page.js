@@ -63,7 +63,7 @@ export default context => {
       <input type="checkbox" className={CLASSNAME_CHECKBOX} />
     )
 
-    li.appendChild(checkbox)
+    li.append(checkbox)
   }
 
   function getAllCheckboxes() {
@@ -140,7 +140,7 @@ export default context => {
         addCheckbox(li)
       }
 
-      elementCollection.get('countTip').appendChild(container)
+      elementCollection.get('countTip').append(container)
     },
 
     onUnload() {

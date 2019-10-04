@@ -43,7 +43,7 @@ export default context => {
       <input type="checkbox" className={CLASSNAME_CHECKBOX} onChange={onCheckboxChanged} />
     )
 
-    li.appendChild(checkbox)
+    li.append(checkbox)
   }
 
   function getAllCheckboxes() {

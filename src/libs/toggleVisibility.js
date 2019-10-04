@@ -5,7 +5,7 @@ const elementDisplay = {}
 function getDefaultDisplay(nodeName) {
   if (!elementDisplay[nodeName]) {
     const element = document.createElement(nodeName)
-    document.body.appendChild(element)
+    document.body.append(element)
     let display = getComputedStyle(element, '').getPropertyValue('display')
     element.remove()
     if (display === 'none') display = 'block'

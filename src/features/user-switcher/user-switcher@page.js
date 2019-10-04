@@ -191,7 +191,7 @@ export default context => {
 
   function renderUserSwitcher() {
     unmountUserSwitcher = preactRender(<UserSwitcher />, rendered => {
-      elementCollection.get('usertop').appendChild(rendered)
+      elementCollection.get('usertop').append(rendered)
     })
   }
 

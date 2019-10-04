@@ -38,7 +38,7 @@ export default context => {
         拖放图片到这里
       </div>
     )
-    elementCollection.get('textareaWrapper').appendChild(tip)
+    elementCollection.get('textareaWrapper').append(tip)
   }
 
   function removeTip() {

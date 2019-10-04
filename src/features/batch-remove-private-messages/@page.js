@@ -35,7 +35,7 @@ export default context => {
       <input type="checkbox" className={CLASSNAME_CHECKBOX} onChange={onCheckboxChanged} />
     )
 
-    li.appendChild(checkbox)
+    li.append(checkbox)
   }
 
   function getAllCheckboxes() {
@@ -109,7 +109,7 @@ export default context => {
         addCheckbox(li)
       }
 
-      select('#main .tabs').appendChild(container)
+      select('#main .tabs').append(container)
     },
 
     onUnload() {

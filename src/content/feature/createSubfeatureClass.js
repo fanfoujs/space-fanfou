@@ -151,7 +151,7 @@ export default ({ messaging, bridge, modules }) => class Subfeature {
     if (!this.script) return
 
     this.unbindDOMEventListeners()
-    await this.script.onUnload?.() // eslint-disable-line
+    await this.script.onUnload?.()
     this.elementCollection.free()
   }
 

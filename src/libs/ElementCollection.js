@@ -20,7 +20,7 @@ export default class ElementCollection {
       }
 
       if (typeof selector !== 'string') {
-        throw new Error('selector 未指定')
+        throw new TypeError('selector 未指定')
       }
 
       this._collection[alias] = {

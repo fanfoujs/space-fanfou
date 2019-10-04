@@ -66,6 +66,7 @@ function processOptionDef(featureName, optionName, rawOptionDef, isSubOption) {
       } else if (typeof defaultValue === 'number') {
         'number' // eslint-disable-line no-unused-expressions
       } else {
+        // eslint-disable-next-line unicorn/prefer-type-error
         throw new Error('无法判断选项的类型，因为没有指定 `isSoldered` 或 `defaultValue`')
       }
     },

@@ -143,6 +143,7 @@ export default context => {
 
       xhr.open('POST', url, true)
       xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+      // eslint-disable-next-line unicorn/prefer-add-event-listener
       xhr.onload = () => safeJSONParse(xhr.responseText, (error, json) => {
         if (error) {
           reject()
@@ -150,7 +151,9 @@ export default context => {
           resolve(json)
         }
       })
+      // eslint-disable-next-line unicorn/prefer-add-event-listener
       xhr.onerror = () => reject()
+      // eslint-disable-next-line unicorn/prefer-add-event-listener
       isImageAttached && (xhr.upload.onprogress = onUploadProgress)
       xhr.send(formData)
     })

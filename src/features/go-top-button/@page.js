@@ -27,7 +27,7 @@ export default context => {
     )
 
     if (existingButton) existingButton.remove()
-    container.appendChild(toTopButton)
+    container.append(toTopButton)
     hideButton()
 
     return toTopButton

@@ -25,7 +25,7 @@ function createSpy(update) {
   // 之所以要靠上一点，对于浮动输入框是否要开启浮动的判定有帮助
   spy.style.top = `${updateOffset - 11}px`
   spy.style.pointerEvents = 'none'
-  document.body.appendChild(spy)
+  document.body.append(spy)
 
   return spy
 }

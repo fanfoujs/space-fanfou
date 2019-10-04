@@ -105,7 +105,7 @@ export default context => {
       userThemeStyleElement = findUserThemeStyleElement()
       userThemeCss = userThemeStyleElement.textContent
       button = createButton()
-      document.body.appendChild(button)
+      document.body.append(button)
       toggle(await shouldEnableOnLoad(), true) // 初始化
     },
 
