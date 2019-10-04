@@ -81,7 +81,7 @@ module.exports = (id, entryFile) => (_, { mode } = defaultArgv) => ({
             indent_level: 2, // eslint-disable-line camelcase
           },
         },
-        parallel: true,
+        extractComments: false,
       }),
     ],
   },
