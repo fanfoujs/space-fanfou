@@ -59,7 +59,7 @@
     "p-retry": "^4.1.0",
     "p-sleep": "^1.1.0",
     "pify": "^4.0.1",
-    "preact": "^10.0.0-rc.1",
+    "preact": "^10.0.0",
     "promise-queue": "^2.2.5",
     "prop-types": "^15.7.2",
     "react-sortable-hoc": "^1.8.3",
