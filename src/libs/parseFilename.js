@@ -6,8 +6,8 @@ export default filename => {
     basename = filename
     extname = ''
   } else {
-    basename = filename.substring(0, index)
-    extname = filename.substring(index)
+    basename = filename.slice(0, index)
+    extname = filename.slice(index)
   }
 
   return { basename, extname }

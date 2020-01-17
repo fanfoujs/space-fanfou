@@ -37,7 +37,7 @@ export default context => {
   }
 
   function getStatusAuthorId(li) {
-    return select('.author', li).pathname.substr(1)
+    return select('.author', li).pathname.slice(1)
   }
 
   function isLoggedInUserId(userId) {

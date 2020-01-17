@@ -13,6 +13,7 @@ module.exports = {
     'function-comma-space-after': null,
     'function-parentheses-newline-inside': null,
     'function-parentheses-space-inside': null,
+    'no-descending-specificity': null,
     'no-unknown-animations': null,
     'property-blacklist': null,
     'selector-class-pattern': null,

@@ -17,7 +17,7 @@ function loadComponent(path, module) {
   const atPos = basename.lastIndexOf('@')
   const subfeatureName = atPos === 0
     ? 'default'
-    : basename.substring(0, atPos)
+    : basename.slice(0, atPos)
 
   if ([ '.less', '.css' ].includes(extname)) return {
     featureName,

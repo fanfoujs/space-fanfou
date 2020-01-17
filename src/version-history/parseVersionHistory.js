@@ -31,7 +31,7 @@ export default rawVersionHistory => {
 
     // 版本号（必选）
     if (currentLine.startsWith('v')) {
-      const versionTag = currentLine.substr(1)
+      const versionTag = currentLine.slice(1)
 
       currentVersionItem = {
         version: versionTag,
@@ -46,7 +46,7 @@ export default rawVersionHistory => {
 
     // 发布日期（必选）
     if (currentLine.startsWith('@')) {
-      const releaseDate = currentLine.substr(1)
+      const releaseDate = currentLine.slice(1)
 
       currentVersionItem.releaseDate = releaseDate
 
@@ -55,7 +55,7 @@ export default rawVersionHistory => {
 
     // 版本更新内容概要（可选）
     if (currentLine.startsWith('~ ')) {
-      const summary = currentLine.substr(2)
+      const summary = currentLine.slice(2)
 
       if (stringWidth(summary) > MAX_SUMMARY_LENGTH) {
         throw new Error(`摘要不该长于 ${MAX_SUMMARY_LENGTH} 字`)
@@ -68,7 +68,7 @@ export default rawVersionHistory => {
 
     // 版本更新细节项目（必选）
     if (currentLine.startsWith('- ')) {
-      const updateDetail = currentLine.substr(2)
+      const updateDetail = currentLine.slice(2)
 
       currentVersionItem.updateDetails.push(updateDetail)
 

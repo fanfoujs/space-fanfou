@@ -10,7 +10,7 @@ export default (string, matcher, starting = 0) => {
     index = string.indexOf(matcher, starting)
     length = matcher.length
   } else {
-    string = string.substring(starting)
+    string = string.slice(starting)
     const matched = string.match(matcher)
 
     if (matched) {

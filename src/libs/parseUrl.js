@@ -13,6 +13,6 @@ export default memoize(url => {
     ...pick(helper, [ 'protocol', 'origin', 'pathname' ]),
     domain: helper.hostname,
     query: parseQueryString(helper.search),
-    hash: helper.hash.substr(1),
+    hash: helper.hash.slice(1),
   }
 })
