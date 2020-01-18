@@ -1,4 +1,4 @@
-import semver from 'semver'
+import semvergt from 'semver/functions/gt'
 import isLegacyVersion from '@libs/isLegacyVersion'
 
 export default (previousVersion, currentVersion) => {
@@ -6,5 +6,5 @@ export default (previousVersion, currentVersion) => {
   if (!previousVersion) return false
   // 检查到老的 '0.x.x.x' 版本号，但是这个不能直接传给 semver，会报错
   if (isLegacyVersion(previousVersion)) return true
-  return semver.gt(currentVersion, previousVersion)
+  return semvergt(currentVersion, previousVersion)
 }

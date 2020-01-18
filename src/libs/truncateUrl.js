@@ -5,7 +5,7 @@ export default url => {
   const originalLength = url.length
 
   if (originalLength > URL_LENGTH_LIMIT) url = (
-    url.substr(0, URL_LENGTH_LIMIT - URL_ELLIPSIS.length) +
+    url.slice(0, URL_LENGTH_LIMIT - URL_ELLIPSIS.length) +
     URL_ELLIPSIS
   )
 

@@ -47,7 +47,7 @@ export default context => {
     // 因为 .content 的内容可能会被修改（比如展开短链接），也可能包含被截断的链接
     // 而转发的时候应该保留原始消息内容
     const repostLink = select(':scope > .op > .repost', li)
-    const queryString = repostLink.search.substr(1) // 去掉开头的 '?'
+    const queryString = repostLink.search.slice(1) // 去掉开头的 '?'
     const urlSearchParams = new URLSearchParams(queryString)
     const queryMap = Object.fromEntries(urlSearchParams.entries())
     const statusContent = queryMap.status

@@ -5,7 +5,7 @@ import blobToBase64 from '@libs/blobToBase64'
 
 // https://www.flaticon.com/free-icon/download_24156
 // eslint-disable-next-line import/newline-after-import
-const DROP_ICON_URL = require('@assets/images/download.svg')
+import DROP_ICON_URL from '@assets/images/download.svg'
 const CLASSNAME_SHOW_TIP = 'sf-show-dnd-upload-tip'
 
 export default context => {

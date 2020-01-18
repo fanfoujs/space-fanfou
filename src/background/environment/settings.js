@@ -1,4 +1,4 @@
-import semver from 'semver'
+import semvergte from 'semver/functions/gte'
 import deepEqual from 'fast-deep-equal'
 import defined from 'defined'
 import simpleMemoize from 'just-once'
@@ -296,7 +296,7 @@ const settings = {
     // 只在本地版本号大于等于云端版本号时，才写入 sync，避免本地过时的设置值覆盖掉较新的设置值
     const localVersion = getExtensionVersion()
     const syncVersion = await storage.read(SETTINGS_VERSION_STORAGE_KEY, 'sync') || localVersion
-    if (!semver.lt(localVersion, syncVersion)) {
+    if (semvergte(localVersion, syncVersion)) {
       await storage.write(SETTINGS_STORAGE_KEY, newOptionValues, 'sync')
       await storage.write(SETTINGS_VERSION_STORAGE_KEY, localVersion, 'sync')
     }

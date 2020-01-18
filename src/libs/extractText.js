@@ -14,7 +14,7 @@ export default (text, opts) => {
     if (matchedClosing.index === -1) break
     currentIndex = matchedClosing.index + matchedClosing.length
 
-    ret[key] = text.substring(
+    ret[key] = text.slice(
       matchedOpening.index + matchedOpening.length,
       matchedClosing.index,
     )
