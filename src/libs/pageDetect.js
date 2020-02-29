@@ -76,6 +76,11 @@ export function isPhotoEntryPage() {
   return window.location.pathname.startsWith('/photo/')
 }
 
+// 是否为用户单消息页面
+export function isStatusPage() {
+  return window.location.pathname.startsWith('/statuses/')
+}
+
 // 是否为用户收藏页面
 export function isFavoritesPage() {
   return window.location.pathname.startsWith('/favorites/')

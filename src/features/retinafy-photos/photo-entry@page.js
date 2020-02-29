@@ -1,6 +1,5 @@
 import { isPhotoEntryPage } from '@libs/pageDetect'
 import every from '@libs/promiseEvery'
-import { ORIGINAL_PHOTO_WIDTH_LIMIT, RE_ORIGINAL_PHOTO_PARAMS } from '@constants'
 
 export default context => {
   const { elementCollection } = context
@@ -18,9 +17,8 @@ export default context => {
     onLoad() {
       const photo = elementCollection.get('photo')
 
-      photo.src = photo.src.replace(RE_ORIGINAL_PHOTO_PARAMS, '')
-      photo.style.maxWidth = `${ORIGINAL_PHOTO_WIDTH_LIMIT}px`
-      photo.style.boxSizing = 'border-box'
+      photo.src = photo.src.replace(/@596w_1l\.jpg$/, '')
+      photo.style.maxWidth = '596px'
     },
 
     onUnload() {
