@@ -32,6 +32,7 @@ export default () => {
 
     onLoad() {
       intervalId = setInterval(updateTimestamps, INTERVAL_DURATION)
+      updateTimestamps()
     },
 
     onUnload() {
