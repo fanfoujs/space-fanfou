@@ -136,7 +136,7 @@ export default context => {
       return null
     }
 
-    componentWillMount() {
+    componentDidMount() {
       this.favoritedStatusIndicator = document.createElement('span')
       this.favoritedStatusToggler = document.createElement('a')
 

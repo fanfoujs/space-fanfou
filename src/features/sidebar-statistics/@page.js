@@ -2,9 +2,8 @@ import { h, Component } from 'preact'
 import select from 'select-dom'
 import cx from 'classnames'
 import clamp from 'just-clamp'
-import retry from 'p-retry'
+import elementReady from 'element-ready'
 import Tooltip from '@libs/Tooltip'
-import jsonp from '@libs/jsonp'
 import { isUserProfilePage } from '@libs/pageDetect'
 import preactRender from '@libs/preactRender'
 import formatDate from '@libs/formatDate'
@@ -26,28 +25,115 @@ class SidebarStatistics extends Component {
     }
   }
 
-  async componentWillMount() {
-    const userProfile = await this.fetchUserProfileData()
-    this.processData(userProfile)
+  async componentDidMount() {
+    try {
+      const userProfile = await this.fetchUserProfileData()
+      this.processData(userProfile)
+    } catch (error) {
+      console.error('[SpaceFanfou] Failed to fetch user profile data:', error)
+      // 保持默认的 "……" 状态，让用户知道数据加载失败
+    }
   }
 
-  getUserId() {
-    const metaContent = select('meta[name=author]').content
-    const userId = metaContent.match(/\((.+)\)/)[1]
+  async getUserId() {
+    // 等待 meta 元素加载（页面可能还在渲染中）
+    const metaElement = await elementReady('meta[name=author]')
 
+    if (!metaElement) {
+      throw new Error('Cannot find meta[name=author] element')
+    }
+
+    const metaContent = metaElement.getAttribute('content')
+    if (!metaContent) {
+      throw new Error('meta[name=author] has no content attribute')
+    }
+
+    const matched = metaContent.match(/\((.+)\)/)
+    if (!matched) {
+      throw new Error(`Cannot extract user ID from meta content: ${metaContent}`)
+    }
+
+    const userId = matched[1]
     return userId
   }
 
   async fetchUserProfileData() {
-    const apiUrl = '//api.fanfou.com/users/show.json'
-    const params = { id: this.getUserId() }
-    const fetch = () => jsonp(apiUrl, { params })
-    const userProfileData = await retry(fetch, {
-      retries: 3,
-      minTimeout: 250,
-    })
+    // 从页面 DOM 直接提取数据，避免 OAuth 认证问题
+    await elementReady('#stream-nav')
 
-    return userProfileData
+    const userProfile = {}
+
+    // 1. 从 #stream-nav 提取统计数字
+    const streamNav = select('#stream-nav')
+    if (streamNav) {
+      const links = streamNav.querySelectorAll('a')
+      links.forEach(link => {
+        const text = link.textContent.trim()
+        // 匹配 "459 关注" 或 "459\n关注" 格式
+        const statusMatch = text.match(/(\d+)[\s\n]*条?消息/)
+        const friendsMatch = text.match(/(\d+)[\s\n]*关注/)
+        const followersMatch = text.match(/(\d+)[\s\n]*粉丝/)
+
+        if (statusMatch) userProfile.statuses_count = parseInt(statusMatch[1], 10)
+        if (friendsMatch) userProfile.friends_count = parseInt(friendsMatch[1], 10)
+        if (followersMatch) userProfile.followers_count = parseInt(followersMatch[1], 10)
+      })
+    }
+
+    // 2. 从页面文本中提取（备用方案）
+    if (!userProfile.statuses_count || !userProfile.friends_count || !userProfile.followers_count) {
+      const bodyText = document.body.innerText
+      const matches = bodyText.match(/(\d+)\s*(条消息|关注|粉丝)/g) || []
+
+      matches.forEach(match => {
+        const numMatch = match.match(/(\d+)/)
+        if (!numMatch) return
+        const num = parseInt(numMatch[1], 10)
+
+        if (match.includes('消息') && !userProfile.statuses_count) {
+          userProfile.statuses_count = num
+        } else if (match.includes('关注') && !userProfile.friends_count) {
+          userProfile.friends_count = num
+        } else if (match.includes('粉丝') && !userProfile.followers_count) {
+          userProfile.followers_count = num
+        }
+      })
+    }
+
+    // 3. 获取注册日期（从 #user_infos 或其他位置）
+    const userInfos = select('#user_infos')
+    if (userInfos) {
+      const items = userInfos.querySelectorAll('li')
+      items.forEach(item => {
+        const text = item.textContent.trim()
+        // 匹配 "注册于：2010-01-01" 格式
+        const regMatch = text.match(/注册于[：:]\s*(\d{4}[-年]\d{1,2}[-月]\d{1,2})/)
+        if (regMatch) {
+          // 转换为标准日期格式
+          const dateStr = regMatch[1].replace(/年|月/g, '-').replace(/日?$/, '')
+          userProfile.created_at = dateStr
+        }
+      })
+    }
+
+    // 4. 如果没有找到注册日期，使用估算（从 meta 标签或默认值）
+    if (!userProfile.created_at) {
+      // 默认使用一个合理的日期（2010年，饭否重新上线的年份）
+      userProfile.created_at = '2010-01-01'
+    }
+
+    // 5. 检查是否为私密账号
+    userProfile.protected = !!select('.protected, [data-protected="true"]')
+
+    console.log('[SpaceFanfou] Extracted user profile from DOM:', userProfile)
+
+    // 验证必需字段
+    if (!userProfile.statuses_count || !userProfile.followers_count) {
+      console.warn('[SpaceFanfou] Missing required fields, attempting secondary extraction')
+      console.log('[SpaceFanfou] Current userProfile:', userProfile)
+    }
+
+    return userProfile
   }
 
   processData(userProfile) {

@@ -43,7 +43,13 @@ export default () => {
   } ]
 
   function createSharerPopup(url, height) {
-    window.open(url, 'sharer', `toolbar=0,status=0,resizable=0,width=640,height=${height}`)
+    // Service Worker 环境：使用 chrome.windows.create 替代 window.open
+    chrome.windows.create({
+      url,
+      type: 'popup',
+      width: 640,
+      height,
+    })
   }
 
   function registerMenuItems() {

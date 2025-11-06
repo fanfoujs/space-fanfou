@@ -71,7 +71,7 @@ export default context => {
   }
 
   async function onClick(event) {
-    const keywordLink = event.path.find(element => element.matches(SELECTOR_KEYWORD_LINK))
+    const keywordLink = (event.composedPath?.() || event.path || []).find(element => element.matches?.(SELECTOR_KEYWORD_LINK))
     const label = select('.label', keywordLink)
     const keyword = label.textContent.trim()
 

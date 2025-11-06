@@ -4,6 +4,7 @@ import select from 'select-dom'
 import cx from 'classnames'
 import arrayLast from 'array-last'
 import sleep from 'p-sleep'
+import DOMPurify from 'dompurify'
 import { CLASSNAME_CONTAINER } from './constants'
 import { isTimelinePage } from '@libs/pageDetect'
 import requireFanfouLib from '@libs/requireFanfouLib'
@@ -40,7 +41,11 @@ export default context => {
       const li = this.base
 
       // 在这里而不是在 render 里使用 dangerouslySetInnerHTML，可以避免闪烁
-      li.innerHTML = this.props.html
+      // 使用 DOMPurify 防止 XSS 攻击
+      li.innerHTML = DOMPurify.sanitize(this.props.html, {
+        ALLOWED_TAGS: ['a', 'span', 'div', 'img', 'br', 'p', 'strong', 'em', 'b', 'i', 'u'],
+        ALLOWED_ATTR: ['href', 'class', 'id', 'src', 'alt', 'title', 'rel', 'target', 'data-href', 'data-title', 'data-img', 'data-name', 'data-user', 'style'],
+      })
 
       window.FF.app.Stream.attach(li)
 

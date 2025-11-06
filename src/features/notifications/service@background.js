@@ -1,7 +1,5 @@
 import wretch from 'wretch'
-import select from 'select-dom'
 import mapValues from 'just-map-values'
-import parseHTML from '@libs/parseHTML'
 import timestamp from '@libs/timestamp'
 import log from '@libs/log'
 
@@ -20,16 +18,13 @@ export default context => {
   let isVisitingFanfou = false
   const userMap = {}
 
+  // Service Worker 环境：直接在 HTML 字符串上使用正则表达式
   const itemsToCheck = {
     unreadMentions: {
       relatedOptionName: 'notifyUnreadMentions',
-      findElement(document) {
-        return select('h2 a[href="/mentions"]', document)
-      },
-      extract(element) {
+      extractFromHTML(html) {
         const re = /@我的\((\d+)\)/
-        const matched = element.textContent.match(re)
-
+        const matched = html.match(re)
         return matched?.[1]
       },
       template: count => `你被 @ 了 ${count} 次`,
@@ -39,13 +34,9 @@ export default context => {
 
     unreadPrivateMessages: {
       relatedOptionName: 'notifyUnreadPrivateMessages',
-      findElement(document) {
-        return select('#nav [accesskey="7"]', document)
-      },
-      extract(element) {
+      extractFromHTML(html) {
         const re = /私信\((\d+)\)/
-        const matched = element.textContent.match(re)
-
+        const matched = html.match(re)
         return matched?.[1]
       },
       template: count => `你有 ${count} 封未读私信`,
@@ -55,16 +46,9 @@ export default context => {
 
     newFollowers: {
       relatedOptionName: 'notifyNewFollowers',
-      findElement(document) {
-        return select('p > span.a > a[href^="/friend.add/"]', document)
-          ?.parentElement // -> span.a
-          ?.parentElement // -> p
-          ?.previousElementSibling
-      },
-      extract(element) {
+      extractFromHTML(html) {
         const re = /(\d+) 个人关注了你/
-        const matched = element.textContent.match(re)
-
+        const matched = html.match(re)
         return matched?.[1]
       },
       template: count => `有 ${count} 个新饭友关注了你`,
@@ -74,13 +58,9 @@ export default context => {
 
     newFollowerRequests: {
       relatedOptionName: 'notifyNewFollowers',
-      findElement(document) {
-        return select('a[href="/friend.request"]', document)?.parentElement
-      },
-      extract(element) {
+      extractFromHTML(html) {
         const re = /(\d+) 个人申请关注你，去看看是谁/
-        const matched = element.textContent.match(re)
-
+        const matched = html.match(re)
         return matched?.[1]
       },
       template: count => `有 ${count} 个新饭友请求关注你`,
@@ -110,38 +90,38 @@ export default context => {
   async function fetchFanfouMobileDOM() {
     try {
       const html = await wretch(URL_FANFOU_M_HOME).get().setTimeout(AJAX_TIMEOUT).text()
-      const document = parseHTML(html)
-
-      return document
+      // Service Worker 环境：直接返回 HTML 字符串
+      return html
     } catch (error) {
       log.info(`获取 m.fanfou.com 页面源码失败 @ ${timestamp()}`, error)
       return null
     }
   }
 
-  function checkIfLoggedIn(document) {
-    return select.exists('#nav', document)
+  function checkIfLoggedIn(html) {
+    // Service Worker 环境：用正则检查 HTML 字符串
+    return html.includes('id="nav"') || html.includes('id=\'nav\'')
   }
 
-  function extractUserId(document) {
-    const userProfilePageLink = select('#nav [accesskey="1"]', document)
-    const userId = unescape(userProfilePageLink.getAttribute('href')).replace('/', '')
-
-    return userId
+  function extractUserId(html) {
+    // Service Worker 环境：用正则从 HTML 提取用户 ID
+    // 查找 <a accesskey="1" href="/用户ID"> 格式的链接
+    const match = html.match(/accesskey=["']1["'][^>]*href=["']\/([^"'\/]+)["']|href=["']\/([^"'\/]+)["'][^>]*accesskey=["']1["']/)
+    const userId = match?.[1] || match?.[2]
+    return userId ? unescape(userId) : null
   }
 
   function getCountCollectorForUser(userId) {
     return userMap[userId] || (userMap[userId] = new CountCollector(userId))
   }
 
-  function extract(document, countCollector) {
+  function extract(html, countCollector) {
     countCollector.previousCounts = countCollector.currentCounts
     countCollector.currentCounts = countCollector.createEmptyCounts()
 
+    // Service Worker 环境：直接在 HTML 字符串上提取
     for (const [ name, opts ] of Object.entries(itemsToCheck)) {
-      const element = opts.findElement(document)
-      const extracted = element && opts.extract(element)
-
+      const extracted = opts.extractFromHTML(html)
       countCollector.currentCounts[name] = parseInt(extracted, 10) || 0
     }
   }
@@ -198,13 +178,13 @@ export default context => {
   async function check() {
     cancelTimer()
 
-    const document = await fetchFanfouMobileDOM()
+    const html = await fetchFanfouMobileDOM()
 
-    if (document && checkIfLoggedIn(document)) {
-      const currentlyLoggedInUserId = extractUserId(document)
+    if (html && checkIfLoggedIn(html)) {
+      const currentlyLoggedInUserId = extractUserId(html)
       const countCollector = getCountCollectorForUser(currentlyLoggedInUserId)
 
-      extract(document, countCollector)
+      extract(html, countCollector)
       notify(countCollector)
     }
 

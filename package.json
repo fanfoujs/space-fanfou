@@ -37,6 +37,7 @@
     "delegated-events": "^1.0.10",
     "dom-chef": "^3.6.0",
     "dom-element-is-natively-editable": "^1.0.4",
+    "dompurify": "^3.3.0",
     "dot-prop": "^5.0.0",
     "easings-css": "^1.0.0",
     "element-ready": "^4.1.0",

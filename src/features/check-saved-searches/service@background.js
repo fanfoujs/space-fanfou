@@ -21,6 +21,17 @@ const CHECKING_INTERVAL = 5 * 60 * 1000
 const MAX_PAGES_TO_SEARCH = 10
 
 export default context => {
+  // Service Worker 环境检测：如果 parseHTML 不可用（会抛出错误），则禁用此功能
+  // 这个功能需要大量 DOM 解析，在 Service Worker 中无法运行
+  try {
+    parseHTML('<div></div>')
+  } catch (error) {
+    log.info('check-saved-searches 功能在 Service Worker 环境中不可用（需要 DOM 解析）')
+    return {
+      onLoad() {},
+      onUnload() {},
+    }
+  }
   const { requireModules, readOptionValue } = context
   const { storage, notification } = requireModules([ 'storage', 'notification' ])
 
