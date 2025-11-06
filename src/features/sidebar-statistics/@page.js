@@ -59,20 +59,23 @@ class SidebarStatistics extends Component {
 
   async fetchUserProfileData() {
     // 从页面 DOM 直接提取数据，避免 OAuth 认证问题
-    await elementReady('#stream-nav')
+    await elementReady('#info')
 
     const userProfile = {}
 
-    // 1. 从 #stream-nav 提取统计数字
-    const streamNav = select('#stream-nav')
-    if (streamNav) {
-      const links = streamNav.querySelectorAll('a')
+    // 1. 从 #info 区域的链接提取统计数字
+    const info = select('#info')
+    if (info) {
+      const links = info.querySelectorAll('li a')
       links.forEach(link => {
         const text = link.textContent.trim()
-        // 匹配 "459 关注" 或 "459\n关注" 格式
-        const statusMatch = text.match(/(\d+)[\s\n]*条?消息/)
-        const friendsMatch = text.match(/(\d+)[\s\n]*关注/)
-        const followersMatch = text.match(/(\d+)[\s\n]*粉丝/)
+
+        // 匹配 "22102 消息" 格式
+        const statusMatch = text.match(/^(\d+)\s*消息$/)
+        // 匹配 "171 他关注的人" 格式
+        const friendsMatch = text.match(/^(\d+)\s*他关注的人$/)
+        // 匹配 "459 关注他的人" 格式
+        const followersMatch = text.match(/^(\d+)\s*关注他的人$/)
 
         if (statusMatch) userProfile.statuses_count = parseInt(statusMatch[1], 10)
         if (friendsMatch) userProfile.friends_count = parseInt(friendsMatch[1], 10)
@@ -80,24 +83,36 @@ class SidebarStatistics extends Component {
       })
     }
 
-    // 2. 从页面文本中提取（备用方案）
+    // 2. 从 .stabs 标签页提取消息数（备用方案）
+    if (!userProfile.statuses_count) {
+      const stabs = select('.stabs')
+      if (stabs) {
+        // 匹配 "消息 (22102)" 格式
+        const statusMatch = stabs.textContent.match(/消息\s*\((\d+)\)/)
+        if (statusMatch) {
+          userProfile.statuses_count = parseInt(statusMatch[1], 10)
+        }
+      }
+    }
+
+    // 3. 从页面文本中提取（最后备用方案）
     if (!userProfile.statuses_count || !userProfile.friends_count || !userProfile.followers_count) {
       const bodyText = document.body.innerText
-      const matches = bodyText.match(/(\d+)\s*(条消息|关注|粉丝)/g) || []
 
-      matches.forEach(match => {
-        const numMatch = match.match(/(\d+)/)
-        if (!numMatch) return
-        const num = parseInt(numMatch[1], 10)
+      if (!userProfile.statuses_count) {
+        const statusMatch = bodyText.match(/(\d+)\s*消息/)
+        if (statusMatch) userProfile.statuses_count = parseInt(statusMatch[1], 10)
+      }
 
-        if (match.includes('消息') && !userProfile.statuses_count) {
-          userProfile.statuses_count = num
-        } else if (match.includes('关注') && !userProfile.friends_count) {
-          userProfile.friends_count = num
-        } else if (match.includes('粉丝') && !userProfile.followers_count) {
-          userProfile.followers_count = num
-        }
-      })
+      if (!userProfile.friends_count) {
+        const friendsMatch = bodyText.match(/(\d+)\s*他关注的人/)
+        if (friendsMatch) userProfile.friends_count = parseInt(friendsMatch[1], 10)
+      }
+
+      if (!userProfile.followers_count) {
+        const followersMatch = bodyText.match(/(\d+)\s*关注他的人/)
+        if (followersMatch) userProfile.followers_count = parseInt(followersMatch[1], 10)
+      }
     }
 
     // 3. 获取注册日期（从 #user_infos 或其他位置）
@@ -124,14 +139,6 @@ class SidebarStatistics extends Component {
 
     // 5. 检查是否为私密账号
     userProfile.protected = !!select('.protected, [data-protected="true"]')
-
-    console.log('[SpaceFanfou] Extracted user profile from DOM:', userProfile)
-
-    // 验证必需字段
-    if (!userProfile.statuses_count || !userProfile.followers_count) {
-      console.warn('[SpaceFanfou] Missing required fields, attempting secondary extraction')
-      console.log('[SpaceFanfou] Current userProfile:', userProfile)
-    }
 
     return userProfile
   }
