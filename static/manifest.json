@@ -1,10 +1,10 @@
 {
   "name": "太空饭否",
   "description": "太空饭否是一个免费、用心的开源项目，是目前最强大最好用的饭否浏览器扩展。可以给饭否添加回复和转发展开、桌面通知、浮动输入框、多用户切换、消息批量管理、自动翻页等功能，并且使饭否页面变得更美更舒心，符合您的使用习惯。",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "version_name": "",
-  "manifest_version": 2,
-  "minimum_chrome_version": "73",
+  "manifest_version": 3,
+  "minimum_chrome_version": "88",
   "icons": {
     "16": "icons/icon-16.png",
     "24": "icons/icon-24.png",
@@ -14,23 +14,27 @@
     "256": "icons/icon-256.png"
   },
   "background": {
-    "scripts": [ "background.js" ]
+    "service_worker": "background.js"
   },
   "content_scripts": [ {
     "js": [ "content.js" ],
     "matches": [ "http://fanfou.com/*", "https://fanfou.com/*" ],
     "run_at": "document_start"
   } ],
-  "page_action": {
+  "action": {
     "default_title": "太空饭否",
     "default_popup": "settings.html"
   },
   "options_page": "settings.html",
-  "permissions": [ "http://*.fanfou.com/", "https://*.fanfou.com/", "https://setq.me/", "tabs", "notifications", "contextMenus", "storage" ],
-  "content_security_policy": "script-src 'self'; object-src 'none'; connect-src 'self' https://fanfou.com https://*.fanfou.com http://fanfou.com http://*.fanfou.com https://setq.me",
+  "permissions": [ "tabs", "notifications", "contextMenus", "storage", "offscreen" ],
+  "host_permissions": [ "http://*.fanfou.com/", "https://*.fanfou.com/", "https://setq.me/" ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'"
+  },
   "web_accessible_resources": [
-    "page.js",
-    "page.css",
-    "assets/*"
+    {
+      "resources": [ "page.js", "page.css", "assets/*", "offscreen.html" ],
+      "matches": [ "http://fanfou.com/*", "https://fanfou.com/*" ]
+    }
   ]
 }

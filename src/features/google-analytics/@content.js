@@ -1,21 +1,8 @@
-import loadAsset, { appendToRoot } from '@libs/loadAsset'
-
-const code = `
-!(function setupGoogleAnalytics() {
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-84490018-1', 'auto');
-  ga('send', 'pageview');
-})();
-`
+// Google Analytics 已禁用 - Manifest V3 不支持远程托管的代码
+// 个人使用版本不需要分析功能
 
 export default () => ({
   onLoad() {
-    if (process.env.NODE_ENV === 'production') {
-      loadAsset({ type: 'script', code, mount: appendToRoot }).remove()
-    }
+    // Google Analytics 功能已移除，以符合 Manifest V3 要求
   },
 })
