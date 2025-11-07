@@ -101,6 +101,10 @@ export default context => {
     }
 
     renderFavoritedStatusIndicator() {
+      if (!this.favoritedStatusIndicator || !this.favoritedStatusIndicator.parentElement) {
+        return
+      }
+
       const id = 'sf-favorited-status-indicator'
       const className = cx({
         'sf-is-favorited': this.state.isFavorited,
@@ -114,6 +118,10 @@ export default context => {
     }
 
     renderFavoritedStatusToggler() {
+      if (!this.favoritedStatusToggler || !this.favoritedStatusToggler.parentElement) {
+        return
+      }
+
       const id = 'sf-favorited-status-toggler'
       const title = this.state.isFavorited
         ? FAVED_TIP
@@ -140,15 +148,26 @@ export default context => {
       this.favoritedStatusIndicator = document.createElement('span')
       this.favoritedStatusToggler = document.createElement('a')
 
-      select('#avatar').append(this.favoritedStatusIndicator)
-      select('#panel h1').append(this.favoritedStatusToggler)
+      const avatar = select('#avatar')
+      const panelHeading = select('#panel h1')
+
+      if (avatar) {
+        avatar.append(this.favoritedStatusIndicator)
+      }
+      if (panelHeading) {
+        panelHeading.append(this.favoritedStatusToggler)
+      }
 
       registerBroadcastListener(this.onStorageChange)
     }
 
     componentWillUnmount() {
-      this.favoritedStatusIndicator.remove()
-      this.favoritedStatusToggler.remove()
+      if (this.favoritedStatusIndicator && this.favoritedStatusIndicator.parentElement) {
+        this.favoritedStatusIndicator.remove()
+      }
+      if (this.favoritedStatusToggler && this.favoritedStatusToggler.parentElement) {
+        this.favoritedStatusToggler.remove()
+      }
 
       this.favoritedStatusIndicator = this.favoritedStatusToggler = null
 
@@ -170,7 +189,9 @@ export default context => {
     },
 
     onUnload() {
-      unmount()
+      if (typeof unmount === 'function') {
+        unmount()
+      }
       unmount = null
     },
   }

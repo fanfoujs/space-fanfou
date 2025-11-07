@@ -299,7 +299,9 @@ export default context => {
     },
 
     onUnload() {
-      unmount()
+      if (typeof unmount === 'function') {
+        unmount()
+      }
       unmount = null
     },
   }
