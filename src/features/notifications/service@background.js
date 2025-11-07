@@ -234,6 +234,7 @@ export default context => {
 
   return {
     onLoad() {
+      console.log('[SpaceFanfou] notifications: onLoad()')
       check()
       chrome.tabs.onActivated.addListener(onActivated)
       chrome.tabs.onUpdated.addListener(onUpdated)
@@ -242,6 +243,7 @@ export default context => {
     },
 
     onUnload() {
+      console.log('[SpaceFanfou] notifications: onUnload()')
       cancelTimer()
       chrome.tabs.onActivated.removeListener(onActivated)
       chrome.tabs.onUpdated.removeListener(onUpdated)

@@ -282,6 +282,7 @@ export default context => {
 
   return {
     onLoad() {
+      console.log('[SpaceFanfou] check-saved-searches: onLoad()')
       check()
       // 使用 chrome.alarms API 替代 setInterval（Service Worker 兼容）
       chrome.alarms.create(ALARM_NAME, {
@@ -295,6 +296,7 @@ export default context => {
     },
 
     onUnload() {
+      console.log('[SpaceFanfou] check-saved-searches: onUnload()')
       previousLoggedInUserId = null
 
       chrome.alarms.clear(ALARM_NAME)
