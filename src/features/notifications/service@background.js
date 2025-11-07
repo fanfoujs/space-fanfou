@@ -10,11 +10,11 @@ export default context => {
   const URL_FANFOU_WEB_ORIGIN = 'https://fanfou.com'
   const URL_FANFOU_M_HOME = 'https://m.fanfou.com/home'
 
-  const CHECK_INTERVAL = 30 * 1000
+  const CHECK_INTERVAL_MINUTES = 1 // Chrome alarms 最小间隔为 1 分钟
   const AJAX_TIMEOUT = 10 * 1000
   const NOTIFICATION_TIMEOUT = 15 * 1000
+  const ALARM_NAME = 'notifications-check'
 
-  let timerId
   let isVisitingFanfou = false
   const userMap = {}
 
@@ -188,17 +188,24 @@ export default context => {
       notify(countCollector)
     }
 
-    setTimer()
+    // 不需要再次调用 setTimer，chrome.alarms 会自动重复
   }
 
   function setTimer() {
-    timerId = setTimeout(check, CHECK_INTERVAL)
+    // 使用 chrome.alarms API 替代 setTimeout（Service Worker 兼容）
+    chrome.alarms.create(ALARM_NAME, {
+      delayInMinutes: CHECK_INTERVAL_MINUTES,
+      periodInMinutes: CHECK_INTERVAL_MINUTES,
+    })
   }
 
   function cancelTimer() {
-    if (timerId) {
-      clearTimeout(timerId)
-      timerId = null
+    chrome.alarms.clear(ALARM_NAME)
+  }
+
+  function onAlarm(alarm) {
+    if (alarm.name === ALARM_NAME) {
+      check()
     }
   }
 
@@ -230,12 +237,15 @@ export default context => {
       check()
       chrome.tabs.onActivated.addListener(onActivated)
       chrome.tabs.onUpdated.addListener(onUpdated)
+      chrome.alarms.onAlarm.addListener(onAlarm)
+      setTimer()
     },
 
     onUnload() {
       cancelTimer()
       chrome.tabs.onActivated.removeListener(onActivated)
       chrome.tabs.onUpdated.removeListener(onUpdated)
+      chrome.alarms.onAlarm.removeListener(onAlarm)
     },
   }
 }

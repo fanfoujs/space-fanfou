@@ -26,7 +26,7 @@
     "default_popup": "settings.html"
   },
   "options_page": "settings.html",
-  "permissions": [ "tabs", "notifications", "contextMenus", "storage", "offscreen", "scripting" ],
+  "permissions": [ "tabs", "notifications", "contextMenus", "storage", "offscreen", "scripting", "alarms" ],
   "host_permissions": [ "http://*.fanfou.com/", "https://*.fanfou.com/", "https://setq.me/" ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'none'"

@@ -17,7 +17,8 @@ import findElementWithSpecifiedContentInArray from '@libs/findElementWithSpecifi
 import isNaN from '@libs/isNaN'
 import log from '@libs/log'
 
-const CHECKING_INTERVAL = 5 * 60 * 1000
+const CHECKING_INTERVAL_MINUTES = 5 // 5 分钟
+const ALARM_NAME = 'check-saved-searches'
 const MAX_PAGES_TO_SEARCH = 10
 
 export default context => {
@@ -35,7 +36,6 @@ export default context => {
   const { requireModules, readOptionValue } = context
   const { storage, notification } = requireModules([ 'storage', 'notification' ])
 
-  let intervalId
   let previousLoggedInUserId
 
   async function readNewTimestampUserMap() {
@@ -274,10 +274,21 @@ export default context => {
     await markKeywordAsRead(userId, keyword)
   }
 
+  function onAlarm(alarm) {
+    if (alarm.name === ALARM_NAME) {
+      check()
+    }
+  }
+
   return {
     onLoad() {
       check()
-      intervalId = setInterval(check, CHECKING_INTERVAL)
+      // 使用 chrome.alarms API 替代 setInterval（Service Worker 兼容）
+      chrome.alarms.create(ALARM_NAME, {
+        delayInMinutes: CHECKING_INTERVAL_MINUTES,
+        periodInMinutes: CHECKING_INTERVAL_MINUTES,
+      })
+      chrome.alarms.onAlarm.addListener(onAlarm)
 
       messaging.registerHandler(SAVED_SEARCHES_READ, onRead)
       messaging.registerHandler(SAVED_SEARCHES_WRITE, onWrite)
@@ -286,8 +297,8 @@ export default context => {
     onUnload() {
       previousLoggedInUserId = null
 
-      clearInterval(intervalId)
-      intervalId = null
+      chrome.alarms.clear(ALARM_NAME)
+      chrome.alarms.onAlarm.removeListener(onAlarm)
 
       messaging.unregisterHandler(SAVED_SEARCHES_READ, onRead)
       messaging.unregisterHandler(SAVED_SEARCHES_WRITE, onWrite)
