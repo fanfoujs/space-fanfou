@@ -11,6 +11,7 @@ import migrate from '@libs/migrate'
 import isExtensionUpgraded from '@libs/isExtensionUpgraded'
 import { readJSONFromLocalStorage } from '@libs/localStorageWrappers'
 import getExtensionVersion from '@libs/getExtensionVersion'
+import log from '@libs/log'
 import omitBy from '@libs/omitBy'
 import {
   SETTINGS_READ,
@@ -173,7 +174,17 @@ async function checkIfExtensionUpgraded() {
     storageAreaName: 'local',
     migrationId: 'extension-version/legacy-to-1.0.0',
     async executor() {
-      const legacyVersion = localStorage.getItem('sf_version')
+      let legacyVersion = null
+
+      if (typeof localStorage !== 'undefined') {
+        try {
+          legacyVersion = localStorage.getItem('sf_version')
+        } catch (error) {
+          log.error('[SpaceFanfou] Failed to read legacy version from localStorage:', error)
+        }
+      } else {
+        log.info('[SpaceFanfou] localStorage unavailable, skip legacy version migration')
+      }
 
       if (legacyVersion) {
         await storage.write(

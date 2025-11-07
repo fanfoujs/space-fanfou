@@ -1,5 +1,6 @@
 import { h } from 'dom-chef'
 import once from 'just-once'
+import { setAttachment } from './attachmentStore'
 import replaceExtensionOrigin from '@libs/replaceExtensionOrigin'
 import blobToBase64 from '@libs/blobToBase64'
 
@@ -138,6 +139,13 @@ export default context => {
       // 异步转换 base64，添加错误处理
       const base64 = await blobToBase64(file)
       updateBase64.value = base64
+      updateBase64.setAttribute('value', base64)
+
+      setAttachment({
+        file,
+        filename: file.name,
+        source: 'drag-and-drop',
+      })
     } catch (error) {
       console.error('[SpaceFanfou] DND upload failed:', error)
       // 失败时清理状态

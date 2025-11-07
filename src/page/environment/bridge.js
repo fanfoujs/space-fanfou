@@ -17,6 +17,11 @@ function eventHandler(event) {
   } else if (from === 'background') {
     const d = deferreds[senderId]
 
+    if (!d) {
+      console.warn('[SpaceFanfou] bridge: missing deferred for sender', senderId)
+      return
+    }
+
     d.resolve(message)
     delete deferreds[senderId]
   }

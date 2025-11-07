@@ -3,6 +3,7 @@ import triggerEvent from 'compat-trigger-event'
 import objectToFormData from 'object-to-formdata'
 import safeJSONParse from 'safe-json-parse'
 import flush from 'just-flush'
+import { getAttachment, clearAttachment } from './attachmentStore'
 import { isHomePage } from '@libs/pageDetect'
 import parseHTML from '@libs/parseHTML'
 import isHotkey from '@libs/isHotkey'
@@ -74,6 +75,7 @@ export default context => {
     triggerEvent(textarea, 'change')
     uploadCloseHandle.click()
     submitButton.value = '发送'
+    clearAttachment()
   }
 
   async function refreshToken() {
@@ -97,6 +99,10 @@ export default context => {
 
   function extractFormData() {
     const form = elementCollection.get('form')
+    const storedAttachment = getAttachment()
+    const domAttachment = form.elements.picture.files[0]
+    const attachmentFile = domAttachment || storedAttachment?.file || null
+
     let formDataJson = {
       ajax: 'yes',
       token: form.elements.token.value,
@@ -109,11 +115,18 @@ export default context => {
       // 通过拖放添加的图片
       photo_base64: form.elements.photo_base64.value, // eslint-disable-line camelcase
       // 通过选择文件对话框添加的图片
-      picture: form.elements.picture.files[0],
+      picture: domAttachment,
       in_reply_to_status_id: form.elements.in_reply_to_status_id.value, // eslint-disable-line camelcase
       repost_status_id: form.elements.repost_status_id.value, // eslint-disable-line camelcase
       location: form.elements.location?.value,
     }
+    if (attachmentFile) {
+      formDataJson.picture = attachmentFile
+      formDataJson.photo_base64 = null // eslint-disable-line camelcase
+      formDataJson.desc = formDataJson.desc || formDataJson.content || ''
+      formDataJson.action = API_ACTION_UPLOAD_IMAGE
+    }
+
     const isImageAttached = !!(formDataJson.photo_base64 || formDataJson.picture)
 
     // 偶尔出现没有图片需要上传，但是部分字段需要调整的情况
@@ -181,9 +194,12 @@ export default context => {
       // 总是先刷新 token，避免因 token 过期导致发送消息失败
       await refreshToken()
 
-      const extractedData = extractFormData()
-      isImageAttached = extractedData.isImageAttached
-      formDataJson = extractedData.formDataJson
+      const {
+        isImageAttached: extractedIsImageAttached,
+        formDataJson: extractedFormDataJson,
+      } = extractFormData()
+      isImageAttached = extractedIsImageAttached
+      formDataJson = extractedFormDataJson
       const url = isImageAttached ? API_URL_UPLOAD_IMAGE : API_URL_PLAIN_MESSAGE
       startTime = Date.now()
 

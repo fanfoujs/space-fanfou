@@ -1,3 +1,4 @@
+import { clearAttachment } from './attachmentStore'
 import truncateFilename from '@libs/truncateFilename'
 
 const CLASSNAME_IMAGE_ATTACHED = 'sf-image-attached'
@@ -39,6 +40,13 @@ export default context => {
   }
 
   function onClickClose() {
+    const { uploadBase64, uploadFile, uploadFilename } = elementCollection.getAll()
+
+    uploadBase64.value = ''
+    uploadBase64.setAttribute('value', '')
+    uploadFile.value = ''
+    uploadFilename.textContent = ''
+    clearAttachment()
     toggleImageAttachedState(false)
   }
 
