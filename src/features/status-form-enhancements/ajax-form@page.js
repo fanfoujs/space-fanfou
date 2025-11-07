@@ -171,16 +171,22 @@ export default context => {
     if (isSubmitting) return
     toggleState(true)
 
-    // 总是先刷新 token，避免因 token 过期导致发送消息失败
-    await refreshToken()
-
-    const { isImageAttached, formDataJson } = extractFormData()
-    const url = isImageAttached ? API_URL_UPLOAD_IMAGE : API_URL_PLAIN_MESSAGE
-    const startTime = Date.now()
     let response
-    let isSuccess
+    let isSuccess = false
+    let isImageAttached = false
+    let formDataJson = {}
+    let startTime = Date.now()
 
     try {
+      // 总是先刷新 token，避免因 token 过期导致发送消息失败
+      await refreshToken()
+
+      const extractedData = extractFormData()
+      isImageAttached = extractedData.isImageAttached
+      formDataJson = extractedData.formDataJson
+      const url = isImageAttached ? API_URL_UPLOAD_IMAGE : API_URL_PLAIN_MESSAGE
+      startTime = Date.now()
+
       response = await performAjaxRequest(url, formDataJson, isImageAttached, event => {
         if (!event.lengthComputable) return
         if (event.total < 50 * 1024) return // 过小的文件不显示上传进度
@@ -192,9 +198,12 @@ export default context => {
       })
       isSuccess = !!response?.status
     } catch (error) {
+      console.error('[SpaceFanfou] postMessage failed:', error)
       isSuccess = false
+    } finally {
+      // 无论成功还是失败，都恢复 textarea 状态
+      toggleState(false)
     }
-    toggleState(false)
 
     if (isSuccess) {
       notification.create(
