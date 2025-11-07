@@ -43,7 +43,7 @@ export default () => {
   } ]
 
   function createSharerPopup(url, height) {
-    // Service Worker 环境：使用 chrome.windows.create 替代 window.open
+    // Service Worker 兼容：使用 chrome.windows.create 替代 window.open
     chrome.windows.create({
       url,
       type: 'popup',

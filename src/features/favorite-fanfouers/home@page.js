@@ -199,7 +199,7 @@ export default context => {
       if (!event.shiftKey) return
       event.preventDefault()
 
-      const li = (event.composedPath?.() || event.path || []).find(element => element.matches?.(`.${CLASSNAME_ITEM}`))
+      const li = event.path.find(element => element.matches(`.${CLASSNAME_ITEM}`))
       const friendsData = [ ...this.state.friendsData ]
 
       await fadeOut(li, 400)
@@ -299,9 +299,7 @@ export default context => {
     },
 
     onUnload() {
-      if (typeof unmount === 'function') {
-        unmount()
-      }
+      unmount()
       unmount = null
     },
   }

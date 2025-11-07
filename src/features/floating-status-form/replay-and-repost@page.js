@@ -86,7 +86,7 @@ export default context => {
     event.preventDefault()
 
     const { form, textarea } = elementCollection.getAll()
-    const li = (event.composedPath?.() || event.path || []).find(element => element.tagName?.toLowerCase() === 'li')
+    const li = event.path.find(element => element.tagName.toLowerCase() === 'li')
     const authorElement = select('.author', li)
     const targetStatusId = extractStatusId(li)
     const targetStatusAuthorNickname = '@' + authorElement.textContent

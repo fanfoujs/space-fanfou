@@ -168,7 +168,7 @@ export default context => {
   }
 
   function getRelatedLiFromEventObject(event) {
-    return (event.composedPath?.() || event.path || []).find(element => element.matches?.('#stream > ol > li'))
+    return event.path.find(element => element.matches?.('#stream > ol > li'))
   }
 
   function onClick(event) {

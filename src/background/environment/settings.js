@@ -173,16 +173,7 @@ async function checkIfExtensionUpgraded() {
     storageAreaName: 'local',
     migrationId: 'extension-version/legacy-to-1.0.0',
     async executor() {
-      // Service Worker 环境：localStorage 不可用，使用 try-catch 安全包装
-      let legacyVersion = null
-      try {
-        if (typeof localStorage !== 'undefined') {
-          legacyVersion = localStorage.getItem('sf_version')
-        }
-      } catch (error) {
-        // localStorage 在 Service Worker 中不可用，跳过迁移
-        console.info('[SpaceFanfou] localStorage 不可用，跳过版本迁移')
-      }
+      const legacyVersion = localStorage.getItem('sf_version')
 
       if (legacyVersion) {
         await storage.write(
@@ -263,9 +254,8 @@ function listenOnPageCoonect() {
     const { tab } = port.sender
 
     if (tab && isFanfouWebUrl(tab.url)) {
-      // 使 action 点击后可以显示设置页而不是弹出菜单
-      // Manifest V3: 使用 chrome.action 替代废弃的 chrome.pageAction
-      chrome.action.enable(tab.id)
+      // 使 pageAction 点击后可以显示设置页而不是弹出菜单
+      chrome.pageAction.show(tab.id)
     }
   })
 }

@@ -17,10 +17,8 @@ function eventHandler(event) {
   } else if (from === 'background') {
     const d = deferreds[senderId]
 
-    if (d) {
-      d.resolve(message)
-      delete deferreds[senderId]
-    }
+    d.resolve(message)
+    delete deferreds[senderId]
   }
 }
 

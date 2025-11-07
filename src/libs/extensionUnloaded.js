@@ -1,30 +1,19 @@
 import { EXTENSION_UNLOADED_EVENT_TYPE } from '@constants'
 
-/// #if ENV_BACKGROUND
-// Service Worker 环境：使用简单的回调数组替代 window 事件
-const listeners = []
+// Service Worker 兼容：检测 window 对象是否存在
+const hasWindow = typeof window !== 'undefined'
 
 export default {
   trigger() {
-    // 触发所有监听器
-    listeners.forEach(fn => fn())
-    listeners.length = 0 // 清空（once: true 行为）
-  },
+    if (!hasWindow) return
 
-  addListener(fn) {
-    listeners.push(fn)
-  },
-}
-/// #else
-// Content/Page 环境：使用 window 事件
-export default {
-  trigger() {
     const event = new CustomEvent(EXTENSION_UNLOADED_EVENT_TYPE)
     window.dispatchEvent(event)
   },
 
   addListener(fn) {
+    if (!hasWindow) return
+
     window.addEventListener(EXTENSION_UNLOADED_EVENT_TYPE, fn, { once: true })
   },
 }
-/// #endif

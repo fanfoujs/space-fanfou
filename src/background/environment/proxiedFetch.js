@@ -12,7 +12,6 @@ function registerHandler() {
     const { url, query, responseType = 'text' } = payload
     let error, responseText, responseJSON
     let w = wretch(url)
-      .options({ credentials: 'include' })  // 确保携带 cookies
 
     if (query) w = w.query(query)
 

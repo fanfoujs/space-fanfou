@@ -5,8 +5,8 @@ import proxiedFetch from './proxiedFetch'
 import proxiedAudio from './proxiedAudio'
 import proxiedCreateTab from './proxiedCreateTab'
 
-// Manifest V3 兼容的 content script 注入
-// 替换 webext-inject-on-install（使用了废弃的 chrome.tabs.executeScript）
+// Manifest V3 compatible content script injection
+// Replaces webext-inject-on-install (uses deprecated chrome.tabs.executeScript)
 async function injectContentScriptsOnInstall() {
   const manifest = chrome.runtime.getManifest()
   const scripts = manifest.content_scripts || []
@@ -16,7 +16,7 @@ async function injectContentScriptsOnInstall() {
 
     for (const tab of tabs) {
       try {
-        // 使用 Manifest V3 的 chrome.scripting API
+        // Use Manifest V3's chrome.scripting API
         if (script.js) {
           await chrome.scripting.executeScript({
             target: { tabId: tab.id, allFrames: script.all_frames },
@@ -30,7 +30,7 @@ async function injectContentScriptsOnInstall() {
           })
         }
       } catch (error) {
-        // 忽略已注入或无权限的 tab（如 chrome:// 页面）
+        // Ignore already injected or unauthorized tabs (like chrome:// pages)
         console.info('[SpaceFanfou] Skip inject on tab', tab.id, ':', error.message)
       }
     }
@@ -38,17 +38,17 @@ async function injectContentScriptsOnInstall() {
 }
 
 export default async function createBackgroundEnvironment() {
-  // 先完成所有初始化，确保 message handlers 都已注册
+  // Complete all initialization first to ensure message handlers are registered
   await Promise.all([
     messaging.install(),
     storage.install(),
-    settings.install(),      // ← 确保 SETTINGS_READ_ALL handler 已注册
+    settings.install(),      // ← Ensure SETTINGS_READ_ALL handler is registered
     proxiedFetch.install(),
     proxiedAudio.install(),
     proxiedCreateTab.install(),
   ])
 
-  // 然后再注入 content scripts（避免消息发送早于 handler 注册）
+  // Then inject content scripts (avoid sending messages before handler registration)
   await injectContentScriptsOnInstall()
 
   return { messaging, settings }
