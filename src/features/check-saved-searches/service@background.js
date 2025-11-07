@@ -277,7 +277,7 @@ export default context => {
   return {
     onLoad() {
       check()
-      setInterval(check, CHECKING_INTERVAL)
+      intervalId = setInterval(check, CHECKING_INTERVAL)
 
       messaging.registerHandler(SAVED_SEARCHES_READ, onRead)
       messaging.registerHandler(SAVED_SEARCHES_WRITE, onWrite)
