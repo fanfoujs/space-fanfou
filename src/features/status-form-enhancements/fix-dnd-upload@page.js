@@ -113,13 +113,38 @@ export default context => {
   async function processForm(file) {
     const { message, action, textarea, uploadFilename, updateBase64 } = elementCollection.getAll()
 
-    message.setAttribute('action', '/home/upload')
-    message.setAttribute('enctype', 'multipart/form-data')
-    action.value = 'photo.upload'
-    textarea.setAttribute('name', 'desc')
-    textarea.focus()
-    uploadFilename.textContent = file.name
-    updateBase64.value = await blobToBase64(file)
+    // 防御性检查：确保所有元素存在
+    if (!message || !action || !textarea || !uploadFilename || !updateBase64) {
+      console.error('[SpaceFanfou] DND upload: Missing required elements', {
+        message: !!message,
+        action: !!action,
+        textarea: !!textarea,
+        uploadFilename: !!uploadFilename,
+        updateBase64: !!updateBase64,
+      })
+      return
+    }
+
+    try {
+      message.setAttribute('action', '/home/upload')
+      message.setAttribute('enctype', 'multipart/form-data')
+      action.value = 'photo.upload'
+      textarea.setAttribute('name', 'desc')
+      uploadFilename.textContent = file.name
+
+      // 立即恢复 textarea 交互（在异步操作之前）
+      textarea.focus()
+
+      // 异步转换 base64，添加错误处理
+      const base64 = await blobToBase64(file)
+      updateBase64.value = base64
+    } catch (error) {
+      console.error('[SpaceFanfou] DND upload failed:', error)
+      // 失败时清理状态
+      uploadFilename.textContent = ''
+      // 确保 textarea 可交互
+      textarea.focus()
+    }
   }
 
   return {
