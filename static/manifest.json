@@ -33,7 +33,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": [ "page.js", "page.css", "assets/*", "offscreen.html" ],
+      "resources": [ "page.js", "page.css", "assets/*", "offscreen.html", "google-analytics-bootstrap.js" ],
       "matches": [ "http://fanfou.com/*", "https://fanfou.com/*" ]
     }
   ]

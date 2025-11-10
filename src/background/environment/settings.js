@@ -264,9 +264,10 @@ function listenOnPageCoonect() {
     // 从 popup 打开设置页时，不存在 tab
     const { tab } = port.sender
 
+    // Manifest V3: action 默认显示，无需手动调用 show()
+    // 原 V2 代码：chrome.pageAction.show(tab.id)
     if (tab && isFanfouWebUrl(tab.url)) {
-      // 使 pageAction 点击后可以显示设置页而不是弹出菜单
-      chrome.pageAction.show(tab.id)
+      // V3 中 action 已在 manifest.json 中配置，此处无需额外操作
     }
   })
 }
