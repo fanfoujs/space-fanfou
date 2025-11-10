@@ -5,6 +5,7 @@ export default () => {
 
   const menuIds = []
   const menuItems = [ {
+    id: 'share-to-fanfou-page',  // Manifest V3: 必须指定 id
     title: '分享到饭否',
     contexts: [ 'page', 'selection' ],
     onclick(info, tab) {
@@ -18,6 +19,7 @@ export default () => {
     },
   // TODO: 拿不到链接标题
   // }, {
+  //   id: 'share-to-fanfou-link',
   //   title: '分享链接到饭否',
   //   contexts: [ 'link' ],
   //   onclick(info) {
@@ -29,6 +31,7 @@ export default () => {
   //     createSharerPopup(url)
   //   },
   }, {
+    id: 'share-to-fanfou-image',  // Manifest V3: 必须指定 id
     title: '分享图片到饭否',
     contexts: [ 'image' ],
     onclick(info, tab) {
@@ -54,7 +57,14 @@ export default () => {
 
   function registerMenuItems() {
     for (const menuItem of menuItems) {
-      menuIds.push(chrome.contextMenus.create(menuItem))
+      // Manifest V3: create() 不再返回 menuId（因为我们已经指定了 id）
+      chrome.contextMenus.create(menuItem, () => {
+        if (chrome.runtime.lastError) {
+          console.error('[SpaceFanfou] 创建上下文菜单失败:', chrome.runtime.lastError.message)
+        } else {
+          menuIds.push(menuItem.id)
+        }
+      })
     }
   }
 
