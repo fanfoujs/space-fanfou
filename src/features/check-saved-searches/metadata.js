@@ -5,7 +5,7 @@ export const options = {
   },
 
   enableNotifications: {
-    defaultValue: false,
+    defaultValue: true,
     disableCloudSyncing: true,
     label: '有新消息时显示桌面通知',
   },
