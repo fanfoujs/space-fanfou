@@ -62,18 +62,23 @@ export default () => {
   }
 
   function registerMenuItems() {
-    for (const menuItem of menuItems) {
-      chrome.contextMenus.create(menuItem, () => {
-        if (chrome.runtime.lastError) {
-          console.error('[SpaceFanfou] 创建上下文菜单失败:', chrome.runtime.lastError.message)
-        } else {
-          menuIds.push(menuItem.id)
-        }
-      })
-    }
+    // Manifest V3: Service Worker 可能重启，先清理旧菜单避免重复
+    chrome.contextMenus.removeAll(() => {
+      menuIds.length = 0
 
-    // 注册点击事件监听器
-    chrome.contextMenus.onClicked.addListener(handleMenuClick)
+      for (const menuItem of menuItems) {
+        chrome.contextMenus.create(menuItem, () => {
+          if (chrome.runtime.lastError) {
+            console.error('[SpaceFanfou] 创建上下文菜单失败:', chrome.runtime.lastError.message)
+          } else {
+            menuIds.push(menuItem.id)
+          }
+        })
+      }
+
+      // 注册点击事件监听器
+      chrome.contextMenus.onClicked.addListener(handleMenuClick)
+    })
   }
 
   function unregisterMenuItems() {

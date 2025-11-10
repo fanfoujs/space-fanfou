@@ -107,9 +107,7 @@ export default context => {
     while (true) {
       const { followerIds, hasReachedEnd } = await fetchFollowersList(++pageNumber)
 
-      if (!hasReachedEnd) {
-        isFollowed = followerIds.includes(userId)
-      }
+      isFollowed = followerIds.includes(userId)
 
       if (hasReachedEnd || isFollowed) {
         break
