@@ -26,11 +26,15 @@ class SidebarStatistics extends Component {
   }
 
   async componentDidMount() {
+    console.log('[SpaceFanfou] SidebarStatistics: componentDidMount 开始')
     try {
       const userProfile = await this.fetchUserProfileData()
+      console.log('[SpaceFanfou] SidebarStatistics: 获取到用户资料', userProfile)
       this.processData(userProfile)
+      console.log('[SpaceFanfou] SidebarStatistics: 数据处理完成')
     } catch (error) {
-      console.error('[SpaceFanfou] Failed to fetch user profile data:', error)
+      console.error('[SpaceFanfou] SidebarStatistics: 获取用户资料失败:', error)
+      console.error('[SpaceFanfou] SidebarStatistics: 错误堆栈:', error.stack)
       // 保持默认的 "……" 状态，让用户知道数据加载失败
     }
   }
@@ -58,8 +62,11 @@ class SidebarStatistics extends Component {
   }
 
   async fetchUserProfileData() {
+    console.log('[SpaceFanfou] SidebarStatistics: fetchUserProfileData 开始')
     // 从页面 DOM 直接提取数据，避免 OAuth 认证问题
+    console.log('[SpaceFanfou] SidebarStatistics: 等待 #info 元素')
     await elementReady('#info')
+    console.log('[SpaceFanfou] SidebarStatistics: #info 元素已就绪')
 
     const userProfile = {}
 
@@ -283,17 +290,31 @@ export default context => {
   })
 
   return {
-    applyWhen: () => isUserProfilePage(),
+    applyWhen: async () => {
+      console.log('[SpaceFanfou] sidebar-statistics: 检查是否为用户资料页')
+      const result = await isUserProfilePage()
+      console.log('[SpaceFanfou] sidebar-statistics: isUserProfilePage =', result)
+      return result
+    },
 
-    waitReady: () => elementCollection.ready('stabs'),
+    waitReady: async () => {
+      console.log('[SpaceFanfou] sidebar-statistics: 等待 .stabs 元素')
+      const result = await elementCollection.ready('stabs')
+      console.log('[SpaceFanfou] sidebar-statistics: .stabs 元素已就绪')
+      return result
+    },
 
     onLoad() {
+      console.log('[SpaceFanfou] sidebar-statistics: onLoad 开始')
       unmount = preactRender(<SidebarStatistics />, rendered => {
+        console.log('[SpaceFanfou] sidebar-statistics: 渲染完成，插入 DOM')
         elementCollection.get('stabs').after(rendered)
       })
+      console.log('[SpaceFanfou] sidebar-statistics: onLoad 完成')
     },
 
     onUnload() {
+      console.log('[SpaceFanfou] sidebar-statistics: onUnload')
       unmount()
     },
   }
