@@ -76,6 +76,7 @@ export default context => {
 
     // https://stackoverflow.com/a/29808690/4617270
     if (isDraggingImages(event) && n++ === 0) {
+      console.log('[SpaceFanfou DND] onDragEnter: 显示提示层, n =', n)
       expandTextarea()
       document.body.classList.add(CLASSNAME_SHOW_TIP)
       elementCollection.get('textarea').blur()
@@ -91,6 +92,7 @@ export default context => {
 
   function onDragLeave(event) {
     if (isDraggingImages(event) && --n === 0) {
+      console.log('[SpaceFanfou DND] onDragLeave: 隐藏提示层, n =', n)
       document.body.classList.remove(CLASSNAME_SHOW_TIP)
     }
   }
@@ -98,20 +100,27 @@ export default context => {
   function onDrop(event) {
     if (!isDraggingImages(event)) return
 
+    console.log('[SpaceFanfou DND] onDrop: 开始处理')
     event.preventDefault()
+    console.log('[SpaceFanfou DND] onDrop: 移除提示层')
     document.body.classList.remove(CLASSNAME_SHOW_TIP)
     n = 0
+    console.log('[SpaceFanfou DND] onDrop: body classes =', document.body.className)
 
     const { update } = elementCollection.getAll()
 
     if (update.contains(event.target)) {
       const file = event.dataTransfer.files[0]
+      console.log('[SpaceFanfou DND] onDrop: 调用 processForm, 文件 =', file.name)
 
       processForm(file)
+    } else {
+      console.log('[SpaceFanfou DND] onDrop: 目标不在 update 区域内')
     }
   }
 
   async function processForm(file) {
+    console.log('[SpaceFanfou DND] processForm: 开始, 文件 =', file.name, file.size, 'bytes')
     const { message, action, textarea, uploadFilename, updateBase64 } = elementCollection.getAll()
 
     // 防御性检查：确保所有元素存在
@@ -126,26 +135,34 @@ export default context => {
       return
     }
 
+    console.log('[SpaceFanfou DND] processForm: 所有元素检查完成')
+
     try {
+      console.log('[SpaceFanfou DND] processForm: 设置表单属性')
       message.setAttribute('action', '/home/upload')
       message.setAttribute('enctype', 'multipart/form-data')
       action.value = 'photo.upload'
       textarea.setAttribute('name', 'desc')
       uploadFilename.textContent = file.name
 
+      console.log('[SpaceFanfou DND] processForm: textarea.disabled =', textarea.disabled)
+      console.log('[SpaceFanfou DND] processForm: 调用 textarea.focus()')
       // 立即恢复 textarea 交互（在异步操作之前）
       textarea.focus()
 
+      console.log('[SpaceFanfou DND] processForm: 开始转换 base64')
       // 异步转换 base64，添加错误处理
       const base64 = await blobToBase64(file)
+      console.log('[SpaceFanfou DND] processForm: base64 转换完成, 长度 =', base64.length)
       updateBase64.value = base64
-      updateBase64.setAttribute('value', base64)
 
+      console.log('[SpaceFanfou DND] processForm: 调用 setAttachment')
       setAttachment({
         file,
         filename: file.name,
         source: 'drag-and-drop',
       })
+      console.log('[SpaceFanfou DND] processForm: 完成')
     } catch (error) {
       console.error('[SpaceFanfou] DND upload failed:', error)
       // 失败时清理状态

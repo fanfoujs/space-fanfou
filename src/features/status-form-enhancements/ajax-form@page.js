@@ -121,8 +121,13 @@ export default context => {
       location: form.elements.location?.value,
     }
     if (attachmentFile) {
-      formDataJson.picture = attachmentFile
-      formDataJson.photo_base64 = null // eslint-disable-line camelcase
+      // 如果已有 base64（拖放/粘贴场景），优先使用 base64
+      if (formDataJson.photo_base64) {
+        formDataJson.picture = null
+      } else {
+        // 否则使用 File 对象（文件选择器场景）
+        formDataJson.picture = attachmentFile
+      }
       formDataJson.desc = formDataJson.desc || formDataJson.content || ''
       formDataJson.action = API_ACTION_UPLOAD_IMAGE
     }
@@ -181,8 +186,13 @@ export default context => {
   }
 
   async function postMessage() {
-    if (isSubmitting) return
+    console.log('[SpaceFanfou DEBUG] postMessage 开始')
+    if (isSubmitting) {
+      console.log('[SpaceFanfou DEBUG] 正在提交中，跳过')
+      return
+    }
     toggleState(true)
+    console.log('[SpaceFanfou DEBUG] 输入框已禁用')
 
     let response
     let isSuccess = false
@@ -192,7 +202,9 @@ export default context => {
 
     try {
       // 总是先刷新 token，避免因 token 过期导致发送消息失败
+      console.log('[SpaceFanfou DEBUG] 开始刷新 token')
       await refreshToken()
+      console.log('[SpaceFanfou DEBUG] token 刷新完成')
 
       const {
         isImageAttached: extractedIsImageAttached,
@@ -200,9 +212,16 @@ export default context => {
       } = extractFormData()
       isImageAttached = extractedIsImageAttached
       formDataJson = extractedFormDataJson
+      console.log('[SpaceFanfou DEBUG] 提取表单数据:', {
+        isImageAttached,
+        hasPhotoBase64: !!formDataJson.photo_base64,
+        hasPicture: !!formDataJson.picture,
+        pictureType: formDataJson.picture?.constructor.name,
+      })
       const url = isImageAttached ? API_URL_UPLOAD_IMAGE : API_URL_PLAIN_MESSAGE
       startTime = Date.now()
 
+      console.log('[SpaceFanfou DEBUG] 开始发送请求到:', url)
       response = await performAjaxRequest(url, formDataJson, isImageAttached, event => {
         if (!event.lengthComputable) return
         if (event.total < 50 * 1024) return // 过小的文件不显示上传进度
@@ -213,12 +232,16 @@ export default context => {
         elementCollection.get('submitButton').value = percent
       })
       isSuccess = !!response?.status
+      console.log('[SpaceFanfou DEBUG] 请求完成，成功:', isSuccess)
     } catch (error) {
-      console.error('[SpaceFanfou] postMessage failed:', error)
+      console.error('[SpaceFanfou DEBUG] postMessage 失败:', error)
+      console.error('[SpaceFanfou DEBUG] 错误堆栈:', error.stack)
       isSuccess = false
     } finally {
+      console.log('[SpaceFanfou DEBUG] 进入 finally，准备恢复输入框')
       // 无论成功还是失败，都恢复 textarea 状态
       toggleState(false)
+      console.log('[SpaceFanfou DEBUG] 输入框已恢复')
     }
 
     if (isSuccess) {
@@ -229,6 +252,8 @@ export default context => {
       resetForm()
       triggerSuccessEvent(formDataJson)
     } else {
+      // 失败时也清理附件，避免下次误用
+      clearAttachment()
       notification.create(
         notification.ERROR,
         response?.msg || (isImageAttached ? '图片上传失败' : '发送失败'),
