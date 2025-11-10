@@ -6,6 +6,7 @@ import promiseEvery from '@libs/promiseEvery'
 import getCurrentPageOwnerUserId from '@libs/getCurrentPageOwnerUserId'
 import neg from '@libs/neg'
 import log from '@libs/log'
+import getLoggedInUserId from '@libs/getLoggedInUserId'
 
 export default context => {
   const { requireModules, elementCollection } = context
@@ -34,9 +35,13 @@ export default context => {
       h1.after(userviewLink)
     }
 
+    // 防止重复添加：先移除已存在的按钮
+    const existingButton = select('.sf-check-friendship-button', userviewLink)
+    if (existingButton) existingButton.remove()
+
     checkButton = (
       // eslint-disable-next-line no-script-url
-      <a href="javascript:void(0)" className="label" onClick={checkFriendship} />
+      <a href="javascript:void(0)" className="label sf-check-friendship-button" onClick={checkFriendship} />
     )
     userviewLink.append(checkButton)
 
@@ -75,21 +80,47 @@ export default context => {
     checkButton.textContent = text.replace(GENDER_PLACEHOLDER, getGender()).trim()
   }
 
-  async function fetchFollowersList(pageNumber) {
-    const url = `https://m.fanfou.com/followers/p.${pageNumber}`
-    const { error: ajaxError, responseText: html } = await proxiedFetch.get({ url })
+  function normalizeUserId(raw) {
+    if (!raw) return ''
+
+    return raw
+      .trim()
+      .replace(/[\s]+/g, ' ')
+      .replace(/^[@（(\s]+/, '')
+      .replace(/[@）)\s]+$/, '')
+      .trim()
+      .toLowerCase()
+  }
+
+  async function fetchFollowersList(targetUserId, pageNumber) {
+    // 检查对方是否关注了你 → 查看对方的 friends 列表（对方关注的人）
+    const url = `https://m.fanfou.com/friends/p.${pageNumber}`
+    const query = targetUserId ? { u: targetUserId } : undefined
+    const { error: ajaxError, responseText: html } = await proxiedFetch.get({ url, query })
     let followerIds, hasReachedEnd
 
     if (ajaxError) {
-      log.error('加载关注者列表失败', ajaxError)
+      log.error('加载关注列表失败', ajaxError)
       followerIds = []
       hasReachedEnd = true
     } else {
       const document = parseHTML(html)
       const items = select.all('ol > li > a > span.a', document)
 
-      followerIds = items.map(item => item.textContent.replace(/^\(|\)$/g, ''))
-      hasReachedEnd = !select.exists(`a[href="/followers/p.${pageNumber + 1}"]`, document)
+      followerIds = items.map(item => normalizeUserId(item.textContent))
+      const nextPageLinks = select.all('a[href*="/friends/p."]', document)
+      const hasNextByNumber = nextPageLinks.some(link => {
+        const href = link.getAttribute('href') || ''
+        const match = href.match(/\/friends\/p\.(\d+)/)
+
+        if (!match) return false
+
+        return Number(match[1]) > pageNumber
+      })
+      const hasNextByText = select.all('a', document)
+        .some(link => link.textContent && link.textContent.includes('下一页'))
+
+      hasReachedEnd = !(hasNextByNumber || hasNextByText)
     }
 
     return { followerIds, hasReachedEnd }
@@ -100,14 +131,22 @@ export default context => {
     hasChecked = true
     setText(TEXT_BUSY)
 
-    const userId = await getCurrentPageOwnerUserId()
+    const targetUserId = await getCurrentPageOwnerUserId()
+    const viewerUserIdRaw = getLoggedInUserId()
+    const viewerUserId = normalizeUserId(viewerUserIdRaw)
+
+    if (!viewerUserId) {
+      log.error('检查关注关系失败：无法获取当前登录用户 ID (cookie u 缺失)')
+      setText(TEXT_IS_NOT_FOLLOWED)
+      return
+    }
     let isFollowed = false
     let pageNumber = 0
 
     while (true) {
-      const { followerIds, hasReachedEnd } = await fetchFollowersList(++pageNumber)
+      const { followerIds, hasReachedEnd } = await fetchFollowersList(targetUserId, ++pageNumber)
 
-      isFollowed = followerIds.includes(userId)
+      isFollowed = followerIds.some(id => id === viewerUserId)
 
       if (hasReachedEnd || isFollowed) {
         break

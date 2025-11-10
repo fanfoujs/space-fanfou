@@ -1,6 +1,24 @@
 import features from '@features'
 import safelyInvokeFn from '@libs/safelyInvokeFn'
 
+let shouldInitialize = true
+
+/// #if ENV_CONTENT
+if (window.__SF_CONTENT_ENTRY_INITIALIZED__) {
+  console.warn('[SpaceFanfou] Content script already initialized, skip duplicate execution')
+  shouldInitialize = false
+} else {
+  window.__SF_CONTENT_ENTRY_INITIALIZED__ = true
+}
+/// #elif ENV_PAGE
+if (window.__SF_PAGE_ENTRY_INITIALIZED__) {
+  console.warn('[SpaceFanfou] Page script already initialized, skip duplicate execution')
+  shouldInitialize = false
+} else {
+  window.__SF_PAGE_ENTRY_INITIALIZED__ = true
+}
+/// #endif
+
 async function init({ createEnvironment, modules, createFeatureClass, createSubfeatureClass }) {
   const environment = await createEnvironment()
   const Feature = createFeatureClass({ ...environment, modules })
@@ -33,9 +51,15 @@ async function init({ createEnvironment, modules, createFeatureClass, createSubf
 }
 
 /// #if ENV_BACKGROUND
-init(require('@background'))
+if (shouldInitialize) {
+  init(require('@background'))
+}
 /// #elif ENV_CONTENT
-init(require('@content'))
+if (shouldInitialize) {
+  init(require('@content'))
+}
 /// #elif ENV_PAGE
-init(require('@page'))
+if (shouldInitialize) {
+  init(require('@page'))
+}
 /// #endif

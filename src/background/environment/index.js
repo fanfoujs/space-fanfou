@@ -37,19 +37,46 @@ async function injectContentScriptsOnInstall() {
   }
 }
 
+function registerContentScriptInjectOnInstall() {
+  if (self.__SF_ON_INSTALLED_HANDLER__) return
+
+  chrome.runtime.onInstalled.addListener(details => {
+    if (details.reason !== 'install' && details.reason !== 'update') return
+
+    injectContentScriptsOnInstall().catch(error => {
+      console.error('[SpaceFanfou] Failed to inject content scripts on install/update:', error)
+    })
+  })
+
+  self.__SF_ON_INSTALLED_HANDLER__ = true
+}
+
+registerContentScriptInjectOnInstall()
+
 export default async function createBackgroundEnvironment() {
-  // Complete all initialization first to ensure message handlers are registered
+  // 防止 Service Worker 重启时重复初始化监听器
+  // Service Worker 休眠后重新唤醒时，整个 background.js 会重新执行
+  // 但全局监听器（chrome.runtime.onConnect 等）会累积，导致功能模块被重复加载
+  if (self.__SF_BACKGROUND_INITIALIZED__) {
+    console.log('[SpaceFanfou] Background already initialized, skip reinstall')
+    return { messaging, settings }
+  }
+
+  self.__SF_BACKGROUND_INITIALIZED__ = true
+  console.log('[SpaceFanfou] Initializing background environment...')
+
+  // 关键修复：立即注册 messaging 监听器（同步），确保 Content Scripts 重连时监听器已就绪
+  // 必须在任何异步操作之前完成，避免 "Receiving end does not exist" 错误
+  messaging.install()
+
+  // 然后并行初始化其他模块（这些可以是异步的）
   await Promise.all([
-    messaging.install(),
     storage.install(),
     settings.install(),      // ← Ensure SETTINGS_READ_ALL handler is registered
     proxiedFetch.install(),
     proxiedAudio.install(),
     proxiedCreateTab.install(),
   ])
-
-  // Then inject content scripts (avoid sending messages before handler registration)
-  await injectContentScriptsOnInstall()
 
   return { messaging, settings }
 }
