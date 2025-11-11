@@ -1,5 +1,5 @@
 import importAll from 'import-all.macro'
-import dotProp from 'dot-prop'
+import { setProperty } from 'dot-prop'
 import pick from 'just-pick'
 import parseFilename from '@libs/parseFilename'
 import replaceExtensionOrigin from '@libs/replaceExtensionOrigin'
@@ -116,13 +116,13 @@ function loadFeatures() {
 
   for (const { featureName, subfeatureName, type, module } of loadComponents()) {
     if (type === 'metadata') {
-      dotProp.set(
+      setProperty(
         features,
         `${featureName}.metadata`,
         processMetadata(featureName, module),
       )
     } else {
-      dotProp.set(
+      setProperty(
         features,
         `${featureName}.subfeatures.${subfeatureName}.${type}`,
         module,

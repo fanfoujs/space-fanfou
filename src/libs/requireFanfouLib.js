@@ -1,4 +1,4 @@
-import dotProp from 'dot-prop'
+import { getProperty } from 'dot-prop'
 import Deferred from '@libs/Deferred'
 
 const CHECKING_INTERVAL = 16
@@ -32,7 +32,7 @@ function clearTimer() {
 
 function check() {
   for (const libName of pending) {
-    const lib = dotProp.get(window, libName)
+    const lib = getProperty(window, libName)
 
     if (typeof lib !== 'undefined') {
       pending.delete(libName)
