@@ -1,5 +1,7 @@
+/* eslint-disable no-console, unicorn/prefer-add-event-listener, arrow-parens, unicorn/no-zero-fractions */
 // Offscreen document for audio playback
 // Service Worker 不支持 Audio API，所以需要在 offscreen document 中播放音频
+// 保留console用于音频播放调试，onerror/oncanplaythrough用于简单事件处理
 
 import { PROXIED_AUDIO } from '@constants'
 
@@ -38,20 +40,20 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     const audio = new Audio()
 
     // 监听加载错误
-    audio.onerror = (error) => {
+    audio.addEventListener('error', error => {
       console.error('[SpaceFanfou Offscreen] Audio load error:', error, 'URL:', fullUrl)
       sendResponse({ success: false, error: 'Failed to load audio file' })
-    }
+    })
 
     // 监听加载完成
-    audio.oncanplaythrough = () => {
+    audio.addEventListener('canplaythrough', () => {
       console.log('[SpaceFanfou Offscreen] Audio loaded, ready to play')
-    }
+    })
 
     audio.src = fullUrl
 
     // 设置音量
-    audio.volume = 1.0
+    audio.volume = 1
 
     // 尝试播放
     audio.play()

@@ -107,6 +107,8 @@ export default context => {
   function extractUserId(html) {
     // Service Worker 环境：用正则从 HTML 提取用户 ID
     // 查找 <a accesskey="1" href="/用户ID"> 格式的链接
+    // 正则表达式中的\转义是为了可读性，保留以提高代码可读性
+    // eslint-disable-next-line no-useless-escape
     const match = html.match(/accesskey=["']1["'][^>]*href=["']\/([^"'\/]+)["']|href=["']\/([^"'\/]+)["'][^>]*accesskey=["']1["']/)
     const userId = match?.[1] || match?.[2]
     return userId ? unescape(userId) : null

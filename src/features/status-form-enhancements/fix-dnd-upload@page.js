@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+// 保留console用于拖放上传调试
 import { h } from 'dom-chef'
 import once from 'just-once'
 import { setAttachment } from './attachmentStore'

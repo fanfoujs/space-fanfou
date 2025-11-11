@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+// 保留console用于表单提交和AJAX错误调试
 import select from 'select-dom'
 import triggerEvent from 'compat-trigger-event'
 import objectToFormData from 'object-to-formdata'

@@ -36,26 +36,26 @@ export default () => {
     let height = 440
 
     switch (info.menuItemId) {
-      case 'share-to-fanfou-page':
-        url = transformUrl('https://fanfou.com/sharer', {
-          u: tab.url,
-          t: tab.title,
-          d: info.selectionText || '',
-        })
-        height = 440
-        break
+    case 'share-to-fanfou-page':
+      url = transformUrl('https://fanfou.com/sharer', {
+        u: tab.url,
+        t: tab.title,
+        d: info.selectionText || '',
+      })
+      height = 440
+      break
 
-      case 'share-to-fanfou-image':
-        url = transformUrl('https://fanfou.com/sharer/image', {
-          u: tab.url,
-          t: tab.title,
-          img_src: info.srcUrl, // eslint-disable-line camelcase
-        })
-        height = 540
-        break
+    case 'share-to-fanfou-image':
+      url = transformUrl('https://fanfou.com/sharer/image', {
+        u: tab.url,
+        t: tab.title,
+        img_src: info.srcUrl, // eslint-disable-line camelcase
+      })
+      height = 540
+      break
 
-      default:
-        return
+    default:
+      return
     }
 
     createSharerPopup(url, height)

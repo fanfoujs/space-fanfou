@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+// 保留console用于Port连接调试和错误追踪
 import wrapper from '@libs/wrapper'
 import Deferred from '@libs/Deferred'
 import safelyInvokeFns from '@libs/safelyInvokeFns'
@@ -61,7 +63,7 @@ function reinstallWithRetry(attempt = 0) {
     console.log(`[SpaceFanfou] Port 重连成功 (尝试 ${attempt + 1}/${maxAttempts})`)
   } catch (error) {
     // 连接失败，使用指数退避算法重试
-    const delay = Math.min(baseDelay * Math.pow(2, attempt), maxDelay)
+    const delay = Math.min(baseDelay * 2 ** attempt, maxDelay)
     console.warn(`[SpaceFanfou] Port 重连失败 (尝试 ${attempt + 1}/${maxAttempts}): ${error.message}，${delay}ms 后重试`)
     setTimeout(() => reinstallWithRetry(attempt + 1), delay)
   }

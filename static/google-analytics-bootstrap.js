@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-expressions, func-names, space-before-function-paren, dot-notation, prefer-rest-params, no-undef */
+// Google Analytics官方初始化代码，第三方代码，禁用所有必要的ESLint规则
 !(function setupGoogleAnalytics() {
-  (function(i, s, o, g, r, a, m) {
-    i['GoogleAnalyticsObject'] = r
+  (function (i, s, o, g, r, a, m) {
+    i.GoogleAnalyticsObject = r
     i[r] = i[r] || function () {
       (i[r].q = i[r].q || []).push(arguments)
     }

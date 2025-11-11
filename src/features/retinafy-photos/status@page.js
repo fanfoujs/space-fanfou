@@ -1,6 +1,6 @@
+import { processStatus } from './shared'
 import { isStatusPage } from '@libs/pageDetect'
 import every from '@libs/promiseEvery'
-import { processStatus } from './shared'
 
 export default context => {
   const { elementCollection } = context

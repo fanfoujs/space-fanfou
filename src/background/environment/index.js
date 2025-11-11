@@ -1,3 +1,6 @@
+/* eslint-disable no-restricted-globals, no-console */
+// Service Worker环境：self是全局上下文，用于存储初始化标记
+// 保留console用于Service Worker生命周期调试
 import messaging from './messaging'
 import storage from './storage'
 import settings from './settings'
@@ -72,7 +75,7 @@ export default async function createBackgroundEnvironment() {
   // 然后并行初始化其他模块（这些可以是异步的）
   await Promise.all([
     storage.install(),
-    settings.install(),      // ← Ensure SETTINGS_READ_ALL handler is registered
+    settings.install(), // ← Ensure SETTINGS_READ_ALL handler is registered
     proxiedFetch.install(),
     proxiedAudio.install(),
     proxiedCreateTab.install(),

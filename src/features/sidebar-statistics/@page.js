@@ -1,3 +1,7 @@
+/* eslint-disable camelcase, no-console, unicorn/prefer-text-content */
+// 饭否API返回的字段使用下划线命名（statuses_count, friends_count等），禁用camelcase检查
+// 保留console.warn用于调试统计数据提取问题
+// innerText用于兼容性，部分旧代码可能依赖其特定行为
 import { h, Component } from 'preact'
 import select from 'select-dom'
 import cx from 'classnames'
@@ -104,7 +108,7 @@ class SidebarStatistics extends Component {
 
     // 3. 从页面文本中提取（最后备用方案）
     if (!userProfile.statuses_count || !userProfile.friends_count || !userProfile.followers_count) {
-      const bodyText = document.body.innerText
+      const bodyText = document.body.textContent
 
       if (!userProfile.statuses_count) {
         const statusMatch = bodyText.match(/(\d+)\s*消息/)

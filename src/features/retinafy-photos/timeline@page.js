@@ -1,5 +1,5 @@
-import { isTimelinePage } from '@libs/pageDetect'
 import { processStatus } from './shared'
+import { isTimelinePage } from '@libs/pageDetect'
 
 function mutationObserverCallback(mutationRecords) {
   for (const { addedNodes } of mutationRecords) {
