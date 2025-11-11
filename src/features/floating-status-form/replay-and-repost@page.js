@@ -86,7 +86,13 @@ export default context => {
     event.preventDefault()
 
     const { form, textarea } = elementCollection.getAll()
-    const li = event.path.find(element => element.tagName.toLowerCase() === 'li')
+    // 使用标准API composedPath()，降级到非标准event.path（向后兼容）
+    const path = event.composedPath?.() || event.path || []
+    const li = path.find(element => element.tagName.toLowerCase() === 'li')
+
+    // 防御性检查：确保找到了li元素
+    if (!li) return
+
     const authorElement = select('.author', li)
     const targetStatusId = extractStatusId(li)
     const targetStatusAuthorNickname = '@' + authorElement.textContent

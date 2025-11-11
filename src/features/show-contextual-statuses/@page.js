@@ -249,8 +249,9 @@ export default context => {
     if (cacheMap.has(cacheId)) {
       const aliveInstance = cacheMap.get(cacheId)
       const maybeDeadInstance = li.nextElementSibling
+      const containerSelector = `.${CLASSNAME_CONTAINER}`
 
-      if (maybeDeadInstance?.matches(`.${CLASSNAME_CONTAINER}`)) {
+      if (maybeDeadInstance?.matches(containerSelector)) {
         maybeDeadInstance.replaceWith(aliveInstance)
       }
 

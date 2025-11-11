@@ -168,7 +168,9 @@ export default context => {
   }
 
   function getRelatedLiFromEventObject(event) {
-    return event.path.find(element => element.matches?.('#stream > ol > li'))
+    // 使用标准API composedPath()，降级到非标准event.path（向后兼容）
+    const path = event.composedPath?.() || event.path || []
+    return path.find(element => element.matches?.('#stream > ol > li'))
   }
 
   function onClick(event) {

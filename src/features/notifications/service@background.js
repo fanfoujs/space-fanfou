@@ -14,6 +14,7 @@ export default context => {
   const AJAX_TIMEOUT = 10 * 1000
   const NOTIFICATION_TIMEOUT = 15 * 1000
   const ALARM_NAME = 'notifications-check'
+  const STORAGE_KEY_PREFIX = 'notification_counts_' // 持久化存储前缀
 
   let isVisitingFanfou = false
   const userMap = {}
@@ -111,11 +112,32 @@ export default context => {
     return userId ? unescape(userId) : null
   }
 
-  function getCountCollectorForUser(userId) {
-    return userMap[userId] || (userMap[userId] = new CountCollector(userId))
+  async function getCountCollectorForUser(userId) {
+    if (userMap[userId]) {
+      return userMap[userId]
+    }
+
+    // 创建新的CountCollector
+    const collector = new CountCollector(userId)
+
+    // 🔧 从storage恢复历史记录（防止Service Worker重启后丢失）
+    const storageKey = STORAGE_KEY_PREFIX + userId
+    try {
+      const result = await chrome.storage.local.get(storageKey)
+      if (result[storageKey]) {
+        collector.previousCounts = result[storageKey].previousCounts || collector.createEmptyCounts()
+        collector.currentCounts = result[storageKey].currentCounts || collector.createEmptyCounts()
+        log.info(`已恢复用户 ${userId} 的通知历史记录`)
+      }
+    } catch (error) {
+      log.info(`恢复通知历史失败，使用默认值`, error)
+    }
+
+    userMap[userId] = collector
+    return collector
   }
 
-  function extract(html, countCollector) {
+  async function extract(html, countCollector) {
     countCollector.previousCounts = countCollector.currentCounts
     countCollector.currentCounts = countCollector.createEmptyCounts()
 
@@ -123,6 +145,19 @@ export default context => {
     for (const [ name, opts ] of Object.entries(itemsToCheck)) {
       const extracted = opts.extractFromHTML(html)
       countCollector.currentCounts[name] = parseInt(extracted, 10) || 0
+    }
+
+    // 🔧 保存到storage（防止Service Worker重启后丢失）
+    const storageKey = STORAGE_KEY_PREFIX + countCollector.userId
+    try {
+      await chrome.storage.local.set({
+        [storageKey]: {
+          previousCounts: countCollector.previousCounts,
+          currentCounts: countCollector.currentCounts,
+        },
+      })
+    } catch (error) {
+      log.info(`保存通知历史失败`, error)
     }
   }
 
@@ -182,9 +217,9 @@ export default context => {
 
     if (html && checkIfLoggedIn(html)) {
       const currentlyLoggedInUserId = extractUserId(html)
-      const countCollector = getCountCollectorForUser(currentlyLoggedInUserId)
+      const countCollector = await getCountCollectorForUser(currentlyLoggedInUserId)
 
-      extract(html, countCollector)
+      await extract(html, countCollector)
       notify(countCollector)
     }
 
