@@ -11,6 +11,7 @@ import Tooltip from '@libs/Tooltip'
 import { isUserProfilePage } from '@libs/pageDetect'
 import preactRender from '@libs/preactRender'
 import formatDate from '@libs/formatDate'
+import getCurrentPageOwnerUserId from '@libs/getCurrentPageOwnerUserId'
 
 class SidebarStatistics extends Component {
   constructor(...args) {
@@ -126,26 +127,141 @@ class SidebarStatistics extends Component {
       }
     }
 
-    // 3. 获取注册日期（从 #user_infos 或其他位置）
-    const userInfos = select('#user_infos')
-    if (userInfos) {
-      const items = userInfos.querySelectorAll('li')
-      items.forEach(item => {
-        const text = item.textContent.trim()
-        // 匹配 "注册于：2010-01-01" 格式
-        const regMatch = text.match(/注册于[：:]\s*(\d{4}[-年]\d{1,2}[-月]\d{1,2})/)
-        if (regMatch) {
-          // 转换为标准日期格式
-          const dateStr = regMatch[1].replace(/年|月/g, '-').replace(/日?$/, '')
-          userProfile.created_at = dateStr
+    // 3. 获取注册日期（从饭否API）
+    console.log('[SpaceFanfou] SidebarStatistics: 开始提取注册日期')
+
+    // 3.1 尝试通过饭否API获取注册时间
+    const { proxiedFetch } = this.props
+    if (proxiedFetch) {
+      try {
+        const userId = await getCurrentPageOwnerUserId()
+        console.log('[SpaceFanfou] SidebarStatistics: 当前用户ID:', userId)
+
+        // 调用饭否API获取用户信息
+        const apiUrl = `http://api.fanfou.com/users/show.json`
+        const query = { id: userId, mode: 'lite' }
+        console.log('[SpaceFanfou] SidebarStatistics: 请求API:', apiUrl, query)
+
+        const { error: ajaxError, responseText: jsonText } = await proxiedFetch.get({
+          url: apiUrl,
+          query,
+        })
+
+        if (ajaxError) {
+          console.warn('[SpaceFanfou] SidebarStatistics: API请求失败:', ajaxError)
+        } else if (jsonText) {
+          try {
+            const userData = JSON.parse(jsonText)
+            console.log('[SpaceFanfou] SidebarStatistics: API返回数据:', userData)
+
+            if (userData.created_at) {
+              // API返回的格式："Sat Jun 09 23:56:33 +0000 2007"
+              // 转换为 YYYY-MM-DD 格式
+              const createdDate = new Date(userData.created_at)
+              if (!isNaN(createdDate.getTime())) {
+                const year = createdDate.getFullYear()
+                const month = String(createdDate.getMonth() + 1).padStart(2, '0')
+                const day = String(createdDate.getDate()).padStart(2, '0')
+                userProfile.created_at = `${year}-${month}-${day}`
+                console.log('[SpaceFanfou] SidebarStatistics: 从API成功提取注册日期:', userProfile.created_at)
+              } else {
+                console.warn('[SpaceFanfou] SidebarStatistics: API返回的日期格式无法解析:', userData.created_at)
+              }
+            } else {
+              console.warn('[SpaceFanfou] SidebarStatistics: API返回数据中没有created_at字段')
+            }
+          } catch (parseError) {
+            console.warn('[SpaceFanfou] SidebarStatistics: 解析API响应失败:', parseError, jsonText)
+          }
         }
-      })
+      } catch (error) {
+        console.warn('[SpaceFanfou] SidebarStatistics: 调用API出错:', error)
+      }
+    }
+
+    // 3.2 如果API没有获取到，再尝试从桌面版 #user_infos 获取（备用方案）
+    if (!userProfile.created_at) {
+      console.log('[SpaceFanfou] SidebarStatistics: API未获取到注册时间，尝试从桌面版 #user_infos 获取')
+      const userInfos = select('#user_infos')
+
+      if (!userInfos) {
+        console.warn('[SpaceFanfou] SidebarStatistics: 未找到 #user_infos 元素')
+      } else {
+        console.log('[SpaceFanfou] SidebarStatistics: #user_infos 元素已找到')
+        const items = userInfos.querySelectorAll('li')
+        console.log(`[SpaceFanfou] SidebarStatistics: 找到 ${items.length} 个 li 元素`)
+
+        let found = false
+        items.forEach((item, index) => {
+          if (found) return // 已找到，跳过剩余项
+
+          const text = item.textContent.trim()
+          console.log(`[SpaceFanfou] SidebarStatistics: li[${index}] 内容:`, text)
+
+          // 尝试多种日期格式匹配
+          const patterns = [
+            // 标准格式：注册于：2010-01-01 或 注册于: 2010-01-01
+            { regex: /注册于[：:]\s*(\d{4}[-]\d{1,2}[-]\d{1,2})/, groups: 1 },
+            // 中文格式：注册于：2010年1月1日
+            { regex: /注册于[：:]\s*(\d{4})年(\d{1,2})月(\d{1,2})日?/, groups: 3 },
+            // 无冒号格式：注册于 2010-01-01
+            { regex: /注册于\s+(\d{4}[-]\d{1,2}[-]\d{1,2})/, groups: 1 },
+            // 无冒号中文格式：注册于 2010年1月1日
+            { regex: /注册于\s+(\d{4})年(\d{1,2})月(\d{1,2})日?/, groups: 3 },
+            // 兼容老格式（混合年月分隔符）
+            { regex: /注册于[：:]\s*(\d{4})[-年](\d{1,2})[-月](\d{1,2})日?/, groups: 3 },
+            // 更宽松的格式（任意分隔符）
+            { regex: /注册于[：:\s]*(\d{4})[\s年/-](\d{1,2})[\s月/-](\d{1,2})/, groups: 3 },
+          ]
+
+          for (const { regex, groups } of patterns) {
+            const match = text.match(regex)
+            if (match) {
+              console.log('[SpaceFanfou] SidebarStatistics: 正则匹配成功', {
+                pattern: regex.source,
+                match: match.slice(0, groups + 1),
+              })
+
+              let dateStr
+              if (groups === 1) {
+                // 简单格式：直接匹配到完整日期字符串
+                dateStr = match[1]
+              } else if (groups === 3) {
+                // 分组格式：年、月、日分别匹配
+                const year = match[1]
+                const month = match[2].padStart(2, '0')
+                const day = match[3].padStart(2, '0')
+                dateStr = `${year}-${month}-${day}`
+              }
+
+              if (dateStr) {
+                // 验证日期有效性
+                const testDate = new Date(dateStr)
+                if (!isNaN(testDate.getTime())) {
+                  userProfile.created_at = dateStr
+                  console.log('[SpaceFanfou] SidebarStatistics: 成功提取注册日期:', dateStr)
+                  found = true
+                  return // 找到有效日期后退出
+                } else {
+                  console.warn('[SpaceFanfou] SidebarStatistics: 日期格式无效:', dateStr)
+                }
+              }
+              break // 匹配成功但日期无效，继续尝试下一个正则
+            }
+          }
+        })
+      }
     }
 
     // 4. 如果没有找到注册日期，使用估算（从 meta 标签或默认值）
     if (!userProfile.created_at) {
+      console.warn('[SpaceFanfou] SidebarStatistics: 未能提取到注册日期，使用默认值 2010-01-01')
+      console.warn('[SpaceFanfou] SidebarStatistics: 请检查页面HTML结构是否改变')
+      console.warn('[SpaceFanfou] SidebarStatistics: 建议检查 #user_infos 元素中的实际内容')
       // 默认使用一个合理的日期（2010年，饭否重新上线的年份）
       userProfile.created_at = '2010-01-01'
+    } else {
+      console.log('[SpaceFanfou] SidebarStatistics: 最终注册日期:', userProfile.created_at)
     }
 
     // 5. 检查是否为私密账号
@@ -285,7 +401,8 @@ class StatisticItem extends Component {
 }
 
 export default context => {
-  const { elementCollection } = context
+  const { elementCollection, requireModules } = context
+  const { proxiedFetch } = requireModules([ 'proxiedFetch' ])
 
   let unmount
 
@@ -310,7 +427,7 @@ export default context => {
 
     onLoad() {
       console.log('[SpaceFanfou] sidebar-statistics: onLoad 开始')
-      unmount = preactRender(<SidebarStatistics />, rendered => {
+      unmount = preactRender(<SidebarStatistics proxiedFetch={proxiedFetch} />, rendered => {
         console.log('[SpaceFanfou] sidebar-statistics: 渲染完成，插入 DOM')
         elementCollection.get('stabs').after(rendered)
       })
