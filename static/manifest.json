@@ -27,7 +27,7 @@
   },
   "options_page": "settings.html",
   "permissions": [ "tabs", "notifications", "contextMenus", "storage", "offscreen", "scripting", "alarms" ],
-  "host_permissions": [ "http://*.fanfou.com/", "https://*.fanfou.com/", "https://setq.me/" ],
+  "host_permissions": [ "http://*.fanfou.com/", "https://*.fanfou.com/", "http://api.fanfou.com/", "https://api.fanfou.com/", "https://setq.me/" ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'none'"
   },
