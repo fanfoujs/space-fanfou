@@ -3,15 +3,14 @@
 // 保留console.warn用于调试统计数据提取问题
 // innerText用于兼容性，部分旧代码可能依赖其特定行为
 import { h, Component } from 'preact'
-import select from 'select-dom'
 import cx from 'classnames'
 import clamp from 'just-clamp'
 import elementReady from 'element-ready'
+import select from 'select-dom'
 import Tooltip from '@libs/Tooltip'
 import { isUserProfilePage } from '@libs/pageDetect'
 import preactRender from '@libs/preactRender'
 import formatDate from '@libs/formatDate'
-import getCurrentPageOwnerUserId from '@libs/getCurrentPageOwnerUserId'
 
 class SidebarStatistics extends Component {
   constructor(...args) {
@@ -31,116 +30,74 @@ class SidebarStatistics extends Component {
   }
 
   async componentDidMount() {
-    console.log('[SpaceFanfou] SidebarStatistics: componentDidMount 开始')
     try {
       const userProfile = await this.fetchUserProfileData()
-      console.log('[SpaceFanfou] SidebarStatistics: 获取到用户资料', userProfile)
       this.processData(userProfile)
-      console.log('[SpaceFanfou] SidebarStatistics: 数据处理完成')
     } catch (error) {
       console.error('[SpaceFanfou] SidebarStatistics: 获取用户资料失败:', error)
-      console.error('[SpaceFanfou] SidebarStatistics: 错误堆栈:', error.stack)
-      // 保持默认的 "……" 状态，让用户知道数据加载失败
+      // 保持默认的 "……" 状态
     }
   }
 
-  async getUserId() {
-    // 等待 meta 元素加载（页面可能还在渲染中）
-    const metaElement = await elementReady('meta[name=author]')
-
-    if (!metaElement) {
-      throw new Error('Cannot find meta[name=author] element')
-    }
-
-    const metaContent = metaElement.getAttribute('content')
-    if (!metaContent) {
-      throw new Error('meta[name=author] has no content attribute')
-    }
-
-    const matched = metaContent.match(/\((.+)\)/)
-    if (!matched) {
-      throw new Error(`Cannot extract user ID from meta content: ${metaContent}`)
-    }
-
-    const userId = matched[1]
-    return userId
+  getUserId() {
+    // 从URL路径直接提取用户ID: fanfou.com/<userid>
+    const splitPathname = window.location.pathname.split('/')
+    return splitPathname[1]
   }
 
   async fetchUserProfileData() {
-    console.log('[SpaceFanfou] SidebarStatistics: fetchUserProfileData 开始')
-    // 从页面 DOM 直接提取数据，避免 OAuth 认证问题
-    console.log('[SpaceFanfou] SidebarStatistics: 等待 #info 元素')
+    // 等待当前页面的#info元素加载
+    console.log('[SpaceFanfou] SidebarStatistics: 等待 #info 元素...')
     await elementReady('#info')
     console.log('[SpaceFanfou] SidebarStatistics: #info 元素已就绪')
 
     const userProfile = {}
 
-    // 1. 从 #info 区域的链接提取统计数字
+    // 步骤1: 从当前页面的 #info 区域提取统计数字
     const info = select('#info')
+    console.log('[SpaceFanfou] SidebarStatistics: #info 元素:', info)
+
     if (info) {
       const links = info.querySelectorAll('li a')
-      links.forEach(link => {
+      console.log('[SpaceFanfou] SidebarStatistics: 找到', links.length, '个链接')
+
+      links.forEach((link, index) => {
         const text = link.textContent.trim()
+        console.log(`[SpaceFanfou] SidebarStatistics: 链接[${index}]:`, text)
 
         // 匹配 "22102 消息" 格式
         const statusMatch = text.match(/^(\d+)\s*消息$/)
-        // 匹配 "171 他关注的人" 格式
-        const friendsMatch = text.match(/^(\d+)\s*他关注的人$/)
-        // 匹配 "459 关注他的人" 格式
-        const followersMatch = text.match(/^(\d+)\s*关注他的人$/)
+        // 匹配 "171 他关注的人" 或 "171 她关注的人" 格式
+        const friendsMatch = text.match(/^(\d+)\s*(他|她)?关注的人$/)
+        // 匹配 "459 关注他的人" 或 "459 关注她的人" 格式
+        const followersMatch = text.match(/^(\d+)\s*关注(他|她)的人$/)
 
-        if (statusMatch) userProfile.statuses_count = parseInt(statusMatch[1], 10)
-        if (friendsMatch) userProfile.friends_count = parseInt(friendsMatch[1], 10)
-        if (followersMatch) userProfile.followers_count = parseInt(followersMatch[1], 10)
-      })
-    }
-
-    // 2. 从 .stabs 标签页提取消息数（备用方案）
-    if (!userProfile.statuses_count) {
-      const stabs = select('.stabs')
-      if (stabs) {
-        // 匹配 "消息 (22102)" 格式
-        const statusMatch = stabs.textContent.match(/消息\s*\((\d+)\)/)
         if (statusMatch) {
           userProfile.statuses_count = parseInt(statusMatch[1], 10)
+          console.log('[SpaceFanfou] SidebarStatistics: ✓ 提取到消息数:', userProfile.statuses_count)
         }
-      }
+        if (friendsMatch) {
+          userProfile.friends_count = parseInt(friendsMatch[1], 10)
+          console.log('[SpaceFanfou] SidebarStatistics: ✓ 提取到关注数:', userProfile.friends_count)
+        }
+        if (followersMatch) {
+          userProfile.followers_count = parseInt(followersMatch[1], 10)
+          console.log('[SpaceFanfou] SidebarStatistics: ✓ 提取到粉丝数:', userProfile.followers_count)
+        }
+      })
+
+      console.log('[SpaceFanfou] SidebarStatistics: DOM提取结果:', userProfile)
+    } else {
+      console.warn('[SpaceFanfou] SidebarStatistics: ❌ 未找到 #info 元素')
     }
 
-    // 3. 从页面文本中提取（最后备用方案）
-    if (!userProfile.statuses_count || !userProfile.friends_count || !userProfile.followers_count) {
-      const bodyText = document.body.textContent
-
-      if (!userProfile.statuses_count) {
-        const statusMatch = bodyText.match(/(\d+)\s*消息/)
-        if (statusMatch) userProfile.statuses_count = parseInt(statusMatch[1], 10)
-      }
-
-      if (!userProfile.friends_count) {
-        const friendsMatch = bodyText.match(/(\d+)\s*他关注的人/)
-        if (friendsMatch) userProfile.friends_count = parseInt(friendsMatch[1], 10)
-      }
-
-      if (!userProfile.followers_count) {
-        const followersMatch = bodyText.match(/(\d+)\s*关注他的人/)
-        if (followersMatch) userProfile.followers_count = parseInt(followersMatch[1], 10)
-      }
-    }
-
-    // 3. 获取注册日期（从饭否API）
-    console.log('[SpaceFanfou] SidebarStatistics: 开始提取注册日期')
-
-    // 3.1 尝试通过饭否API获取注册时间
+    // 步骤2: 尝试通过API获取注册日期（可选，可能失败）
     const { proxiedFetch } = this.props
     if (proxiedFetch) {
       try {
-        const userId = await getCurrentPageOwnerUserId()
-        console.log('[SpaceFanfou] SidebarStatistics: 当前用户ID:', userId)
-
-        // 调用饭否API获取用户信息
+        const userId = this.getUserId()
         const apiUrl = `http://api.fanfou.com/users/show.json`
         const query = { id: userId, mode: 'lite' }
-        console.log('[SpaceFanfou] SidebarStatistics: 请求API:', apiUrl, query)
 
         const { error: ajaxError, responseText: jsonText } = await proxiedFetch.get({
           url: apiUrl,
@@ -148,11 +105,10 @@ class SidebarStatistics extends Component {
         })
 
         if (ajaxError) {
-          console.warn('[SpaceFanfou] SidebarStatistics: API请求失败:', ajaxError)
+          console.warn('[SpaceFanfou] SidebarStatistics: API请求失败（预期内）:', ajaxError)
         } else if (jsonText) {
           try {
             const userData = JSON.parse(jsonText)
-            console.log('[SpaceFanfou] SidebarStatistics: API返回数据:', userData)
 
             if (userData.created_at) {
               // API返回的格式："Sat Jun 09 23:56:33 +0000 2007"
@@ -163,109 +119,16 @@ class SidebarStatistics extends Component {
                 const month = String(createdDate.getMonth() + 1).padStart(2, '0')
                 const day = String(createdDate.getDate()).padStart(2, '0')
                 userProfile.created_at = `${year}-${month}-${day}`
-                console.log('[SpaceFanfou] SidebarStatistics: 从API成功提取注册日期:', userProfile.created_at)
-              } else {
-                console.warn('[SpaceFanfou] SidebarStatistics: API返回的日期格式无法解析:', userData.created_at)
               }
-            } else {
-              console.warn('[SpaceFanfou] SidebarStatistics: API返回数据中没有created_at字段')
             }
           } catch (parseError) {
-            console.warn('[SpaceFanfou] SidebarStatistics: 解析API响应失败:', parseError, jsonText)
+            console.warn('[SpaceFanfou] SidebarStatistics: 解析API响应失败:', parseError)
           }
         }
       } catch (error) {
         console.warn('[SpaceFanfou] SidebarStatistics: 调用API出错:', error)
       }
     }
-
-    // 3.2 如果API没有获取到，再尝试从桌面版 #user_infos 获取（备用方案）
-    if (!userProfile.created_at) {
-      console.log('[SpaceFanfou] SidebarStatistics: API未获取到注册时间，尝试从桌面版 #user_infos 获取')
-      const userInfos = select('#user_infos')
-
-      if (!userInfos) {
-        console.warn('[SpaceFanfou] SidebarStatistics: 未找到 #user_infos 元素')
-      } else {
-        console.log('[SpaceFanfou] SidebarStatistics: #user_infos 元素已找到')
-        const items = userInfos.querySelectorAll('li')
-        console.log(`[SpaceFanfou] SidebarStatistics: 找到 ${items.length} 个 li 元素`)
-
-        let found = false
-        items.forEach((item, index) => {
-          if (found) return // 已找到，跳过剩余项
-
-          const text = item.textContent.trim()
-          console.log(`[SpaceFanfou] SidebarStatistics: li[${index}] 内容:`, text)
-
-          // 尝试多种日期格式匹配
-          const patterns = [
-            // 标准格式：注册于：2010-01-01 或 注册于: 2010-01-01
-            { regex: /注册于[：:]\s*(\d{4}[-]\d{1,2}[-]\d{1,2})/, groups: 1 },
-            // 中文格式：注册于：2010年1月1日
-            { regex: /注册于[：:]\s*(\d{4})年(\d{1,2})月(\d{1,2})日?/, groups: 3 },
-            // 无冒号格式：注册于 2010-01-01
-            { regex: /注册于\s+(\d{4}[-]\d{1,2}[-]\d{1,2})/, groups: 1 },
-            // 无冒号中文格式：注册于 2010年1月1日
-            { regex: /注册于\s+(\d{4})年(\d{1,2})月(\d{1,2})日?/, groups: 3 },
-            // 兼容老格式（混合年月分隔符）
-            { regex: /注册于[：:]\s*(\d{4})[-年](\d{1,2})[-月](\d{1,2})日?/, groups: 3 },
-            // 更宽松的格式（任意分隔符）
-            { regex: /注册于[：:\s]*(\d{4})[\s年/-](\d{1,2})[\s月/-](\d{1,2})/, groups: 3 },
-          ]
-
-          for (const { regex, groups } of patterns) {
-            const match = text.match(regex)
-            if (match) {
-              console.log('[SpaceFanfou] SidebarStatistics: 正则匹配成功', {
-                pattern: regex.source,
-                match: match.slice(0, groups + 1),
-              })
-
-              let dateStr
-              if (groups === 1) {
-                // 简单格式：直接匹配到完整日期字符串
-                dateStr = match[1]
-              } else if (groups === 3) {
-                // 分组格式：年、月、日分别匹配
-                const year = match[1]
-                const month = match[2].padStart(2, '0')
-                const day = match[3].padStart(2, '0')
-                dateStr = `${year}-${month}-${day}`
-              }
-
-              if (dateStr) {
-                // 验证日期有效性
-                const testDate = new Date(dateStr)
-                if (!isNaN(testDate.getTime())) {
-                  userProfile.created_at = dateStr
-                  console.log('[SpaceFanfou] SidebarStatistics: 成功提取注册日期:', dateStr)
-                  found = true
-                  return // 找到有效日期后退出
-                } else {
-                  console.warn('[SpaceFanfou] SidebarStatistics: 日期格式无效:', dateStr)
-                }
-              }
-              break // 匹配成功但日期无效，继续尝试下一个正则
-            }
-          }
-        })
-      }
-    }
-
-    // 4. 如果没有找到注册日期，使用估算（从 meta 标签或默认值）
-    if (!userProfile.created_at) {
-      console.warn('[SpaceFanfou] SidebarStatistics: 未能提取到注册日期，使用默认值 2010-01-01')
-      console.warn('[SpaceFanfou] SidebarStatistics: 请检查页面HTML结构是否改变')
-      console.warn('[SpaceFanfou] SidebarStatistics: 建议检查 #user_infos 元素中的实际内容')
-      // 默认使用一个合理的日期（2010年，饭否重新上线的年份）
-      userProfile.created_at = '2010-01-01'
-    } else {
-      console.log('[SpaceFanfou] SidebarStatistics: 最终注册日期:', userProfile.created_at)
-    }
-
-    // 5. 检查是否为私密账号
-    userProfile.protected = !!select('.protected, [data-protected="true"]')
 
     return userProfile
   }
@@ -411,31 +274,17 @@ export default context => {
   })
 
   return {
-    applyWhen: async () => {
-      console.log('[SpaceFanfou] sidebar-statistics: 检查是否为用户资料页')
-      const result = await isUserProfilePage()
-      console.log('[SpaceFanfou] sidebar-statistics: isUserProfilePage =', result)
-      return result
-    },
+    applyWhen: () => isUserProfilePage(),
 
-    waitReady: async () => {
-      console.log('[SpaceFanfou] sidebar-statistics: 等待 .stabs 元素')
-      const result = await elementCollection.ready('stabs')
-      console.log('[SpaceFanfou] sidebar-statistics: .stabs 元素已就绪')
-      return result
-    },
+    waitReady: () => elementCollection.ready('stabs'),
 
     onLoad() {
-      console.log('[SpaceFanfou] sidebar-statistics: onLoad 开始')
       unmount = preactRender(<SidebarStatistics proxiedFetch={proxiedFetch} />, rendered => {
-        console.log('[SpaceFanfou] sidebar-statistics: 渲染完成，插入 DOM')
         elementCollection.get('stabs').after(rendered)
       })
-      console.log('[SpaceFanfou] sidebar-statistics: onLoad 完成')
     },
 
     onUnload() {
-      console.log('[SpaceFanfou] sidebar-statistics: onUnload')
       unmount()
     },
   }
