@@ -7,6 +7,7 @@ import settings from './settings'
 import proxiedFetch from './proxiedFetch'
 import proxiedAudio from './proxiedAudio'
 import proxiedCreateTab from './proxiedCreateTab'
+import fanfouOAuth from './fanfouOAuth'
 
 // Manifest V3 compatible content script injection
 // Replaces webext-inject-on-install (uses deprecated chrome.tabs.executeScript)
@@ -79,6 +80,7 @@ export default async function createBackgroundEnvironment() {
     proxiedFetch.install(),
     proxiedAudio.install(),
     proxiedCreateTab.install(),
+    fanfouOAuth.install(),
   ])
 
   return { messaging, settings }

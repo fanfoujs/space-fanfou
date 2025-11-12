@@ -3,6 +3,7 @@ import arrayRemove from 'just-remove'
 import messaging from './messaging'
 import VersionHistory from './components/VersionHistory'
 import HelpAndSupport from './components/HelpAndSupport'
+import OAuthPanel from './components/OAuthPanel'
 import { GET_OPTION_DEFS } from '@constants'
 
 const tabDefs = [ {
@@ -67,6 +68,12 @@ const tabDefs = [ {
     options: [
       'share-to-fanfou',
     ],
+  }, {
+    title: 'API 接入',
+    options: [
+      'fanfou-oauth',
+    ],
+    children: <OAuthPanel />,
   } ],
 }, {
   title: '更新历史',

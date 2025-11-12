@@ -92,27 +92,51 @@ class SidebarStatistics extends Component {
     }
 
     // 步骤2: 尝试通过API获取注册日期（可选，可能失败）
-    const { proxiedFetch } = this.props
-    if (proxiedFetch) {
-      try {
-        const userId = this.getUserId()
-        const apiUrl = `http://api.fanfou.com/users/show.json`
-        const query = { id: userId, mode: 'lite' }
+    const { proxiedFetch, oauthClient } = this.props
+    const userId = this.getUserId()
+    const apiUrl = 'https://api.fanfou.com/users/show.json'
+    const query = { id: userId, mode: 'lite' }
 
+    if (oauthClient) {
+      try {
+        const { responseJSON, error } = await oauthClient.request({
+          url: apiUrl,
+          method: 'GET',
+          query,
+          responseType: 'json',
+        }) || {}
+
+        if (error) {
+          console.warn('[SpaceFanfou] SidebarStatistics: OAuth API 请求失败:', error)
+        } else if (responseJSON?.created_at) {
+          const createdDate = new Date(responseJSON.created_at)
+          if (!isNaN(createdDate.getTime())) {
+            const year = createdDate.getFullYear()
+            const month = String(createdDate.getMonth() + 1).padStart(2, '0')
+            const day = String(createdDate.getDate()).padStart(2, '0')
+            userProfile.created_at = `${year}-${month}-${day}`
+          }
+        }
+      } catch (error) {
+        console.warn('[SpaceFanfou] SidebarStatistics: OAuth API 调用异常:', error)
+      }
+    }
+
+    // OAuth 未配置或返回异常时，保留旧的 proxiedFetch 调用，便于调试
+    if (!userProfile.created_at && proxiedFetch) {
+      try {
         const { error: ajaxError, responseText: jsonText } = await proxiedFetch.get({
           url: apiUrl,
           query,
         })
 
         if (ajaxError) {
-          console.warn('[SpaceFanfou] SidebarStatistics: API请求失败（预期内）:', ajaxError)
+          console.warn('[SpaceFanfou] SidebarStatistics: 未签名 API 请求失败（预期内）:', ajaxError)
         } else if (jsonText) {
           try {
             const userData = JSON.parse(jsonText)
 
             if (userData.created_at) {
-              // API返回的格式："Sat Jun 09 23:56:33 +0000 2007"
-              // 转换为 YYYY-MM-DD 格式
               const createdDate = new Date(userData.created_at)
               if (!isNaN(createdDate.getTime())) {
                 const year = createdDate.getFullYear()
@@ -122,11 +146,11 @@ class SidebarStatistics extends Component {
               }
             }
           } catch (parseError) {
-            console.warn('[SpaceFanfou] SidebarStatistics: 解析API响应失败:', parseError)
+            console.warn('[SpaceFanfou] SidebarStatistics: 解析未签名 API 响应失败:', parseError)
           }
         }
       } catch (error) {
-        console.warn('[SpaceFanfou] SidebarStatistics: 调用API出错:', error)
+        console.warn('[SpaceFanfou] SidebarStatistics: 未签名 API 调用异常:', error)
       }
     }
 
@@ -265,7 +289,7 @@ class StatisticItem extends Component {
 
 export default context => {
   const { elementCollection, requireModules } = context
-  const { proxiedFetch } = requireModules([ 'proxiedFetch' ])
+  const { proxiedFetch, fanfouOAuth } = requireModules([ 'proxiedFetch', 'fanfouOAuth' ])
 
   let unmount
 
@@ -279,7 +303,7 @@ export default context => {
     waitReady: () => elementCollection.ready('stabs'),
 
     onLoad() {
-      unmount = preactRender(<SidebarStatistics proxiedFetch={proxiedFetch} />, rendered => {
+      unmount = preactRender(<SidebarStatistics proxiedFetch={proxiedFetch} oauthClient={fanfouOAuth} />, rendered => {
         elementCollection.get('stabs').after(rendered)
       })
     },

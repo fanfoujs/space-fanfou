@@ -116,12 +116,13 @@ export default class App extends Component {
   }
 
   renderSection = (sectionDef, sectionId) => {
-    const { title, options } = sectionDef
+    const { title, options = [], children } = sectionDef
 
     return (
       <section key={sectionId}>
         <h3>{ title }</h3>
         { options.map(this.renderOptionGroup) }
+        { children }
       </section>
     )
   }
@@ -145,6 +146,7 @@ export default class App extends Component {
       <li key={key} className={classNames}>
         { type === 'checkbox' && this.renderCheckbox(optionDef) }
         { type === 'number' && this.renderNumberInput(optionDef) }
+        { type === 'text' && this.renderTextInput(optionDef) }
         { this.renderComment(optionDef) }
         { optionDef.disableCloudSyncing && <CloudSyncingDisabledTip /> }
       </li>
@@ -172,6 +174,28 @@ export default class App extends Component {
     return (
       <label>
         { pre }<input type="number" {...controlOptions} />{ post }
+      </label>
+    )
+  }
+
+  renderTextInput(optionDef) {
+    const label = optionDef.label || ''
+    const controlOptions = this.getControlOptions(optionDef, 'value')
+
+    if (label.includes(CONTROL_PLACEHOLDER)) {
+      const [ pre, post ] = label.split(CONTROL_PLACEHOLDER)
+
+      return (
+        <label className="text-input-inline">
+          { pre }<input type="text" {...controlOptions} />{ post }
+        </label>
+      )
+    }
+
+    return (
+      <label className="text-input">
+        <span>{ label }</span>
+        <input type="text" {...controlOptions} />
       </label>
     )
   }
