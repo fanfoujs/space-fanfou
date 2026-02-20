@@ -5,8 +5,9 @@
 import { h, Component } from 'preact'
 import cx from 'classnames'
 import clamp from 'just-clamp'
-import elementReady from 'element-ready'
 import select from 'select-dom'
+import retry from 'p-retry'
+import jsonp from '@libs/jsonp'
 import Tooltip from '@libs/Tooltip'
 import { isUserProfilePage } from '@libs/pageDetect'
 import preactRender from '@libs/preactRender'
@@ -46,118 +47,33 @@ class SidebarStatistics extends Component {
   }
 
   async fetchUserProfileData() {
-    // 等待当前页面的#info元素加载
-    console.log('[SpaceFanfou] SidebarStatistics: 等待 #info 元素...')
-    await elementReady('#info')
-    console.log('[SpaceFanfou] SidebarStatistics: #info 元素已就绪')
-
-    const userProfile = {}
-
-    // 步骤1: 从当前页面的 #info 区域提取统计数字
-    const info = select('#info')
-    console.log('[SpaceFanfou] SidebarStatistics: #info 元素:', info)
-
-    if (info) {
-      const links = info.querySelectorAll('li a')
-      console.log('[SpaceFanfou] SidebarStatistics: 找到', links.length, '个链接')
-
-      links.forEach((link, index) => {
-        const text = link.textContent.trim()
-        console.log(`[SpaceFanfou] SidebarStatistics: 链接[${index}]:`, text)
-
-        // 匹配 "22102 消息" 格式
-        const statusMatch = text.match(/^(\d+)\s*消息$/)
-        // 匹配 "171 他关注的人" 或 "171 她关注的人" 格式
-        const friendsMatch = text.match(/^(\d+)\s*(他|她)?关注的人$/)
-        // 匹配 "459 关注他的人" 或 "459 关注她的人" 格式
-        const followersMatch = text.match(/^(\d+)\s*关注(他|她)的人$/)
-
-        if (statusMatch) {
-          userProfile.statuses_count = parseInt(statusMatch[1], 10)
-          console.log('[SpaceFanfou] SidebarStatistics: ✓ 提取到消息数:', userProfile.statuses_count)
-        }
-        if (friendsMatch) {
-          userProfile.friends_count = parseInt(friendsMatch[1], 10)
-          console.log('[SpaceFanfou] SidebarStatistics: ✓ 提取到关注数:', userProfile.friends_count)
-        }
-        if (followersMatch) {
-          userProfile.followers_count = parseInt(followersMatch[1], 10)
-          console.log('[SpaceFanfou] SidebarStatistics: ✓ 提取到粉丝数:', userProfile.followers_count)
-        }
+    const apiUrl = '//api.fanfou.com/users/show.json'
+    const params = { id: this.getUserId() }
+    const fetch = () => jsonp(apiUrl, { params })
+    
+    try {
+      const userProfileData = await retry(fetch, {
+        retries: 3,
+        minTimeout: 250,
       })
-
-      console.log('[SpaceFanfou] SidebarStatistics: DOM提取结果:', userProfile)
-    } else {
-      console.warn('[SpaceFanfou] SidebarStatistics: ❌ 未找到 #info 元素')
+      return userProfileData || {}
+    } catch (error) {
+      console.warn('[SpaceFanfou] SidebarStatistics: JSONP API 请求失败:', error)
+      return {}
     }
-
-    // 步骤2: 尝试通过API获取注册日期（可选，可能失败）
-    const { proxiedFetch, oauthClient } = this.props
-    const userId = this.getUserId()
-    const apiUrl = 'https://api.fanfou.com/users/show.json'
-    const query = { id: userId, mode: 'lite' }
-
-    if (oauthClient) {
-      try {
-        const { responseJSON, error } = await oauthClient.request({
-          url: apiUrl,
-          method: 'GET',
-          query,
-          responseType: 'json',
-        }) || {}
-
-        if (error) {
-          console.warn('[SpaceFanfou] SidebarStatistics: OAuth API 请求失败:', error)
-        } else if (responseJSON?.created_at) {
-          const createdDate = new Date(responseJSON.created_at)
-          if (!isNaN(createdDate.getTime())) {
-            const year = createdDate.getFullYear()
-            const month = String(createdDate.getMonth() + 1).padStart(2, '0')
-            const day = String(createdDate.getDate()).padStart(2, '0')
-            userProfile.created_at = `${year}-${month}-${day}`
-          }
-        }
-      } catch (error) {
-        console.warn('[SpaceFanfou] SidebarStatistics: OAuth API 调用异常:', error)
-      }
-    }
-
-    // OAuth 未配置或返回异常时，保留旧的 proxiedFetch 调用，便于调试
-    if (!userProfile.created_at && proxiedFetch) {
-      try {
-        const { error: ajaxError, responseText: jsonText } = await proxiedFetch.get({
-          url: apiUrl,
-          query,
-        })
-
-        if (ajaxError) {
-          console.warn('[SpaceFanfou] SidebarStatistics: 未签名 API 请求失败（预期内）:', ajaxError)
-        } else if (jsonText) {
-          try {
-            const userData = JSON.parse(jsonText)
-
-            if (userData.created_at) {
-              const createdDate = new Date(userData.created_at)
-              if (!isNaN(createdDate.getTime())) {
-                const year = createdDate.getFullYear()
-                const month = String(createdDate.getMonth() + 1).padStart(2, '0')
-                const day = String(createdDate.getDate()).padStart(2, '0')
-                userProfile.created_at = `${year}-${month}-${day}`
-              }
-            }
-          } catch (parseError) {
-            console.warn('[SpaceFanfou] SidebarStatistics: 解析未签名 API 响应失败:', parseError)
-          }
-        }
-      } catch (error) {
-        console.warn('[SpaceFanfou] SidebarStatistics: 未签名 API 调用异常:', error)
-      }
-    }
-
-    return userProfile
   }
 
   processData(userProfile) {
+    if (!userProfile || !userProfile.created_at) {
+      this.setState({
+        registerDateText: '获取失败',
+        registerDurationText: '获取失败',
+        statusFrequencyText: '获取失败',
+        influenceIndexText: '获取失败',
+      })
+      return
+    }
+
     // 是否加锁
     const isProtected = userProfile.protected
 
@@ -288,8 +204,7 @@ class StatisticItem extends Component {
 }
 
 export default context => {
-  const { elementCollection, requireModules } = context
-  const { proxiedFetch, fanfouOAuth } = requireModules([ 'proxiedFetch', 'fanfouOAuth' ])
+  const { elementCollection } = context
 
   let unmount
 
@@ -303,7 +218,7 @@ export default context => {
     waitReady: () => elementCollection.ready('stabs'),
 
     onLoad() {
-      unmount = preactRender(<SidebarStatistics proxiedFetch={proxiedFetch} oauthClient={fanfouOAuth} />, rendered => {
+      unmount = preactRender(<SidebarStatistics />, rendered => {
         elementCollection.get('stabs').after(rendered)
       })
     },
