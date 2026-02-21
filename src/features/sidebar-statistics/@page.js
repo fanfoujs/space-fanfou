@@ -6,8 +6,6 @@ import { h, Component } from 'preact'
 import cx from 'classnames'
 import clamp from 'just-clamp'
 import select from 'select-dom'
-import retry from 'p-retry'
-import jsonp from '@libs/jsonp'
 import Tooltip from '@libs/Tooltip'
 import { isUserProfilePage } from '@libs/pageDetect'
 import preactRender from '@libs/preactRender'
@@ -19,6 +17,7 @@ class SidebarStatistics extends Component {
 
     this.state = {
       isProtected: false,
+      oauthNotConfigured: false,
       registerDateText: '……',
       registerDurationText: '……',
       registerDurationProgress: 0,
@@ -32,8 +31,12 @@ class SidebarStatistics extends Component {
 
   async componentDidMount() {
     try {
-      const userProfile = await this.fetchUserProfileData()
-      this.processData(userProfile)
+      const { profile, oauthNotConfigured } = await this.fetchUserProfileData()
+      if (oauthNotConfigured) {
+        this.setState({ oauthNotConfigured: true })
+      } else {
+        this.processData(profile)
+      }
     } catch (error) {
       console.error('[SpaceFanfou] SidebarStatistics: 获取用户资料失败:', error)
       // 保持默认的 "……" 状态
@@ -47,29 +50,29 @@ class SidebarStatistics extends Component {
   }
 
   async fetchUserProfileData() {
-    const apiUrl = '//api.fanfou.com/users/show.json'
-    const params = { id: this.getUserId() }
-    const fetch = () => jsonp(apiUrl, { params })
-    
-    try {
-      const userProfileData = await retry(fetch, {
-        retries: 3,
-        minTimeout: 250,
-      })
-      return userProfileData || {}
-    } catch (error) {
-      console.warn('[SpaceFanfou] SidebarStatistics: JSONP API 请求失败:', error)
-      return {}
+    const { error, responseJSON } = await this.props.fanfouOAuth.request({
+      url: 'https://api.fanfou.com/users/show.json',
+      query: { id: this.getUserId() },
+      responseType: 'json',
+    })
+
+    if (error) {
+      const needsAuth = typeof error === 'string' && error.includes('授权')
+      const oauthDisabled = typeof error === 'string' && error.includes('OAuth 功能未启用')
+      console.warn('[SpaceFanfou] SidebarStatistics: OAuth API 请求失败:', error)
+      return { profile: {}, oauthNotConfigured: needsAuth || oauthDisabled }
     }
+
+    return { profile: responseJSON || {} }
   }
 
   processData(userProfile) {
     if (!userProfile || !userProfile.created_at) {
       this.setState({
-        registerDateText: '获取失败',
-        registerDurationText: '获取失败',
-        statusFrequencyText: '获取失败',
-        influenceIndexText: '获取失败',
+        registerDateText: '请求失败',
+        registerDurationText: '请求失败',
+        statusFrequencyText: '请求失败',
+        influenceIndexText: '请求失败',
       })
       return
     }
@@ -143,12 +146,24 @@ class SidebarStatistics extends Component {
   render() {
     const {
       isProtected,
+      oauthNotConfigured,
       registerDateText,
       registerDurationText, registerDurationProgress,
       statusFrequencyText, statusFrequencyProgress,
       influenceIndexText, influenceIndexProgress,
       backgroundImageUrl,
     } = this.state
+
+    if (oauthNotConfigured) {
+      return (
+        <div class="stabs sf-sidebar-statistics">
+          <h2>统计信息</h2>
+          <ul>
+            <li class="sf-sidebar-statistics-item">请在设置页完成 OAuth 授权</li>
+          </ul>
+        </div>
+      )
+    }
 
     return (
       <div class="stabs sf-sidebar-statistics">
@@ -204,7 +219,8 @@ class StatisticItem extends Component {
 }
 
 export default context => {
-  const { elementCollection } = context
+  const { requireModules, elementCollection } = context
+  const { fanfouOAuth } = requireModules([ 'fanfouOAuth' ])
 
   let unmount
 
@@ -218,7 +234,7 @@ export default context => {
     waitReady: () => elementCollection.ready('stabs'),
 
     onLoad() {
-      unmount = preactRender(<SidebarStatistics />, rendered => {
+      unmount = preactRender(<SidebarStatistics fanfouOAuth={fanfouOAuth} />, rendered => {
         elementCollection.get('stabs').after(rendered)
       })
     },

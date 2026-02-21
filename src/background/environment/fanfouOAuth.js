@@ -11,6 +11,11 @@ import {
   FANFOU_OAUTH_API_REQUEST,
 } from '@constants'
 
+// fanfoujs/nofan 开源项目公开的 consumer key（与本项目同属 fanfoujs 组织）
+// 饭否官方已停止开发者申请，内置此 key 供无法自行申请的用户使用
+const BUILTIN_CONSUMER_KEY = '13456aa784cdf7688af69e85d482e011'
+const BUILTIN_CONSUMER_SECRET = 'f75c02df373232732b69354ecfbcabea'
+
 const REQUEST_TOKEN_URL = 'http://fanfou.com/oauth/request_token'
 const ACCESS_TOKEN_URL = 'http://fanfou.com/oauth/access_token'
 const AUTHORIZE_URL = 'http://fanfou.com/oauth/authorize'
@@ -57,14 +62,18 @@ async function persistTokens(tokens) {
 async function readConsumerConfig() {
   const optionValues = await settings.readAll()
   const enabled = !!optionValues['fanfou-oauth']
-  const consumerKey = (optionValues['fanfou-oauth/consumerKey'] || '').trim()
-  const consumerSecret = (optionValues['fanfou-oauth/consumerSecret'] || '').trim()
+  const userKey = (optionValues['fanfou-oauth/consumerKey'] || '').trim()
+  const userSecret = (optionValues['fanfou-oauth/consumerSecret'] || '').trim()
+  // 用户未填写时使用内置 key，保证「开始授权」按钮始终可用
+  const consumerKey = userKey || BUILTIN_CONSUMER_KEY
+  const consumerSecret = userSecret || BUILTIN_CONSUMER_SECRET
 
   return {
     enabled,
     consumerKey,
     consumerSecret,
-    hasCredentials: Boolean(consumerKey && consumerSecret),
+    hasCredentials: true, // 内置 key 始终存在
+    usingBuiltinKey: !userKey,
   }
 }
 
@@ -173,7 +182,7 @@ function launchAuthWindow(authUrl) {
   })
 }
 
-function buildStatus({ enabled, hasCredentials, consumerKey }, tokens, redirectUrl) {
+function buildStatus({ enabled, hasCredentials, consumerKey, usingBuiltinKey }, tokens, redirectUrl) {
   const hasTokens = Boolean(tokens?.oauthToken && tokens?.oauthTokenSecret)
 
   return {
@@ -181,8 +190,9 @@ function buildStatus({ enabled, hasCredentials, consumerKey }, tokens, redirectU
     status: {
       enabled,
       hasConsumerCredentials: hasCredentials,
+      usingBuiltinKey: usingBuiltinKey || (!hasTokens ? false : tokens.consumerKey === BUILTIN_CONSUMER_KEY),
       hasTokens,
-      canAuthorize: enabled && hasCredentials,
+      canAuthorize: hasCredentials, // 内置 key 始终可授权，无需先勾选复选框
       screenName: tokens?.screenName || null,
       userId: tokens?.userId || null,
       redirectUrl,
@@ -269,10 +279,6 @@ async function handleApiRequest(payload) {
 
     const consumer = await readConsumerConfig()
     const tokens = await readTokens()
-
-    if (!consumer.enabled) {
-      return { error: 'OAuth 功能未启用' }
-    }
 
     if (!consumer.hasCredentials) {
       return { error: '请先填写 Consumer Key / Secret' }
