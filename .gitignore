@@ -17,3 +17,4 @@ tests/e2e/screenshots/
 .tmp-chrome-profile/
 fanfou账号
 tasks/lessons.md
+test-results/
