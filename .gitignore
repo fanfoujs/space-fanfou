@@ -12,3 +12,8 @@ node_modules
 .project
 .vscode
 .worktrees/
+tests/e2e/.env.local
+tests/e2e/screenshots/
+.tmp-chrome-profile/
+fanfou账号
+tasks/lessons.md

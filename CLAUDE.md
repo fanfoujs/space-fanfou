@@ -2,9 +2,68 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## AI 行为指南
+
+### 1. 规划优先
+- 任何非简单任务（3 步以上或涉及架构决策）都要进入计划模式
+- 遇到问题时立刻停下重新规划，不要硬撑
+- 用计划模式做验证，不只是构建
+- 提前写清详细规格，减少歧义
+
+### 2. 子代理策略
+- 积极使用子代理，保持主上下文干净
+- 把研究、探索、并行分析分配给子代理
+- 复杂问题用子代理投入更多算力
+- 每个子代理专注单一任务
+
+### 3. 自我改进循环
+- 用户纠正后：把规律记录到 `tasks/lessons.md`
+- 写下规则防止同类错误
+- 持续迭代直到错误率下降
+- 每次会话开始时回顾 lessons
+
+### 4. 完成前验证
+- 没有证明工作前不要标记任务完成
+- 必要时对比 main 分支与修改后的行为差异
+- 问自己：资深工程师会认可这个方案吗？
+- 跑测试、查日志、证明正确性
+
+### 5. 追求优雅（适度）
+- 对于非简单修改：停下来问"有没有更优雅的方式？"
+- 如果修复感觉很 hacky："用我现在掌握的全部知识，实现优雅方案"
+- 简单明显的修复跳过此步，不要过度设计
+- 提交前自我审查
+
+### 6. 自主 bug 修复
+- 收到 bug 报告时：直接修，不要要求手把手
+- 用日志、报错、失败测试定位问题
+- 不需要用户切换上下文
+- 主动修复 CI 失败测试
+
+## 任务管理
+
+1. **先规划**：把计划写入 `tasks/todo.md`，含可勾选事项
+2. **确认计划**：开始实现前先确认
+3. **追踪进度**：逐项标记完成
+4. **解释变更**：每步给出高层次说明
+5. **记录结果**：在 `tasks/todo.md` 中添加回顾章节
+6. **记录教训**：纠正后更新 `tasks/lessons.md`
+
+## 核心原则
+
+- **简单优先**：每次改动尽可能简单，影响最少代码
+- **不偷懒**：找根因，不打临时补丁，以资深工程师标准要求自己
+- **最小影响**：改动只触碰必要部分，避免引入新 bug
+
+---
+
 ## 项目概述
 
 太空饭否是一个 Chrome 浏览器扩展（Manifest V3），为 fanfou.com 提供增强功能。
+
+- **版本**：MV3（本 fork 已完成 MV2→MV3 迁移，上游仍为 MV2）
+- **基础**：Fork 自 [fanfoujs/space-fanfou](https://github.com/fanfoujs/space-fanfou)
+- **OAuth**：内置饭否开发者密钥，用户一键授权即可（`fanfou-oauth` 功能模块）
 
 ## 核心命令
 
@@ -13,7 +72,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev          # 开发模式（监听文件变化，自动重新构建）
 npm test             # 运行 lint + 单元测试
 npm run build        # 生产构建
-npm run release      # 构建并打包发布版本
+npm run release      # 生产构建并打包（= build + pack）
 ```
 
 ### 测试与检查
@@ -111,7 +170,7 @@ export const isSoldered = true
 - **入口文件**：`src/entries/` 目录
   - `background-content-page.js`：三层共用的入口（自动根据环境加载对应功能组件）
   - `settings.js`：设置页面入口
-  - `offscreen.js`：Offscreen 文档入口
+  - `offscreen.js`：Offscreen 文档入口（MV3 中 Service Worker 不支持 Audio API，音频播放由此处理）
 - **条件编译**：使用 `ifdef-loader` 根据环境变量选择性编译代码
   - `/// #if ENV_BACKGROUND`
   - `/// #elif ENV_CONTENT`
@@ -170,9 +229,8 @@ export const isSoldered = true
 ### 发布前检查
 
 ```bash
-npm test                # 确保通过所有检查
-npm run build           # 生产构建
-npm run pack            # 打包成 zip
+npm test            # 确保通过所有检查
+npm run release     # 生产构建并打包成 zip
 ```
 
 ## 参考文档
