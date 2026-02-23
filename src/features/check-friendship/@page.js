@@ -12,10 +12,12 @@ export default context => {
   const { proxiedFetch } = requireModules([ 'proxiedFetch' ])
 
   const GENDER_PLACEHOLDER = '<GENDER_PLACEHOLDER>'
-  const TEXT_INITIAL = `检查${GENDER_PLACEHOLDER}是否关注了你`
+  const TEXT_INITIAL = `检查与${GENDER_PLACEHOLDER}的关系`
   const TEXT_BUSY = '检查中……'
-  const TEXT_IS_FOLLOWED = `${GENDER_PLACEHOLDER}关注了你！`
-  const TEXT_IS_NOT_FOLLOWED = `${GENDER_PLACEHOLDER}没有关注你 :(`
+  const TEXT_MUTUAL = '互相关注 ✓'
+  const TEXT_THEY_FOLLOW = `${GENDER_PLACEHOLDER}关注了你`
+  const TEXT_I_FOLLOW = `你关注了${GENDER_PLACEHOLDER}`
+  const TEXT_NO_FOLLOW = '互未关注'
 
   let checkButton
   let hasChecked = false
@@ -79,23 +81,46 @@ export default context => {
     checkButton.textContent = text.replace(GENDER_PLACEHOLDER, getGender()).trim()
   }
 
-  async function fetchFollowersList(pageNumber) {
-    const url = `https://m.fanfou.com/followers/p.${pageNumber}`
-    const { error: ajaxError, responseText: html } = await proxiedFetch.get({ url })
-    let followerIds, hasReachedEnd
+  // 通用翻页抓取函数：baseUrl 为不含页码部分，pageKey 用于检测下一页链接
+  async function fetchUserList(baseUrl, pageKey, pageNumber) {
+    const url = `${baseUrl}${pageNumber}`
+    const { error, responseText: html } = await proxiedFetch.get({ url })
 
-    if (ajaxError) {
-      log.error('加载关注者列表失败', ajaxError)
-      return { error: true }
+    if (error) {
+      log.error('加载列表失败', error)
+      return { ids: [], hasReachedEnd: true }
     }
 
-    const document = parseHTML(html)
-    const items = select.all('ol > li > a > span.a', document)
+    const doc = parseHTML(html)
+    const items = select.all('ol > li > a > span.a', doc)
+    const ids = items.map(item => item.textContent.replace(/^\(|\)$/g, ''))
+    const hasReachedEnd = !select.exists(`a[href="/${pageKey}/p.${pageNumber + 1}"]`, doc)
 
-    followerIds = items.map(item => item.textContent.replace(/^\(|\)$/g, ''))
-    hasReachedEnd = !select.exists(`a[href="/followers/p.${pageNumber + 1}"]`, document)
+    return { ids, hasReachedEnd }
+  }
 
-    return { followerIds, hasReachedEnd }
+  // 检查 targetUserId 是否在我的 followers 列表里（对方是否关注了我）
+  async function checkTheyFollowMe(targetUserId) {
+    let pageNumber = 0
+
+    while (true) {
+      const { ids, hasReachedEnd } = await fetchUserList('https://m.fanfou.com/followers/p.', 'followers', ++pageNumber)
+
+      if (ids.includes(targetUserId)) return true
+      if (hasReachedEnd) return false
+    }
+  }
+
+  // 检查 targetUserId 是否在我的 friends 列表里（我是否关注了对方）
+  async function checkIFollowThem(targetUserId) {
+    let pageNumber = 0
+
+    while (true) {
+      const { ids, hasReachedEnd } = await fetchUserList('https://m.fanfou.com/friends/p.', 'friends', ++pageNumber)
+
+      if (ids.includes(targetUserId)) return true
+      if (hasReachedEnd) return false
+    }
   }
 
   async function checkFriendship() {
@@ -104,35 +129,23 @@ export default context => {
     setText(TEXT_BUSY)
 
     try {
-      const userId = await getCurrentPageOwnerUserId()
-      let isFollowed = false
-      let pageNumber = 0
+      const targetUserId = await getCurrentPageOwnerUserId()
 
-      while (true) {
-        const result = await fetchFollowersList(++pageNumber)
-        
-        if (result.error) {
-          hasChecked = false
-          setText('网络错误，点击重试')
-          return
-        }
+      // 双向并行检查
+      const [ theyFollowMe, iFollowThem ] = await Promise.all([
+        checkTheyFollowMe(targetUserId),
+        checkIFollowThem(targetUserId),
+      ])
 
-        const { followerIds, hasReachedEnd } = result
-
-        if (!hasReachedEnd) {
-          isFollowed = followerIds.includes(userId)
-        }
-
-        if (hasReachedEnd || isFollowed) {
-          break
-        }
-      }
-
-      setText(isFollowed ? TEXT_IS_FOLLOWED : TEXT_IS_NOT_FOLLOWED)
+      if (theyFollowMe && iFollowThem) setText(TEXT_MUTUAL)
+      else if (theyFollowMe) setText(TEXT_THEY_FOLLOW)
+      else if (iFollowThem) setText(TEXT_I_FOLLOW)
+      else setText(TEXT_NO_FOLLOW)
     } catch (err) {
       log.error('检查关注关系发生异常', err)
-      hasChecked = false
       setText('出现异常，点击重试')
+    } finally {
+      hasChecked = false // 允许重试
     }
   }
 

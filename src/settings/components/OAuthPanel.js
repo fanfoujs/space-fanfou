@@ -119,7 +119,7 @@ export default class OAuthPanel extends Component {
     lines.push(
       status.enabled
         ? '「启用 OAuth 认证」：已勾选'
-        : '「启用 OAuth 认证」：未启用（请先选中复选框）'
+        : '「启用 OAuth 认证」：未启用（请先选中复选框）',
     )
 
     lines.push(
@@ -127,7 +127,7 @@ export default class OAuthPanel extends Component {
         ? 'Consumer Key / Secret：使用内置密钥（nofan）'
         : status.hasConsumerCredentials
           ? 'Consumer Key / Secret：已填写（自定义）'
-          : 'Consumer Key / Secret：尚未填写'
+          : 'Consumer Key / Secret：尚未填写',
     )
 
     if (status.hasTokens) {

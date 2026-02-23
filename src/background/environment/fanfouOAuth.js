@@ -1,3 +1,4 @@
+/* eslint-disable camelcase, new-cap */
 import OAuth from 'oauth-1.0a'
 import CryptoJS from 'crypto-js'
 import messaging from './messaging'
