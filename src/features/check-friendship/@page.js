@@ -88,7 +88,29 @@ export default context => {
     setText(TEXT_BUSY)
 
     try {
-      const targetUserId = await getCurrentPageOwnerUserId()
+      let targetUserId = await getCurrentPageOwnerUserId()
+
+      // Step 1. 先通过 users/show 将潜在的 login string 解析为底层的 ~id，规避 friendships/show 的严格格式缺陷
+      const { error: userError, responseJSON: userJSON } = await fanfouOAuth.request({
+        url: 'https://api.fanfou.com/users/show.json',
+        query: { id: targetUserId },
+        responseType: 'json',
+      })
+
+      if (userError) {
+        log.error('API请求失败 (users/show)', userError)
+        if (typeof userError === 'string' && userError.includes('未完成授权')) {
+          setText('请前往设置页完成授权')
+        } else {
+          setText('出现异常，点击重试')
+        }
+        hasChecked = false // 允许重试
+        return
+      }
+
+      if (userJSON && userJSON.id) {
+        targetUserId = userJSON.id
+      }
 
       // 切换至稳健的 OAuth 官方 API
       const { error, responseJSON } = await fanfouOAuth.request({
@@ -99,7 +121,7 @@ export default context => {
       })
 
       if (error) {
-        log.error('API请求失败', error)
+        log.error('API请求失败 (friendships/show)', error)
         if (typeof error === 'string' && error.includes('未完成授权')) {
           setText('请前往设置页完成授权')
         } else {
@@ -121,6 +143,8 @@ export default context => {
       else if (theyFollowMe) setText(TEXT_THEY_FOLLOW)
       else if (iFollowThem) setText(TEXT_I_FOLLOW)
       else setText(TEXT_NO_FOLLOW)
+
+      hasChecked = false
     } catch (err) {
       log.error('检查关注关系发生异常', err)
       setText('出现异常，点击重试')

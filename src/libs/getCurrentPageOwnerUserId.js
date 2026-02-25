@@ -5,7 +5,9 @@ import { isUserProfilePage } from '@libs/pageDetect'
 export default simpleMemoize(async () => {
   const splitPathname = window.location.pathname.split('/')
 
-  return await isUserProfilePage()
+  const result = await isUserProfilePage()
     ? splitPathname[1] // fanfou.com/<userid>
     : splitPathname[2] // fanfou.com/album/<userid>
+
+  return decodeURIComponent(result || '')
 })

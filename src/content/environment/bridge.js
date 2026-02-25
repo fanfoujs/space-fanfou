@@ -6,7 +6,12 @@ async function eventHandler(event) {
   const { from, senderId, message } = event.detail
 
   if (from === 'page') {
-    const respondedMessage = await bridge.postMessageToBackground(message)
+    let respondedMessage
+    try {
+      respondedMessage = await bridge.postMessageToBackground(message)
+    } catch (error) {
+      respondedMessage = { error: error.message || 'Background unavailable' }
+    }
 
     bridge.postMessageToInjected({
       senderId,

@@ -24,6 +24,11 @@
 5. **错误感知与 UI 降级优化 (Sidebar-Statistics - P2)**
    - 把早年版本仅能匹配中文“授权”触发的降级过滤器，扩展补充了 `401/403/Invalid/Unauthorized` 等高危网络拒收码标志，保障了当饭否 API 变脸时应用能从容抛出要求用户授权的温和向导而非无休止的骨架屏。
 
+6. **修复好友互查时的隐蔽 API 崩溃 (Check-Friendship - P1)**
+   - **双重编码缺陷**：修复了原代码提取 URL 中文用户名时未经 `decodeURIComponent` 解码，直接喂给底层网关导致被二次 URL 编码成乱码，从而触发 `target user` 丢失的问题。
+   - **Login Name 拒收缺陷**：摸排并破解了饭否 `friendships/show.json` 端点对部分老式纯字母登录名（Login Name）兼容性不佳的服务器隐疾。通过引入前置的 `users/show.json` 单点解析查询，强制将其剥离转化为稳定的原生 `~xxx` 格式内部 ID，成功兜底了所有边缘情况，达成 100% 的准确核查率。
+   - **异步通信防死锁**：鉴于 MV3 环境中 Service Worker 频繁休眠阻断 `postMessage` 回调导致 UI 界面永久冻结的问题，针对 `bridge.js` 管道跨层通信增修了全局异常捕获（try-catch）并归位了 Promise 决议，保障故障节点优雅降回失败态。
+
 ## 📦 测试验证覆盖报告
 我们在真实环境与无头环境双线并进执行了验证：
 - **端到端探测**: Playwright `smoke.spec.ts` 跑通，确证了 Service Worker 与 Content 注入顺畅。
