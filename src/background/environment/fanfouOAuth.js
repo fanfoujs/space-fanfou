@@ -155,13 +155,19 @@ async function requestTemporaryToken(consumer, redirectUrl) {
 }
 
 async function exchangeAccessToken(consumer, tempToken, verifier) {
+  const params = {
+    oauth_token: tempToken.oauth_token,
+  }
+  
+  // 对于桌面应用/老式 OAuth 1.0，可能没有 oauth_verifier，这里设为可选
+  if (verifier) {
+    params.oauth_verifier = verifier
+  }
+
   const responseText = await signedRequest({
     url: ACCESS_TOKEN_URL,
     method: 'POST',
-    params: {
-      oauth_token: tempToken.oauth_token,
-      oauth_verifier: verifier,
-    },
+    params,
     consumerKey: consumer.consumerKey,
     consumerSecret: consumer.consumerSecret,
     token: {
@@ -244,10 +250,13 @@ async function handleAuthorize() {
     const authorizeUrl = `${AUTHORIZE_URL}?oauth_token=${encodeURIComponent(tempToken.oauth_token)}&oauth_callback=${encodeURIComponent(redirectUrl)}`
     const responseUrl = await launchAuthWindow(authorizeUrl)
     const parsedUrl = new URL(responseUrl)
-    const verifier = parsedUrl.searchParams.get('oauth_verifier')
-
-    if (!verifier) {
-      return { error: '授权被取消或未返回 oauth_verifier' }
+    
+    // Nofan 是一个基于 PIN/OOB 的老式 CLI 应用 Key，饭否回调时不会返回 verifier。
+    // 但是只要拿到了 oauth_token 回调，且没有 denied 参数，就说明用户同意了。
+    const verifier = parsedUrl.searchParams.get('oauth_verifier') || ''
+    
+    if (parsedUrl.searchParams.get('denied')) {
+      return { error: '授权被拒绝' }
     }
 
     const accessTokens = await exchangeAccessToken(consumer, tempToken, verifier)
