@@ -21,15 +21,95 @@
 }
 
 #sf-counter {
-  padding-right: 8px;
+  margin-right: 8px;
+  padding: 2px 10px;
+  border-radius: 999px;
   color: #444;
-  transition: all 300ms;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  transition: all 220ms;
 
   &.sf-warning {
-    color: @md-brown-500;
+    color: @md-brown-900;
+    font-size: 15px;
+    font-weight: bold;
+    background-image: linear-gradient(90deg, fade(@md-amber-200, 90%), fade(@md-orange-200, 90%), fade(@md-deep-orange-200, 90%));
+    box-shadow:
+      inset 0 0 0 1px fade(@md-orange-400, 45%),
+      0 1px 4px fade(@md-orange-700, 20%);
   }
 
   &.sf-exceeded {
-    color: @md-red-800;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bolder;
+    background-image: linear-gradient(90deg, fade(@md-deep-orange-500, 95%), fade(@md-red-500, 95%), fade(@md-pink-500, 95%));
+    box-shadow:
+      inset 0 0 0 1px fade(@md-red-700, 65%),
+      0 2px 8px fade(@md-red-700, 28%);
+  }
+}
+
+#phupdate.sf-status-warning textarea {
+  border-color: @md-orange-700;
+  box-shadow:
+    0 0 0 2px fade(@md-orange-500, 38%),
+    0 8px 18px fade(@md-orange-700, 18%);
+  background-image: linear-gradient(130deg, fade(@md-amber-100, 65%), fade(@md-orange-100, 58%), fade(@md-deep-orange-100, 52%));
+}
+
+#phupdate.sf-status-danger textarea {
+  border-color: @md-red-700;
+  box-shadow:
+    0 0 0 2px fade(@md-red-500, 42%),
+    0 9px 20px fade(@md-red-700, 22%);
+  background-image: linear-gradient(130deg, fade(@md-orange-100, 58%), fade(@md-red-100, 60%), fade(@md-pink-100, 56%));
+  animation: sf-danger-pulse 1.2s ease-in-out infinite alternate;
+}
+
+#phupdate.sf-status-warning #sf-counter {
+  color: @md-brown-900;
+}
+
+#phupdate.sf-status-danger #sf-counter {
+  color: #fff;
+  font-size: 16px;
+  font-weight: bolder;
+  animation: sf-danger-counter-glow 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes sf-danger-pulse {
+  0% {
+    box-shadow:
+      0 0 0 2px fade(@md-red-500, 35%),
+      0 8px 18px fade(@md-red-700, 16%);
+  }
+
+  100% {
+    box-shadow:
+      0 0 0 2px fade(@md-red-500, 58%),
+      0 12px 24px fade(@md-red-700, 28%);
+  }
+}
+
+@keyframes sf-danger-counter-glow {
+  0% {
+    box-shadow:
+      inset 0 0 0 1px fade(@md-red-700, 45%),
+      0 1px 4px fade(@md-red-700, 16%);
+  }
+
+  100% {
+    box-shadow:
+      inset 0 0 0 1px fade(@md-red-700, 70%),
+      0 4px 10px fade(@md-red-700, 32%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #phupdate.sf-status-danger textarea,
+  #phupdate.sf-status-danger #sf-counter {
+    animation: none;
   }
 }
