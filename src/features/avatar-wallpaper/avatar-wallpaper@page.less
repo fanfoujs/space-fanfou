@@ -1,0 +1,74 @@
+#sf-avatar-wallpaper {
+  --sf-avatar-wallpaper-tile-size: 64px;
+  --sf-avatar-wallpaper-tile-gap: 6px;
+  --sf-avatar-wallpaper-pane-bg: transparent;
+  --sf-avatar-wallpaper-pane-bg-opacity: 0;
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+#sf-avatar-wallpaper .sf-avatar-wallpaper-pane {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--sf-avatar-wallpaper-tile-size));
+  grid-auto-rows: var(--sf-avatar-wallpaper-tile-size);
+  justify-content: center;
+  align-content: center;
+  gap: var(--sf-avatar-wallpaper-tile-gap);
+  padding: 14px 8px;
+  overflow: hidden;
+
+  &::before {
+    position: absolute;
+    inset: 0;
+    content: "";
+    z-index: 0;
+    background: var(--sf-avatar-wallpaper-pane-bg);
+    opacity: var(--sf-avatar-wallpaper-pane-bg-opacity);
+  }
+}
+
+#sf-avatar-wallpaper-pane-left {
+  left: 0;
+}
+
+#sf-avatar-wallpaper-pane-right {
+  right: 0;
+}
+
+#sf-avatar-wallpaper .sf-avatar-wallpaper-pane .sf-avatar-wallpaper-tile {
+  position: relative;
+  z-index: 1;
+  width: var(--sf-avatar-wallpaper-tile-size);
+  height: var(--sf-avatar-wallpaper-tile-size);
+  border-radius: 50%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: grayscale(8%) saturate(102%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.42),
+    0 2px 8px rgba(43, 76, 120, 0.12);
+}
+
+body.sf-avatar-wallpaper-enabled {
+  background-image: var(--sf-avatar-wallpaper-bg) !important;
+}
+
+body.sf-avatar-wallpaper-enabled #container {
+  position: relative;
+  z-index: 3;
+}
+
+body.sf-avatar-wallpaper-enabled #container #main {
+  background-image: none !important;
+}

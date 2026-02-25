@@ -54,6 +54,7 @@ const tabDefs = [ {
       'translucent-sidebar',
       'box-shadows',
       'remove-logo-beta',
+      'avatar-wallpaper',
     ],
   } ],
 }, {
