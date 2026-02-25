@@ -5,11 +5,10 @@ import promiseEvery from '@libs/promiseEvery'
 import getCurrentPageOwnerUserId from '@libs/getCurrentPageOwnerUserId'
 import neg from '@libs/neg'
 import log from '@libs/log'
-import { FANFOU_OAUTH_API_REQUEST } from '@constants'
 
 export default context => {
   const { requireModules, elementCollection } = context
-  const { messaging } = requireModules([ 'messaging' ])
+  const { fanfouOAuth } = requireModules([ 'fanfouOAuth' ])
 
   const GENDER_PLACEHOLDER = '<GENDER_PLACEHOLDER>'
   const TEXT_INITIAL = `检查与${GENDER_PLACEHOLDER}的关系`
@@ -92,7 +91,7 @@ export default context => {
       const targetUserId = await getCurrentPageOwnerUserId()
 
       // 切换至稳健的 OAuth 官方 API
-      const { error, responseJSON } = await messaging.send(FANFOU_OAUTH_API_REQUEST, {
+      const { error, responseJSON } = await fanfouOAuth.request({
         url: 'https://api.fanfou.com/friendships/show.json',
         // eslint-disable-next-line camelcase
         query: { target_id: targetUserId },
