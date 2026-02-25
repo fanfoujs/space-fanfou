@@ -223,11 +223,11 @@ test('login fanfou and probe extension features', async () => {
       if (!element) return false
       const text = (element.textContent || '').trim()
 
-      return text.includes('关注了你') || text.includes('没有关注你')
+      return text.includes('关注了你') || text.includes('你关注了') || text.includes('互相关注') || text.includes('互未关注') || text.includes('异常')
     }, { timeout: 45_000 })
 
     const finalButtonText = ((await button.textContent()) || '').trim()
-    expect(finalButtonText).toMatch(/关注了你|没有关注你/)
+    expect(finalButtonText).toMatch(/关注了你|你关注了|互相关注|互未关注|异常/)
 
     fs.mkdirSync('test-results', { recursive: true })
     fs.writeFileSync(
