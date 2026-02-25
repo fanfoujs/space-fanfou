@@ -221,7 +221,7 @@ async function handleAuthorize() {
     const consumer = await readConsumerConfig()
     const redirectUrl = chrome.identity.getRedirectURL('fanfou-oauth')
 
-    if (!consumer.enabled) {
+    if (!consumer.enabled && !consumer.usingBuiltinKey) {
       return { error: '请先勾选「启用 OAuth 认证」' }
     }
 
