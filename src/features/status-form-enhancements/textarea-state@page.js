@@ -4,9 +4,13 @@ import isHotkey from '@libs/isHotkey'
 
 const MAX_STATUS_LENGTH = 140
 const WARN_WHEN_LESS_THAN = 20
+const WARN_WHEN_GREATER_THAN_OR_EQUAL_TO = 120
+const DANGER_WHEN_GREATER_THAN_OR_EQUAL_TO = 135
 
 const CLASSNAME_STATUS_TEXTAREA_EMPTY = 'sf-status-form-textarea-empty'
 const CLASSNAME_STATUS_TEXTAREA_FOCUSED = 'sf-status-form-textarea-focused'
+const CLASSNAME_STATUS_WARNING = 'sf-status-warning'
+const CLASSNAME_STATUS_DANGER = 'sf-status-danger'
 const CLASSNAME_WARNING = 'sf-warning'
 const CLASSNAME_EXCEEDED = 'sf-exceeded'
 
@@ -41,8 +45,15 @@ export default context => {
     const remaining = MAX_STATUS_LENGTH - statusLength
     const hasExceeded = remaining < 0
     const isDangerous = remaining <= WARN_WHEN_LESS_THAN && !hasExceeded
+    const hasStatusWarning = statusLength >= WARN_WHEN_GREATER_THAN_OR_EQUAL_TO
+    const hasStatusDanger = statusLength >= DANGER_WHEN_GREATER_THAN_OR_EQUAL_TO
 
     update.classList.toggle(CLASSNAME_STATUS_TEXTAREA_EMPTY, isEmpty)
+    update.classList.toggle(
+      CLASSNAME_STATUS_WARNING,
+      hasStatusWarning && !hasStatusDanger,
+    )
+    update.classList.toggle(CLASSNAME_STATUS_DANGER, hasStatusDanger)
     counter.textContent = MAX_STATUS_LENGTH - statusLength
     counter.classList.toggle(CLASSNAME_WARNING, isDangerous)
     counter.classList.toggle(CLASSNAME_EXCEEDED, hasExceeded)
@@ -76,6 +87,8 @@ export default context => {
 
       update.classList.remove(CLASSNAME_STATUS_TEXTAREA_EMPTY)
       update.classList.remove(CLASSNAME_STATUS_TEXTAREA_FOCUSED)
+      update.classList.remove(CLASSNAME_STATUS_WARNING)
+      update.classList.remove(CLASSNAME_STATUS_DANGER)
 
       counter.remove()
       counter = null
