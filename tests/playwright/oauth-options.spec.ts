@@ -22,8 +22,13 @@ test('dump settings page DOM', async () => {
     let [background] = context.serviceWorkers();
     if (!background) background = await context.waitForEvent('serviceworker');
 
+    background.on('console', msg => console.log('SW LOG:', msg.text()));
+    background.on('pageerror', err => console.log('SW ERROR:', err.message));
+
     const extensionId = background.url().split('/')[2];
     const page = await context.newPage();
+    page.on('console', msg => console.log('PAGE LOG:', msg.text()));
+    page.on('pageerror', err => console.log('PAGE ERROR:', err.message));
     
     await page.goto(`chrome-extension://${extensionId}/settings.html`);
     console.log("Navigated to settings page");

@@ -38,3 +38,11 @@
 - **复盘与规则**：
   - 对视觉占比高、风格化强的功能，默认策略优先采用 `defaultValue: false`，由用户手动开启。
   - 文档中需同步注明“默认关闭，可手动开启”，避免用户预期与实际行为不一致。
+
+## 8. Service Worker IPC 竞态死锁 (MV3 Async Init Race Condition)
+- **踩坑点**：在 MV3 中，Service Worker 在空闲时会被销毁，前台请求时才重新唤醒。此时如果在建立连接（`chrome.runtime.onConnect`）与注册特定消息处理函数之间，混入了异步初始化操作（`await asyncInitialize()`），引擎就会在 `await` 时交出执行流。如果前台恰在这极短的时间间隙内发来 `postMessage`，背景环境找不到该 handler，就会直接抛错，导致该请求在前端表现为永远挂起的死锁状态。白屏就是因为 `settings.html` 的配置加载请求遇到了这堵无形的冷启动空气墙。
+- **复盘与规则**：**MV3 扩展中不要裸奔发送 IPC。** 背景脚本的 `onMessage` 内部应当维护一个 `await self.__SF_BACKGROUND_READY__` 的类似初始化完成屏障。它通过挂起后到的消息，等全局所有依赖项加载注册完毕再一并送给真实的 handler 去处理，彻底杜绝冷启动生命周期的并发时序竞态！
+
+## 9. Webpack 缓存导致 Macro 漏装（Stale AST Cache on Macros）
+- **踩坑点**：项目依靠 `import-all.macro` 宏来遍历构建全量启用的子功能树。由于 `babel-loader` 和 `cache-loader` 主要是追踪单独代码文件（如 `index.js`）的修改时间 (mtime)，它们完全无视所在文件夹内子目录的增删。当你新建或删除了 `src/features/xxx`，即使重启构建，如果宏的源文件没有修改，宏就不会重新运行！这极其危险地导致生产环境中遗漏最新的组件，进而导致 `optionDefs` 返回缺失字段，最终造成前台 `Cannot read properties of undefined` 引发白屏。
+- **复盘与规则**：在含有深度文件系统动态扫描机制（Macros）的项目构建链路中，对于生产构建（`mode: 'production'`）**必须严格禁用 `cache-loader` 或 `babel-loader` 的 AST Caching**。即使牺牲两三秒的构建效率，也要用干净的文件系统树来换取线上版本的确定性！

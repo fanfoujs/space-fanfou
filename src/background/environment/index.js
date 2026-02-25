@@ -74,7 +74,7 @@ export default async function createBackgroundEnvironment() {
   messaging.install()
 
   // 然后并行初始化其他模块（这些可以是异步的）
-  await Promise.all([
+  self.__SF_BACKGROUND_READY__ = Promise.all([
     storage.install(),
     settings.install(), // ← Ensure SETTINGS_READ_ALL handler is registered
     proxiedFetch.install(),
@@ -82,6 +82,8 @@ export default async function createBackgroundEnvironment() {
     proxiedCreateTab.install(),
     fanfouOAuth.install(),
   ])
+  
+  await self.__SF_BACKGROUND_READY__
 
   return { messaging, settings }
 }

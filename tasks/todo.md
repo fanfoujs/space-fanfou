@@ -183,3 +183,13 @@
   - `npx eslint src/features/avatar-wallpaper/metadata.js src/features/avatar-wallpaper/avatar-wallpaper@page.js`
   - `npm run build`
 - 结果：通过
+
+## 13. [2026-02-25] 白屏 Bug 排查与修复 (White Screen Fix)
+- [x] **Bug 排查：** 解决用户反馈的 `npm run build` 生成 `dist` 后重新载入扩展 `settings.html` 打不开（白屏）的问题。
+- [x] **Root Cause 1 (IPC 竞态死锁):** 
+  - MV3 的 Service Worker 在冷启动期间遇到 `await` （如 `settings.install` 中的数据迁移）会让出执行线程。由于 `messaging.install()` 是同步注册的，背景脚本此时能收到前端立即发出的 `GET_OPTION_DEFS` 请求，但 handler 尚未注册完毕，直接抛出了未捕获异常并死锁。
+  - **Fix:** 在 `src/background/environment/messaging.js` 的 `createMessageHandler` 引进 `__SF_BACKGROUND_READY__` 屏障同步锁，将消息处理推迟到背景脚本全量初始化完毕才执行。
+- [x] **Root Cause 2 (Babel 宏缓存带来的副作用):** 
+  - `cache-loader` 在增删 `src/features` 子目录后，因为 `index.js` 代码文件本身未变，错误地为 `importAll.macro` 服务了旧有的缓存。这导致近期增删的特性（如 `avatar-wallpaper` 或因清理而删除的文件）在 `production` 构建中丢失与残缺，继而在前端抛出 `Cannot read properties of undefined` 的白屏级 React 渲染崩溃。
+  - **Fix:** 修改 `build/webpack.js.config.js`，在 `mode === 'production'` 生产构建时彻底弃用 `cache-loader`，确保每次 `build` 都根据最新的 FS 完全重评宏指令。
+- [x] **Verification:** 通过在内置 E2E 测试挂载 `pageerror` 监听验证排查，并最终跑通。白屏彻底解决。
