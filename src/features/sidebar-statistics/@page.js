@@ -143,9 +143,10 @@ class SidebarStatistics extends Component {
     })
 
     if (error) {
-      const needsAuth = typeof error === 'string' && error.includes('授权')
-      const oauthDisabled = typeof error === 'string' && error.includes('OAuth 功能未启用')
-      console.warn('[SpaceFanfou] SidebarStatistics: OAuth API 请求失败:', error)
+      const errorStr = String(error)
+      const needsAuth = errorStr.includes('授权') || errorStr.includes('401') || errorStr.includes('403') || errorStr.includes('Unauthorized') || errorStr.includes('Invalid')
+      const oauthDisabled = errorStr.includes('OAuth 功能未启用')
+      console.warn('[SpaceFanfou] SidebarStatistics: OAuth API 请求失败:', errorStr)
       return { profile: {}, oauthNotConfigured: needsAuth || oauthDisabled }
     }
 

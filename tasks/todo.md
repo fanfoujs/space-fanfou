@@ -45,5 +45,5 @@
   - [x] 删除对自身 ID 强解析行为 (`getLoggedInUserId` / `normalizeUserId`) 带来的脆点。
   - [x] 收敛查询逻辑，变回仅向 `m.fanfou.com/followers/p.N` 发起请求并查找页面目标 ID。
   - [x] 修复当查询失败或遇到异常时死锁的缺陷，使检查行为可重试 (`hasChecked = false`)。
-- [ ] **Verification**
-  - [ ] 在真实 Chrome 环境及 Playwright E2E 中跑通 OAuth 授权链路和 `check-friendship` 流程。
+- [x] **Verification**
+  - [x] 在真实 Chrome 环境及 Playwright E2E 中跑通 OAuth 授权链路和 `check-friendship` 流程。

@@ -98,11 +98,13 @@ async function signedRequest({
   token,
 }) {
   const oauth = createOAuthClient(consumerKey, consumerSecret)
-  
+
   // 特殊修复：即使我们通过 HTTPS 请求，饭否由于极为古老的 OAuth 实现，
-  // 依然强制要求 signature 的 origin base 必须是 http://fanfou.com 
+  // 依然强制要求 signature 的 origin base 必须是 http://fanfou.com
   // 否则会返回 401 Invalid signature. 因此我们需要“欺骗”签名器。
-  const signUrl = url.replace('https://fanfou.com/oauth', 'http://fanfou.com/oauth')
+  const signUrl = url
+    .replace('https://fanfou.com/oauth', 'http://fanfou.com/oauth')
+    .replace('https://api.fanfou.com', 'http://api.fanfou.com')
 
   const authParams = oauth.authorize({
     url: signUrl,
@@ -159,7 +161,7 @@ async function exchangeAccessToken(consumer, tempToken, verifier) {
   const params = {
     oauth_token: tempToken.oauth_token,
   }
-  
+
   // 对于桌面应用/老式 OAuth 1.0，可能没有 oauth_verifier，这里设为可选
   if (verifier) {
     params.oauth_verifier = verifier
@@ -251,11 +253,11 @@ async function handleAuthorize() {
     const authorizeUrl = `${AUTHORIZE_URL}?oauth_token=${encodeURIComponent(tempToken.oauth_token)}&oauth_callback=${encodeURIComponent(redirectUrl)}`
     const responseUrl = await launchAuthWindow(authorizeUrl)
     const parsedUrl = new URL(responseUrl)
-    
+
     // Nofan 是一个基于 PIN/OOB 的老式 CLI 应用 Key，饭否回调时不会返回 verifier。
     // 但是只要拿到了 oauth_token 回调，且没有 denied 参数，就说明用户同意了。
     const verifier = parsedUrl.searchParams.get('oauth_verifier') || ''
-    
+
     if (parsedUrl.searchParams.get('denied')) {
       return { error: '授权被拒绝' }
     }

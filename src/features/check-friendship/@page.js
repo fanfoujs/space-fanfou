@@ -1,15 +1,15 @@
 import { h } from 'dom-chef'
 import select from 'select-dom'
 import { isUserProfilePage, isLoggedInUserProfilePage } from '@libs/pageDetect'
-import parseHTML from '@libs/parseHTML'
 import promiseEvery from '@libs/promiseEvery'
 import getCurrentPageOwnerUserId from '@libs/getCurrentPageOwnerUserId'
 import neg from '@libs/neg'
 import log from '@libs/log'
+import { FANFOU_OAUTH_API_REQUEST } from '@constants'
 
 export default context => {
   const { requireModules, elementCollection } = context
-  const { proxiedFetch } = requireModules([ 'proxiedFetch' ])
+  const { messaging } = requireModules([ 'messaging' ])
 
   const GENDER_PLACEHOLDER = '<GENDER_PLACEHOLDER>'
   const TEXT_INITIAL = `检查与${GENDER_PLACEHOLDER}的关系`
@@ -81,47 +81,7 @@ export default context => {
     checkButton.textContent = text.replace(GENDER_PLACEHOLDER, getGender()).trim()
   }
 
-  // 通用翻页抓取函数：baseUrl 为不含页码部分，pageKey 用于检测下一页链接
-  async function fetchUserList(baseUrl, pageKey, pageNumber) {
-    const url = `${baseUrl}${pageNumber}`
-    const { error, responseText: html } = await proxiedFetch.get({ url })
-
-    if (error) {
-      log.error('加载列表失败', error)
-      return { ids: [], hasReachedEnd: true }
-    }
-
-    const doc = parseHTML(html)
-    const items = select.all('ol > li > a > span.a', doc)
-    const ids = items.map(item => item.textContent.replace(/^\(|\)$/g, ''))
-    const hasReachedEnd = !select.exists(`a[href="/${pageKey}/p.${pageNumber + 1}"]`, doc)
-
-    return { ids, hasReachedEnd }
-  }
-
-  // 检查 targetUserId 是否在我的 followers 列表里（对方是否关注了我）
-  async function checkTheyFollowMe(targetUserId) {
-    let pageNumber = 0
-
-    while (true) {
-      const { ids, hasReachedEnd } = await fetchUserList('https://m.fanfou.com/followers/p.', 'followers', ++pageNumber)
-
-      if (ids.includes(targetUserId)) return true
-      if (hasReachedEnd) return false
-    }
-  }
-
-  // 检查 targetUserId 是否在我的 friends 列表里（我是否关注了对方）
-  async function checkIFollowThem(targetUserId) {
-    let pageNumber = 0
-
-    while (true) {
-      const { ids, hasReachedEnd } = await fetchUserList('https://m.fanfou.com/friends/p.', 'friends', ++pageNumber)
-
-      if (ids.includes(targetUserId)) return true
-      if (hasReachedEnd) return false
-    }
-  }
+  // 已移除基于 HTML Scraping 的翻页检查函数
 
   async function checkFriendship() {
     if (hasChecked) return
@@ -131,11 +91,32 @@ export default context => {
     try {
       const targetUserId = await getCurrentPageOwnerUserId()
 
-      // 双向并行检查
-      const [ theyFollowMe, iFollowThem ] = await Promise.all([
-        checkTheyFollowMe(targetUserId),
-        checkIFollowThem(targetUserId),
-      ])
+      // 切换至稳健的 OAuth 官方 API
+      const { error, responseJSON } = await messaging.send(FANFOU_OAUTH_API_REQUEST, {
+        url: 'https://api.fanfou.com/friendships/show.json',
+        // eslint-disable-next-line camelcase
+        query: { target_id: targetUserId },
+        responseType: 'json',
+      })
+
+      if (error) {
+        log.error('API请求失败', error)
+        if (typeof error === 'string' && error.includes('未完成授权')) {
+          setText('请前往设置页完成授权')
+        } else {
+          setText('出现异常，点击重试')
+        }
+        hasChecked = false // 允许重试
+        return
+      }
+
+      if (!responseJSON || !responseJSON.relationship) {
+        throw new Error('API 响应格式无效')
+      }
+
+      const { target, source } = responseJSON.relationship
+      const iFollowThem = source.following === 'true'
+      const theyFollowMe = target.following === 'true'
 
       if (theyFollowMe && iFollowThem) setText(TEXT_MUTUAL)
       else if (theyFollowMe) setText(TEXT_THEY_FOLLOW)
@@ -144,7 +125,6 @@ export default context => {
     } catch (err) {
       log.error('检查关注关系发生异常', err)
       setText('出现异常，点击重试')
-    } finally {
       hasChecked = false // 允许重试
     }
   }
