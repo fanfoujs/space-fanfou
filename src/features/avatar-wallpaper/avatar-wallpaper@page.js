@@ -19,6 +19,8 @@ const DEFAULT_REFRESH_INTERVAL_DAYS = 7
 const MAX_RENDER_AVATARS = 520
 const MAX_API_PAGES = 8
 const MAX_WEB_PAGES = 8
+const LEFT_PANE_CENTER_GUTTER = 14
+const RIGHT_PANE_CENTER_GUTTER = 24
 const API_URL = 'https://api.fanfou.com/users/friends.json'
 const BACKGROUND_PRESETS = [ {
   id: 1,
@@ -321,11 +323,29 @@ function getRenderAvatarUrls({
 }) {
   if (!avatars.length) return []
 
-  const maybePrioritized = prioritizeFavoritesFirst
-    ? prioritizeFavorites({ avatars, favoriteAvatarUrls })
-    : avatars
+  if (prioritizeFavoritesFirst) {
+    const prioritized = prioritizeFavorites({ avatars, favoriteAvatarUrls })
+    const favoriteKeys = new Set(
+      favoriteAvatarUrls.map(createAvatarKey),
+    )
+    const favorites = []
+    const normal = []
 
-  return shuffle([ ...maybePrioritized ])
+    for (const url of prioritized) {
+      const key = createAvatarKey(url)
+
+      if (favoriteKeys.has(key)) {
+        favorites.push(url)
+      } else {
+        normal.push(url)
+      }
+    }
+
+    return [ ...favorites, ...shuffle([ ...normal ]) ]
+      .slice(0, MAX_RENDER_AVATARS)
+  }
+
+  return shuffle([ ...avatars ])
     .slice(0, MAX_RENDER_AVATARS)
 }
 
@@ -335,14 +355,14 @@ function resolveSidePaneWidths() {
   if (!centerContainer) {
     const fallbackWidth = Math.floor(window.innerWidth * 0.22)
     return {
-      left: fallbackWidth,
-      right: fallbackWidth,
+      left: Math.max(0, fallbackWidth - LEFT_PANE_CENTER_GUTTER),
+      right: Math.max(0, fallbackWidth - RIGHT_PANE_CENTER_GUTTER),
     }
   }
 
   const rect = centerContainer.getBoundingClientRect()
-  const left = Math.max(0, Math.floor(rect.left) - 10)
-  const right = Math.max(0, Math.floor(window.innerWidth - rect.right) - 10)
+  const left = Math.max(0, Math.floor(rect.left) - LEFT_PANE_CENTER_GUTTER)
+  const right = Math.max(0, Math.floor(window.innerWidth - rect.right) - RIGHT_PANE_CENTER_GUTTER)
 
   return { left, right }
 }

@@ -52,3 +52,134 @@
 - [ ] 修复 `src/content/environment/bridge.js`，增加 try-catch 避免 SW 休眠导致的 postMessage 报错造成死锁
 - [ ] 修复 `src/features/check-friendship/@page.js` 的 `hasChecked` 重置逻辑，确保成功和失败路径均能清空改标志以便下一次点击正常工作
 - [x] 跑通端到端测试验证以上两处修复
+
+## 9. Claude 执行计划接管（2026-02-25）
+- [x] 阅读并对齐输入文档：`docs/project-status.md`、`docs/plans/2026-02-25-claude-execution-plan.md`、`CLAUDE.md`、`GEMINI.md`
+- [x] 创建 4 个并行工作树（均基于 `gemini/fix-mv3`）：
+  - `../space-fanfou-word-count` on `feat/word-count-warning`
+  - `../space-fanfou-draft-save` on `feat/draft-save`
+  - `../space-fanfou-collapse-repost` on `feat/collapse-repost`
+  - `../space-fanfou-custom-avatar` on `feat/custom-avatar`
+- [x] `feat/word-count-warning`：在 `status-form-enhancements` 中实现字数预警可视化（120+ 黄色、135+ 红色，输入框与计数器联动）
+- [x] `feat/draft-save`：在 `status-form-enhancements` 中实现草稿自动保存/恢复，并在恢复后触发原生 `input` 事件；发文成功后清空草稿
+- [x] `feat/collapse-repost`：新增 `collapse-repost-chain` 功能目录，支持长转发链折叠/展开
+- [x] `feat/custom-avatar`：新增 `custom-avatar` 功能目录，支持设置页配置头像 URL 并在页面替换“我的空间”头像
+- [x] 各工作树分别执行验证（至少 `npm run build`）并修复构建问题
+- [x] 每个特性分支分别提交 commit（含清晰 why）
+- [x] 回填本节 Review 结果：记录每个分支的构建结果、风险点、待人工验证项
+
+### 9.1 Review 结果（2026-02-25）
+
+#### feat/word-count-warning
+- Worktree: `/home/fiver/projects/space-fanfou-word-count`
+- Commit: `a6c36d6`
+- 变更:
+  - `src/features/status-form-enhancements/textarea-state@page.js`
+  - `src/features/status-form-enhancements/misc@page.less`
+- 验证:
+  - `npx eslint src/features/status-form-enhancements/textarea-state@page.js`
+  - `npx stylelint src/features/status-form-enhancements/misc@page.less`
+  - `npm run build`
+- 结果: 通过
+
+#### feat/draft-save
+- Worktree: `/home/fiver/projects/space-fanfou-draft-save`
+- Commit: `1ff07d4`
+- 变更:
+  - `src/features/status-form-enhancements/draft-save@page.js`
+- 验证:
+  - `npx eslint src/features/status-form-enhancements/draft-save@page.js`
+  - `npm run build`
+- 结果: 通过
+
+#### feat/collapse-repost
+- Worktree: `/home/fiver/projects/space-fanfou-collapse-repost`
+- Commit: `194b54b`
+- 变更:
+  - `src/features/collapse-repost-chain/metadata.js`
+  - `src/features/collapse-repost-chain/@page.js`
+  - `src/features/collapse-repost-chain/@page.less`
+  - `src/settings/getTabDefs.js`
+- 验证:
+  - `npx eslint src/features/collapse-repost-chain/@page.js src/features/collapse-repost-chain/metadata.js src/settings/getTabDefs.js`
+  - `npx stylelint src/features/collapse-repost-chain/@page.less`
+  - `npm run build`
+- 结果: 通过
+
+#### feat/custom-avatar
+- Worktree: `/home/fiver/projects/space-fanfou-custom-avatar`
+- Commit: `1f9b478`
+- 变更:
+  - `src/features/custom-avatar/metadata.js`
+  - `src/features/custom-avatar/@page.js`
+  - `src/settings/getTabDefs.js`
+- 验证:
+  - `npx eslint src/features/custom-avatar/@page.js src/features/custom-avatar/metadata.js src/settings/getTabDefs.js`
+  - `npm run build`
+- 结果: 通过
+
+#### 风险与待人工验证
+- `collapse-repost-chain` 的“过长转发链”判断基于文本规则（`// @xxx:` 次数 + 长度阈值），建议在真实时间线多样样本下人工确认阈值是否过严/过宽。
+- `custom-avatar` 仅替换可归属到当前登录用户 ID 的头像，建议在「首页 / 他人页 / 我的空间」三类页面人工验证覆盖率与误替换率。
+
+### 9.2 用户反馈后修正（2026-02-25）
+- [x] `feat/collapse-repost`：修复“长转发链不明显生效”
+  - 放宽触发阈值（2 次转发标记即可触发），兼容全角 `／／`，并在 `onLoad` 主动扫描现有消息
+  - 提升按钮可见性（边框、背景、加粗）
+  - 新 commit: `74b9f24`
+- [x] `feat/word-count-warning`：增强 120+/135+ 阶段视觉对比
+  - 计数器字号/字重增强，warning/danger 颜色加强
+  - 文本框增加更明显的边框、阴影和背景提示
+  - 新 commit: `bf52c22`
+
+## 10. 自定义头像上传修复与方案调研（2026-02-25）
+- [x] 在 `feat/custom-avatar` 实现设置页图片上传（非 URL 依赖）
+- [x] 实现自动居中裁剪并缩放为 48x48（内部存储可用 96x96 提高清晰度）
+- [x] 接入预览与清除按钮，保留开关逻辑
+- [x] 页面替换逻辑改为读取本地上传结果并应用
+- [x] 在 `feat/custom-avatar` 运行 lint/build 验证并提交
+- [x] 调研“自动读取关注用户头像并拼接壁纸”的开源方案，整理可复用路径与风险
+
+### 10.1 Review 结果（2026-02-25）
+- `feat/custom-avatar` 新提交: `f008334`
+- 关键变更:
+  - 新增设置页上传组件 `src/settings/components/CustomAvatarPanel.js`
+  - 新增存储常量 `src/features/custom-avatar/constants.js`
+  - `custom-avatar` 页面逻辑改为读取 `chrome.storage.local` 头像数据并应用替换
+  - 设置页 `getTabDefs` 挂载 `CustomAvatarPanel`
+- 验证:
+  - `eslint`（自定义头像与设置页相关文件）通过
+  - `stylelint src/settings/styles/settings.less` 通过
+  - `npm run build` 通过
+
+## 11. Avatar Wallpaper 体验修正（2026-02-25）
+- [x] 调整左右头像墙与中间内容区的保留间距（重点：右侧不再贴边）
+- [x] 修复“有爱饭友优先”逻辑：有爱饭友固定在前排，非有爱头像继续随机重排
+- [x] 运行验证（至少 `eslint` + `npm run build`）并记录结果
+
+### 11.1 Review 结果（2026-02-25）
+- 关键改动：
+  - `src/features/avatar-wallpaper/avatar-wallpaper@page.js`
+    - 新增左右中缝常量：`LEFT_PANE_CENTER_GUTTER = 14`、`RIGHT_PANE_CENTER_GUTTER = 24`
+    - `resolveSidePaneWidths()` 按新中缝计算，右侧头像栏远离主内容区，避免贴边
+    - `getRenderAvatarUrls()` 改为“有爱饭友固定前排 + 普通头像随机重排”
+- 验证：
+  - `npx eslint src/features/avatar-wallpaper/avatar-wallpaper@page.js`
+  - `npm run build`
+- 结果：通过
+
+## 12. 文档更新与头像墙默认策略调整（2026-02-25）
+- [x] 更新 `docs/MV3-优化与重构报告.md`，补充 2026.2 已合并功能介绍
+- [x] 将 `avatar-wallpaper` 主开关默认值改为关闭（手动开启）
+- [x] 运行验证并回填结果
+
+### 12.1 Review 结果（2026-02-25）
+- 关键改动：
+  - `docs/MV3-优化与重构报告.md`
+    - 新增「0. 2026.2 分支已合并功能概览（体验层）」章节，补充草稿保留、字数预警、头像墙能力与默认策略说明。
+  - `src/features/avatar-wallpaper/metadata.js`
+    - 主开关 `_` 的 `defaultValue` 从 `true` 调整为 `false`（默认关闭，用户手动开启）。
+- 验证：
+  - `npx eslint src/features/avatar-wallpaper/metadata.js src/features/avatar-wallpaper/avatar-wallpaper@page.js`
+  - `npm run build`
+- 结果：通过
