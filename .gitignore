@@ -18,3 +18,10 @@ tests/e2e/screenshots/
 fanfou账号
 tasks/lessons.md
 test-results/
+GEMINI.md
+CLAUDE.md
+AGENTS.md
+.claude/
+playwright-report/
+*-审核.md
+PROJECT-STATUS-*.md

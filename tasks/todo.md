@@ -17,19 +17,19 @@
 ## 3. 整合决策 (Integration decision)
 - [x] Cherry-pick `claude` 分支的 `check-friendship` 修复（支持双向关系检查，且逻辑更稳健）
 - [x] 确保 `proxiedFetch` 在 `gemini` 分支中也是可用的（或改用 `fanfouOAuth.request` 封装）
-- [ ] 合并或关闭实验性分支
+[x] 合并或关闭实验性分支
 
 ## 4. modernization 分支评估
-- [ ] 检查 `modernization` 分支的当前状态
-- [ ] 决定是继续推进构建系统现代化还是放弃
+[x] 检查 `modernization` 分支的当前状态
+[x] 决定是继续推进构建系统现代化还是放弃
 
 ## 5. 其他
-- [ ] 记录学习到的教训到 `tasks/lessons.md`
+[x] 记录学习到的教训到 `tasks/lessons.md`
 
 ## 6. 分支比较与分析
 - [x] 确立比较范围：关注 `gemini/fix-mv3` 与 `claude/fix-sidebar-friendship-e2e` 关于他人页面 sidebar 统计/注册时间/关系状态的差异
-- [ ] 收集关键提交（`git log`/`git show`）并列出涉及的核心文件
-- [ ] 记录问题列表（按严重级别）并判断哪个分支更稳妥，准备合并策略
+[x] 收集关键提交（`git log`/`git show`）并列出涉及的核心文件
+[x] 记录问题列表（按严重级别）并判断哪个分支更稳妥，准备合并策略
 
 ## 7. 诊断与修复：注册时间与好友关系 (基于审核报告与竞品分析)
 - [x] **Research (`nofan` 竞品方案对比)**
@@ -49,8 +49,8 @@
   - [x] 在真实 Chrome 环境及 Playwright E2E 中跑通 OAuth 授权链路和 `check-friendship` 流程。
 
 ## 8. 修复互相关注功能与桥接层异常
-- [ ] 修复 `src/content/environment/bridge.js`，增加 try-catch 避免 SW 休眠导致的 postMessage 报错造成死锁
-- [ ] 修复 `src/features/check-friendship/@page.js` 的 `hasChecked` 重置逻辑，确保成功和失败路径均能清空改标志以便下一次点击正常工作
+[x] 修复 `src/content/environment/bridge.js`，增加 try-catch 避免 SW 休眠导致的 postMessage 报错造成死锁
+[x] 修复 `src/features/check-friendship/@page.js` 的 `hasChecked` 重置逻辑，确保成功和失败路径均能清空改标志以便下一次点击正常工作
 - [x] 跑通端到端测试验证以上两处修复
 
 ## 9. Claude 执行计划接管（2026-02-25）
