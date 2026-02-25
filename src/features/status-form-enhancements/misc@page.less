@@ -23,21 +23,42 @@
 #sf-counter {
   padding-right: 8px;
   color: #444;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
   transition: all 300ms;
 
   &.sf-warning {
-    color: @md-brown-500;
+    color: @md-orange-800;
+    font-size: 14px;
+    font-weight: bold;
   }
 
   &.sf-exceeded {
     color: @md-red-800;
+    font-size: 15px;
+    font-weight: bolder;
   }
 }
 
 #phupdate.sf-status-warning textarea {
-  border-color: @md-brown-500;
+  border-color: @md-orange-700;
+  box-shadow: 0 0 0 1px fade(@md-orange-700, 45%);
+  background-color: fade(@md-orange-100, 35%);
 }
 
 #phupdate.sf-status-danger textarea {
-  border-color: @md-red-800;
+  border-color: @md-red-700;
+  box-shadow: 0 0 0 1px fade(@md-red-700, 50%);
+  background-color: fade(@md-red-100, 35%);
+}
+
+#phupdate.sf-status-warning #sf-counter {
+  color: @md-orange-800;
+}
+
+#phupdate.sf-status-danger #sf-counter {
+  color: @md-red-800;
+  font-size: 15px;
+  font-weight: bolder;
 }
