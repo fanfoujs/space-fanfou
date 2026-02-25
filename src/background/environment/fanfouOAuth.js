@@ -115,6 +115,7 @@ async function signedRequest({
   const fetchOptions = {
     method,
     headers,
+    credentials: 'omit', // 防止 Chrome 自动带上 fanfou.com 的登录 Cookie 导致 OAuth 签名校验直接被饭否拦截
   }
 
   if (method === 'GET') {
