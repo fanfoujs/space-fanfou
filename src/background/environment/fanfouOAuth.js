@@ -17,9 +17,9 @@ import {
 const BUILTIN_CONSUMER_KEY = '13456aa784cdf7688af69e85d482e011'
 const BUILTIN_CONSUMER_SECRET = 'f75c02df373232732b69354ecfbcabea'
 
-const REQUEST_TOKEN_URL = 'http://fanfou.com/oauth/request_token'
-const ACCESS_TOKEN_URL = 'http://fanfou.com/oauth/access_token'
-const AUTHORIZE_URL = 'http://fanfou.com/oauth/authorize'
+const REQUEST_TOKEN_URL = 'https://fanfou.com/oauth/request_token'
+const ACCESS_TOKEN_URL = 'https://fanfou.com/oauth/access_token'
+const AUTHORIZE_URL = 'https://fanfou.com/oauth/authorize'
 const TOKEN_STORAGE_KEY = 'fanfou-oauth/tokens'
 const API_HOST = 'https://api.fanfou.com'
 
@@ -98,8 +98,14 @@ async function signedRequest({
   token,
 }) {
   const oauth = createOAuthClient(consumerKey, consumerSecret)
+  
+  // 特殊修复：即使我们通过 HTTPS 请求，饭否由于极为古老的 OAuth 实现，
+  // 依然强制要求 signature 的 origin base 必须是 http://fanfou.com 
+  // 否则会返回 401 Invalid signature. 因此我们需要“欺骗”签名器。
+  const signUrl = url.replace('https://fanfou.com/oauth', 'http://fanfou.com/oauth')
+
   const authParams = oauth.authorize({
-    url,
+    url: signUrl,
     method,
     data: params,
   }, token)
