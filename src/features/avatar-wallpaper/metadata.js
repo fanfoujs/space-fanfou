@@ -40,6 +40,12 @@ export const options = {
     comment: '开启后，有爱饭友中的头像会优先出现在两侧头像墙前排。',
   },
 
+  match3Mode: {
+    defaultValue: false,
+    label: '羊了个羊模式（实验）',
+    comment: '随机抽取 13 位关注用户作为元素；点击头像放入槽位，同一头像凑满 3 个自动消除。槽位满 7 个仍未消除则失败。',
+  },
+
   fetchIntervalDays: {
     defaultValue: 7,
     label: `自动刷新缓存周期 ${CONTROL_PLACEHOLDER} 天`,

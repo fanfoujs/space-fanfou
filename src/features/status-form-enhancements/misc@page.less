@@ -14,10 +14,68 @@
   display: inline-block;
 }
 
-#sf-counter,
+#phupdate #sf-counter,
+#phupdate .sf-popup-upload-wrapper,
 #phupdate .act .formbutton {
   display: table-cell;
   vertical-align: middle;
+}
+
+.sf-popup-upload-wrapper {
+  padding-right: 12px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  transition: background-color 160ms ease, box-shadow 160ms ease;
+
+  .sf-upload-button {
+    display: inline-block;
+    width: 24px;
+    height: 20px;
+    background: url("~@assets/images/uploading-image-icons.svg") no-repeat top left;
+    opacity: 0.86;
+    cursor: pointer;
+    transition: opacity 160ms ease;
+  }
+
+  .upload-file {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    font-size: 0;
+  }
+}
+
+.sf-popup-upload-wrapper:hover .sf-upload-button {
+  background-position: top right;
+  opacity: 1;
+}
+
+#PopupBox #sf-counter,
+#PopupBox .sf-popup-upload-wrapper {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#PopupBox .sf-popup-upload-wrapper {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 8px;
+  padding: 2px 6px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(245, 248, 252, 0.95));
+  box-shadow:
+    inset 0 0 0 1px rgba(128, 151, 181, 0.4),
+    0 1px 3px rgba(38, 62, 90, 0.16);
+}
+
+#PopupBox .sf-popup-upload-wrapper:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(236, 243, 251, 0.98));
+  box-shadow:
+    inset 0 0 0 1px rgba(95, 136, 178, 0.55),
+    0 2px 6px rgba(38, 62, 90, 0.2);
 }
 
 #sf-counter {
@@ -51,7 +109,9 @@
   }
 }
 
-#phupdate.sf-status-warning textarea {
+#phupdate.sf-status-warning textarea,
+#message.sf-status-warning textarea,
+#PopupBox.sf-status-warning textarea {
   border-color: @md-orange-700;
   box-shadow:
     0 0 0 2px fade(@md-orange-500, 38%),
@@ -59,7 +119,9 @@
   background-image: linear-gradient(130deg, fade(@md-amber-100, 65%), fade(@md-orange-100, 58%), fade(@md-deep-orange-100, 52%));
 }
 
-#phupdate.sf-status-danger textarea {
+#phupdate.sf-status-danger textarea,
+#message.sf-status-danger textarea,
+#PopupBox.sf-status-danger textarea {
   border-color: @md-red-700;
   box-shadow:
     0 0 0 2px fade(@md-red-500, 42%),
@@ -68,11 +130,15 @@
   animation: sf-danger-pulse 1.2s ease-in-out infinite alternate;
 }
 
-#phupdate.sf-status-warning #sf-counter {
+#phupdate.sf-status-warning #sf-counter,
+#message.sf-status-warning #sf-counter,
+#PopupBox.sf-status-warning #sf-counter {
   color: @md-brown-900;
 }
 
-#phupdate.sf-status-danger #sf-counter {
+#phupdate.sf-status-danger #sf-counter,
+#message.sf-status-danger #sf-counter,
+#PopupBox.sf-status-danger #sf-counter {
   color: #fff;
   font-size: 16px;
   font-weight: bolder;
@@ -109,7 +175,11 @@
 
 @media (prefers-reduced-motion: reduce) {
   #phupdate.sf-status-danger textarea,
-  #phupdate.sf-status-danger #sf-counter {
+  #message.sf-status-danger textarea,
+  #PopupBox.sf-status-danger textarea,
+  #phupdate.sf-status-danger #sf-counter,
+  #message.sf-status-danger #sf-counter,
+  #PopupBox.sf-status-danger #sf-counter {
     animation: none;
   }
 }
