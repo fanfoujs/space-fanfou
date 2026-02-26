@@ -25,3 +25,6 @@ AGENTS.md
 playwright-report/
 *-审核.md
 PROJECT-STATUS-*.md
+
+debug-*
+
