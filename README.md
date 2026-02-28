@@ -38,43 +38,37 @@
 
 ---
 
-## 📦 自用修改版本说明
+## 分支说明
 
-> **提示**：这是基于官方版本的个人修改版，仅供个人使用。如需官方稳定版本，请前往 [Chrome 网上应用店](https://chrome.google.com/webstore/detail/mfofmcdbaeajgdeihmcjjohmhepcdcol) 下载。
+这是一个基于原版太空饭否持续维护的 fork，可对外称为 **Space Fanfou 2.0**。
 
-### 🚀 快速安装（适合不懂代码的用户）
+相较于上游仓库，这个 fork 主要聚焦于：
 
-**第一步：下载插件文件**
+- 迁移到 Manifest V3，适配现代 Chrome 扩展环境
+- 通过 OAuth 与 API 改造恢复已失效或脆弱的旧功能
+- 提升发文、图片上传、回复框等高频交互的稳定性
+- 在尽量不改变原有产品气质的前提下，补充少量实用增强功能
 
-1. 在本仓库的 **[Releases](https://github.com/halmisen/space-fanfou/releases)** 页面下载最新的 `dist.zip` 压缩包
-2. 解压下载的 ZIP 文件到任意文件夹
-3. 找到解压后的 `dist` 文件夹（这个文件夹包含所有插件文件）
+更完整的 fork 差异说明可参阅
+[docs/fork-differences.md](docs/fork-differences.md)。
 
-**第二步：安装到 Chrome 浏览器**
+### 安装方式
 
-1. 打开 Chrome 浏览器
-2. 在地址栏输入 `chrome://extensions` 并回车
-3. 打开右上角的 **开发者模式** 开关
-4. 点击左上角的 **加载已解压的扩展程序** 按钮
-5. 选择刚才解压的 `dist` 文件夹
-6. 完成！现在可以访问 [fanfou.com](https://fanfou.com) 使用了
+普通饭友请点 [Releases](https://github.com/halmisen/space-fanfou/releases) 下载压缩包，详情页有引导。
+
+开发者请使用 `npm install`、`npm run build`、`npm run dev` 进行安装、构建和本地开发。
 
 **温馨提示（授权与高级功能）：**
 为了能够正常使用互相关注等依赖 API 的增强功能，请在安装后进行一次手动授权：打开插件面板（点此浏览器右上角插件图标），进入 **“工具”** -> **“API 接入”**，点击 **“开始授权”** 完成操作即可。
 
-### 🔧 开发者说明（源码编译安装）
+### 开发说明
 
-如需从源码构建：
-1. 下载或克隆本仓库到本地
-2. 在终端中进入项目目录，执行 `npm install` 安装依赖
-3. 执行 `npm run build` 进行构建
-4. 打开浏览器的 `chrome://extensions` 页面并开启“开发者模式”
-5. 选择“加载已解压的扩展程序”，并指向刚生成的 `dist` 目录即可
+常用命令：
 
-> 更多开发指南请参考 [CLAUDE.md](CLAUDE.md) 。
+- `npm test`
+- `npm run build`
+- `npm run dev`
 
-### ⚠️ 注意事项
+其他开发与贡献说明请参阅 [docs/contributing.md](docs/contributing.md)。
 
-- 此版本可能包含实验性功能，稳定性不如官方版本
-- 使用过程中遇到问题，请优先检查是否为自用修改导致
-- 建议先卸载官方版本，避免冲突
+当前 fork 由 [@halmisen](https://fanfou.com/halmisen) 持续维护。
