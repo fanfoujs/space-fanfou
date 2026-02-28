@@ -26,8 +26,12 @@ AGENTS.md
 playwright-report/
 *-审核.md
 PROJECT-STATUS-*.md
+CHROME_API_ANALYSIS.md
+PR.md
 
 debug-*
 bug/
 settings_page_debug.png
 space-fanfou-*.tar.gz
+tasks/oauth-status-report.md
+tasks/popupbox-wallpaper-context.md
