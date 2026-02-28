@@ -23,6 +23,7 @@ const generateBaseConfig = mode => ({
       '@content': approot('src/content'),
       '@page': approot('src/page'),
       '@settings': approot('src/settings'),
+      '@offscreen': approot('src/offscreen'),
       '@features': approot('src/features'),
       '@libs': approot('src/libs'),
       '@assets': approot('assets'),

@@ -1,7 +1,6 @@
 import { h } from 'dom-chef'
 import select from 'select-dom'
 import { isUserProfilePage, isLoggedInUserProfilePage } from '@libs/pageDetect'
-import parseHTML from '@libs/parseHTML'
 import promiseEvery from '@libs/promiseEvery'
 import getCurrentPageOwnerUserId from '@libs/getCurrentPageOwnerUserId'
 import neg from '@libs/neg'
@@ -9,13 +8,15 @@ import log from '@libs/log'
 
 export default context => {
   const { requireModules, elementCollection } = context
-  const { proxiedFetch } = requireModules([ 'proxiedFetch' ])
+  const { fanfouOAuth } = requireModules([ 'fanfouOAuth' ])
 
   const GENDER_PLACEHOLDER = '<GENDER_PLACEHOLDER>'
-  const TEXT_INITIAL = `检查${GENDER_PLACEHOLDER}是否关注了你`
+  const TEXT_INITIAL = `检查与${GENDER_PLACEHOLDER}的关系`
   const TEXT_BUSY = '检查中……'
-  const TEXT_IS_FOLLOWED = `${GENDER_PLACEHOLDER}关注了你！`
-  const TEXT_IS_NOT_FOLLOWED = `${GENDER_PLACEHOLDER}没有关注你 :(`
+  const TEXT_MUTUAL = '互相关注 ✓'
+  const TEXT_THEY_FOLLOW = `${GENDER_PLACEHOLDER}关注了你`
+  const TEXT_I_FOLLOW = `你关注了${GENDER_PLACEHOLDER}`
+  const TEXT_NO_FOLLOW = '互未关注'
 
   let checkButton
   let hasChecked = false
@@ -34,9 +35,13 @@ export default context => {
       h1.after(userviewLink)
     }
 
+    // 防止重复添加：先移除已存在的按钮
+    const existingButton = select('.sf-check-friendship-button', userviewLink)
+    if (existingButton) existingButton.remove()
+
     checkButton = (
       // eslint-disable-next-line no-script-url
-      <a href="javascript:void(0)" className="label" onClick={checkFriendship} />
+      <a href="javascript:void(0)" className="label sf-check-friendship-button" onClick={checkFriendship} />
     )
     userviewLink.append(checkButton)
 
@@ -75,48 +80,76 @@ export default context => {
     checkButton.textContent = text.replace(GENDER_PLACEHOLDER, getGender()).trim()
   }
 
-  async function fetchFollowersList(pageNumber) {
-    const url = `https://m.fanfou.com/followers/p.${pageNumber}`
-    const { error: ajaxError, responseText: html } = await proxiedFetch.get({ url })
-    let followerIds, hasReachedEnd
-
-    if (ajaxError) {
-      log.error('加载关注者列表失败', ajaxError)
-      followerIds = []
-      hasReachedEnd = true
-    } else {
-      const document = parseHTML(html)
-      const items = select.all('ol > li > a > span.a', document)
-
-      followerIds = items.map(item => item.textContent.replace(/^\(|\)$/g, ''))
-      hasReachedEnd = !select.exists(`a[href="/followers/p.${pageNumber + 1}"]`, document)
-    }
-
-    return { followerIds, hasReachedEnd }
-  }
+  // 已移除基于 HTML Scraping 的翻页检查函数
 
   async function checkFriendship() {
     if (hasChecked) return
     hasChecked = true
     setText(TEXT_BUSY)
 
-    const userId = await getCurrentPageOwnerUserId()
-    let isFollowed = false
-    let pageNumber = 0
+    try {
+      let targetUserId = await getCurrentPageOwnerUserId()
 
-    while (true) {
-      const { followerIds, hasReachedEnd } = await fetchFollowersList(++pageNumber)
+      // Step 1. 先通过 users/show 将潜在的 login string 解析为底层的 ~id，规避 friendships/show 的严格格式缺陷
+      const { error: userError, responseJSON: userJSON } = await fanfouOAuth.request({
+        url: 'https://api.fanfou.com/users/show.json',
+        query: { id: targetUserId },
+        responseType: 'json',
+      })
 
-      if (!hasReachedEnd) {
-        isFollowed = followerIds.includes(userId)
+      if (userError) {
+        log.error('API请求失败 (users/show)', userError)
+        if (typeof userError === 'string' && userError.includes('未完成授权')) {
+          setText('请前往设置页完成授权')
+        } else {
+          setText('出现异常，点击重试')
+        }
+        hasChecked = false // 允许重试
+        return
       }
 
-      if (hasReachedEnd || isFollowed) {
-        break
+      if (userJSON && userJSON.id) {
+        targetUserId = userJSON.id
       }
+
+      // 切换至稳健的 OAuth 官方 API
+      const { error, responseJSON } = await fanfouOAuth.request({
+        url: 'https://api.fanfou.com/friendships/show.json',
+        // eslint-disable-next-line camelcase
+        query: { target_id: targetUserId },
+        responseType: 'json',
+      })
+
+      if (error) {
+        log.error('API请求失败 (friendships/show)', error)
+        if (typeof error === 'string' && error.includes('未完成授权')) {
+          setText('请前往设置页完成授权')
+        } else {
+          setText('出现异常，点击重试')
+        }
+        hasChecked = false // 允许重试
+        return
+      }
+
+      if (!responseJSON || !responseJSON.relationship) {
+        throw new Error('API 响应格式无效')
+      }
+
+      const { target, source } = responseJSON.relationship
+      const iFollowThem = source.following === 'true'
+      const theyFollowMe = target.following === 'true'
+
+      if (theyFollowMe && iFollowThem) setText(TEXT_MUTUAL)
+      else if (theyFollowMe) setText(TEXT_THEY_FOLLOW)
+      else if (iFollowThem) setText(TEXT_I_FOLLOW)
+      else setText(TEXT_NO_FOLLOW)
+
+      hasChecked = false
+    } catch (err) {
+      log.error('检查关注关系发生异常', err)
+      setText('出现异常，点击重试')
+      hasChecked = false // 允许重试
     }
-
-    setText(isFollowed ? TEXT_IS_FOLLOWED : TEXT_IS_NOT_FOLLOWED)
   }
 
   return {

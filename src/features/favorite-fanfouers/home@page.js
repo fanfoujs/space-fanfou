@@ -199,7 +199,13 @@ export default context => {
       if (!event.shiftKey) return
       event.preventDefault()
 
-      const li = event.path.find(element => element.matches(`.${CLASSNAME_ITEM}`))
+      // 使用标准API composedPath()，降级到非标准event.path（向后兼容）
+      const path = event.composedPath?.() || event.path || []
+      const li = path.find(element => element.matches(`.${CLASSNAME_ITEM}`))
+
+      // 防御性检查：确保找到了li元素
+      if (!li) return
+
       const friendsData = [ ...this.state.friendsData ]
 
       await fadeOut(li, 400)

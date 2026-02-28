@@ -136,7 +136,8 @@ export default context => {
       return null
     }
 
-    componentWillMount() {
+    // TODO: 迁移到UNSAFE_componentWillMount或componentDidMount
+    componentWillMount() { // eslint-disable-line react/no-deprecated
       this.favoritedStatusIndicator = document.createElement('span')
       this.favoritedStatusToggler = document.createElement('a')
 

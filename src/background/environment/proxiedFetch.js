@@ -11,7 +11,10 @@ function registerHandler() {
   messaging.registerHandler(PROXIED_FETCH_GET, async payload => {
     const { url, query, responseType = 'text' } = payload
     let error, responseText, responseJSON
-    let w = wretch(url)
+    let w = wretch(url).options({
+      // 必须带上 cookie，否则 fanfou 会返回登录页导致解析为空
+      credentials: 'include',
+    })
 
     if (query) w = w.query(query)
 

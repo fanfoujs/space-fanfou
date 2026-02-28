@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+// 保留console用于页面检测调试
 import select from 'select-dom'
 import simpleMemoize from 'just-once'
 import elementReady from 'element-ready'
@@ -57,13 +59,41 @@ export const isLoggedInUserFollowersListPage = simpleMemoize(async () => {
 })
 
 // 是否为用户 timeline 页面
-export const isUserProfilePage = simpleMemoize(() => {
-  return any([
-    // 只有用户个人页面中才存在「投诉」对话框
-    elementReady('#overlay-report'),
-    // 但是当前登录用户的个人页面中没有「投诉」对话框，需要额外判断
-    isLoggedInUserProfilePage(),
-  ])
+export const isUserProfilePage = simpleMemoize(async () => {
+  console.log('[SpaceFanfou] pageDetect: isUserProfilePage 开始检查')
+  console.log('[SpaceFanfou] pageDetect: 当前路径 =', window.location.pathname)
+
+  // 检查当前登录用户的个人页面
+  const isLoggedInUser = isLoggedInUserProfilePage()
+  console.log('[SpaceFanfou] pageDetect: isLoggedInUserProfilePage =', isLoggedInUser)
+
+  if (isLoggedInUser) {
+    console.log('[SpaceFanfou] pageDetect: 确认为当前登录用户资料页')
+    return true
+  }
+
+  // 检查是否存在投诉对话框（其他用户的资料页）
+  console.log('[SpaceFanfou] pageDetect: 等待 #overlay-report 元素（超时10秒）')
+  const overlayReport = await elementReady('#overlay-report', { timeout: 10000 })
+  console.log('[SpaceFanfou] pageDetect: #overlay-report =', !!overlayReport)
+
+  if (overlayReport) {
+    console.log('[SpaceFanfou] pageDetect: 确认为其他用户资料页（存在投诉对话框）')
+    return true
+  }
+
+  // 备用检测：检查 URL 模式
+  const pathSegments = window.location.pathname.split('/').filter(Boolean)
+  console.log('[SpaceFanfou] pageDetect: 路径片段 =', pathSegments)
+
+  // 用户资料页通常是 /username 格式
+  if (pathSegments.length === 1 && pathSegments[0] !== 'home' && pathSegments[0] !== 'login') {
+    console.log('[SpaceFanfou] pageDetect: 根据 URL 模式确认为用户资料页')
+    return true
+  }
+
+  console.log('[SpaceFanfou] pageDetect: 不是用户资料页')
+  return false
 })
 
 // 是否为用户相册页面

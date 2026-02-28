@@ -35,3 +35,40 @@
 ### 协议
 
 基于 [GPL v3](COPYING) 协议发布。版权所有 © 2011-2020 太空饭否开发组。
+
+---
+
+## 分支说明
+
+这是一个基于原版太空饭否持续维护的 fork，可对外称为 **Space Fanfou 2.0**。
+
+相较于上游仓库，这个 fork 主要聚焦于：
+
+- 迁移到 Manifest V3，适配现代 Chrome 扩展环境
+- 通过 OAuth 与 API 改造恢复已失效或脆弱的旧功能
+- 提升发文、图片上传、回复框等高频交互的稳定性
+- 在尽量不改变原有产品气质的前提下，补充少量实用增强功能
+
+更完整的 fork 差异说明可参阅
+[docs/fork-differences.md](docs/fork-differences.md)。
+
+### 安装方式
+
+普通饭友请点 [Releases](https://github.com/halmisen/space-fanfou/releases) 下载压缩包，详情页有引导。
+
+开发者请使用 `npm install`、`npm run build`、`npm run dev` 进行安装、构建和本地开发。
+
+**温馨提示（授权与高级功能）：**
+为了能够正常使用互相关注等依赖 API 的增强功能，请在安装后进行一次手动授权：打开插件面板（点此浏览器右上角插件图标），进入 **“工具”** -> **“API 接入”**，点击 **“开始授权”** 完成操作即可。
+
+### 开发说明
+
+常用命令：
+
+- `npm test`
+- `npm run build`
+- `npm run dev`
+
+其他开发与贡献说明请参阅 [docs/contributing.md](docs/contributing.md)。
+
+当前 fork 由 [@halmisen](https://fanfou.com/halmisen) 持续维护。

@@ -1,5 +1,5 @@
 import importAll from 'import-all.macro'
-import dotProp from 'dot-prop'
+import { setProperty } from 'dot-prop'
 import pick from 'just-pick'
 import parseFilename from '@libs/parseFilename'
 import replaceExtensionOrigin from '@libs/replaceExtensionOrigin'
@@ -55,21 +55,25 @@ function loadComponents() {
 
 function processOptionDef(featureName, optionName, rawOptionDef, isSubOption) {
   const { isSoldered = false, defaultValue, disableCloudSyncing = false } = rawOptionDef
+  const inferredType = rawOptionDef.type || do {
+    if (isSoldered || typeof defaultValue === 'boolean') {
+      'checkbox' // eslint-disable-line no-unused-expressions
+    } else if (typeof defaultValue === 'number') {
+      'number' // eslint-disable-line no-unused-expressions
+    } else if (typeof defaultValue === 'string') {
+      'text' // eslint-disable-line no-unused-expressions
+    } else {
+      // eslint-disable-next-line unicorn/prefer-type-error
+      throw new Error('无法判断选项的类型，因为没有指定 `type` 或合法的 `defaultValue`')
+    }
+  }
+
   const optionDef = {
     key: optionName,
     isSoldered,
     isSubOption,
     disableCloudSyncing,
-    type: do {
-      if (isSoldered || typeof defaultValue === 'boolean') {
-        'checkbox' // eslint-disable-line no-unused-expressions
-      } else if (typeof defaultValue === 'number') {
-        'number' // eslint-disable-line no-unused-expressions
-      } else {
-        // eslint-disable-next-line unicorn/prefer-type-error
-        throw new Error('无法判断选项的类型，因为没有指定 `isSoldered` 或 `defaultValue`')
-      }
-    },
+    type: inferredType,
     ...pick(rawOptionDef, [ 'label', 'comment', 'controlOptions' ]),
   }
 
@@ -116,13 +120,13 @@ function loadFeatures() {
 
   for (const { featureName, subfeatureName, type, module } of loadComponents()) {
     if (type === 'metadata') {
-      dotProp.set(
+      setProperty(
         features,
         `${featureName}.metadata`,
         processMetadata(featureName, module),
       )
     } else {
-      dotProp.set(
+      setProperty(
         features,
         `${featureName}.subfeatures.${subfeatureName}.${type}`,
         module,

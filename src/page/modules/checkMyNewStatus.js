@@ -40,8 +40,8 @@ async function fetchNewStatuses() {
 function findTheStatusJustPosted(startTime, statusElements) {
   return statusElements.some(li => {
     // 首先得是登录用户自己的消息
-    const authorUrl = select('.author', li).href
-    if (authorUrl !== getLoggedInUserProfilePageUrl()) return false
+    const authorLink = select('.author', li)
+    if (!authorLink || authorLink.href !== getLoggedInUserProfilePageUrl()) return false
 
     // 且消息的时间应该在发送之后，否则认为是之前发送过但是没有加载进 TL 的消息
     const statusTime = (

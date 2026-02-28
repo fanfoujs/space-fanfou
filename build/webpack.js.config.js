@@ -1,6 +1,7 @@
 const TerserWebpackPlugin = require('terser-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const { EXTENSION_ORIGIN_PLACEHOLDER } = require('esm')(module)('../src/constants/extension-origin')
+// 直接定义常量，避免 esm 加载器的兼容性问题
+const EXTENSION_ORIGIN_PLACEHOLDER = '<EXTENSION_ORIGIN_PLACEHOLDER>'
 const {
   approot,
   defaultArgv,
@@ -30,12 +31,12 @@ module.exports = (id, entryFile) => (_, { mode } = defaultArgv) => ({
       {
         test: /\.js$/,
         use: [
-          {
+          ...(mode === 'development' ? [ {
             loader: 'cache-loader',
             options: {
               cacheIdentifier: require('cache-loader/package').version + mode + id,
             },
-          },
+          } ] : []),
           'babel-loader',
           {
             loader: 'ifdef-loader',

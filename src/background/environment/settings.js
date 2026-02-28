@@ -11,6 +11,7 @@ import migrate from '@libs/migrate'
 import isExtensionUpgraded from '@libs/isExtensionUpgraded'
 import { readJSONFromLocalStorage } from '@libs/localStorageWrappers'
 import getExtensionVersion from '@libs/getExtensionVersion'
+import log from '@libs/log'
 import omitBy from '@libs/omitBy'
 import {
   SETTINGS_READ,
@@ -173,7 +174,17 @@ async function checkIfExtensionUpgraded() {
     storageAreaName: 'local',
     migrationId: 'extension-version/legacy-to-1.0.0',
     async executor() {
-      const legacyVersion = localStorage.getItem('sf_version')
+      let legacyVersion = null
+
+      if (typeof localStorage !== 'undefined') {
+        try {
+          legacyVersion = localStorage.getItem('sf_version')
+        } catch (error) {
+          log.error('[SpaceFanfou] Failed to read legacy version from localStorage:', error)
+        }
+      } else {
+        log.info('[SpaceFanfou] localStorage unavailable, skip legacy version migration')
+      }
 
       if (legacyVersion) {
         await storage.write(
@@ -253,9 +264,10 @@ function listenOnPageCoonect() {
     // 从 popup 打开设置页时，不存在 tab
     const { tab } = port.sender
 
+    // Manifest V3: action 默认显示，无需手动调用 show()
+    // 原 V2 代码：chrome.pageAction.show(tab.id)
     if (tab && isFanfouWebUrl(tab.url)) {
-      // 使 pageAction 点击后可以显示设置页而不是弹出菜单
-      chrome.pageAction.show(tab.id)
+      // V3 中 action 已在 manifest.json 中配置，此处无需额外操作
     }
   })
 }

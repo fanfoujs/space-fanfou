@@ -71,7 +71,13 @@ export default context => {
   }
 
   async function onClick(event) {
-    const keywordLink = event.path.find(element => element.matches(SELECTOR_KEYWORD_LINK))
+    // 使用标准API composedPath()，降级到非标准event.path（向后兼容）
+    const path = event.composedPath?.() || event.path || []
+    const keywordLink = path.find(element => element.matches(SELECTOR_KEYWORD_LINK))
+
+    // 防御性检查：确保找到了keywordLink元素
+    if (!keywordLink) return
+
     const label = select('.label', keywordLink)
     const keyword = label.textContent.trim()
 

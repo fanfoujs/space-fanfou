@@ -280,6 +280,85 @@ input[type="checkbox"] {
   }
 }
 
+.option {
+  label.text-input,
+  label.text-input-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 4px 0;
+
+    span {
+      flex: 1 1 100%;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      flex: 1 1 auto;
+      min-width: 240px;
+      padding: 2px 6px;
+    }
+  }
+
+  label.text-input-inline {
+    align-items: center;
+
+    span {
+      flex: 0 0 auto;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      flex: 0 0 260px;
+    }
+  }
+}
+
+.sf-oauth-panel {
+  border: 1px solid @dividerColor;
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin: 12px 0 8px 16px;
+  background: #fafafa;
+
+  &__summary {
+    margin: 6px 0 12px;
+    padding-left: 18px;
+    color: #555;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    button[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__redirect {
+    font-size: 11px;
+    color: #666;
+    word-break: break-all;
+
+    code {
+      display: inline-block;
+      margin-top: 4px;
+      padding: 3px 4px;
+      background: #fff;
+      border: 1px solid @dividerColor;
+      border-radius: 2px;
+    }
+  }
+
+  &__error {
+    margin-top: 10px;
+    color: #c0392b;
+  }
+}
+
 @media (max-width: 775px) {
   html {
     width: 560px;

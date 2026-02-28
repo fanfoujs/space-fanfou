@@ -52,7 +52,7 @@ export default context => {
       const diff = [
         ...arrayRemove(added, removed).map(getStatusByInternalId(addedNodes)),
         ...arrayRemove(removed, added).map(getStatusByInternalId(removedNodes)),
-      ]
+      ].filter(Boolean) // 过滤掉undefined
       const loggedInUserStatuses = diff.map(getStatusAuthorId).filter(isLoggedInUserId)
 
       if (isInit) {
@@ -74,9 +74,18 @@ export default context => {
     if (ajaxError) return
 
     const document = parseHTML(html)
-    const p = select('#nav', document).previousElementSibling
+    const nav = select('#nav', document)
+    if (!nav || !nav.previousElementSibling) {
+      console.warn('[SpaceFanfou] 无法找到导航元素或其前置元素')
+      return
+    }
+    const p = nav.previousElementSibling
     const re = /^消息\((\d+)\)$/
     const link = findElementWithSpecifiedContentInArray(select.all('a', p), re)
+    if (!link) {
+      console.warn('[SpaceFanfou] 无法找到消息计数链接')
+      return
+    }
     const newCountNumber = link.textContent.match(re)[1]
 
     elementCollection.get('count').textContent = newCountNumber

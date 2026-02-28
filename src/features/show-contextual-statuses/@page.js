@@ -4,6 +4,7 @@ import select from 'select-dom'
 import cx from 'classnames'
 import arrayLast from 'array-last'
 import sleep from 'p-sleep'
+import DOMPurify from 'dompurify'
 import { CLASSNAME_CONTAINER } from './constants'
 import { isTimelinePage } from '@libs/pageDetect'
 import requireFanfouLib from '@libs/requireFanfouLib'
@@ -40,7 +41,17 @@ export default context => {
       const li = this.base
 
       // 在这里而不是在 render 里使用 dangerouslySetInnerHTML，可以避免闪烁
-      li.innerHTML = this.props.html
+      // 🔒 使用DOMPurify净化HTML，防止XSS攻击
+      li.innerHTML = DOMPurify.sanitize(this.props.html, {
+        ALLOWED_TAGS: [
+          'a', 'span', 'div', 'img', 'b', 'i', 'em', 'strong',
+          'h1', 'h2', 'br', 'p', 'ul', 'li', 'blockquote',
+        ],
+        ALLOWED_ATTR: [
+          'href', 'class', 'src', 'alt', 'title', 'id',
+          'width', 'height', 'style', 'target', 'rel',
+        ],
+      })
 
       window.FF.app.Stream.attach(li)
 
@@ -249,8 +260,9 @@ export default context => {
     if (cacheMap.has(cacheId)) {
       const aliveInstance = cacheMap.get(cacheId)
       const maybeDeadInstance = li.nextElementSibling
+      const containerSelector = `.${CLASSNAME_CONTAINER}`
 
-      if (maybeDeadInstance?.matches(`.${CLASSNAME_CONTAINER}`)) {
+      if (maybeDeadInstance?.matches(containerSelector)) {
         maybeDeadInstance.replaceWith(aliveInstance)
       }
 

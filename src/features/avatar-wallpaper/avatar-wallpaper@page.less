@@ -1,0 +1,457 @@
+#sf-avatar-wallpaper {
+  --sf-avatar-wallpaper-tile-size: 64px;
+  --sf-avatar-wallpaper-tile-gap: 6px;
+  --sf-avatar-wallpaper-pane-bg: transparent;
+  --sf-avatar-wallpaper-pane-bg-opacity: 0;
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 4;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+#sf-avatar-wallpaper .sf-avatar-wallpaper-pane {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--sf-avatar-wallpaper-columns, auto-fill), var(--sf-avatar-wallpaper-tile-size));
+  grid-auto-rows: var(--sf-avatar-wallpaper-tile-size);
+  justify-content: center;
+  align-content: start;
+  gap: var(--sf-avatar-wallpaper-tile-gap);
+  padding: 14px 8px;
+  overflow: hidden;
+
+  &::before {
+    position: absolute;
+    inset: 0;
+    content: "";
+    z-index: 0;
+    background: var(--sf-avatar-wallpaper-pane-bg);
+    opacity: var(--sf-avatar-wallpaper-pane-bg-opacity);
+  }
+}
+
+#sf-avatar-wallpaper-pane-left {
+  left: 0;
+  justify-content: end;
+
+  &::before {
+    box-shadow:
+      inset -14px 0 22px rgba(35, 73, 123, 0.18),
+      inset 0 12px 18px rgba(255, 255, 255, 0.11);
+  }
+
+  &::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 2px;
+    content: "";
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(137, 170, 214, 0.3), rgba(255, 255, 255, 0.45));
+    opacity: 0.68;
+    z-index: 0;
+  }
+}
+
+#sf-avatar-wallpaper-pane-right {
+  right: 0;
+  justify-content: start;
+
+  &::before {
+    box-shadow:
+      inset 14px 0 22px rgba(35, 73, 123, 0.18),
+      inset 0 12px 18px rgba(255, 255, 255, 0.11);
+  }
+
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 2px;
+    content: "";
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(137, 170, 214, 0.3), rgba(255, 255, 255, 0.45));
+    opacity: 0.68;
+    z-index: 0;
+  }
+}
+
+#sf-avatar-wallpaper .sf-avatar-wallpaper-pane .sf-avatar-wallpaper-tile {
+  --sf-avatar-frame-ring: 0 0 0 1px rgba(255, 255, 255, 0.42);
+
+  position: relative;
+  z-index: 1;
+  width: var(--sf-avatar-wallpaper-tile-size);
+  height: var(--sf-avatar-wallpaper-tile-size);
+  border-radius: 50%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: grayscale(8%) saturate(102%);
+  animation: sf-avatar-float 4.8s ease-in-out infinite;
+  box-shadow:
+    var(--sf-avatar-frame-ring),
+    0 2px 8px rgba(43, 76, 120, 0.12);
+}
+
+#sf-avatar-wallpaper .sf-avatar-wallpaper-pane .sf-avatar-wallpaper-tile.sf-avatar-frame-1 {
+  --sf-avatar-frame-ring:
+    0 0 0 2px rgba(214, 235, 255, 0.9),
+    0 0 0 4px rgba(127, 177, 233, 0.35);
+}
+
+#sf-avatar-wallpaper .sf-avatar-wallpaper-pane .sf-avatar-wallpaper-tile.sf-avatar-frame-2 {
+  --sf-avatar-frame-ring:
+    0 0 0 2px rgba(227, 246, 248, 0.9),
+    0 0 0 4px rgba(106, 176, 189, 0.38);
+}
+
+#sf-avatar-wallpaper .sf-avatar-wallpaper-pane .sf-avatar-wallpaper-tile.sf-avatar-frame-3 {
+  --sf-avatar-frame-ring:
+    0 0 0 2px rgba(241, 234, 255, 0.92),
+    0 0 0 4px rgba(151, 130, 208, 0.4);
+}
+
+#sf-avatar-wallpaper .sf-avatar-wallpaper-pane .sf-avatar-wallpaper-tile.sf-avatar-frame-4 {
+  --sf-avatar-frame-ring:
+    0 0 0 2px rgba(255, 235, 225, 0.92),
+    0 0 0 4px rgba(216, 143, 118, 0.38);
+}
+
+#sf-avatar-wallpaper .sf-avatar-wallpaper-pane .sf-avatar-wallpaper-tile.sf-avatar-frame-5 {
+  --sf-avatar-frame-ring:
+    0 0 0 2px rgba(228, 246, 222, 0.92),
+    0 0 0 4px rgba(125, 188, 116, 0.38);
+}
+
+#sf-avatar-wallpaper .sf-avatar-wallpaper-pane .sf-avatar-wallpaper-tile.sf-avatar-frame-gold {
+  --sf-avatar-frame-ring:
+    0 0 0 2px rgba(255, 236, 148, 0.98),
+    0 0 0 4px rgba(230, 174, 56, 0.56);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-avatar-wallpaper-pane {
+  pointer-events: auto;
+  display: block;
+  padding-bottom: 124px;
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-board {
+  position: relative;
+  z-index: 1;
+  display: block;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-stack-slot {
+  position: relative;
+  width: var(--sf-avatar-wallpaper-tile-size);
+  height: var(--sf-avatar-wallpaper-tile-size);
+  pointer-events: none;
+  overflow: visible;
+  transform: translateZ(0);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-board > .sf-match3-stack-slot {
+  position: absolute;
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-tray {
+  --sf-match3-tray-slot-size: clamp(34px, 2.8vw, 46px);
+
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  width: auto;
+  max-width: calc(50vw - 36px);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 9px 10px 10px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(238, 246, 255, 0.96), rgba(216, 233, 253, 0.93));
+  box-shadow:
+    0 8px 20px rgba(24, 56, 99, 0.24),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.85);
+  pointer-events: auto;
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-controls {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 4;
+  width: min(320px, calc(50vw - 36px));
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  pointer-events: auto;
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-control-button {
+  min-height: 34px;
+  border: 0;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(31, 61, 104, 0.94);
+  background: linear-gradient(180deg, rgba(245, 251, 255, 0.95), rgba(216, 233, 252, 0.9));
+  box-shadow:
+    0 4px 10px rgba(24, 56, 99, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.82);
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 6px 12px rgba(24, 56, 99, 0.25),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.86);
+  }
+
+  &:disabled {
+    opacity: 0.48;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-control-button.is-emphasis {
+  color: rgba(28, 77, 48, 0.95);
+  background: linear-gradient(180deg, rgba(232, 251, 238, 0.96), rgba(198, 237, 211, 0.92));
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-tray-status {
+  align-self: flex-start;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(37, 71, 116, 0.94);
+  background: rgba(255, 255, 255, 0.66);
+  box-shadow: inset 0 0 0 1px rgba(145, 179, 219, 0.34);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-tray-slots {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-tray-slot {
+  position: relative;
+  width: var(--sf-match3-tray-slot-size);
+  height: var(--sf-match3-tray-slot-size);
+  flex: 0 0 var(--sf-match3-tray-slot-size);
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.48);
+  box-shadow: inset 0 0 0 1px rgba(141, 175, 214, 0.36);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-tray-tile {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: none;
+  filter: grayscale(2%) saturate(104%);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-tile,
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-tray-tile {
+  --sf-match3-type-accent: rgba(103, 146, 201, 0.68);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-tile {
+  --sf-match3-stack-shadow-offset: 0;
+  --sf-match3-stack-shadow-alpha: 0.16;
+
+  pointer-events: auto;
+  cursor: pointer;
+  position: relative;
+  z-index: 3;
+  transition: transform 120ms ease, box-shadow 140ms ease, filter 160ms ease;
+  box-shadow:
+    var(--sf-avatar-frame-ring),
+    0 0 0 2px var(--sf-match3-type-accent),
+    var(--sf-match3-stack-shadow-offset) var(--sf-match3-stack-shadow-offset) 0 rgba(232, 241, 252, 0.88),
+    0 2px 8px rgba(35, 73, 123, var(--sf-match3-stack-shadow-alpha)),
+    0 4px 10px rgba(35, 73, 123, 0.2);
+
+  &:hover {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow:
+      var(--sf-avatar-frame-ring),
+      0 0 0 2px var(--sf-match3-type-accent),
+      var(--sf-match3-stack-shadow-offset) var(--sf-match3-stack-shadow-offset) 0 rgba(232, 241, 252, 0.88),
+      0 2px 8px rgba(35, 73, 123, var(--sf-match3-stack-shadow-alpha)),
+      0 5px 12px rgba(35, 73, 123, 0.28);
+    filter: saturate(106%);
+  }
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-tile.is-match3-blocked {
+  cursor: not-allowed;
+  opacity: 0.74;
+  filter: grayscale(22%) saturate(70%);
+  box-shadow:
+    var(--sf-avatar-frame-ring),
+    0 0 0 2px rgba(122, 143, 169, 0.46),
+    var(--sf-match3-stack-shadow-offset) var(--sf-match3-stack-shadow-offset) 0 rgba(208, 221, 236, 0.72),
+    0 2px 8px rgba(35, 73, 123, 0.18);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-type-badge {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  z-index: 1;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+  color: rgba(20, 47, 85, 0.95);
+  background: rgba(245, 252, 255, 0.86);
+  box-shadow:
+    0 1px 2px rgba(40, 74, 115, 0.24),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.76);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-type-1 {
+  --sf-match3-type-accent: rgba(88, 172, 255, 0.7);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-type-2 {
+  --sf-match3-type-accent: rgba(87, 186, 152, 0.72);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-type-3 {
+  --sf-match3-type-accent: rgba(244, 163, 96, 0.72);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-type-4 {
+  --sf-match3-type-accent: rgba(222, 137, 220, 0.72);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-type-5 {
+  --sf-match3-type-accent: rgba(132, 162, 255, 0.7);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-type-6 {
+  --sf-match3-type-accent: rgba(86, 203, 219, 0.72);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-type-7 {
+  --sf-match3-type-accent: rgba(240, 133, 133, 0.72);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-type-8 {
+  --sf-match3-type-accent: rgba(172, 163, 106, 0.72);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-type-9 {
+  --sf-match3-type-accent: rgba(136, 134, 220, 0.72);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-type-10 {
+  --sf-match3-type-accent: rgba(120, 186, 106, 0.72);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-type-11 {
+  --sf-match3-type-accent: rgba(223, 142, 171, 0.72);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-type-12 {
+  --sf-match3-type-accent: rgba(96, 184, 176, 0.72);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3 .sf-match3-type-13 {
+  --sf-match3-type-accent: rgba(192, 151, 102, 0.72);
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3.is-match3-failed .sf-match3-tray {
+  background: linear-gradient(180deg, rgba(255, 231, 231, 0.95), rgba(255, 216, 216, 0.92));
+}
+
+#sf-avatar-wallpaper.sf-avatar-wallpaper-match3.is-match3-cleared .sf-match3-tray {
+  background: linear-gradient(180deg, rgba(226, 251, 232, 0.96), rgba(206, 242, 214, 0.94));
+}
+
+.sf-match3-fly-tile {
+  position: fixed !important;
+  z-index: 2147483647 !important;
+  pointer-events: none !important;
+  opacity: 0.9;
+  transition: transform 260ms cubic-bezier(0.21, 0.82, 0.33, 1), opacity 260ms ease;
+}
+
+#sf-avatar-wallpaper .sf-avatar-wallpaper-pane .sf-avatar-wallpaper-tile:nth-child(3n) {
+  animation-duration: 5.2s;
+}
+
+#sf-avatar-wallpaper .sf-avatar-wallpaper-pane .sf-avatar-wallpaper-tile:nth-child(3n + 1) {
+  animation-duration: 4.4s;
+}
+
+@keyframes sf-avatar-float {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-2px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #sf-avatar-wallpaper .sf-avatar-wallpaper-pane .sf-avatar-wallpaper-tile {
+    animation: none;
+  }
+}
+
+body.sf-avatar-wallpaper-enabled {
+  background-image: var(--sf-avatar-wallpaper-bg) !important;
+}
+
+body.sf-avatar-wallpaper-enabled #container {
+  position: relative;
+  z-index: 3;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85),
+    0 10px 24px rgba(28, 56, 96, 0.1);
+}
+
+body.sf-avatar-wallpaper-enabled #container #main {
+  background-image: none !important;
+}
+
+body.sf-avatar-wallpaper-enabled #stream .avatar,
+body.sf-avatar-wallpaper-enabled #stream .avatar a {
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+body.sf-avatar-wallpaper-enabled #stream .avatar img {
+  border-radius: 50% !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.72),
+    0 2px 6px rgba(35, 73, 123, 0.2);
+}

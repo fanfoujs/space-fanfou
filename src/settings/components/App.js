@@ -14,8 +14,6 @@ export default class App extends Component {
   constructor(...args) {
     super(...args)
 
-    this.background = null
-
     this.state = {
       isReady: false,
       currentTabId: 0,
@@ -32,8 +30,6 @@ export default class App extends Component {
 
     tabDefs = await getTabDefs()
 
-    this.background = await this.initBackground()
-
     this.setState({
       isReady: true,
       currentTabId,
@@ -42,10 +38,6 @@ export default class App extends Component {
 
     window.addEventListener('unload', this.writeLastTabId)
   }
-
-  initBackground = () => new Promise(resolve => {
-    chrome.runtime.getBackgroundPage(resolve)
-  })
 
   saveSettings = async () => {
     const { optionValues } = this.state
@@ -63,9 +55,8 @@ export default class App extends Component {
   })
 
   writeLastTabId = () => {
-    // 因为操作是异步的，页面关闭可能来不及完成写入操作就退出了
-    // 放到后台去做这个操作
-    this.background.chrome.storage.sync.set({
+    // Manifest V3: 直接使用 chrome.storage API，无需通过 background page
+    chrome.storage.sync.set({
       [LAST_TAB_ID_STORAGE_KEY]: this.state.currentTabId,
     })
   }
@@ -125,12 +116,13 @@ export default class App extends Component {
   }
 
   renderSection = (sectionDef, sectionId) => {
-    const { title, options } = sectionDef
+    const { title, options = [], children } = sectionDef
 
     return (
       <section key={sectionId}>
         <h3>{ title }</h3>
         { options.map(this.renderOptionGroup) }
+        { children }
       </section>
     )
   }
@@ -154,6 +146,7 @@ export default class App extends Component {
       <li key={key} className={classNames}>
         { type === 'checkbox' && this.renderCheckbox(optionDef) }
         { type === 'number' && this.renderNumberInput(optionDef) }
+        { type === 'text' && this.renderTextInput(optionDef) }
         { this.renderComment(optionDef) }
         { optionDef.disableCloudSyncing && <CloudSyncingDisabledTip /> }
       </li>
@@ -181,6 +174,28 @@ export default class App extends Component {
     return (
       <label>
         { pre }<input type="number" {...controlOptions} />{ post }
+      </label>
+    )
+  }
+
+  renderTextInput(optionDef) {
+    const label = optionDef.label || ''
+    const controlOptions = this.getControlOptions(optionDef, 'value')
+
+    if (label.includes(CONTROL_PLACEHOLDER)) {
+      const [ pre, post ] = label.split(CONTROL_PLACEHOLDER)
+
+      return (
+        <label className="text-input-inline">
+          { pre }<input type="text" {...controlOptions} />{ post }
+        </label>
+      )
+    }
+
+    return (
+      <label className="text-input">
+        <span>{ label }</span>
+        <input type="text" {...controlOptions} />
       </label>
     )
   }
