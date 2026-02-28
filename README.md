@@ -38,42 +38,38 @@
 
 ---
 
-## 📦 自用修改版本说明
+## Fork Notes
 
-> **提示**：这是基于官方版本的个人修改版，仅供个人使用。如需官方稳定版本，请前往 [Chrome 网上应用店](https://chrome.google.com/webstore/detail/mfofmcdbaeajgdeihmcjjohmhepcdcol) 下载。
+This fork is maintained as a modern continuation of Space Fanfou and may be
+referred to as **Space Fanfou 2.0**.
 
-### 🚀 快速安装（适合不懂代码的用户）
+Compared with the original upstream project, this fork mainly focuses on:
 
-**第一步：下载插件文件**
+- migrating the extension to Manifest V3
+- restoring broken integrations through OAuth and API-backed implementations
+- improving posting, image upload, and status-form reliability
+- adding a small set of practical enhancements such as draft save, word count
+  warning, and avatar wallpaper
 
-1. 点击页面顶部的绿色 **Code** 按钮
-2. 选择 **Download ZIP**
-3. 解压下载的 ZIP 文件到任意文件夹
-4. 找到解压后的 `dist` 文件夹（这个文件夹包含所有插件文件）
+For a fuller summary of fork-specific differences, see
+[docs/fork-differences.md](docs/fork-differences.md).
 
-**第二步：安装到 Chrome 浏览器**
+### Quick Install
 
-1. 打开 Chrome 浏览器
-2. 在地址栏输入 `chrome://extensions` 并回车
-3. 打开右上角的 **开发者模式** 开关
-4. 点击左上角的 **加载已解压的扩展程序** 按钮
-5. 选择刚才解压的 `dist` 文件夹
-6. 完成！现在可以访问 [fanfou.com](https://fanfou.com) 使用了
+1. Download or clone this repository.
+2. Run `npm install`.
+3. Run `npm run build`.
+4. Open `chrome://extensions`.
+5. Enable **Developer mode**.
+6. Click **Load unpacked** and choose the generated `dist` directory.
 
-**更新版本**
+### Development
 
-当此仓库有更新时：
-1. 重新下载 ZIP 文件
-2. 解压覆盖原文件
-3. 在 `chrome://extensions` 页面点击插件的 **刷新** 图标
-4. 刷新饭否页面即可
+Useful commands:
 
-### ⚠️ 注意事项
+- `npm test`
+- `npm run build`
+- `npm run dev`
 
-- 此版本可能包含实验性功能，稳定性不如官方版本
-- 使用过程中遇到问题，请优先检查是否为自用修改导致
-- 建议先卸载官方版本，避免冲突
-
-### 🔧 开发者说明
-
-如需从源码构建，请参考 [CLAUDE.md](CLAUDE.md) 中的开发指南。
+Additional contributor notes are available in
+[docs/contributing.md](docs/contributing.md).
