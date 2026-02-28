@@ -38,38 +38,37 @@
 
 ---
 
-## Fork Notes
+## 分支说明
 
-This fork is maintained as a modern continuation of Space Fanfou and may be
-referred to as **Space Fanfou 2.0**.
+这是一个基于原版太空饭否持续维护的 fork，可对外称为 **Space Fanfou 2.0**。
 
-Compared with the original upstream project, this fork mainly focuses on:
+相较于上游仓库，这个 fork 主要聚焦于：
 
-- migrating the extension to Manifest V3
-- restoring broken integrations through OAuth and API-backed implementations
-- improving posting, image upload, and status-form reliability
-- adding a small set of practical enhancements such as draft save, word count
-  warning, and avatar wallpaper
+- 迁移到 Manifest V3，适配现代 Chrome 扩展环境
+- 通过 OAuth 与 API 改造恢复已失效或脆弱的旧功能
+- 提升发文、图片上传、回复框等高频交互的稳定性
+- 在尽量不改变原有产品气质的前提下，补充少量实用增强功能
 
-For a fuller summary of fork-specific differences, see
-[docs/fork-differences.md](docs/fork-differences.md).
+更完整的 fork 差异说明可参阅
+[docs/fork-differences.md](docs/fork-differences.md)。
 
-### Quick Install
+### 安装方式
 
-1. Download or clone this repository.
-2. Run `npm install`.
-3. Run `npm run build`.
-4. Open `chrome://extensions`.
-5. Enable **Developer mode**.
-6. Click **Load unpacked** and choose the generated `dist` directory.
+1. 下载或克隆本仓库
+2. 执行 `npm install`
+3. 执行 `npm run build`
+4. 打开 `chrome://extensions`
+5. 开启右上角的“开发者模式”
+6. 选择“加载已解压的扩展程序”，并指向生成后的 `dist` 目录
 
-### Development
+### 开发说明
 
-Useful commands:
+常用命令：
 
 - `npm test`
 - `npm run build`
 - `npm run dev`
 
-Additional contributor notes are available in
-[docs/contributing.md](docs/contributing.md).
+其他开发与贡献说明请参阅 [docs/contributing.md](docs/contributing.md)。
+
+当前 fork 由 [@halmisen](https://fanfou.com/halmisen) 持续维护。
