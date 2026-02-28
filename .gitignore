@@ -17,6 +17,7 @@ tests/e2e/screenshots/
 .tmp-chrome-profile/
 fanfou账号
 tasks/lessons.md
+tasks/todo.md
 test-results/
 GEMINI.md
 CLAUDE.md
@@ -27,4 +28,6 @@ playwright-report/
 PROJECT-STATUS-*.md
 
 debug-*
-
+bug/
+settings_page_debug.png
+space-fanfou-*.tar.gz

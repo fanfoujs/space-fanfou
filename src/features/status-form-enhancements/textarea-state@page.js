@@ -24,7 +24,7 @@ export default () => {
     if (!counter) {
       counter = document.createElement('span')
       counter.id = 'sf-counter'
-      
+
       const loading = wrapper.querySelector('.act .actpost .loading, .actpost .loading, .loading')
       if (loading) {
         loading.after(counter)

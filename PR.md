@@ -1,51 +1,82 @@
-  feat: Migrate to MV3, integrate OAuth, and add new UX enhancements
+# feat: migrate Space Fanfou to MV3, restore core integrations, and polish posting UX
 
-  描述
+## Summary
 
-  Background
+This PR brings the `2026.2` branch to a releasable Manifest V3 baseline for Space Fanfou.
 
-  Chrome 已全面弃用并下架 MV2 扩展。本 PR 将 Space Fanfou 完整迁移至 Manifest V3，修复了迁移过程中因架构变更和
-   API 失效导致的核心功能损坏，并新增了数项实用功能。
+It does three things in one coherent pass:
 
-  ---
-  What's Changed
+- completes the MV2 -> MV3 migration and hardens cross-context messaging
+- replaces broken legacy integrations with built-in OAuth + API-based implementations
+- adds a small set of practical UX enhancements, especially around posting and image upload
 
-  1. Manifest V3 Migration
+## Why
 
-  - Background Page → Service Worker，更新 manifest.json
-  - 重构 bridge.js 与跨脚本通信层，加入 try-catch 应对 Service Worker 休眠断连，解决 Promise 回调死锁问题
-  - 修复 contextMenus、定时器等多处 MV3 兼容性问题
+Chrome has fully deprecated MV2, and several older Fanfou web integrations had become unreliable or broken.
+Without this branch, the extension is at risk of failing both at the platform level and at the feature level.
 
-  2. OAuth Integration & API Migration
+This work aims to restore a stable foundation first, then layer in focused usability improvements without rewriting the product's core interaction model.
 
-  - 内置 Consumer Key：开箱即用，用户无需自行申请开发者密钥
-  - 一键授权：设置页内完成 OAuth 授权闭环，无繁琐手动配置
-  - 将 sidebar-statistics（注册时间）、check-friendship（互关状态）等功能从已失效的 DOM 抓取 / JSONP
-  方案，迁移至稳定的 OAuth API（users/show.json、friends/show.json）
+## What Changed
 
-  3. Bug Fixes
+### 1. Manifest V3 migration and runtime hardening
 
-  - 修复图片拖放/粘贴上传导致输入框永久冻结的无限循环问题
-  - 修复 check-friendship URL 构造错误及 hasChecked 阻止重试的问题
-  - 修复 favorite-fanfouers DOM 访问错误
-  - 修复多处 Service Worker 定时器泄漏问题
+- migrated the extension architecture from background pages to a Service Worker model
+- updated manifest/offscreen/background wiring for MV3 compatibility
+- hardened the bridge/messaging flow to better survive Service Worker cold starts, disconnects, and deferred initialization
+- fixed several MV3-specific regressions around timers, background lifecycle, and context integration
 
-  4. New Features
+### 2. Built-in OAuth and API migration
 
-  - 头像壁纸 (Avatar Wallpaper)：将他人饭否页面背景替换为关注者的动态头像墙排列，支持有爱饭友优先排序，默认
-  opt-in（需手动开启）
-  - 发文草稿自动保存：输入内容自动持久化，支持断点恢复，发文成功后自动清空
-  - 字数预警增强：输入超过 120 字时黄色预警，超过 135 字时红色危险提示，渐进式视觉反馈
+- integrated built-in OAuth flow so users no longer need to manually provide their own consumer key
+- added in-extension authorization UI and supporting background/page bridge modules
+- migrated broken or fragile legacy data paths away from DOM scraping / JSONP toward OAuth-backed API requests
+- restored features such as sidebar statistics and friendship checks on top of stable API sources
 
-  ---
-  Acknowledgements
+### 3. Status form reliability and UX improvements
 
-  本次 MV3 重构与 OAuth 破局中，特别感谢核心贡献者 @LitoMore。
-  扩展内置的 Consumer Key 直接来自其开源项目
-  nofan——某种意义上，是用饭友曾经打造的另一把钥匙，重新打开了这座太空舱的门。
+- improved Ajax posting flow for multi-form contexts, including PopupBox reply forms
+- fixed image upload edge cases around drag-and-drop, paste, and file selection
+- added draft auto-save for status composition
+- added word-count warning / danger states with clearer visual feedback
+- polished PopupBox upload injection and follow-up alignment behavior for reply forms
 
-  本次迁移工程由 @halmisen 主导，在 Claude Code（Sonnet 4.6）、Codex CLI 与 Gemini CLI
-  的协助下完成代码库诊断、重构、功能新编与测试覆盖。
+### 4. New user-facing features
 
-  ---
-  主要变更：3 项新功能 / 109 个文件 / ~11k 行
+- added Avatar Wallpaper as an opt-in decorative feature for user pages
+- added more resilient OAuth-related settings and account flows
+- expanded Playwright coverage for OAuth, extension smoke checks, and status-form behavior
+
+## Follow-up fixes included in this branch
+
+- normalized Jest/Babel test execution so `npm test` runs successfully in the current repository state
+- cleaned up several lint-triggering helper/debug scripts with narrow rule suppressions instead of broad project-wide relaxation
+- added small PopupBox reply-form layout follow-ups based on visual regression checks
+
+## Verification
+
+Validated in the current `2026.2` workspace with:
+
+- `npm test`
+- `npm run build`
+- targeted `stylelint` / `eslint` checks while iterating on PopupBox and test-environment changes
+
+Current observed result:
+
+- lint passes, with one existing non-blocking Stylelint warning related to a `TODO:` comment
+- Jest passes all current unit suites
+- production build completes successfully
+
+## Notes for Reviewers
+
+- `2026.2` is a large integration branch, so this PR mixes platform migration, feature recovery, and a limited set of new UX work
+- the biggest reviewer focus areas should be:
+  - MV3 background/message lifecycle safety
+  - OAuth setup and API migration correctness
+  - posting/image-upload regressions, especially in PopupBox reply flows
+
+## Acknowledgements
+
+Special thanks to @LitoMore for the open-source OAuth groundwork that made the built-in authorization path practical.
+
+This branch was developed by @halmisen with substantial repository analysis, refactoring, and validation assistance from Claude Code, Codex CLI, and Gemini CLI.

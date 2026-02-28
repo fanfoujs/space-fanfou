@@ -31,12 +31,12 @@ module.exports = (id, entryFile) => (_, { mode } = defaultArgv) => ({
       {
         test: /\.js$/,
         use: [
-          ...(mode === 'development' ? [{
+          ...(mode === 'development' ? [ {
             loader: 'cache-loader',
             options: {
               cacheIdentifier: require('cache-loader/package').version + mode + id,
             },
-          }] : []),
+          } ] : []),
           'babel-loader',
           {
             loader: 'ifdef-loader',

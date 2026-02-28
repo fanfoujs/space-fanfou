@@ -11,6 +11,7 @@ const broadcastListeners = []
 function createMessageHandler(port) {
   return async ({ senderId, message }) => {
     // 【核心修复】防止 Service Worker 刚唤醒时，异步安装过程还没完成就接收到消息导致 handler 找不到
+    /* eslint-disable no-restricted-globals */
     if (self.__SF_BACKGROUND_READY__) {
       try {
         await self.__SF_BACKGROUND_READY__
@@ -18,6 +19,7 @@ function createMessageHandler(port) {
         log.error('[SpaceFanfou] Background 初始化失败，但仍尝试处理消息', e)
       }
     }
+    /* eslint-enable no-restricted-globals */
 
     const handler = messageHandlers[message.action]
     let respondedMessage
@@ -42,9 +44,9 @@ function createMessageHandler(port) {
       const errMsg = `未知消息类型 「${message.action}」`
       log.error(errMsg)
       if (!isPortDisconnected(port)) {
-        port.postMessage({ 
-          senderId, 
-          message: { __isError: true, message: errMsg } 
+        port.postMessage({
+          senderId,
+          message: { __isError: true, message: errMsg },
         })
       }
     }

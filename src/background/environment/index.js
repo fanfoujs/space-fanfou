@@ -82,7 +82,7 @@ export default async function createBackgroundEnvironment() {
     proxiedCreateTab.install(),
     fanfouOAuth.install(),
   ])
-  
+
   await self.__SF_BACKGROUND_READY__
 
   return { messaging, settings }
