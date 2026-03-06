@@ -9,6 +9,7 @@ import { getAttachment, clearAttachment } from './attachmentStore'
 import { isHomePage } from '@libs/pageDetect'
 import parseHTML from '@libs/parseHTML'
 import isHotkey from '@libs/isHotkey'
+import extractFanfouErrorMessage from '@libs/extractFanfouErrorMessage'
 import { POST_STATUS_SUCCESS_EVENT_TYPE } from '@constants'
 
 const API_URL_PLAIN_MESSAGE = '/home'
@@ -153,13 +154,10 @@ export default context => {
     }
 
     if (attachmentFile) {
-      // 如果已有 base64（拖放/粘贴场景），优先使用 base64
-      if (formDataJson.photo_base64) {
-        formDataJson.picture = null
-      } else {
-        // 否则使用 File 对象（文件选择器场景）
-        formDataJson.picture = attachmentFile
-      }
+      // 对于剪贴板/拖放等场景，我们已经在 attachmentStore 中拿到了真实 File，
+      // 直接走 multipart 文件上传会比 photo_base64 更接近原生上传行为，也更稳定。
+      formDataJson.picture = attachmentFile
+      formDataJson.photo_base64 = null // eslint-disable-line camelcase
       formDataJson.desc = formDataJson.desc || formDataJson.content || ''
       formDataJson.action = API_ACTION_UPLOAD_IMAGE
     }
@@ -197,7 +195,14 @@ export default context => {
       // eslint-disable-next-line unicorn/prefer-add-event-listener
       xhr.onload = () => safeJSONParse(xhr.responseText, (error, json) => {
         if (error) {
-          reject(new Error('饭否服务器返回格式异常'))
+          const message = extractFanfouErrorMessage(xhr.responseText, xhr.status)
+          console.error('[SpaceFanfou DEBUG] 饭否返回了非 JSON 响应:', {
+            status: xhr.status,
+            url,
+            message,
+            responseSnippet: (xhr.responseText || '').slice(0, 300),
+          })
+          reject(new Error(message))
         } else {
           resolve(json)
         }

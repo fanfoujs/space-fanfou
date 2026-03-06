@@ -5,6 +5,7 @@ import { chromium, expect, test } from '@playwright/test'
 import type { BrowserContext, SetCookieParam } from '@playwright/test'
 
 const cookiesJson = (process.env.FANFOU_COOKIES_JSON || '').trim()
+const transparentPngBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
 
 function parseCookiesFromEnv(): SetCookieParam[] {
   if (!cookiesJson) return []
@@ -22,15 +23,19 @@ function parseCookiesFromEnv(): SetCookieParam[] {
 const injectedCookies = parseCookiesFromEnv()
 test.skip(injectedCookies.length === 0, '需要 FANFOU_COOKIES_JSON 授权测试')
 
-test('word count and image upload in #PopupBox', async () => {
-  const extensionPath = path.resolve(__dirname, '../../dist')
-  const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'space-fanfou-status-form-'))
-
-  const context = await chromium.launchPersistentContext(userDataDir, {
+async function launchExtensionContext(extensionPath: string, userDataDir: string): Promise<BrowserContext> {
+  return chromium.launchPersistentContext(userDataDir, {
     channel: 'chromium',
     headless: process.env.PW_HEADLESS !== '0',
     args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`, '--no-sandbox'],
   })
+}
+
+test('word count and image upload in #PopupBox', async () => {
+  const extensionPath = path.resolve(__dirname, '../../dist')
+  const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'space-fanfou-status-form-'))
+
+  const context = await launchExtensionContext(extensionPath, userDataDir)
 
   try {
     const page = await context.newPage()
@@ -79,7 +84,7 @@ test('word count and image upload in #PopupBox', async () => {
     
     // 生成一个测试图片文件
     const testImagePath = path.join(os.tmpdir(), 'test-upload.png')
-    const transparentPng = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=', 'base64')
+    const transparentPng = Buffer.from(transparentPngBase64, 'base64')
     fs.writeFileSync(testImagePath, transparentPng)
 
     await fileInput.setInputFiles(testImagePath)
@@ -102,6 +107,70 @@ test('word count and image upload in #PopupBox', async () => {
     await page.waitForTimeout(3000)
     await expect(submitButton).toHaveValue('发送') // 回到原始状态
 
+  } finally {
+    await context.close()
+    fs.rmSync(userDataDir, { recursive: true, force: true })
+  }
+})
+
+test('clipboard image upload uses multipart picture payload', async () => {
+  const extensionPath = path.resolve(__dirname, '../../dist')
+  const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'space-fanfou-clipboard-upload-'))
+
+  const context = await launchExtensionContext(extensionPath, userDataDir)
+
+  try {
+    const page = await context.newPage()
+    await context.addCookies(injectedCookies)
+
+    await page.goto('https://fanfou.com/fanfou', { waitUntil: 'domcontentloaded', timeout: 45_000 })
+    await page.waitForTimeout(4_000)
+
+    const textarea = page.locator('#phupdate textarea')
+    await expect(textarea).toBeVisible()
+    await textarea.fill('Playwright 剪贴板图片上传测试 ' + Date.now())
+
+    await page.evaluate(({ base64 }) => {
+      const target = document.querySelector('#phupdate textarea')
+
+      if (!target) {
+        throw new Error('找不到 #phupdate textarea')
+      }
+
+      const binary = atob(base64)
+      const bytes = Uint8Array.from(binary, char => char.charCodeAt(0))
+      const file = new File([ bytes ], 'image-from-clipboard.png', { type: 'image/png' })
+      const event = new Event('paste', { bubbles: true, cancelable: true })
+
+      Object.defineProperty(event, 'clipboardData', {
+        value: {
+          items: [{
+            kind: 'file',
+            type: file.type,
+            getAsFile: () => file,
+          }],
+        },
+      })
+
+      target.focus()
+      window.dispatchEvent(event)
+    }, { base64: transparentPngBase64 })
+
+    const uploadFilename = page.locator('#upload-filename')
+    await expect(uploadFilename).toContainText('image-from-clipboard.png')
+
+    const requestPromise = page.waitForRequest(request =>
+      request.url().includes('/home/upload') && request.method() === 'POST'
+    )
+
+    const submitButton = page.locator('#phupdate input[type="submit"]')
+    await submitButton.click()
+
+    const request = await requestPromise
+    const postData = request.postData() || ''
+    expect(postData).toContain('name="picture"')
+    expect(postData).toContain('filename="image-from-clipboard.png"')
+    expect(postData).not.toContain('name="photo_base64"')
   } finally {
     await context.close()
     fs.rmSync(userDataDir, { recursive: true, force: true })
