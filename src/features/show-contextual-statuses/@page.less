@@ -1,11 +1,10 @@
-.sf-contextual-statuses-container {
-  li.buffered + & {
-    display: none;
-  }
+li.buffered > .sf-contextual-statuses-container {
+  display: none;
+}
 
-  .sf-contextual-statuses {
-    padding-left: 30px;
-  }
+.sf-contextual-statuses-container {
+  clear: both;
+  padding-top: 4px;
 }
 
 .sf-contextual-statuses-container .sf-toggle,
@@ -72,23 +71,105 @@
   }
 }
 
-#stream ol .sf-contextual-statuses-container li {
+.sf-contextual-statuses-container .sf-contextual-status {
+  position: relative;
+  box-sizing: border-box;
+  display: block;
   min-height: 38px;
-  width: 100%;
-  padding: 6px 30px 6px 52px;
-  border-left: 1px solid #eee;
+  width: calc(100% + 100px);
+  margin-left: -67px;
+  padding: 9px 33px 9px 67px;
+  border-bottom: 1px solid #eee;
+  background-color: rgba(0, 0, 0, 0.018);
+  box-shadow: inset 2px 0 0 rgba(0, 0, 0, 0.08);
   font-size: 12px;
+  line-height: 1.6;
   animation: sf-fade-in 400ms;
 
   &.sf-last {
     border-bottom-color: #ddd;
   }
 
+  .author {
+    display: block;
+    float: none !important;
+    margin: 0 0 2px !important;
+    color: inherit;
+    font-weight: 600;
+    line-height: 1.6;
+    text-decoration: none;
+  }
+
+  .content {
+    display: block;
+    line-height: 1.6;
+    word-break: break-word;
+
+    a.former,
+    a.nickquery {
+      text-decoration: none !important;
+    }
+
+    a.photo {
+      display: inline-block;
+      margin-top: 6px;
+      border-radius: 0 !important;
+    }
+
+    a.photo img {
+      display: block;
+      max-width: 100px;
+      max-height: 100px;
+      padding: 0;
+      border: 0;
+    }
+
+    a.zoom.gif span {
+      right: 0 !important;
+      bottom: 0 !important;
+    }
+
+    a.zoom.gif span::after {
+      opacity: 1 !important;
+      padding: 0 4px !important;
+      background: rgba(0, 0, 0, 0.5) !important;
+      font: inherit !important;
+      font-size: 10px !important;
+      font-weight: inherit !important;
+      border-radius: 0 !important;
+      backdrop-filter: saturate(100%) blur(30px);
+      // stylelint-disable-next-line property-no-vendor-prefix
+      -webkit-backdrop-filter: saturate(100%) blur(30px);
+    }
+  }
+
+  .stamp {
+    display: block;
+    margin-top: 4px;
+    color: #999;
+  }
+
+  .stamp a,
+  .sf-contextual-time {
+    border-bottom: none !important;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .op {
+    display: inline-block;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
   .avatar {
-    margin-left: -41px;
+    display: block;
+    float: left;
+    margin-left: -58px;
   }
 
   .avatar img {
+    display: block;
     width: 32px;
     height: 32px;
   }

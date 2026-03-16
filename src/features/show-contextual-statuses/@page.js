@@ -5,7 +5,7 @@ import cx from 'classnames'
 import arrayLast from 'array-last'
 import sleep from 'p-sleep'
 import DOMPurify from 'dompurify'
-import { CLASSNAME_CONTAINER } from './constants'
+import { CLASSNAME_CONTAINER, CLASSNAME_STATUS, CLASSNAME_TIME } from './constants'
 import { isTimelinePage } from '@libs/pageDetect'
 import requireFanfouLib from '@libs/requireFanfouLib'
 import preactRender from '@libs/preactRender'
@@ -33,16 +33,16 @@ export default context => {
       const { isLast } = this.props
 
       return (
-        <li className={cx('unlight', { 'sf-last': isLast })} />
+        <div className={cx(CLASSNAME_STATUS, 'unlight', { 'sf-last': isLast })} />
       )
     }
 
     componentDidMount() {
-      const li = this.base
+      const status = this.base
 
       // 在这里而不是在 render 里使用 dangerouslySetInnerHTML，可以避免闪烁
       // 🔒 使用DOMPurify净化HTML，防止XSS攻击
-      li.innerHTML = DOMPurify.sanitize(this.props.html, {
+      status.innerHTML = DOMPurify.sanitize(this.props.html, {
         ALLOWED_TAGS: [
           'a', 'span', 'div', 'img', 'b', 'i', 'em', 'strong',
           'h1', 'h2', 'br', 'p', 'ul', 'li', 'blockquote',
@@ -53,10 +53,20 @@ export default context => {
         ],
       })
 
-      window.FF.app.Stream.attach(li)
+      // 饭否原生 TL 的 `load more` 成功后会遍历 `#stream .time`
+      // 并对每个节点读取 `stime`。状态详情页里的时间链接没有这个 attribute，
+      // 若保留 `.time` 类名会触发 `null.split(...)` 并中断下一页游标更新。
+      for (const timeElement of select.all('.stamp .time', status)) {
+        if (timeElement.getAttribute('stime')) continue
+
+        timeElement.classList.remove('time')
+        timeElement.classList.add(CLASSNAME_TIME)
+      }
+
+      window.FF.app.Stream.attach(status)
 
       if (this.props.hasPhoto) {
-        window.FF.app.Zoom.init(li)
+        window.FF.app.Zoom.init(status)
       }
     }
   }
@@ -244,6 +254,22 @@ export default context => {
     return select.exists('.stamp .reply a', li)
   }
 
+  function getMountedContainer(li) {
+    return select(`:scope > .${CLASSNAME_CONTAINER}`, li)
+  }
+
+  function mountContainer(li, container) {
+    const mountedContainer = getMountedContainer(li)
+
+    if (mountedContainer && mountedContainer !== container) {
+      mountedContainer.remove()
+    }
+
+    if (container.parentElement !== li) {
+      li.append(container)
+    }
+  }
+
   function onStatusAdded(li) {
     // 被删除的可能是我们插入进去的 `sf-contextual-statuses-container`
     if (!isStatusElement(li)) return
@@ -259,12 +285,7 @@ export default context => {
     // 我们用原来可以交互的实例（alive instance）替换掉新的实例
     if (cacheMap.has(cacheId)) {
       const aliveInstance = cacheMap.get(cacheId)
-      const maybeDeadInstance = li.nextElementSibling
-      const containerSelector = `.${CLASSNAME_CONTAINER}`
-
-      if (maybeDeadInstance?.matches(containerSelector)) {
-        maybeDeadInstance.replaceWith(aliveInstance)
-      }
+      mountContainer(li, aliveInstance)
 
       return
     }
@@ -278,8 +299,7 @@ export default context => {
     }
 
     preactRender(<ContextualStatuses {...props} />, instance => {
-      // 调整插入位置
-      li.after(instance)
+      mountContainer(li, instance)
       cacheMap.set(cacheId, instance)
     })
   }
@@ -298,7 +318,7 @@ export default context => {
 
     if (cacheMap.has(cacheId)) {
       const instance = cacheMap.get(cacheId)
-      const elements = select.all('button, li', instance)
+      const elements = select.all(`button, .${CLASSNAME_STATUS}`, instance)
 
       // 如果已经不存在于 DOM 中，则不需要出场动画等操作
       if (isElementInDocument(instance)) {
