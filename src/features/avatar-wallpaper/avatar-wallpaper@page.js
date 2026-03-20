@@ -6,6 +6,8 @@ const STORAGE_KEY_CACHE = 'avatar-wallpaper/cache'
 const STORAGE_AREA = 'local'
 const STORAGE_KEY_FAVORITE_FANFOUERS = 'favorite-fanfouers/friendsData'
 const STORAGE_AREA_FAVORITE_FANFOUERS = 'sync'
+const STORAGE_KEY_AUTOCOMPLETE_FRIENDS_LIST = 'friends-list'
+const STORAGE_AREA_AUTOCOMPLETE_FRIENDS_LIST = 'session'
 const STORAGE_KEY_MATCH3_TRADITIONAL_MINIMIZED = 'avatar-wallpaper/match3TraditionalMinimized'
 // Bump the cache schema so existing installs refetch avatar data after
 // merging the avatar-wallpaper branch into the main worktree.
@@ -526,6 +528,42 @@ async function readFavoriteAvatarUrls(storage) {
     : []
 
   return dedupeAndNormalize(favoriteAvatarUrls)
+}
+
+function getAutocompleteFriendsListStorageKey() {
+  return `${STORAGE_KEY_AUTOCOMPLETE_FRIENDS_LIST}/${getLoggedInUserId()}`
+}
+
+function normalizeAvatarUrlsFromFriendsList(friendsList) {
+  if (!Array.isArray(friendsList)) return []
+
+  return dedupeAndNormalize(
+    friendsList
+      .map(item => item?.photo_url || item?.avatarUrl || item?.profile_image_url || '')
+      .filter(Boolean),
+  )
+}
+
+async function readAvatarUrlsFromAutocompleteCache(storage) {
+  const cachedValue = await storage.read(
+    getAutocompleteFriendsListStorageKey(),
+    STORAGE_AREA_AUTOCOMPLETE_FRIENDS_LIST,
+  ) || {}
+
+  return normalizeAvatarUrlsFromFriendsList(cachedValue.friendsList)
+}
+
+async function fetchAvatarUrlsFromAutocompleteEndpoint() {
+  try {
+    const response = await fetch('/home.ac_friends')
+    if (!response.ok) return []
+
+    const responseJSON = await response.json()
+
+    return normalizeAvatarUrlsFromFriendsList(responseJSON)
+  } catch {
+    return []
+  }
 }
 
 function resolveLayout(avatarCount) {
@@ -3425,6 +3463,16 @@ export default context => {
       }
     } catch (error) {
       // OAuth 未配置或请求失败时，回退到页面抓取方案
+    }
+
+    const avatarsFromAutocompleteCache = await readAvatarUrlsFromAutocompleteCache(storage)
+    if (avatarsFromAutocompleteCache.length) {
+      return avatarsFromAutocompleteCache
+    }
+
+    const avatarsFromAutocompleteEndpoint = await fetchAvatarUrlsFromAutocompleteEndpoint()
+    if (avatarsFromAutocompleteEndpoint.length) {
+      return avatarsFromAutocompleteEndpoint
     }
 
     return fetchAvatarUrlsFromWebPages(proxiedFetch)
