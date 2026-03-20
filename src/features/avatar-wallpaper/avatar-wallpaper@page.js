@@ -7,7 +7,9 @@ const STORAGE_AREA = 'local'
 const STORAGE_KEY_FAVORITE_FANFOUERS = 'favorite-fanfouers/friendsData'
 const STORAGE_AREA_FAVORITE_FANFOUERS = 'sync'
 const STORAGE_KEY_MATCH3_TRADITIONAL_MINIMIZED = 'avatar-wallpaper/match3TraditionalMinimized'
-const CACHE_SCHEMA_VERSION = 1
+// Bump the cache schema so existing installs refetch avatar data after
+// merging the avatar-wallpaper branch into the main worktree.
+const CACHE_SCHEMA_VERSION = 2
 const CONTAINER_ID = 'sf-avatar-wallpaper'
 const PANE_LEFT_ID = 'sf-avatar-wallpaper-pane-left'
 const PANE_RIGHT_ID = 'sf-avatar-wallpaper-pane-right'
