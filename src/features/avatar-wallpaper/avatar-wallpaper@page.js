@@ -20,11 +20,55 @@ const DEFAULT_PRIORITIZE_FAVORITES = true
 const DEFAULT_FILL_GAPS_ONLY = true
 const DEFAULT_MATCH3_MODE = false
 const DEFAULT_REFRESH_INTERVAL_DAYS = 7
-const MAX_RENDER_AVATARS = 520
+const API_PAGE_SIZE = 100
 const MAX_API_PAGES = 8
 const MAX_WEB_PAGES = 8
+const MAX_RENDER_AVATARS = API_PAGE_SIZE * MAX_API_PAGES
 const LEFT_PANE_CENTER_GUTTER = 14
 const RIGHT_PANE_CENTER_GUTTER = 14
+const NORMAL_TILE_LAYOUTS = [ {
+  tileSize: 72,
+  tileGap: 8,
+}, {
+  tileSize: 64,
+  tileGap: 6,
+}, {
+  tileSize: 56,
+  tileGap: 5,
+}, {
+  tileSize: 52,
+  tileGap: 4,
+}, {
+  tileSize: 48,
+  tileGap: 3,
+}, {
+  tileSize: 44,
+  tileGap: 3,
+}, {
+  tileSize: 40,
+  tileGap: 3,
+}, {
+  tileSize: 36,
+  tileGap: 2,
+}, {
+  tileSize: 32,
+  tileGap: 2,
+}, {
+  tileSize: 28,
+  tileGap: 2,
+}, {
+  tileSize: 24,
+  tileGap: 1,
+}, {
+  tileSize: 22,
+  tileGap: 1,
+}, {
+  tileSize: 20,
+  tileGap: 1,
+}, {
+  tileSize: 18,
+  tileGap: 1,
+} ]
 const SHEEP_MIN_TYPE_COUNT = 3
 const SHEEP_TRAY_LIMIT = 7
 const SHEEP_STACK_OVERLAP_PX = 22
@@ -424,7 +468,7 @@ async function fetchAvatarUrlsFromApi(fanfouOAuth) {
     const { error, responseJSON } = await fanfouOAuth.request({
       url: API_URL,
       query: {
-        count: 100,
+        count: API_PAGE_SIZE,
         page,
       },
       responseType: 'json',
@@ -442,7 +486,7 @@ async function fetchAvatarUrlsFromApi(fanfouOAuth) {
       avatars.push(user?.profile_image_url)
     }
 
-    if (responseJSON.length < 100) {
+    if (responseJSON.length < API_PAGE_SIZE) {
       break
     }
   }
@@ -486,22 +530,31 @@ async function readFavoriteAvatarUrls(storage) {
 
 function resolveLayout(avatarCount) {
   if (avatarCount <= 110) {
-    return { tileSize: 72, tileGap: 8 }
+    return NORMAL_TILE_LAYOUTS[0]
   }
 
   if (avatarCount <= 180) {
-    return { tileSize: 64, tileGap: 6 }
+    return NORMAL_TILE_LAYOUTS[1]
   }
 
   if (avatarCount <= 280) {
-    return { tileSize: 56, tileGap: 5 }
+    return NORMAL_TILE_LAYOUTS[2]
   }
 
   if (avatarCount <= 420) {
-    return { tileSize: 52, tileGap: 4 }
+    return NORMAL_TILE_LAYOUTS[3]
   }
 
-  return { tileSize: 48, tileGap: 3 }
+  return NORMAL_TILE_LAYOUTS[4]
+}
+
+function getNormalLayoutCandidates(avatarCount) {
+  const defaultLayout = resolveLayout(avatarCount)
+  const defaultIndex = NORMAL_TILE_LAYOUTS.findIndex(
+    layout => layout.tileSize === defaultLayout.tileSize && layout.tileGap === defaultLayout.tileGap,
+  )
+
+  return NORMAL_TILE_LAYOUTS.slice(Math.max(0, defaultIndex))
 }
 
 function getBackgroundPreset(rawPresetId) {
@@ -601,30 +654,126 @@ function getPaneCapacity({ paneWidth, tileSize, tileGap }) {
   return { capacity: columns * rows, columns, rows }
 }
 
-function splitItemsForPanes({ items, leftCapacity, rightCapacity }) {
-  const leftItems = []
-  const rightItems = []
+function resolveNormalPaneLayout({
+  avatarCount,
+  leftPaneWidth,
+  rightPaneWidth,
+}) {
+  const candidates = getNormalLayoutCandidates(avatarCount)
+  let fallback = null
 
-  for (const item of items) {
-    const shouldPushLeft = leftItems.length <= rightItems.length
+  for (const candidate of candidates) {
+    const leftPaneMetrics = getPaneCapacity({
+      paneWidth: leftPaneWidth,
+      tileSize: candidate.tileSize,
+      tileGap: candidate.tileGap,
+    })
+    const rightPaneMetrics = getPaneCapacity({
+      paneWidth: rightPaneWidth,
+      tileSize: candidate.tileSize,
+      tileGap: candidate.tileGap,
+    })
 
-    if (shouldPushLeft && leftItems.length < leftCapacity) {
-      leftItems.push(item)
+    if (!leftPaneMetrics.capacity && !rightPaneMetrics.capacity) {
       continue
     }
 
-    if (rightItems.length < rightCapacity) {
-      rightItems.push(item)
-      continue
+    const resolved = {
+      ...candidate,
+      leftPaneMetrics,
+      rightPaneMetrics,
+      totalCapacity: leftPaneMetrics.capacity + rightPaneMetrics.capacity,
     }
+    fallback = resolved
 
-    if (leftItems.length < leftCapacity) {
-      leftItems.push(item)
-      continue
+    if (resolved.totalCapacity >= avatarCount) {
+      return resolved
     }
-
-    break
   }
+
+  return fallback
+}
+
+function countPartialRow(itemCount, columnCount) {
+  return itemCount > 0 && columnCount > 0 && itemCount % columnCount
+    ? 1
+    : 0
+}
+
+function countTrailingEmptyCells(itemCount, columnCount) {
+  if (!itemCount || columnCount <= 0) return 0
+
+  return (columnCount - (itemCount % columnCount || columnCount)) % columnCount
+}
+
+function isBetterPaneDistribution(left, right) {
+  return (
+    left.partialRowCount < right.partialRowCount
+    || (
+      left.partialRowCount === right.partialRowCount
+      && left.trailingEmptyCellCount < right.trailingEmptyCellCount
+    )
+    || (
+      left.partialRowCount === right.partialRowCount
+      && left.trailingEmptyCellCount === right.trailingEmptyCellCount
+      && left.rowBalance < right.rowBalance
+    )
+    || (
+      left.partialRowCount === right.partialRowCount
+      && left.trailingEmptyCellCount === right.trailingEmptyCellCount
+      && left.rowBalance === right.rowBalance
+      && left.itemBalance < right.itemBalance
+    )
+  )
+}
+
+function splitItemsForPanes({
+  items,
+  leftCapacity,
+  rightCapacity,
+  leftColumns,
+  rightColumns,
+}) {
+  const totalCount = Math.min(items.length, leftCapacity + rightCapacity)
+  if (!totalCount) {
+    return {
+      leftItems: [],
+      rightItems: [],
+    }
+  }
+
+  const minimumLeftCount = Math.max(0, totalCount - rightCapacity)
+  const maximumLeftCount = Math.min(leftCapacity, totalCount)
+  let bestDistribution = null
+
+  for (let leftCount = minimumLeftCount; leftCount <= maximumLeftCount; leftCount++) {
+    const rightCount = totalCount - leftCount
+    const leftRowCount = leftColumns > 0
+      ? Math.ceil(leftCount / leftColumns)
+      : 0
+    const rightRowCount = rightColumns > 0
+      ? Math.ceil(rightCount / rightColumns)
+      : 0
+    const candidate = {
+      leftCount,
+      rightCount,
+      partialRowCount:
+        countPartialRow(leftCount, leftColumns)
+        + countPartialRow(rightCount, rightColumns),
+      trailingEmptyCellCount:
+        countTrailingEmptyCells(leftCount, leftColumns)
+        + countTrailingEmptyCells(rightCount, rightColumns),
+      rowBalance: Math.abs(leftRowCount - rightRowCount),
+      itemBalance: Math.abs(leftCount - rightCount),
+    }
+
+    if (!bestDistribution || isBetterPaneDistribution(candidate, bestDistribution)) {
+      bestDistribution = candidate
+    }
+  }
+
+  const leftItems = items.slice(0, bestDistribution.leftCount)
+  const rightItems = items.slice(bestDistribution.leftCount, totalCount)
 
   return { leftItems, rightItems }
 }
@@ -2926,27 +3075,53 @@ function renderWallpaper({
   const defaultLayout = resolveLayout(renderUrls.length)
   let { tileSize, tileGap } = defaultLayout
   let sheepTileMetrics = resolveSheepTileMetrics(tileSize)
+  const { left: leftPaneWidth, right: rightPaneWidth } = resolveSidePaneWidths()
+  let leftPaneMetrics = null
+  let rightPaneMetrics = null
+
   if (match3Mode && match3TraditionalLayout) {
     sheepTileMetrics = resolveTraditionalSheepTileMetrics()
     tileSize = sheepTileMetrics.tileWidth
     tileGap = 0
   }
-  const { left: leftPaneWidth, right: rightPaneWidth } = resolveSidePaneWidths()
-  const leftPaneMetrics = getPaneCapacity({
-    paneWidth: leftPaneWidth,
-    tileSize,
-    tileGap,
-  })
-  const rightPaneMetrics = getPaneCapacity({
-    paneWidth: rightPaneWidth,
-    tileSize,
-    tileGap,
-  })
-  const paneColumns = Math.min(leftPaneMetrics.columns, rightPaneMetrics.columns)
-  if (!match3Mode && !paneColumns) return
 
-  const leftPaneCapacity = leftPaneMetrics.rows * Math.max(1, paneColumns)
-  const rightPaneCapacity = rightPaneMetrics.rows * Math.max(1, paneColumns)
+  if (match3Mode) {
+    leftPaneMetrics = getPaneCapacity({
+      paneWidth: leftPaneWidth,
+      tileSize,
+      tileGap,
+    })
+    rightPaneMetrics = getPaneCapacity({
+      paneWidth: rightPaneWidth,
+      tileSize,
+      tileGap,
+    })
+  } else {
+    const normalPaneLayout = resolveNormalPaneLayout({
+      avatarCount: renderUrls.length,
+      leftPaneWidth,
+      rightPaneWidth,
+    })
+    if (!normalPaneLayout) return
+
+    const {
+      tileSize: resolvedTileSize,
+      tileGap: resolvedTileGap,
+      leftPaneMetrics: resolvedLeftPaneMetrics,
+      rightPaneMetrics: resolvedRightPaneMetrics,
+    } = normalPaneLayout
+
+    tileSize = resolvedTileSize
+    tileGap = resolvedTileGap
+    sheepTileMetrics = resolveSheepTileMetrics(tileSize)
+    leftPaneMetrics = resolvedLeftPaneMetrics
+    rightPaneMetrics = resolvedRightPaneMetrics
+
+    if (!leftPaneMetrics.capacity && !rightPaneMetrics.capacity) return
+  }
+
+  const leftPaneCapacity = leftPaneMetrics.capacity
+  const rightPaneCapacity = rightPaneMetrics.capacity
 
   const container = document.createElement('div')
   const leftPane = document.createElement('div')
@@ -2965,7 +3140,6 @@ function renderWallpaper({
     : fillBlueOnlyInGaps
       ? '1'
       : String(opacity)
-  container.style.setProperty('--sf-avatar-wallpaper-columns', Math.max(1, paneColumns))
   container.style.setProperty('--sf-avatar-wallpaper-tile-size', `${tileSize}px`)
   container.style.setProperty('--sf-avatar-wallpaper-tile-gap', `${tileGap}px`)
   container.style.setProperty('--sf-match3-overlap', `${SHEEP_STACK_OVERLAP_PX}px`)
@@ -2991,9 +3165,11 @@ function renderWallpaper({
   leftPane.id = PANE_LEFT_ID
   leftPane.className = 'sf-avatar-wallpaper-pane'
   leftPane.style.width = `${leftPaneWidth}px`
+  leftPane.style.setProperty('--sf-avatar-wallpaper-pane-columns', Math.max(1, leftPaneMetrics.columns))
   rightPane.id = PANE_RIGHT_ID
   rightPane.className = 'sf-avatar-wallpaper-pane'
   rightPane.style.width = `${rightPaneWidth}px`
+  rightPane.style.setProperty('--sf-avatar-wallpaper-pane-columns', Math.max(1, rightPaneMetrics.columns))
   match3Stage.className = 'sf-match3-stage'
   match3StageMark.className = 'sf-match3-stage-mark'
   match3StageMark.textContent = SHEEP_TRADITIONAL_GLYPH_TEXT
@@ -3180,6 +3356,8 @@ function renderWallpaper({
       items: renderUrls,
       leftCapacity: leftPaneCapacity,
       rightCapacity: rightPaneCapacity,
+      leftColumns: leftPaneMetrics.columns,
+      rightColumns: rightPaneMetrics.columns,
     })
     if (!leftUrls.length && !rightUrls.length) return
 
