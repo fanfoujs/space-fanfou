@@ -48,3 +48,6 @@ docs/fanfou-oauth-investigation.md
 docs/oauth-integration-report.md
 docs/sidebar-statistics-fix-status.md
 docs/v2ex-oauth-application-template.md
+
+.wxt/
+.output/

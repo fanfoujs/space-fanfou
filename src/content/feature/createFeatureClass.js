@@ -1,1 +1,1 @@
-export default from '@background/feature/createFeatureClass'
+export { default } from '@background/feature/createFeatureClass'

@@ -1,3 +1,5 @@
+import { events } from '@platform/events'
+import { browser } from 'wxt/browser'
 import transformUrl from 'transform-url'
 
 export default () => {
@@ -21,8 +23,8 @@ export default () => {
   } ]
 
   function createSharerPopup(url, height) {
-    // Service Worker 兼容：使用 chrome.windows.create 替代 window.open
-    chrome.windows.create({
+    // Service Worker 兼容：使用 browser.windows.create 替代 window.open
+    return browser.windows.create({
       url,
       type: 'popup',
       width: 640,
@@ -49,7 +51,7 @@ export default () => {
       url = transformUrl('https://fanfou.com/sharer/image', {
         u: tab.url,
         t: tab.title,
-        img_src: info.srcUrl, // eslint-disable-line camelcase
+        img_src: info.srcUrl,
       })
       height = 540
       break
@@ -58,40 +60,30 @@ export default () => {
       return
     }
 
-    createSharerPopup(url, height)
+    return createSharerPopup(url, height)
   }
 
-  function registerMenuItems() {
-    // Manifest V3: Service Worker 可能重启，先清理旧菜单避免重复
-    chrome.contextMenus.removeAll(() => {
-      menuIds.length = 0
-
-      for (const menuItem of menuItems) {
-        chrome.contextMenus.create(menuItem, () => {
-          if (chrome.runtime.lastError) {
-            console.error('[SpaceFanfou] 创建上下文菜单失败:', chrome.runtime.lastError.message)
-          } else {
-            menuIds.push(menuItem.id)
-          }
-        })
-      }
-
-      // 注册点击事件监听器
-      chrome.contextMenus.onClicked.addListener(handleMenuClick)
-    })
+  async function registerMenuItems() {
+    events.menuClicked.addListener(handleMenuClick)
+    await browser.contextMenus.removeAll()
+    menuIds.length = 0
+    for (const menuItem of menuItems) {
+      browser.contextMenus.create(menuItem)
+      menuIds.push(menuItem.id)
+    }
   }
 
   function unregisterMenuItems() {
     // 移除点击事件监听器
-    chrome.contextMenus.onClicked.removeListener(handleMenuClick)
+    events.menuClicked.removeListener(handleMenuClick)
 
-    menuIds.forEach(menuId => chrome.contextMenus.remove(menuId))
+    menuIds.forEach(menuId => browser.contextMenus.remove(menuId))
     menuIds.length = 0
   }
 
   return {
     onLoad() {
-      registerMenuItems()
+      return registerMenuItems()
     },
 
     onUnload() {

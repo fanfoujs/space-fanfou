@@ -1,6 +1,4 @@
 import select from 'select-dom'
-
-// eslint-disable-next-line import/prefer-default-export
 export function processStatus(li) {
   const photoLink = select('a.photo.zoom', li)
   const photo = photoLink && select('img', photoLink)

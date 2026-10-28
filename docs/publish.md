@@ -21,7 +21,11 @@
 
 ### 如何发布新版？
 
-1. 修改 `static/manifest.json` 中的版本号
+1. 修改 `package.json` 中的版本号（WXT 自动写入 Manifest）
 1. 在 `src/version-history/versionHistory` 中添加更新说明（可选）
-1. 构建 `npm run release`
-1. 将自动打包生成的 zip 文件提交到商店审核
+1. 执行 `npm test`、`npm run build:all`、`npm run verify:build` 和浏览器回归测试
+1. 使用 `npm run pack`、`npm run pack:firefox`、`npm run pack:safari` 生成各自的 ZIP（输出在 `.output`）
+1. Chrome/Firefox 沿用原来的发布身份，分别提交对应 ZIP。发布新 Firefox 条目时确认 `wxt.config.ts` 中的 Gecko ID。
+1. Safari 运行 `npm run safari:project`，在生成的 Xcode 工程中选择自己的签名团队，完成真实 Safari 验收后提交 App Store Connect。
+
+构建、ZIP 和未签名的 Xcode 编译不等于商店发布完成。详见 [迁移说明](migration.md)。

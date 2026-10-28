@@ -1,4 +1,4 @@
-/* eslint-disable camelcase, new-cap */
+import { browser } from 'wxt/browser'
 import OAuth from 'oauth-1.0a'
 import CryptoJS from 'crypto-js'
 import messaging from './messaging'
@@ -183,18 +183,22 @@ async function exchangeAccessToken(consumer, tempToken, verifier) {
 }
 
 function launchAuthWindow(authUrl) {
-  return new Promise((resolve, reject) => {
-    chrome.identity.launchWebAuthFlow({
-      url: authUrl,
-      interactive: true,
-    }, responseUrl => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message))
-        return
-      }
+  return browser.identity.launchWebAuthFlow({ url: authUrl, interactive: true })
+}
 
-      resolve(responseUrl)
-    })
+function getRedirectUrl() {
+  return browser.identity?.getRedirectURL ? browser.identity.getRedirectURL('fanfou-oauth') : 'oob'
+}
+
+async function saveAccessTokens(consumer, tempToken, verifier = '') {
+  const tokens = await exchangeAccessToken(consumer, tempToken, verifier)
+  if (!tokens.oauth_token || !tokens.oauth_token_secret) throw new Error('获取 Access Token 失败，请确认应用配置')
+  await persistTokens({
+    oauthToken: tokens.oauth_token,
+    oauthTokenSecret: tokens.oauth_token_secret,
+    screenName: tokens.screen_name,
+    userId: tokens.user_id,
+    consumerKey: consumer.consumerKey,
   })
 }
 
@@ -212,6 +216,7 @@ function buildStatus({ enabled, hasCredentials, consumerKey, usingBuiltinKey }, 
       screenName: tokens?.screenName || null,
       userId: tokens?.userId || null,
       redirectUrl,
+      manualAuthorization: !browser.identity?.launchWebAuthFlow,
       consumerKeyMatches: hasTokens ? tokens.consumerKey === consumerKey : true,
     },
   }
@@ -220,7 +225,7 @@ function buildStatus({ enabled, hasCredentials, consumerKey, usingBuiltinKey }, 
 async function handleGetStatus() {
   const consumer = await readConsumerConfig()
   const tokens = await readTokens()
-  const redirectUrl = chrome.identity.getRedirectURL('fanfou-oauth')
+  const redirectUrl = getRedirectUrl()
 
   if (tokens && consumer.consumerKey && tokens.consumerKey !== consumer.consumerKey) {
     // Consumer 改变后旧 token 失效，提示重新授权
@@ -228,13 +233,15 @@ async function handleGetStatus() {
     return buildStatus(consumer, null, redirectUrl)
   }
 
-  return buildStatus(consumer, tokens, redirectUrl)
+  const result = buildStatus(consumer, tokens, redirectUrl)
+  result.status.pendingAuthorization = !!await storage.read('fanfou-oauth/pending', 'session')
+  return result
 }
 
-async function handleAuthorize() {
+async function handleAuthorize(payload = {}) {
   try {
     const consumer = await readConsumerConfig()
-    const redirectUrl = chrome.identity.getRedirectURL('fanfou-oauth')
+    const redirectUrl = payload.manual ? 'oob' : getRedirectUrl()
 
     if (!consumer.enabled && !consumer.usingBuiltinKey) {
       return { error: '请先勾选「启用 OAuth 认证」' }
@@ -244,6 +251,15 @@ async function handleAuthorize() {
       return { error: '请填写 Consumer Key 和 Consumer Secret 后重试' }
     }
 
+    if (payload.complete) {
+      const pending = await storage.read('fanfou-oauth/pending', 'session')
+      if (!pending || Date.now() - pending.createdAt > 10 * 60_000) throw new Error('授权已过期，请重新开始授权')
+      if (pending.consumerKey !== consumer.consumerKey) throw new Error('应用密钥已变更，请重新开始授权')
+      await saveAccessTokens(consumer, pending.tempToken, (payload.verifier || '').trim())
+      await storage.delete('fanfou-oauth/pending', 'session')
+      return handleGetStatus()
+    }
+
     const tempToken = await requestTemporaryToken(consumer, redirectUrl)
 
     if (!tempToken.oauth_token) {
@@ -251,6 +267,11 @@ async function handleAuthorize() {
     }
 
     const authorizeUrl = `${AUTHORIZE_URL}?oauth_token=${encodeURIComponent(tempToken.oauth_token)}&oauth_callback=${encodeURIComponent(redirectUrl)}`
+    if (redirectUrl === 'oob') {
+      await storage.write('fanfou-oauth/pending', { tempToken, consumerKey: consumer.consumerKey, createdAt: Date.now() }, 'session')
+      await browser.tabs.create({ url: authorizeUrl, active: true })
+      return handleGetStatus()
+    }
     const responseUrl = await launchAuthWindow(authorizeUrl)
     const parsedUrl = new URL(responseUrl)
 
@@ -262,19 +283,8 @@ async function handleAuthorize() {
       return { error: '授权被拒绝' }
     }
 
-    const accessTokens = await exchangeAccessToken(consumer, tempToken, verifier)
-
-    if (!accessTokens.oauth_token || !accessTokens.oauth_token_secret) {
-      return { error: '获取 Access Token 失败，请确认应用配置' }
-    }
-
-    await persistTokens({
-      oauthToken: accessTokens.oauth_token,
-      oauthTokenSecret: accessTokens.oauth_token_secret,
-      screenName: accessTokens.screen_name,
-      userId: accessTokens.user_id,
-      consumerKey: consumer.consumerKey,
-    })
+    if (parsedUrl.searchParams.get('oauth_token') !== tempToken.oauth_token) throw new Error('OAuth 回调 token 不匹配')
+    await saveAccessTokens(consumer, tempToken, verifier)
 
     return handleGetStatus()
   } catch (error) {
@@ -285,6 +295,7 @@ async function handleAuthorize() {
 
 async function handleClearTokens() {
   await persistTokens(null)
+  await storage.delete('fanfou-oauth/pending', 'session')
   return handleGetStatus()
 }
 
@@ -292,7 +303,7 @@ async function handleApiRequest(payload) {
   try {
     const { url, method = 'GET', query = {}, responseType = 'json' } = payload
 
-    if (!url || !url.startsWith(API_HOST)) {
+    if (!url || new URL(url).origin !== API_HOST) {
       return { error: '仅允许访问 api.fanfou.com 域名' }
     }
 

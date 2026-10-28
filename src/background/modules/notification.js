@@ -1,99 +1,92 @@
-import pick from 'just-pick'
-import debounce from 'just-debounce-it'
+import { browser } from 'wxt/browser'
+import { events } from '@platform/events'
+import { createStorageArea } from '@platform/storage'
+import { playBackgroundAudio } from '@platform/audio'
 import settings from '@background/environment/settings'
+import messaging from '@background/environment/messaging'
 import wrapper from '@libs/wrapper'
-import playSound from '@libs/playSound'
-import noop from '@libs/noop'
+import debounce from 'just-debounce-it'
+import log from '@libs/log'
+import SOUND_URL from '@assets/sounds/ding.mp3'
 
-const DEFAULT_NOTIFICATION_TIMEOUT = 15 * 1000
-const SOUND_URL = require('@assets/sounds/ding.mp3')
-
-const notificationMap = {}
-
-// 使用 debounce 避免多个通知同时弹出导致重复播放提示音（音量会偏大）
-const playSoundForNotification = debounce(() => {
-  if (settings.read('notifications/playSound')) {
-    playSound(SOUND_URL)
-  }
+const DEFAULT_TIMEOUT = 15_000
+const ALARM_PREFIX = 'notification-expire/'
+const state = createStorageArea('session')
+const callbacks = new Map()
+const playSound = debounce(() => {
+  if (settings.read('notifications/playSound')) playBackgroundAudio(SOUND_URL).catch(log.info)
 }, 1)
 
-function createNotification(opts) {
-  const {
-    id,
-    title = '太空饭否',
-    message,
-    timeout = DEFAULT_NOTIFICATION_TIMEOUT,
-    buttonDefs = [],
-  } = opts
-  const buttons = buttonDefs.map(buttonDef => pick(buttonDef, [ 'title' ]))
-
-  if (!id) {
-    throw new Error('必须指定通知的 id')
-  }
-
-  // 如果存在活跃的同名实例，先销毁它
-  destroyNotification(id)
-
-  chrome.notifications.create(id, {
-    type: 'basic',
-    iconUrl: '/icons/icon-256.png',
-    title,
-    message,
-    buttons,
-    // 避免被 Windows 自动收入到通知中心，否则之后就没办法用代码清除了
-    // 而且一旦被收入通知中心，下次就不能再弹同 ID 的通知
-    requireInteraction: true,
-    // 禁用系统默认的提示音
-    silent: true,
-  })
-
-  playSoundForNotification()
-  opts.timeoutId = setTimeout(() => {
-    destroyNotification(id)
-  }, timeout)
-
-  notificationMap[id] = opts
+async function destroy(id) {
+  callbacks.delete(id)
+  await Promise.all([
+    browser.notifications?.clear(id),
+    browser.alarms.clear(ALARM_PREFIX + id),
+    state.delete('notification/' + id),
+  ])
+  if (!browser.notifications) await browser.action.setBadgeText({ text: '' })
 }
 
-function destroyNotification(id) {
-  const opts = notificationMap[id]
-
-  if (opts) {
-    clearTimeout(opts.timeoutId)
-    chrome.notifications.clear(id)
-    delete notificationMap[id]
+async function create(opts) {
+  const { id, title = '太空饭否', message, timeout = DEFAULT_TIMEOUT, buttonDefs = [] } = opts
+  if (!id) throw new Error('必须指定通知的 id')
+  await destroy(id)
+  const record = {
+    targetUrl: opts.targetUrl,
+    reuseExistingTabs: !!opts.reuseExistingTabs,
+    action: opts.action,
+    expiresAt: Date.now() + timeout,
   }
+  await state.write('notification/' + id, record)
+  callbacks.set(id, opts)
+  if (browser.notifications) {
+    await browser.notifications.create(id, {
+      type: 'basic', iconUrl: browser.runtime.getURL('/icons/icon-256.png'), title, message,
+      ...(import.meta.env.CHROME ? {
+        buttons: buttonDefs.map(({ title }) => ({ title })),
+        requireInteraction: true,
+        silent: true,
+      } : {}),
+    })
+  } else {
+    // Safari has no WebExtensions notifications API: preserve unread indicators
+    // and surface the message in open Fanfou pages as well as the toolbar badge.
+    await browser.action.setBadgeText({ text: '•' })
+    messaging.broadcastMessage({ action: 'NOTIFICATION_FALLBACK', payload: { title, message } })
+  }
+  playSound()
+  await browser.alarms.create(ALARM_PREFIX + id, { when: record.expiresAt })
 }
 
-function onNotificationClicked(id) {
-  const opts = notificationMap[id]
-
+async function click(id, buttonIndex) {
+  const opts = callbacks.get(id)
+  const record = await state.read('notification/' + id)
   if (opts) {
-    const handler = opts.onClick || noop
-
-    handler()
-    destroyNotification(id)
+    const handler = buttonIndex == null ? opts.onClick : opts.buttonDefs?.[buttonIndex]?.onClick
+    await handler?.()
+  } else if (record && (buttonIndex == null || buttonIndex === 0)) {
+    if (record.targetUrl) {
+      const tabs = record.reuseExistingTabs ? await browser.tabs.query({ url: record.targetUrl }) : []
+      const tab = tabs[0]
+      if (tab?.id != null) {
+        await browser.tabs.update(tab.id, { active: true })
+        await browser.windows.update(tab.windowId, { focused: true })
+        await browser.tabs.reload(tab.id)
+      } else await browser.tabs.create({ url: record.targetUrl, active: true })
+    }
+    if (record.action) await messaging.invoke(record.action.type, record.action.payload)
   }
-}
-
-function onButtonClicked(id, buttonIndex) {
-  const opts = notificationMap[id]
-
-  if (opts) {
-    const handler = opts.buttonDefs?.[buttonIndex]?.onClick || noop
-
-    handler()
-    destroyNotification(id)
-  }
+  await destroy(id)
 }
 
 export default wrapper({
   install() {
-    chrome.notifications.onClicked.addListener(onNotificationClicked)
-    chrome.notifications.onButtonClicked.addListener(onButtonClicked)
+    events.notificationClicked.addListener(id => click(id))
+    events.notificationButtonClicked.addListener(click)
+    events.alarm.addListener(alarm => {
+      if (alarm.name.startsWith(ALARM_PREFIX)) return destroy(alarm.name.slice(ALARM_PREFIX.length))
+    })
   },
-
-  create: createNotification,
-
-  hide: destroyNotification,
+  create: opts => create(opts).catch(log.error),
+  hide: id => destroy(id).catch(log.error),
 })

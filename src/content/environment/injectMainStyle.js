@@ -12,7 +12,7 @@ export default async function injectMainStyle() {
 
   loadAsset({
     type: 'style',
-    url: `${getExtensionOrigin()}/page.css`,
+    url: `${getExtensionOrigin()}/assets/page-style.css`,
     // 插入到 <head /> 紧后面，确保应该在所有其他 feature 样式之前
     mount: insertImmediatelyAfterHead,
   })

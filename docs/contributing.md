@@ -2,11 +2,16 @@
 
 ### 开发
 
-1. fork 并 clone 项目
-1. 安装依赖 `npm install`
-1. 进入开发模式 `npm run dev`，webpack 会持续监听文件变化并重新构建
-1. 在 Chrome 中加载 `dist` 目录
-1. 请确保 `npm test` 测试通过
+1. 使用 Node.js 22.12 或更新的版本，fork 并 clone 项目。
+1. `npm ci --legacy-peer-deps` 安装锁定的依赖。旧 React 组件通过 Preact compat 运行，因此仍需忽略它们过时的 peer dependency 声明。
+1. `npm run dev` 启动 Chrome 开发环境；Firefox 使用 `npm run dev:firefox`。
+1. `npm run test` 执行 TypeScript、ESLint 和 Vitest。
+1. `npm run build:all && npm run verify:build` 构建并核对三个 MV3 产物。
+1. `npx playwright install chromium && npm run test:e2e` 运行隔离的 Chrome 回归测试。
+1. `npm run lint:firefox` 执行 Mozilla 静态检查；`npm run test:firefox` 使用独立临时 profile 验证 Firefox，非默认路径可设置 `FIREFOX_BINARY`。
+1. macOS 上运行 `npm run safari:project` 生成 Safari Xcode 工程。不要把生成目录、证书或个人浏览器资料提交到仓库。
+
+构建输出位于 `.output/chrome-mv3`、`.output/firefox-mv3`、`.output/safari-mv3`。功能增删必须同步更新 `docs/feature-inventory.json`，并说明原因；迁移期间不要删除用户的原有设置键。
 
 ### 约定
 

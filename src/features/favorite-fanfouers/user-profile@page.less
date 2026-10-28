@@ -19,7 +19,7 @@
   border-top-right-radius: 2px;
   display: inline-block;
   pointer-events: none;
-  background: url("~@assets/images/star.svg") right top no-repeat;
+  background: url("@assets/images/star.svg") right top no-repeat;
   transform: translate(@size / 2, -(@size / 2));
   transition-property: transform, opacity;
   transition-duration: @transitionDuration;
@@ -37,7 +37,7 @@
   margin: 3px 0 1px 4px;
   opacity: 0;
   display: inline-block;
-  background: url("~@assets/images/fav-grey.base64.svg");
+  background: url("@assets/images/fav-grey.base64.svg");
   transition: opacity @transitionDuration;
 
   #info:hover & {
@@ -45,11 +45,11 @@
   }
 
   &:not(.sf-is-favorited):hover {
-    background: url("~@assets/images/fav-dark.base64.svg");
+    background: url("@assets/images/fav-dark.base64.svg");
   }
 
   &.sf-is-favorited {
-    background: url("~@assets/images/faved-yellow.base64.svg");
+    background: url("@assets/images/faved-yellow.base64.svg");
   }
 
   &.sf-is-favorited:hover {
@@ -59,6 +59,6 @@
 
   &:active {
     // 覆盖掉上面多类的选择度
-    background: url("~@assets/images/fav-blue.base64.svg") !important;
+    background: url("@assets/images/fav-blue.base64.svg") !important;
   }
 }

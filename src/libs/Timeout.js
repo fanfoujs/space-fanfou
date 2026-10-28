@@ -5,11 +5,11 @@ const ERR_WAIT_HAS_PRESET = new Error('wait 已经预先设置，不允许覆盖
 
 export default class Timeout {
   constructor({ fn, wait }) {
-    if (this._hasPresetFn = typeof fn === 'function') {
+    if ((this._hasPresetFn = typeof fn === 'function')) {
       this._fn = fn
     }
 
-    if (this._hasPresetWait = isNumber(wait)) {
+    if ((this._hasPresetWait = isNumber(wait))) {
       this._wait = wait
     }
 

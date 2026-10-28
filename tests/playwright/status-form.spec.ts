@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { chromium, expect, test } from '@playwright/test'
-import type { BrowserContext, SetCookieParam } from '@playwright/test'
+import type { SetCookieParam } from '@playwright/test'
 
 const cookiesJson = (process.env.FANFOU_COOKIES_JSON || '').trim()
 
@@ -23,7 +23,7 @@ const injectedCookies = parseCookiesFromEnv()
 test.skip(injectedCookies.length === 0, '需要 FANFOU_COOKIES_JSON 授权测试')
 
 test('word count and image upload in #PopupBox', async () => {
-  const extensionPath = path.resolve(__dirname, '../../dist')
+  const extensionPath = path.resolve(__dirname, '../../.output/chrome-mv3')
   const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'space-fanfou-status-form-'))
 
   const context = await chromium.launchPersistentContext(userDataDir, {

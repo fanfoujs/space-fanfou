@@ -1,11 +1,6 @@
-function loadConstants() {
-  const context = require.context('./', false, /\.js$/)
-
-  return context.keys().reduce((constants, key) => {
-    return key.endsWith(__filename)
-      ? constants
-      : Object.assign(constants, context(key))
-  }, {})
-}
-
-module.exports = Object.assign(exports, loadConstants())
+export * from './action-types'
+export * from './assets'
+export * from './custom-event-types'
+export * from './extension-origin'
+export * from './message-types'
+export * from './others'

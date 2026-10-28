@@ -6,8 +6,7 @@ export default fn => {
   }
 
   const memoized = arg => {
-    // eslint-disable-next-line no-prototype-builtins
-    if (!cache.hasOwnProperty(arg)) {
+    if (!Object.hasOwn(cache, arg)) {
       cache[arg] = fn(arg)
     }
 

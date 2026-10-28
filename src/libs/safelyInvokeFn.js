@@ -13,14 +13,15 @@ export default opts => {
     fn = opts
     opts = {}
   } else {
-    fn = opts.fn // eslint-disable-line prefer-destructuring
+    fn = opts.fn
   }
 
   const exceptionHandler = defined(opts.exceptionHandler, defaultExceptionHandler)
   const args = defined(opts.args, [])
 
   try {
-    fn(...args)
+    const result = fn(...args)
+    return result?.catch ? result.catch(exceptionHandler) : result
   } catch (error) {
     exceptionHandler(error)
   }

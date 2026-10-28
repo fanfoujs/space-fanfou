@@ -17,11 +17,30 @@
 
 ### 下载安装
 
-请使用 Chrome 浏览器访问网上应用店获取插件下载。
+项目已迁移至 WXT 与 Manifest V3，提供 Chrome、Firefox 和 Safari macOS 的独立构建。兼容差异、数据升级注意事项及验收范围见 [迁移说明](docs/migration.md)。
+
+Chrome 原商店链接：
 
 <a href="https://chrome.google.com/webstore/detail/mfofmcdbaeajgdeihmcjjohmhepcdcol">
   <img src="https://raw.githubusercontent.com/fanfoujs/space-fanfou/master/media/chrome-web-store-badge.png" alt="Download on the Chrome Web Store" width="248px" height="75px" />
 </a>
+
+### 本地构建
+
+需要 Node.js 22.12 或更新版本。
+
+```sh
+npm ci --legacy-peer-deps
+npm test
+npm run build:all
+npm run verify:build
+```
+
+- Chrome：在扩展管理页面加载 `.output/chrome-mv3`。
+- Firefox：在 `about:debugging` 中临时加载 `.output/firefox-mv3/manifest.json`；正式安装需要 Mozilla 签名。
+- Safari：macOS 安装 Xcode 后运行 `npm run safari:project`，打开 `.output/safari-project/Space Fanfou/Space Fanfou.xcodeproj`，选择签名团队后运行。
+
+开发与回归测试命令见 [贡献指南](docs/contributing.md)。已有解压版升级时请先阅读迁移说明，保持原来的扩展 ID 以保留设置。
 
 ### 参阅
 

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test } from '@playwright/test'
 
 test('probe Fanfou API', async ({ page }) => {
   await page.goto('https://fanfou.com/kesikesi')
