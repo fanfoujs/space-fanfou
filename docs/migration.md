@@ -43,7 +43,11 @@
 - 网络请求使用 HTTPS，通过 SDK 的 `baseString` hook 保留饭否所需的 HTTP OAuth 签名基串。
 - 普通 OAuth 授权使用 SDK 的 `getRequestToken` / `getAccessToken`，将 `oauth_callback` 放在饭否授权页 URL 中；Chrome/Firefox 回调及 Safari 无验证码的手动授权均使用 SDK 交换 token。
 - beta 的 `getAccessToken` 尚不能提交 `oauth_verifier`，仅在回调携带或用户填写验证码时保留签名 POST 兼容请求。沿用临时凭据的 session 格式、十分钟有效期和回调 token 校验；同一授权的重复请求复用进行中的任务，避免多次交换一次性 token。
-- SDK 的 token 方法只返回凭据，账号资料另由 `verifyCredentials` 获取；资料接口暂时不可用时仍保留已取得的正式凭据。网页发文、上传与其他站内请求继续使用原有站点接口。
+- SDK 的 token 方法只返回凭据，账号资料通过不带 `id` 的 `getUser()` 获取，并校验账号 ID。资料接口失败时保留凭据，打开登录设置或窗口重新获得焦点时自动检查；并发查询会合并，查询期间退出不会恢复已删除的凭据。
+- 默认登录界面仅显示「未登录／已登录」及登录、退出按钮。仅使用内置应用凭据，移除自定义 Consumer Key / Secret 的选项及读取逻辑，旧自定义值不再生效；回调地址及底层错误不展示给普通用户。Safari 手动完成和验证码输入仅在需要时出现。
+- 设置页检测旧后台返回的不兼容状态时显示「重新加载扩展」，避免将缺少 `loggedIn` 字段误判为未登录。开发构建更新后需要重新加载扩展使后台生效；更换内置应用后，旧应用签发的授权需重新获取。
+- 授权按账号分别保存，登录状态和 API 请求均匹配当前饭否网页账号，兼容用户 ID 与 unique ID。切换账号不会沿用其他账号的凭据，切回已授权账号可以复用授权，退出只移除当前账号的授权。旧版单份凭据会自动保留并纳入账号记录。网页发文、上传与其他站内请求继续使用原有站点接口。
+- 新 OAuth 交换成功且授权前后网页账号保持一致时，可确认该账号登录；后续资料接口限流或暂时不可用不会抹掉已确认的登录。只有明确的凭据失效会使登录失效。饭否返回「尝试次数过多」时暂停资料查询五分钟，其他临时错误暂停一分钟，避免窗口焦点变化反复请求；不会据此给历史未知凭据猜测账号归属。
 
 ## 浏览器差异和限制
 
@@ -90,10 +94,10 @@ Safari 和 Firefox 不会自动共享 Chrome 的扩展存储。Chrome/Firefox �
 - [MDN identity 兼容数据](https://github.com/mdn/browser-compat-data/blob/main/webextensions/api/identity.json)
 - [Apple Safari 打包](https://developer.apple.com/documentation/safariservices/packaging-a-web-extension-for-safari)
 
-## 本次验证记录（2026-10-28）
+## 本次验证记录（更新于 2026-10-29）
 
-- TypeScript 与 ESLint 通过；19 个测试文件、43 个单元测试通过，包含实际 SDK 的签名、字段转换、分页、关系布尔值、普通与验证码授权、重复授权合并及临时凭据校验。
-- Chromium 156：6 个隔离扩展测试通过，包含历史默认设置、严格 CSP、设置写入、草稿、头像壁纸渲染/调整/关闭、SDK 使用已有 token 请求模拟 API、手动授权的 SDK token 交换与账号资料获取，以及 Service Worker 强制停止后的恢复。
+- TypeScript 与 ESLint 通过；20 个测试文件、63 个单元测试通过，包含 SDK 签名、字段转换、分页、关系布尔值、普通与验证码授权、重复授权合并、临时凭据校验、资料查询恢复、网页账号识别、账号切换、按账号退出、内置应用凭据隔离及限流与凭据失效的区分。
+- Chromium 156：7 个隔离扩展测试通过，包含历史默认设置、严格 CSP、设置写入、草稿、头像壁纸渲染/调整/关闭、SDK API 和 token 交换、精简登录界面、限流时保留登录与退避恢复、账号切换、旧后台状态检测，以及 Service Worker 强制停止后的恢复。
 - Firefox 159.0：设置页、MAIN world 注入、跨环境消息、扩展样式、草稿保存与恢复通过。
 - Safari：Xcode 27 生成的 macOS 应用与扩展在关闭代码签名的情况下编译通过；尚未在 Safari 中签名启用并进行实际账号验收。
 - 三个 MV3 产物均通过功能清单和资源核对，已生成 2.0.0 ZIP。

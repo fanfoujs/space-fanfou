@@ -2,13 +2,16 @@ import { browser } from 'wxt/browser'
 import OAuth from 'oauth-1.0a'
 import CryptoJS from 'crypto-js'
 import messaging from './messaging'
-import settings from './settings'
 import storage from './storage'
 import log from '@libs/log'
+import { readFanfouSession } from '@platform/fanfou-session'
 import {
   createFanfouClient,
   requestFanfouApi,
   getFanfouApiError,
+  getFanfouAccount,
+  isFanfouRateLimit,
+  isFanfouAuthorizationInvalid,
 } from '@platform/fanfou-api'
 import {
   FANFOU_OAUTH_AUTHORIZE,
@@ -17,18 +20,76 @@ import {
   FANFOU_OAUTH_API_REQUEST,
 } from '@constants'
 
-// fanfoujs/nofan 开源项目公开的 consumer key（与本项目同属 fanfoujs 组织）
-// 饭否官方已停止开发者申请，内置此 key 供无法自行申请的用户使用
-const BUILTIN_CONSUMER_KEY = '13456aa784cdf7688af69e85d482e011'
-const BUILTIN_CONSUMER_SECRET = 'f75c02df373232732b69354ecfbcabea'
+// 统一使用内置饭否应用凭据。
+const BUILTIN_CONSUMER_KEY = '3b8763186f221a7d1f4afa56969898b9'
+const BUILTIN_CONSUMER_SECRET = '0aa2aa5bba64adcb094d257dac1fdd40'
 
 const ACCESS_TOKEN_URL = 'https://fanfou.com/oauth/access_token'
 const AUTHORIZE_URL = 'https://fanfou.com/oauth/authorize'
 const TOKEN_STORAGE_KEY = 'fanfou-oauth/tokens'
+const ACCOUNTS_STORAGE_KEY = 'fanfou-oauth/accounts'
 
 let tokenCache
 let authorizationRequest
 let authorizationRequestKey
+let accountRequest
+let tokenRevision = 0
+let accountsWrite = Promise.resolve()
+
+function updateAccounts(update) {
+  const request = accountsWrite.then(async () => {
+    const accounts = await storage.read(ACCOUNTS_STORAGE_KEY, 'local') || {}
+    await storage.write(ACCOUNTS_STORAGE_KEY, update(accounts), 'local')
+  })
+  accountsWrite = request.catch(() => {})
+  return request
+}
+
+function rememberTokens(tokens) {
+  if (!tokens?.oauthToken || !tokens?.oauthTokenSecret || !tokens.consumerKey) return
+  return updateAccounts(accounts => ({ ...accounts, [`${tokens.consumerKey}:${tokens.oauthToken}`]: tokens }))
+}
+
+function matchesAccount(tokens, userId) {
+  return !!userId && (tokens?.userId === userId || tokens?.accountIds?.includes(userId))
+}
+
+async function currentSession() {
+  try { return await readFanfouSession() }
+  catch (error) {
+    log.warn('[SpaceFanfou] 无法检查当前饭否账号:', error.message)
+    return null
+  }
+}
+
+async function selectAccountTokens(consumer, session, refresh = false) {
+  const legacy = await readTokens()
+  await rememberTokens(legacy)
+  await accountsWrite
+  const accounts = await storage.read(ACCOUNTS_STORAGE_KEY, 'local') || {}
+  const candidates = [...new Map([legacy, ...Object.values(accounts)]
+    .filter(tokens => tokens?.consumerKey === consumer.consumerKey && tokens.oauthToken && tokens.oauthTokenSecret)
+    .map(tokens => [tokens.oauthToken, tokens])).values()]
+  if (!session) return null
+  let tokens = candidates.find(tokens => matchesAccount(tokens, session.userId))
+  let refreshed = false
+  // 升级前未保存账号信息的凭据先补全身份，绝不直接用于另一个饭否账号。
+  if (!tokens) {
+    for (const candidate of candidates.filter(item => (!item.userId || !item.accountIds) && (!item.profileError || refresh))) {
+      await persistTokens(candidate)
+      await refreshAccountProfile(consumer, candidate)
+      const updated = await readTokens()
+      if (matchesAccount(updated, session.userId)) { tokens = updated; refreshed = true; break }
+    }
+  }
+  if (!tokens) return null
+  if ((await readTokens())?.oauthToken !== tokens.oauthToken) await persistTokens(tokens)
+  if (refresh && !refreshed) {
+    await refreshAccountProfile(consumer, tokens)
+    tokens = await readTokens()
+  }
+  return matchesAccount(tokens, session.userId) ? tokens : null
+}
 
 function createOAuthClient(consumerKey, consumerSecret) {
   return new OAuth({
@@ -52,10 +113,12 @@ async function readTokens() {
 }
 
 async function persistTokens(tokens) {
+  tokenRevision++
   tokenCache = tokens || null
 
   if (tokens) {
     await storage.write(TOKEN_STORAGE_KEY, tokens, 'local')
+    await rememberTokens(tokens)
   } else {
     try {
       await storage.delete(TOKEN_STORAGE_KEY, 'local')
@@ -65,21 +128,10 @@ async function persistTokens(tokens) {
   }
 }
 
-async function readConsumerConfig() {
-  const optionValues = await settings.readAll()
-  const enabled = !!optionValues['fanfou-oauth']
-  const userKey = (optionValues['fanfou-oauth/consumerKey'] || '').trim()
-  const userSecret = (optionValues['fanfou-oauth/consumerSecret'] || '').trim()
-  // 用户未填写时使用内置 key，保证「开始授权」按钮始终可用
-  const consumerKey = userKey || BUILTIN_CONSUMER_KEY
-  const consumerSecret = userSecret || BUILTIN_CONSUMER_SECRET
-
+function readConsumerConfig() {
   return {
-    enabled,
-    consumerKey,
-    consumerSecret,
-    hasCredentials: true, // 内置 key 始终存在
-    usingBuiltinKey: !userKey,
+    consumerKey: BUILTIN_CONSUMER_KEY,
+    consumerSecret: BUILTIN_CONSUMER_SECRET,
   }
 }
 
@@ -143,61 +195,98 @@ function getRedirectUrl() {
   return browser.identity?.getRedirectURL ? browser.identity.getRedirectURL('fanfou-oauth') : 'oob'
 }
 
-async function saveAccessTokens(consumer, tempToken, verifier = '') {
+async function saveAccessTokens(consumer, tempToken, verifier = '', accountContext) {
   const tokens = await exchangeAccessToken(consumer, tempToken, verifier)
   if (!tokens.oauthToken || !tokens.oauthTokenSecret) throw new Error('获取 Access Token 失败，请确认应用配置')
+  const session = await currentSession()
+  // 仅刚完成 OAuth 交换且网页账号未改变时绑定身份，不据此猜测历史未知凭据的归属。
+  const confirmedSession = accountContext && session && (!accountContext.userId || accountContext.userId === session.userId)
+    ? session : null
   const saved = {
     oauthToken: tokens.oauthToken,
     oauthTokenSecret: tokens.oauthTokenSecret,
-    screenName: tokens.screenName,
-    userId: tokens.userId,
+    screenName: tokens.screenName || confirmedSession?.screenName || null,
+    userId: tokens.userId || confirmedSession?.userId || null,
+    accountIds: confirmedSession ? [confirmedSession.userId] : undefined,
+    authorizationInvalid: false,
+    profileError: null,
     consumerKey: consumer.consumerKey,
   }
+  await rememberTokens(await readTokens())
   await persistTokens(saved)
-  if (!saved.screenName || !saved.userId) {
-    // SDK 的 token 方法只返回凭据，另取账号资料供设置页显示。
-    try {
-      const profile = await createFanfouClient({ ...consumer, ...saved }).verifyCredentials()
-      await persistTokens({ ...saved, screenName: profile.screenName, userId: profile.id })
-    } catch (error) {
-      // 资料接口暂时不可用时，仍保留已取得的正式凭据。
-      log.warn('[SpaceFanfou] 授权成功，但读取账号资料失败:', getFanfouApiError(error))
-    }
+  if (!tokens.screenName || !tokens.userId) {
+    await refreshAccountProfile(consumer, saved)
   }
 }
 
-function buildStatus({ enabled, hasCredentials, consumerKey, usingBuiltinKey }, tokens, redirectUrl) {
+function refreshAccountProfile(consumer, tokens) {
+  if (tokens.profileRetryAt > Date.now()) return Promise.resolve()
+  if (accountRequest?.token === tokens.oauthToken && accountRequest?.consumerKey === consumer.consumerKey) {
+    return accountRequest.promise
+  }
+  const request = {
+    token: tokens.oauthToken,
+    consumerKey: consumer.consumerKey,
+    promise: updateAccountProfile(consumer, tokens).finally(() => {
+      if (accountRequest === request) accountRequest = null
+    }),
+  }
+  accountRequest = request
+  return request.promise
+}
+
+async function updateAccountProfile(consumer, tokens) {
+  const revision = tokenRevision
+  let profile
+  try {
+    profile = {
+      ...await getFanfouAccount(createFanfouClient({ ...consumer, ...tokens })),
+      profileError: null,
+      profileRetryAt: 0,
+      authorizationInvalid: false,
+    }
+    profile.accountIds = [...new Set([...(tokens.accountIds || []), ...profile.accountIds])]
+  } catch (error) {
+    profile = {
+      profileError: getFanfouApiError(error),
+      profileRetryAt: Date.now() + (isFanfouRateLimit(error) ? 5 : 1) * 60_000,
+      authorizationInvalid: isFanfouAuthorizationInvalid(error),
+    }
+    log.warn('[SpaceFanfou] 读取授权账号资料失败:', profile.profileError)
+  }
+  // 查询过程中取消或更换授权时，旧请求不得恢复已经清除的凭据。
+  if (revision !== tokenRevision) return
+  const current = await readTokens()
+  if (revision !== tokenRevision || !current || current.oauthToken !== tokens.oauthToken || current.consumerKey !== tokens.consumerKey) return
+  await persistTokens({ ...current, ...profile })
+}
+
+function buildStatus(tokens, redirectUrl) {
   const hasTokens = Boolean(tokens?.oauthToken && tokens?.oauthTokenSecret)
 
   return {
     ok: true,
     status: {
-      enabled,
-      hasConsumerCredentials: hasCredentials,
-      usingBuiltinKey: usingBuiltinKey || (!hasTokens ? false : tokens.consumerKey === BUILTIN_CONSUMER_KEY),
       hasTokens,
-      canAuthorize: hasCredentials, // 内置 key 始终可授权，无需先勾选复选框
+      loggedIn: hasTokens && !!tokens.userId && !tokens.authorizationInvalid,
+      canAuthorize: true,
       screenName: tokens?.screenName || null,
       userId: tokens?.userId || null,
+      profileError: tokens?.profileError || null,
       redirectUrl,
       manualAuthorization: !browser.identity?.launchWebAuthFlow,
-      consumerKeyMatches: hasTokens ? tokens.consumerKey === consumerKey : true,
     },
   }
 }
 
-async function handleGetStatus() {
+async function handleGetStatus(payload = {}) {
   const consumer = await readConsumerConfig()
-  const tokens = await readTokens()
+  const session = await currentSession()
+  const tokens = await selectAccountTokens(consumer, session, !!payload.refreshAccount)
   const redirectUrl = getRedirectUrl()
 
-  if (tokens && consumer.consumerKey && tokens.consumerKey !== consumer.consumerKey) {
-    // Consumer 改变后旧 token 失效，提示重新授权
-    await persistTokens(null)
-    return buildStatus(consumer, null, redirectUrl)
-  }
-
-  const result = buildStatus(consumer, tokens, redirectUrl)
+  const result = buildStatus(tokens, redirectUrl)
+  result.status.currentUserId = session?.userId || null
   result.status.pendingAuthorization = !!await storage.read('fanfou-oauth/pending', 'session')
   return result
 }
@@ -226,23 +315,16 @@ async function authorize(payload) {
     const consumer = await readConsumerConfig()
     const redirectUrl = payload.manual ? 'oob' : getRedirectUrl()
 
-    if (!consumer.enabled && !consumer.usingBuiltinKey) {
-      return { error: '请先勾选「启用 OAuth 认证」' }
-    }
-
-    if (!consumer.hasCredentials) {
-      return { error: '请填写 Consumer Key 和 Consumer Secret 后重试' }
-    }
-
     if (payload.complete) {
       const pending = await storage.read('fanfou-oauth/pending', 'session')
       if (!pending || Date.now() - pending.createdAt > 10 * 60_000) throw new Error('授权已过期，请重新开始授权')
       if (pending.consumerKey !== consumer.consumerKey) throw new Error('应用密钥已变更，请重新开始授权')
-      await saveAccessTokens(consumer, pending.tempToken, (payload.verifier || '').trim())
+      await saveAccessTokens(consumer, pending.tempToken, (payload.verifier || '').trim(), pending.accountContext)
       await storage.delete('fanfou-oauth/pending', 'session')
       return handleGetStatus()
     }
 
+    const accountContext = { userId: (await currentSession())?.userId || null }
     const tempToken = await requestTemporaryToken(consumer)
 
     if (!tempToken.oauth_token || !tempToken.oauth_token_secret) {
@@ -254,15 +336,14 @@ async function authorize(payload) {
     authorizeUrl.searchParams.set('oauth_token', tempToken.oauth_token)
     authorizeUrl.searchParams.set('oauth_callback', redirectUrl)
     if (redirectUrl === 'oob') {
-      await storage.write('fanfou-oauth/pending', { tempToken, consumerKey: consumer.consumerKey, createdAt: Date.now() }, 'session')
+      await storage.write('fanfou-oauth/pending', { tempToken, consumerKey: consumer.consumerKey, accountContext, createdAt: Date.now() }, 'session')
       await browser.tabs.create({ url: authorizeUrl.href, active: true })
       return handleGetStatus()
     }
     const responseUrl = await launchAuthWindow(authorizeUrl.href)
     const parsedUrl = new URL(responseUrl)
 
-    // Nofan 是一个基于 PIN/OOB 的老式 CLI 应用 Key，饭否回调时不会返回 verifier。
-    // 但是只要拿到了 oauth_token 回调，且没有 denied 参数，就说明用户同意了。
+    // 兼容不返回 verifier 的授权回调；仍校验拒绝状态和临时 token。
     const verifier = parsedUrl.searchParams.get('oauth_verifier') || ''
 
     if (parsedUrl.searchParams.get('denied')) {
@@ -270,7 +351,7 @@ async function authorize(payload) {
     }
 
     if (parsedUrl.searchParams.get('oauth_token') !== tempToken.oauth_token) throw new Error('OAuth 回调 token 不匹配')
-    await saveAccessTokens(consumer, tempToken, verifier)
+    await saveAccessTokens(consumer, tempToken, verifier, accountContext)
 
     return handleGetStatus()
   } catch (error) {
@@ -280,6 +361,12 @@ async function authorize(payload) {
 }
 
 async function handleClearTokens() {
+  const consumer = await readConsumerConfig()
+  const session = await currentSession()
+  const tokens = await selectAccountTokens(consumer, session)
+  await updateAccounts(accounts => Object.fromEntries(Object.entries(accounts).filter(([, item]) =>
+    item.consumerKey !== consumer.consumerKey || (!matchesAccount(item, session?.userId) && item.oauthToken !== tokens?.oauthToken),
+  )))
   await persistTokens(null)
   await storage.delete('fanfou-oauth/pending', 'session')
   return handleGetStatus()
@@ -288,14 +375,10 @@ async function handleClearTokens() {
 async function handleApiRequest(payload) {
   try {
     const consumer = await readConsumerConfig()
-    const tokens = await readTokens()
+    const tokens = await selectAccountTokens(consumer, await currentSession())
 
-    if (!consumer.hasCredentials) {
-      return { error: '请先填写 Consumer Key / Secret' }
-    }
-
-    if (!tokens || !tokens.oauthToken || !tokens.oauthTokenSecret) {
-      return { error: '尚未完成授权，请先点击「开始授权」' }
+    if (!tokens || !tokens.oauthToken || !tokens.oauthTokenSecret || tokens.authorizationInvalid) {
+      return { error: '当前饭否账号尚未完成授权，请先在设置中登录' }
     }
 
     if (tokens.consumerKey !== consumer.consumerKey) {

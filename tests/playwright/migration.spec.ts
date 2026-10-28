@@ -274,9 +274,15 @@ test('SDK API and token exchange run in the service worker with existing tokens 
       return { id: -1 }
     }
     state.__sfSdkRequests = []
+    state.__sfCurrentWebUser = '~sdk-tester'
     state.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
       const request = new Request(input, init)
       const url = new URL(request.url)
+      if (url.origin === 'https://fanfou.com' && url.pathname === '/home') {
+        return new Response(
+          `<nav id="navigation"><a href="/${state.__sfCurrentWebUser}">我的空间</a></nav>`,
+        )
+      }
       const isTokenRequest =
         url.origin === 'https://fanfou.com' &&
         /^\/oauth\/(request_token|access_token)$/.test(url.pathname)
@@ -294,6 +300,11 @@ test('SDK API and token exchange run in the service worker with existing tokens 
             ? 'oauth_token=sdk-temporary&oauth_token_secret=sdk-temp-secret'
             : 'oauth_token=sdk-access&oauth_token_secret=sdk-access-secret',
         )
+      if (state.__sfProfileFailure)
+        return Response.json(
+          { error: '尝试次数过多，请到 http://fanfou.com 登录' },
+          { status: 401 },
+        )
       return Response.json({
         id: '~sdk-tester',
         screen_name: 'SDK 测试',
@@ -304,7 +315,10 @@ test('SDK API and token exchange run in the service worker with existing tokens 
       'fanfou-oauth/tokens': {
         oauthToken: 'sdk-test-token',
         oauthTokenSecret: 'sdk-test-secret',
-        consumerKey: '13456aa784cdf7688af69e85d482e011',
+        consumerKey: '3b8763186f221a7d1f4afa56969898b9',
+        userId: '~sdk-tester',
+        screenName: 'SDK 测试',
+        accountIds: ['~sdk-tester'],
       },
     })
   })
@@ -371,7 +385,7 @@ test('SDK API and token exchange run in the service worker with existing tokens 
     ).toEqual([
       ['/oauth/request_token', 'GET'],
       ['/oauth/access_token', 'GET'],
-      ['/account/verify_credentials.json', 'GET'],
+      ['/users/show.json', 'GET'],
     ])
     expect(authorizationRequests[1].authorization).toContain(
       'oauth_token="sdk-temporary"',
@@ -379,6 +393,50 @@ test('SDK API and token exchange run in the service worker with existing tokens 
     expect(authorizationRequests[2].authorization).toContain(
       'oauth_token="sdk-access"',
     )
+    await worker.evaluate(() => {
+      ;(globalThis as any).__sfProfileFailure = true
+    })
+    await page
+      .getByRole('navigation')
+      .getByText('工具', { exact: true })
+      .click()
+    await expect(page.getByRole('status')).toHaveText('已登录')
+    await expect(
+      page.getByRole('button', { name: '退出登录', exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: '重新检测', exact: true }),
+    ).toHaveCount(0)
+    await expect(page.getByRole('alert')).toHaveCount(0)
+    await expect(page.getByText('高级设置', { exact: true })).toHaveCount(0)
+    await expect(page.getByText(/Consumer Key|Consumer Secret/)).toHaveCount(0)
+    await expect(page.getByText(/OAuth 回调地址/)).toHaveCount(0)
+    await worker.evaluate(() => {
+      ;(globalThis as any).__sfProfileFailure = false
+      const state = globalThis as any
+      state.__sfOriginalNow = Date.now
+      Date.now = () => state.__sfOriginalNow() + 6 * 60_000
+    })
+    await page.evaluate(() => window.dispatchEvent(new Event('focus')))
+    await expect(page.getByRole('status')).toHaveText('已登录')
+    await expect(
+      page.getByRole('button', { name: '退出登录', exact: true }),
+    ).toBeVisible()
+    await expect(page.getByRole('alert')).toHaveCount(0)
+    await worker.evaluate(() => {
+      ;(globalThis as any).__sfCurrentWebUser = 'another-user'
+    })
+    await page.evaluate(() => window.dispatchEvent(new Event('focus')))
+    await expect(page.getByRole('status')).toHaveText('未登录')
+    await worker.evaluate(() => {
+      ;(globalThis as any).__sfCurrentWebUser = '~sdk-tester'
+    })
+    await page.evaluate(() => window.dispatchEvent(new Event('focus')))
+    await expect(page.getByRole('status')).toHaveText('已登录')
+    await page
+      .locator('section')
+      .filter({ has: page.locator('.sf-oauth-panel') })
+      .screenshot({ path: 'test-results/oauth-login.png' })
   } finally {
     await worker.evaluate(() => {
       const state = globalThis as any
@@ -388,6 +446,10 @@ test('SDK API and token exchange run in the service worker with existing tokens 
       delete state.__sfOriginalCreateTab
       delete state.__sfAuthorizationUrl
       delete state.__sfSdkRequests
+      delete state.__sfProfileFailure
+      delete state.__sfCurrentWebUser
+      Date.now = state.__sfOriginalNow || Date.now
+      delete state.__sfOriginalNow
     })
     await page.evaluate(async () =>
       (globalThis as any).chrome.runtime.sendMessage({
@@ -397,6 +459,29 @@ test('SDK API and token exchange run in the service worker with existing tokens 
     )
     await page.close()
   }
+})
+
+test('settings asks to reload an old background instead of reporting a false logged-out state', async () => {
+  const page = await context.newPage()
+  await page.addInitScript(() => {
+    const api = (globalThis as any).chrome
+    const send = api.runtime.sendMessage.bind(api.runtime)
+    api.runtime.sendMessage = (request: any) =>
+      request.message?.action === 'FANFOU_OAUTH_GET_STATUS'
+        ? Promise.resolve({ status: { hasTokens: true, userId: null } })
+        : send(request)
+  })
+  await page.goto(`chrome-extension://${extensionId}/settings.html`)
+  await page.getByRole('navigation').getByText('工具', { exact: true }).click()
+  await expect(page.getByRole('status')).toContainText('请重新加载')
+  await expect(
+    page.getByRole('button', { name: '重新加载扩展', exact: true }),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: 'OAuth 登录', exact: true }),
+  ).toHaveCount(0)
+  await expect(page.getByText('未登录', { exact: true })).toHaveCount(0)
+  await page.close()
 })
 
 test('settings and alarms recover after the service worker is stopped', async () => {

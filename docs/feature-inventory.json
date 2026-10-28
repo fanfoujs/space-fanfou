@@ -64,7 +64,9 @@
     },
     "fanfou-oauth": {
       "metadataSha256": "b25e6ff52aa87bbe666059eb23c724bc38e523ef7e6b841e3d98cb9c9ee3d365",
-      "components": []
+      "components": [],
+      "approvedMetadataSha256": "21868bad5c334cdda8f2a44d8257d011f7ab2d0c5619b0974cf15449b2443cd6",
+      "approvedChange": "按用户要求移除自定义 Consumer Key / Secret 配置，统一使用内置凭据。"
     },
     "favorite-fanfouers": {
       "components": [

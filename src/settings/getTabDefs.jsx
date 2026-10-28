@@ -70,10 +70,8 @@ const tabDefs = [ {
       'share-to-fanfou',
     ],
   }, {
-    title: 'API 接入',
-    options: [
-      'fanfou-oauth',
-    ],
+    title: '饭否账号',
+    options: [],
     children: <OAuthPanel />,
   } ],
 }, {
@@ -91,7 +89,8 @@ export default async () => {
     action: GET_OPTION_DEFS,
   })
 
-  const a = Object.keys(optionDefs)
+  // 饭否登录使用独立界面，不再生成 OAuth 配置项。
+  const a = Object.keys(optionDefs).filter(name => name !== 'fanfou-oauth')
   const b = []
 
   for (const tabDef of tabDefs) {

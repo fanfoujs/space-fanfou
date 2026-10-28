@@ -43,6 +43,33 @@ export function requestFanfouApi(client: Fanfou, request: FanfouApiRequest) {
   }
 }
 
+export async function getFanfouAccount(client: Fanfou) {
+  // 与 fanfou-export 一致，不传 id 时读取当前授权账号。
+  const profile = await client.getUser()
+  if (profile && typeof profile === 'object' && 'error' in profile) {
+    if (typeof profile.error === 'string' && profile.error) {
+      throw new Error(profile.error)
+    }
+  }
+  const userId =
+    profile &&
+    (typeof profile.id === 'string' || typeof profile.id === 'number')
+      ? String(profile.id).trim()
+      : ''
+  if (!userId) throw new Error('饭否没有返回有效的账号资料')
+  return {
+    userId,
+    accountIds: [
+      ...new Set(
+        [userId, profile.uniqueId].filter(
+          (id): id is string => typeof id === 'string' && !!id,
+        ),
+      ),
+    ],
+    screenName: profile.screenName || profile.name || null,
+  }
+}
+
 export function getFanfouApiError(error: unknown): string {
   const cause = error instanceof FanfouError ? error.err : error
   if (cause instanceof Error && 'data' in cause) {
@@ -53,4 +80,31 @@ export function getFanfouApiError(error: unknown): string {
     }
   }
   return error instanceof Error ? error.message : 'API 请求失败'
+}
+
+export function isFanfouRateLimit(error: unknown): boolean {
+  const cause = error instanceof FanfouError ? error.err : error
+  return (
+    /尝试次数过多|请求次数过多|too many|rate.?limit/i.test(
+      getFanfouApiError(error),
+    ) ||
+    (cause instanceof Error &&
+      'response' in cause &&
+      cause.response instanceof Response &&
+      cause.response.status === 429)
+  )
+}
+
+export function isFanfouAuthorizationInvalid(error: unknown): boolean {
+  if (isFanfouRateLimit(error)) return false
+  const cause = error instanceof FanfouError ? error.err : error
+  return (
+    (cause instanceof Error &&
+      'response' in cause &&
+      cause.response instanceof Response &&
+      cause.response.status === 401) ||
+    /invalid.*(?:oauth|token|signature)|(?:oauth|token).*expired|授权.*失效/i.test(
+      getFanfouApiError(error),
+    )
+  )
 }

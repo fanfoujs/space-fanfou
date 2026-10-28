@@ -111,7 +111,7 @@ export default class App extends Component {
     return (
       <div key={tabId} className={classNames}>
         <header><h2>{ title }</h2></header>
-        { children || sections.map(this.renderSection) }
+        { tabId === currentTabId && (children || sections.map(this.renderSection)) }
       </div>
     )
   }
