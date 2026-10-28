@@ -32,7 +32,7 @@ test.beforeAll(async () => {
   })
   context.on('weberror', (error) => {
     errors.push(error.error().message)
-    console.error('Browser error:', error.error().stack)
+    console.error('Browser error:', error.page()?.url(), error.error().stack)
   })
   context.on('console', (message) => {
     if (message.type() === 'error')
@@ -258,6 +258,145 @@ test('avatar wallpaper retains its layout, favorites, settings and cleanup', asy
   )
   await page.close()
   await settingsPage.close()
+})
+
+test('SDK API and token exchange run in the service worker with existing tokens and camelCase results', async () => {
+  const page = await context.newPage()
+  await page.goto(`chrome-extension://${extensionId}/settings.html`)
+  await expect(page.locator('.wrapper')).toBeVisible()
+  await worker.evaluate(async () => {
+    const state = globalThis as any
+    state.__sfOriginalFetch = state.fetch
+    state.__sfOriginalCreateTab = state.chrome.tabs.create
+    // 授权页和用户操作由模拟代替，SDK 的 token 交换仍在真实 Worker 中执行。
+    state.chrome.tabs.create = async (options: { url: string }) => {
+      state.__sfAuthorizationUrl = options.url
+      return { id: -1 }
+    }
+    state.__sfSdkRequests = []
+    state.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
+      const request = new Request(input, init)
+      const url = new URL(request.url)
+      const isTokenRequest =
+        url.origin === 'https://fanfou.com' &&
+        /^\/oauth\/(request_token|access_token)$/.test(url.pathname)
+      if (url.origin !== 'https://api.fanfou.com' && !isTokenRequest) {
+        return state.__sfOriginalFetch(input, init)
+      }
+      state.__sfSdkRequests.push({
+        url: request.url,
+        method: request.method,
+        authorization: request.headers.get('Authorization'),
+      })
+      if (isTokenRequest)
+        return new Response(
+          url.pathname.endsWith('/request_token')
+            ? 'oauth_token=sdk-temporary&oauth_token_secret=sdk-temp-secret'
+            : 'oauth_token=sdk-access&oauth_token_secret=sdk-access-secret',
+        )
+      return Response.json({
+        id: '~sdk-tester',
+        screen_name: 'SDK 测试',
+        statuses_count: 42,
+      })
+    }
+    await state.chrome.storage.local.set({
+      'fanfou-oauth/tokens': {
+        oauthToken: 'sdk-test-token',
+        oauthTokenSecret: 'sdk-test-secret',
+        consumerKey: '13456aa784cdf7688af69e85d482e011',
+      },
+    })
+  })
+  try {
+    const result = await page.evaluate(async () =>
+      (globalThis as any).chrome.runtime.sendMessage({
+        target: 'space-fanfou-background',
+        message: {
+          action: 'FANFOU_OAUTH_API_REQUEST',
+          payload: { method: 'getUser', params: { id: '~sdk-tester' } },
+        },
+      }),
+    )
+    expect(result.responseJSON).toMatchObject({
+      id: '~sdk-tester',
+      screenName: 'SDK 测试',
+      statusesCount: 42,
+    })
+    const requests = await worker.evaluate(
+      () => (globalThis as any).__sfSdkRequests,
+    )
+    expect(requests).toHaveLength(1)
+    expect(requests[0].url).toContain('https://api.fanfou.com/users/show.json')
+    expect(requests[0].authorization).toContain('oauth_token="sdk-test-token"')
+    const started = await page.evaluate(async () =>
+      (globalThis as any).chrome.runtime.sendMessage({
+        target: 'space-fanfou-background',
+        message: {
+          action: 'FANFOU_OAUTH_AUTHORIZE',
+          payload: { manual: true },
+        },
+      }),
+    )
+    expect(started.status.pendingAuthorization).toBe(true)
+    const authorizationUrl = new URL(
+      await worker.evaluate(() => (globalThis as any).__sfAuthorizationUrl),
+    )
+    expect(authorizationUrl.searchParams.get('oauth_callback')).toBe('oob')
+    expect(authorizationUrl.searchParams.get('oauth_token')).toBe(
+      'sdk-temporary',
+    )
+    const completed = await page.evaluate(async () =>
+      (globalThis as any).chrome.runtime.sendMessage({
+        target: 'space-fanfou-background',
+        message: {
+          action: 'FANFOU_OAUTH_AUTHORIZE',
+          payload: { complete: true },
+        },
+      }),
+    )
+    expect(completed.status).toMatchObject({
+      hasTokens: true,
+      pendingAuthorization: false,
+      screenName: 'SDK 测试',
+    })
+    const authorizationRequests = await worker.evaluate(() =>
+      (globalThis as any).__sfSdkRequests.slice(1),
+    )
+    expect(
+      authorizationRequests.map((request: any) => [
+        new URL(request.url).pathname,
+        request.method,
+      ]),
+    ).toEqual([
+      ['/oauth/request_token', 'GET'],
+      ['/oauth/access_token', 'GET'],
+      ['/account/verify_credentials.json', 'GET'],
+    ])
+    expect(authorizationRequests[1].authorization).toContain(
+      'oauth_token="sdk-temporary"',
+    )
+    expect(authorizationRequests[2].authorization).toContain(
+      'oauth_token="sdk-access"',
+    )
+  } finally {
+    await worker.evaluate(() => {
+      const state = globalThis as any
+      state.fetch = state.__sfOriginalFetch
+      state.chrome.tabs.create = state.__sfOriginalCreateTab
+      delete state.__sfOriginalFetch
+      delete state.__sfOriginalCreateTab
+      delete state.__sfAuthorizationUrl
+      delete state.__sfSdkRequests
+    })
+    await page.evaluate(async () =>
+      (globalThis as any).chrome.runtime.sendMessage({
+        target: 'space-fanfou-background',
+        message: { action: 'FANFOU_OAUTH_CLEAR_TOKENS' },
+      }),
+    )
+    await page.close()
+  }
 })
 
 test('settings and alarms recover after the service worker is stopped', async () => {

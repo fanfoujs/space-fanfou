@@ -9,6 +9,7 @@ v2.0.0
 - 增加 Firefox 适配，以及 Safari 站内提醒和手动授权
 - 移除旧版 Google Analytics 统计
 - 恢复 12 项历史默认设置，移除头像壁纸中的小游戏
+- 使用 fanfou-sdk beta 统一饭否 API 与普通 OAuth 授权，保留验证码流程兼容及已有数据
 
 v1.0.0
 @2019-09-12

@@ -6,6 +6,11 @@ import settings from './settings'
 import storage from './storage'
 import log from '@libs/log'
 import {
+  createFanfouClient,
+  requestFanfouApi,
+  getFanfouApiError,
+} from '@platform/fanfou-api'
+import {
   FANFOU_OAUTH_AUTHORIZE,
   FANFOU_OAUTH_GET_STATUS,
   FANFOU_OAUTH_CLEAR_TOKENS,
@@ -17,13 +22,13 @@ import {
 const BUILTIN_CONSUMER_KEY = '13456aa784cdf7688af69e85d482e011'
 const BUILTIN_CONSUMER_SECRET = 'f75c02df373232732b69354ecfbcabea'
 
-const REQUEST_TOKEN_URL = 'https://fanfou.com/oauth/request_token'
 const ACCESS_TOKEN_URL = 'https://fanfou.com/oauth/access_token'
 const AUTHORIZE_URL = 'https://fanfou.com/oauth/authorize'
 const TOKEN_STORAGE_KEY = 'fanfou-oauth/tokens'
-const API_HOST = 'https://api.fanfou.com'
 
 let tokenCache
+let authorizationRequest
+let authorizationRequestKey
 
 function createOAuthClient(consumerKey, consumerSecret) {
   return new OAuth({
@@ -78,108 +83,56 @@ async function readConsumerConfig() {
   }
 }
 
-function parseQueryString(str = '') {
-  return str.split('&').reduce((acc, pair) => {
-    if (!pair) return acc
-    const [ key, value = '' ] = pair.split('=')
-
-    acc[decodeURIComponent(key)] = decodeURIComponent(value)
-
-    return acc
-  }, {})
-}
-
-async function signedRequest({
-  url,
-  method = 'GET',
-  params = {},
-  consumerKey,
-  consumerSecret,
-  token,
-}) {
-  const oauth = createOAuthClient(consumerKey, consumerSecret)
-
-  // 特殊修复：即使我们通过 HTTPS 请求，饭否由于极为古老的 OAuth 实现，
-  // 依然强制要求 signature 的 origin base 必须是 http://fanfou.com
-  // 否则会返回 401 Invalid signature. 因此我们需要“欺骗”签名器。
-  const signUrl = url
-    .replace('https://fanfou.com/oauth', 'http://fanfou.com/oauth')
-    .replace('https://api.fanfou.com', 'http://api.fanfou.com')
-
-  const authParams = oauth.authorize({
-    url: signUrl,
-    method,
-    data: params,
-  }, token)
-  const headers = oauth.toHeader(authParams)
-  const search = new URLSearchParams(params)
-  let finalUrl = url
-  const fetchOptions = {
-    method,
-    headers,
-    credentials: 'omit', // 防止 Chrome 自动带上 fanfou.com 的登录 Cookie 导致 OAuth 签名校验直接被饭否拦截
+async function requestTemporaryToken(consumer) {
+  const client = await createFanfouClient(consumer).getRequestToken()
+  // 沿用已有 session 数据格式，后台休眠前开始的手动授权仍可继续完成。
+  return {
+    oauth_token: client.oauthToken,
+    oauth_token_secret: client.oauthTokenSecret,
   }
-
-  if (method === 'GET') {
-    const queryString = search.toString()
-    if (queryString) {
-      finalUrl += (url.includes('?') ? '&' : '?') + queryString
-    }
-  } else {
-    fetchOptions.body = search.toString()
-    fetchOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-  }
-
-  const response = await fetch(finalUrl, fetchOptions)
-  const text = await response.text()
-
-  if (!response.ok) {
-    const error = new Error(`Fanfou API ${response.status}`)
-    error.status = response.status
-    error.responseText = text
-    throw error
-  }
-
-  return text
-}
-
-async function requestTemporaryToken(consumer, redirectUrl) {
-  const responseText = await signedRequest({
-    url: REQUEST_TOKEN_URL,
-    method: 'POST',
-    params: {
-      oauth_callback: redirectUrl,
-    },
-    consumerKey: consumer.consumerKey,
-    consumerSecret: consumer.consumerSecret,
-  })
-
-  return parseQueryString(responseText)
 }
 
 async function exchangeAccessToken(consumer, tempToken, verifier) {
+  if (!verifier) {
+    const client = await createFanfouClient(consumer).getAccessToken({
+      oauthToken: tempToken.oauth_token,
+      oauthTokenSecret: tempToken.oauth_token_secret,
+    })
+    return {
+      oauthToken: client.oauthToken,
+      oauthTokenSecret: client.oauthTokenSecret,
+    }
+  }
+
+  // SDK beta 尚不能提交 oauth_verifier，仅验证码交换保留兼容请求。
+  const oauth = createOAuthClient(consumer.consumerKey, consumer.consumerSecret)
   const params = {
     oauth_token: tempToken.oauth_token,
+    oauth_verifier: verifier,
   }
-
-  // 对于桌面应用/老式 OAuth 1.0，可能没有 oauth_verifier，这里设为可选
-  if (verifier) {
-    params.oauth_verifier = verifier
-  }
-
-  const responseText = await signedRequest({
-    url: ACCESS_TOKEN_URL,
-    method: 'POST',
-    params,
-    consumerKey: consumer.consumerKey,
-    consumerSecret: consumer.consumerSecret,
-    token: {
-      key: tempToken.oauth_token,
-      secret: tempToken.oauth_token_secret,
+  const headers = oauth.toHeader(oauth.authorize(
+    {
+      url: ACCESS_TOKEN_URL.replace('https:', 'http:'),
+      method: 'POST',
+      data: params,
     },
+    { key: tempToken.oauth_token, secret: tempToken.oauth_token_secret },
+  ))
+  const response = await fetch(ACCESS_TOKEN_URL, {
+    method: 'POST',
+    headers: { ...headers, 'Content-Type': 'application/x-www-form-urlencoded' },
+    credentials: 'omit',
+    body: new URLSearchParams(params).toString(),
   })
-
-  return parseQueryString(responseText)
+  const text = await response.text()
+  if (!response.ok) throw new Error(text || `Fanfou API ${response.status}`)
+  const tokens = new URLSearchParams(text)
+  return {
+    oauthToken: tokens.get('oauth_token'),
+    oauthTokenSecret: tokens.get('oauth_token_secret'),
+    screenName: tokens.get('screen_name'),
+    userId: tokens.get('user_id'),
+  }
 }
 
 function launchAuthWindow(authUrl) {
@@ -192,14 +145,25 @@ function getRedirectUrl() {
 
 async function saveAccessTokens(consumer, tempToken, verifier = '') {
   const tokens = await exchangeAccessToken(consumer, tempToken, verifier)
-  if (!tokens.oauth_token || !tokens.oauth_token_secret) throw new Error('获取 Access Token 失败，请确认应用配置')
-  await persistTokens({
-    oauthToken: tokens.oauth_token,
-    oauthTokenSecret: tokens.oauth_token_secret,
-    screenName: tokens.screen_name,
-    userId: tokens.user_id,
+  if (!tokens.oauthToken || !tokens.oauthTokenSecret) throw new Error('获取 Access Token 失败，请确认应用配置')
+  const saved = {
+    oauthToken: tokens.oauthToken,
+    oauthTokenSecret: tokens.oauthTokenSecret,
+    screenName: tokens.screenName,
+    userId: tokens.userId,
     consumerKey: consumer.consumerKey,
-  })
+  }
+  await persistTokens(saved)
+  if (!saved.screenName || !saved.userId) {
+    // SDK 的 token 方法只返回凭据，另取账号资料供设置页显示。
+    try {
+      const profile = await createFanfouClient({ ...consumer, ...saved }).verifyCredentials()
+      await persistTokens({ ...saved, screenName: profile.screenName, userId: profile.id })
+    } catch (error) {
+      // 资料接口暂时不可用时，仍保留已取得的正式凭据。
+      log.warn('[SpaceFanfou] 授权成功，但读取账号资料失败:', getFanfouApiError(error))
+    }
+  }
 }
 
 function buildStatus({ enabled, hasCredentials, consumerKey, usingBuiltinKey }, tokens, redirectUrl) {
@@ -238,7 +202,26 @@ async function handleGetStatus() {
   return result
 }
 
-async function handleAuthorize(payload = {}) {
+function handleAuthorize(payload = {}) {
+  const key = JSON.stringify([
+    !!payload.manual,
+    !!payload.complete,
+    (payload.verifier || '').trim(),
+  ])
+  if (authorizationRequest) {
+    return key === authorizationRequestKey
+      ? authorizationRequest
+      : Promise.resolve({ error: '授权正在处理中，请稍后再试' })
+  }
+  authorizationRequestKey = key
+  authorizationRequest = authorize(payload).finally(() => {
+    authorizationRequest = null
+    authorizationRequestKey = null
+  })
+  return authorizationRequest
+}
+
+async function authorize(payload) {
   try {
     const consumer = await readConsumerConfig()
     const redirectUrl = payload.manual ? 'oob' : getRedirectUrl()
@@ -260,19 +243,22 @@ async function handleAuthorize(payload = {}) {
       return handleGetStatus()
     }
 
-    const tempToken = await requestTemporaryToken(consumer, redirectUrl)
+    const tempToken = await requestTemporaryToken(consumer)
 
-    if (!tempToken.oauth_token) {
+    if (!tempToken.oauth_token || !tempToken.oauth_token_secret) {
       return { error: '获取 Request Token 失败，请稍后重试' }
     }
 
-    const authorizeUrl = `${AUTHORIZE_URL}?oauth_token=${encodeURIComponent(tempToken.oauth_token)}&oauth_callback=${encodeURIComponent(redirectUrl)}`
+    // 和 fanfou-export 一样，将 callback 放在授权页 URL 中，SDK 负责 token 交换。
+    const authorizeUrl = new URL(AUTHORIZE_URL)
+    authorizeUrl.searchParams.set('oauth_token', tempToken.oauth_token)
+    authorizeUrl.searchParams.set('oauth_callback', redirectUrl)
     if (redirectUrl === 'oob') {
       await storage.write('fanfou-oauth/pending', { tempToken, consumerKey: consumer.consumerKey, createdAt: Date.now() }, 'session')
-      await browser.tabs.create({ url: authorizeUrl, active: true })
+      await browser.tabs.create({ url: authorizeUrl.href, active: true })
       return handleGetStatus()
     }
-    const responseUrl = await launchAuthWindow(authorizeUrl)
+    const responseUrl = await launchAuthWindow(authorizeUrl.href)
     const parsedUrl = new URL(responseUrl)
 
     // Nofan 是一个基于 PIN/OOB 的老式 CLI 应用 Key，饭否回调时不会返回 verifier。
@@ -301,12 +287,6 @@ async function handleClearTokens() {
 
 async function handleApiRequest(payload) {
   try {
-    const { url, method = 'GET', query = {}, responseType = 'json' } = payload
-
-    if (!url || new URL(url).origin !== API_HOST) {
-      return { error: '仅允许访问 api.fanfou.com 域名' }
-    }
-
     const consumer = await readConsumerConfig()
     const tokens = await readTokens()
 
@@ -323,34 +303,17 @@ async function handleApiRequest(payload) {
       return { error: '保存的授权与当前 Consumer Key 不匹配，请重新授权' }
     }
 
-    const responseText = await signedRequest({
-      url,
-      method,
-      params: query,
+    const client = createFanfouClient({
       consumerKey: consumer.consumerKey,
       consumerSecret: consumer.consumerSecret,
-      token: {
-        key: tokens.oauthToken,
-        secret: tokens.oauthTokenSecret,
-      },
+      oauthToken: tokens.oauthToken,
+      oauthTokenSecret: tokens.oauthTokenSecret,
     })
-
-    let responseJSON
-
-    if (responseType === 'json') {
-      try {
-        responseJSON = JSON.parse(responseText)
-      } catch (error) {
-        return { error: 'API 返回的 JSON 无法解析', responseText }
-      }
-    }
-
-    return { responseText, responseJSON }
+    const responseJSON = await requestFanfouApi(client, payload)
+    return { responseJSON }
   } catch (error) {
     log.error('[SpaceFanfou] 调用 FanFou API 失败:', error)
-    const errorMessage = error.responseText || error.message || 'API 请求失败'
-
-    return { error: errorMessage }
+    return { error: getFanfouApiError(error) }
   }
 }
 

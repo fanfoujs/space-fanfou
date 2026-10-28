@@ -92,10 +92,8 @@ export default context => {
       let targetUserId = await getCurrentPageOwnerUserId()
 
       // Step 1. 先通过 users/show 将潜在的 login string 解析为底层的 ~id，规避 friendships/show 的严格格式缺陷
-      const { error: userError, responseJSON: userJSON } = await fanfouOAuth.request({
-        url: 'https://api.fanfou.com/users/show.json',
-        query: { id: targetUserId },
-        responseType: 'json',
+      const { error: userError, responseJSON: userJSON } = await fanfouOAuth.getUser({
+        id: targetUserId,
       })
 
       if (userError) {
@@ -114,10 +112,8 @@ export default context => {
       }
 
       // 切换至稳健的 OAuth 官方 API
-      const { error, responseJSON } = await fanfouOAuth.request({
-        url: 'https://api.fanfou.com/friendships/show.json',
-        query: { target_id: targetUserId },
-        responseType: 'json',
+      const { error, responseJSON } = await fanfouOAuth.checkFriendshipDetail({
+        target_id: targetUserId,
       })
 
       if (error) {
@@ -136,8 +132,8 @@ export default context => {
       }
 
       const { target, source } = responseJSON.relationship
-      const iFollowThem = source.following === 'true'
-      const theyFollowMe = target.following === 'true'
+      const iFollowThem = source.following === true || source.following === 'true'
+      const theyFollowMe = target.following === true || target.following === 'true'
 
       if (theyFollowMe && iFollowThem) setText(TEXT_MUTUAL)
       else if (theyFollowMe) setText(TEXT_THEY_FOLLOW)

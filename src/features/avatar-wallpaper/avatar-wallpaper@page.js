@@ -29,7 +29,6 @@ const AVATAR_FRAME_CLASSES = [
   'sf-avatar-frame-5',
 ]
 const AVATAR_FRAME_GOLD_CLASS = 'sf-avatar-frame-gold'
-const API_URL = 'https://api.fanfou.com/users/friends.json'
 const BACKGROUND_PRESETS = [ {
   id: 1,
   background: 'linear-gradient(140deg, #f3f8ff 0%, #e6f0ff 45%, #d8e7ff 100%)',
@@ -208,13 +207,9 @@ async function fetchAvatarUrlsFromApi(fanfouOAuth) {
   const avatars = []
 
   for (let page = 1; page <= MAX_API_PAGES; page++) {
-    const { error, responseJSON } = await fanfouOAuth.request({
-      url: API_URL,
-      query: {
-        count: 100,
-        page,
-      },
-      responseType: 'json',
+    const { error, responseJSON } = await fanfouOAuth.getFollowings({
+      count: 100,
+      page,
     })
 
     if (error) {
@@ -226,7 +221,7 @@ async function fetchAvatarUrlsFromApi(fanfouOAuth) {
     }
 
     for (const user of responseJSON) {
-      avatars.push(user?.profile_image_url)
+      avatars.push(user?.profileImageUrl)
     }
 
     if (responseJSON.length < 100) {

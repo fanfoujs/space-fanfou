@@ -1,4 +1,3 @@
-// 饭否API返回的字段使用下划线命名（statuses_count, friends_count等），禁用camelcase检查
 // 保留console.warn用于调试统计数据提取问题
 // innerText用于兼容性，部分旧代码可能依赖其特定行为
 import { h, Component } from 'preact'
@@ -58,11 +57,11 @@ class SidebarStatistics extends Component {
       let finalProfile = scrapedData
 
       // 如果是自己页面，尝试从 m.fanfou.com 抓取注册时间
-      if (isLoggedInUserProfilePage() && scrapedData.statuses_count > 0 && this.props.proxiedFetch) {
-        const lastPage = Math.ceil(scrapedData.statuses_count / 30)
+      if (isLoggedInUserProfilePage() && scrapedData.statusesCount > 0 && this.props.proxiedFetch) {
+        const lastPage = Math.ceil(scrapedData.statusesCount / 30)
         const oldestDate = await fetchOldestStatusDate(this.getUserId(), lastPage, this.props.proxiedFetch)
         if (oldestDate) {
-          finalProfile = { ...scrapedData, created_at: oldestDate }
+          finalProfile = { ...scrapedData, createdAt: oldestDate }
           this.processData(finalProfile)
         }
       }
@@ -70,11 +69,11 @@ class SidebarStatistics extends Component {
       // 尝试通过 OAuth 获取最完整资料
       const { profile, oauthNotConfigured } = await this.fetchUserProfileData()
       if (oauthNotConfigured) {
-        // 如果 OAuth 未配置，且还没有 created_at，显示提示
-        if (!finalProfile.created_at) {
+        // 如果 OAuth 未配置，且还没有 createdAt，显示提示
+        if (!finalProfile.createdAt) {
           this.setState({ oauthNotConfigured: true })
         }
-      } else if (profile && profile.created_at) {
+      } else if (profile && profile.createdAt) {
         this.processData(profile)
       }
     } catch (error) {
@@ -104,11 +103,11 @@ class SidebarStatistics extends Component {
     const userId = this.getUserId()
     const profile = {
       id: userId,
-      statuses_count: 0,
-      friends_count: 0,
-      followers_count: 0,
+      statusesCount: 0,
+      friendsCount: 0,
+      followersCount: 0,
       protected: false,
-      profile_background_image_url: null,
+      profileBackgroundImageUrl: null,
     }
 
     // 计数 widget 固定在 #user_stats 容器内
@@ -118,9 +117,9 @@ class SidebarStatistics extends Component {
       return el ? parseInt(el.textContent.replace(/\D/g, ''), 10) : 0
     }
 
-    profile.statuses_count = getCount(`/${userId}`)
-    profile.friends_count = getCount(`/friends/${userId}`)
-    profile.followers_count = getCount(`/followers/${userId}`)
+    profile.statusesCount = getCount(`/${userId}`)
+    profile.friendsCount = getCount(`/friends/${userId}`)
+    profile.followersCount = getCount(`/followers/${userId}`)
 
     // 加锁状态
     profile.protected = select.exists('.locked, .private-icon, [class*="private"]')
@@ -128,17 +127,15 @@ class SidebarStatistics extends Component {
     // 背景图片
     const bgImage = getComputedStyle(document.body).backgroundImage
     if (bgImage && bgImage !== 'none') {
-      profile.profile_background_image_url = bgImage.replace(/^url\(["']?|["']?\)$/g, '')
+      profile.profileBackgroundImageUrl = bgImage.replace(/^url\(["']?|["']?\)$/g, '')
     }
 
     return profile
   }
 
   async fetchUserProfileData() {
-    const { error, responseJSON } = await this.props.fanfouOAuth.request({
-      url: 'https://api.fanfou.com/users/show.json',
-      query: { id: this.getUserId() },
-      responseType: 'json',
+    const { error, responseJSON } = await this.props.fanfouOAuth.getUser({
+      id: this.getUserId(),
     })
 
     if (error) {
@@ -165,8 +162,8 @@ class SidebarStatistics extends Component {
       registerDurationProgress,
     } = this.state
 
-    if (userProfile.created_at) {
-      const registerDate = new Date(userProfile.created_at)
+    if (userProfile.createdAt) {
+      const registerDate = new Date(userProfile.createdAt)
       registerDateText = formatDate(registerDate)
 
       // 注册时长
@@ -194,8 +191,8 @@ class SidebarStatistics extends Component {
       // 只有在有 registerDays 的情况下才计算频率和影响力
       // 消息频率
       const statusFrequency = actualRegisterDays < 1
-        ? userProfile.statuses_count
-        : (userProfile.statuses_count / actualRegisterDays).toFixed(2)
+        ? userProfile.statusesCount
+        : (userProfile.statusesCount / actualRegisterDays).toFixed(2)
       const statusFrequencyText = `平均 ${statusFrequency} 条消息 / 天`
       const statusFrequencyProgress = statusFrequency / 50
 
@@ -204,8 +201,8 @@ class SidebarStatistics extends Component {
       if (statusFrequency > 20) actionIndex = 1
       if (isProtected) actionIndex = actionIndex * 0.75
       const influenceIndex = (
-        (10 * Math.sqrt(userProfile.followers_count) / Math.log(registerDays + 100)) +
-         ((userProfile.followers_count / 100) + (registerDays / 100)) * actionIndex
+        (10 * Math.sqrt(userProfile.followersCount) / Math.log(registerDays + 100)) +
+         ((userProfile.followersCount / 100) + (registerDays / 100)) * actionIndex
       ).toFixed(0)
       const influenceIndexText = `${influenceIndex} 公里`
       const influenceIndexProgress = influenceIndex / 100
@@ -226,7 +223,7 @@ class SidebarStatistics extends Component {
     }
 
     // 背景图片
-    const backgroundImageUrl = userProfile.profile_background_image_url
+    const backgroundImageUrl = userProfile.profileBackgroundImageUrl
     // 需要检测用户是否在「设置 → 模板」中选择了「不要背景图片」
     const isBackgroundImageDisabled = getComputedStyle(document.body).backgroundImage === 'none'
 

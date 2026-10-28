@@ -44,6 +44,8 @@ npm run verify:build
 
 ### 参阅
 
+- [太空饭否 3D 打印冰箱贴](Artifacts/SpaceFanfouMagnet/README.md)：50 mm 蓝底白字模型、STL、3MF 和描摹 SVG。
+
 | **→ [官方饭否](https://fanfou.com/spacefanfou)** | **→ [入门手册](https://spacekid.me/spacefanfou/)** |
 | :----------------------------------------------: | :------------------------------------------------: |
 

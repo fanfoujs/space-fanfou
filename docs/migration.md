@@ -35,6 +35,16 @@
 - 使用 `scripting.executeScript` 在 MAIN world 执行打包脚本，避免通过网页 `<script src>` 注入时受到 CSP 限制。
 - 页面资源地址从实际扩展 origin 获取，支持 `chrome-extension:`、`moz-extension:` 和 Safari 的扩展地址。
 
+## 饭否 API SDK
+
+- API 请求统一使用 `fanfou-sdk@7.0.0-beta.3`，固定 beta 版本；好友关系、侧栏统计和头像壁纸分别调用 SDK 的 `getUser`、`checkFriendshipDetail` 和 `getFollowings`。
+- SDK 仅在扩展后台运行，页面通过明确允许的方法通信，不能指定任意请求地址。沿用原有 OAuth token，无需因 SDK 迁移重新授权。
+- 页面适配 SDK 的 camelCase 响应字段和关系布尔值，保留头像分页、统计数据和未授权时的回退行为。
+- 网络请求使用 HTTPS，通过 SDK 的 `baseString` hook 保留饭否所需的 HTTP OAuth 签名基串。
+- 普通 OAuth 授权使用 SDK 的 `getRequestToken` / `getAccessToken`，将 `oauth_callback` 放在饭否授权页 URL 中；Chrome/Firefox 回调及 Safari 无验证码的手动授权均使用 SDK 交换 token。
+- beta 的 `getAccessToken` 尚不能提交 `oauth_verifier`，仅在回调携带或用户填写验证码时保留签名 POST 兼容请求。沿用临时凭据的 session 格式、十分钟有效期和回调 token 校验；同一授权的重复请求复用进行中的任务，避免多次交换一次性 token。
+- SDK 的 token 方法只返回凭据，账号资料另由 `verifyCredentials` 获取；资料接口暂时不可用时仍保留已取得的正式凭据。网页发文、上传与其他站内请求继续使用原有站点接口。
+
 ## 浏览器差异和限制
 
 | 能力 | Chrome | Firefox | Safari macOS |
@@ -43,7 +53,7 @@
 | 后台桌面通知 | 原生通知 | 原生通知，点击通知主体查看 | 无标准 WebExtensions notifications API；改为站内提示与工具栏标记 |
 | 通知按钮 | 支持，具体显示取决于系统 | API 不支持按钮；保留点击通知主体查看 | 使用提醒替代 |
 | 提示音 | offscreen document | 后台文档音频 | 后台文档音频，仍受浏览器自动播放限制 |
-| OAuth | 浏览器授权窗口，也可手动授权 | 浏览器授权窗口，也可手动授权 | 无 identity API；打开饭否授权页，返回设置填写验证码并完成授权 |
+| OAuth | 浏览器授权窗口，也可手动授权 | 浏览器授权窗口，也可手动授权 | 无 identity API；打开饭否授权页，返回设置完成授权，验证码按需填写 |
 | 设置 | local/sync | local/sync | 保存到本机；Safari 的 sync 存储不提供设备间同步 |
 | 定时检查 | alarms | alarms | alarms |
 
@@ -82,8 +92,8 @@ Safari 和 Firefox 不会自动共享 Chrome 的扩展存储。Chrome/Firefox �
 
 ## 本次验证记录（2026-10-28）
 
-- TypeScript 与 ESLint 通过；18 个测试文件、26 个单元测试通过。
-- Chromium 156：5 个隔离扩展测试通过，包含历史默认设置、严格 CSP、设置写入、草稿、头像壁纸渲染/调整/关闭和 Service Worker 强制停止后的恢复。
+- TypeScript 与 ESLint 通过；19 个测试文件、43 个单元测试通过，包含实际 SDK 的签名、字段转换、分页、关系布尔值、普通与验证码授权、重复授权合并及临时凭据校验。
+- Chromium 156：6 个隔离扩展测试通过，包含历史默认设置、严格 CSP、设置写入、草稿、头像壁纸渲染/调整/关闭、SDK 使用已有 token 请求模拟 API、手动授权的 SDK token 交换与账号资料获取，以及 Service Worker 强制停止后的恢复。
 - Firefox 159.0：设置页、MAIN world 注入、跨环境消息、扩展样式、草稿保存与恢复通过。
 - Safari：Xcode 27 生成的 macOS 应用与扩展在关闭代码签名的情况下编译通过；尚未在 Safari 中签名启用并进行实际账号验收。
 - 三个 MV3 产物均通过功能清单和资源核对，已生成 2.0.0 ZIP。
