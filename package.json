@@ -12,6 +12,7 @@
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox --mv3",
     "build": "wxt build --mv3",
+    "build:beta": "wxt build -b chrome --mv3 --mode beta",
     "build:firefox": "wxt build -b firefox --mv3",
     "build:safari": "wxt build -b safari --mv3",
     "build:all": "npm run build && npm run build:firefox && npm run build:safari",
@@ -23,6 +24,7 @@
     "test": "npm run typecheck && npm run lint && npm run unit",
     "test:e2e": "playwright test tests/playwright/migration.spec.ts",
     "pack": "wxt zip --mv3",
+    "pack:beta": "wxt zip -b chrome --mv3 --mode beta && npm run verify:build:beta",
     "pack:firefox": "wxt zip -b firefox --mv3",
     "pack:safari": "wxt zip -b safari --mv3",
     "release": "npm test && npm run build:all && npm run verify:build && npm run pack && npm run pack:firefox && npm run pack:safari",
@@ -30,7 +32,8 @@
     "lint:firefox": "web-ext lint --source-dir .output/firefox-mv3 --no-config-discovery",
     "test:firefox": "node scripts/test-firefox.mjs",
     "format": "prettier --write wxt.config.ts vitest.config.ts tsconfig.json eslint.config.mjs scripts tests/unit src/platform src/entrypoints src/features/registry.ts",
-    "verify:build": "node scripts/verify-build.mjs"
+    "verify:build": "node scripts/verify-build.mjs",
+    "verify:build:beta": "node scripts/verify-build.mjs --beta"
   },
   "license": "GPL v3",
   "private": true,
@@ -112,5 +115,6 @@
     "prettier": "^3.0.0"
   },
   "type": "module",
-  "version": "2.0.0"
+  "version": "2.0.0",
+  "chromeBetaBuild": 0
 }

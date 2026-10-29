@@ -29,3 +29,19 @@
 1. Safari 运行 `npm run safari:project`，在生成的 Xcode 工程中选择自己的签名团队，完成真实 Safari 验收后提交 App Store Connect。
 
 构建、ZIP 和未签名的 Xcode 编译不等于商店发布完成。详见 [迁移说明](migration.md)。
+
+### Chrome Beta 打包
+
+执行 `npm run pack:beta`，生成并校验独立的 Chrome Beta 包：
+
+- 名称：`太空饭否 Beta`
+- 内部版本：`package.json` 的 `version` 加上第四位 `chromeBetaBuild`，初始为 `2.0.0.0`
+- 展示版本：`version_name` 使用 `package.json` 的 `version`，初始为 `2.0.0`
+- ZIP：`.output/space-fanfou-2.0.0.0-chrome-beta.zip`
+- 本地加载目录：`.output/chrome-mv3-beta`
+
+后续测试构建只需递增 `package.json` 的 `chromeBetaBuild`（整数 `0`～`65535`），然后重新执行 `npm run pack:beta`。只构建目录可执行 `npm run build:beta`。
+
+Beta 包上传至独立的 Chrome Web Store 测试条目，商店名称使用「太空饭否 Beta」，描述中注明 `THIS EXTENSION IS FOR BETA TESTING`。该条目每次上传的内部版本必须递增；Chrome 将 `2.0.0.0` 与 `2.0.0` 视为同一版本。
+
+默认打包命令仍生成正式版，Beta 构建不会覆盖正式版输出，也不会改变 Firefox 和 Safari 的版本。

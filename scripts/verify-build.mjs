@@ -8,16 +8,36 @@ const inventory = JSON.parse(
 const features = Object.entries(inventory.features).filter(
   ([name]) => !(name in inventory.retired),
 )
-for (const browser of ['chrome', 'firefox', 'safari']) {
-  const output = path.resolve(`.output/${browser}-mv3`)
+const beta = process.argv.includes('--beta')
+const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'))
+if (beta) {
+  assert.ok(
+    Number.isInteger(packageJson.chromeBetaBuild) &&
+      packageJson.chromeBetaBuild >= 0 &&
+      packageJson.chromeBetaBuild <= 65535,
+    'chromeBetaBuild must be an integer between 0 and 65535',
+  )
+}
+for (const browser of beta ? ['chrome'] : ['chrome', 'firefox', 'safari']) {
+  const output = path.resolve(`.output/${browser}-mv3${beta ? '-beta' : ''}`)
   const manifest = JSON.parse(
     fs.readFileSync(path.join(output, 'manifest.json'), 'utf8'),
   )
   assert.equal(manifest.manifest_version, 3)
   assert.equal(
     manifest.version,
-    JSON.parse(fs.readFileSync('package.json', 'utf8')).version,
+    beta
+      ? `${packageJson.version}.${packageJson.chromeBetaBuild}`
+      : packageJson.version,
   )
+  assert.equal(manifest.name, beta ? '太空饭否 Beta' : '太空饭否')
+  if (beta) {
+    assert.equal(manifest.version_name, packageJson.version)
+    assert.equal(manifest.action.default_title, '太空饭否 Beta')
+    assert.ok(
+      manifest.description.includes('THIS EXTENSION IS FOR BETA TESTING'),
+    )
+  }
   assert.equal(
     browser === 'chrome'
       ? manifest.background.service_worker
@@ -85,6 +105,6 @@ for (const browser of ['chrome', 'firefox', 'safari']) {
   }
   assert.ok(fs.existsSync(path.join(output, 'assets/page-style.css')))
   console.log(
-    `${browser}: MV3 manifest, ${features.length} feature registries, all scripts/styles and local resources verified`,
+    `${browser}${beta ? ' beta' : ''}: MV3 manifest, ${features.length} feature registries, all scripts/styles and local resources verified`,
   )
 }
