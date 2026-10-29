@@ -65,7 +65,6 @@ export default class App extends Component {
     return this.state.isReady && (
       <div className="wrapper">
         { this.renderNavagation() }
-        { import.meta.env.SAFARI && <p className="browser-compatibility-note">Safari 的消息提醒显示在饭否页面和扩展图标上；设置保存在本机。OAuth 授权请按页面提示完成。</p> }
         { this.renderTabs() }
       </div>
     )

@@ -2,7 +2,14 @@
 @dimmedColor: #999;
 @dimmedElementOpacity: 0.5;
 
+html {
+  color-scheme: light;
+  background: #fff;
+}
+
 body {
+  min-height: 100vh;
+  background: #fff;
   color: #555;
   font: normal 12px/1.5 "Lucida Grande", "Hevetica Neue", Hevetica, Tahoma, "Hiragino Sans GB", "Microsoft Yahei", "Wenquanyi MicroHei", sans-serif;
   user-select: none;
@@ -59,12 +66,17 @@ h4 {
   display: none !important;
 }
 
+.wrapper {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 718px);
+  column-gap: 35px;
+  padding-right: 20px;
+}
+
 nav {
-  position: fixed;
+  position: sticky;
   top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  align-self: start;
   width: 120px;
   z-index: 100;
 }
@@ -112,30 +124,17 @@ nav ul li {
 }
 
 #tabs {
-  margin-left: 155px;
   box-sizing: border-box;
-  max-width: 718px;
-  min-width: 420px;
-  padding-top: 53px;
+  min-width: 0;
 }
 
 #tabs header {
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 155px;
-  right: 0;
-  max-width: 718px;
-  min-width: 420px;
   border-bottom: 1px solid @dividerColor;
   padding: 15px 0 10px;
   z-index: 3;
-  background-image:
-    linear-gradient(
-      to bottom,
-      #fff,
-      #fff 40%,
-      rgba(255, 255, 255, 0.92)
-    );
+  background: #fff;
 }
 
 #tabs h2 {
@@ -341,35 +340,18 @@ input[type="checkbox"] {
     overflow-y: hidden;
   }
 
+  .wrapper {
+    column-gap: 0;
+  }
+
   #tabs {
-    margin-left: 120px;
-    max-width: 440px;
-    min-width: 420px;
     height: 600px;
     overflow-y: auto;
     overflow-x: hidden;
-  }
-
-  #tabs header {
-    left: 120px;
-    max-width: 420px;
-    min-width: 420px;
-  }
-
-  #tabs ul {
-    max-width: 420px;
   }
 
   :-webkit-any(.checkbox, .radio) label {
     padding-top: 5px;
     padding-bottom: 5px;
   }
-}
-
-.browser-compatibility-note {
-  padding: 12px 20px;
-  margin: 0;
-  background: #fff5d6;
-  color: #614d12;
-  line-height: 1.6;
 }
