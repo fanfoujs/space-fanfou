@@ -12,6 +12,23 @@ export default defineConfig({
   zip: {
     artifactTemplate: '{{name}}-{{version}}-{{browser}}{{modeSuffix}}.zip',
     sourcesTemplate: '{{name}}-{{version}}-sources{{modeSuffix}}.zip',
+    includeSources: [
+      'src/**',
+      'assets/**',
+      'public/**',
+      'scripts/**',
+      'docs/**',
+      'tests/**',
+      '*.json',
+      '*.ts',
+      '*.mjs',
+      'README.md',
+      'CONTRIBUTING.md',
+      'COPYING',
+      '.npmrc',
+      '.postcssrc.js',
+      '.browserslistrc',
+    ],
   },
   imports: false,
   alias: Object.fromEntries([
@@ -81,14 +98,29 @@ export default defineConfig({
           browser_specific_settings: {
             gecko: {
               id: 'space-fanfou@litomore.me',
-              strict_min_version: '128.0',
+              strict_min_version: '140.0',
               data_collection_permissions: { required: ['none'] },
             },
+            gecko_android: { strict_min_version: '142.0' },
           },
         }
       : {}),
   }),
   hooks: {
+    'vite:build:extendConfig'(entrypoints, config) {
+      const entrypoint = entrypoints[0]
+      if (entrypoint?.type !== 'unlisted-style') return
+
+      // Keep the stylesheet path stable and name its images by content, so
+      // parallel asset processing cannot change names between review builds.
+      const output = config.build?.rollupOptions?.output
+      if (output && !Array.isArray(output)) {
+        output.assetFileNames = (asset) =>
+          asset.names.some((name) => name.endsWith('.css'))
+            ? `assets/${entrypoint.name}.css`
+            : 'assets/[name]-[hash].[ext]'
+      }
+    },
     'build:manifestGenerated'(wxt, manifest) {
       if (wxt.config.browser === 'safari') {
         manifest.background = { scripts: ['background.js'] }

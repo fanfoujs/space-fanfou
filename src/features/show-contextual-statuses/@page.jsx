@@ -40,9 +40,9 @@ export default context => {
     componentDidMount() {
       const li = this.base
 
-      // 在这里而不是在 render 里使用 dangerouslySetInnerHTML，可以避免闪烁
-      // 🔒 使用DOMPurify净化HTML，防止XSS攻击
-      li.innerHTML = DOMPurify.sanitize(this.props.html, {
+      // 在挂载后插入净化后的 DOM，避免闪烁和再次解析 HTML 字符串。
+      li.replaceChildren(DOMPurify.sanitize(this.props.html, {
+        RETURN_DOM_FRAGMENT: true,
         ALLOWED_TAGS: [
           'a', 'span', 'div', 'img', 'b', 'i', 'em', 'strong',
           'h1', 'h2', 'br', 'p', 'ul', 'li', 'blockquote',
@@ -51,7 +51,7 @@ export default context => {
           'href', 'class', 'src', 'alt', 'title', 'id',
           'width', 'height', 'style', 'target', 'rel',
         ],
-      })
+      }))
 
       window.FF.app.Stream.attach(li)
 
