@@ -14,9 +14,9 @@ export default class ElementCollection {
         selector = elementOpts
         getAll = false
       } else {
-        selector = elementOpts.selector // eslint-disable-line prefer-destructuring
-        parent = elementOpts.parent // eslint-disable-line prefer-destructuring
-        getAll = elementOpts.getAll // eslint-disable-line prefer-destructuring
+        selector = elementOpts.selector
+        parent = elementOpts.parent
+        getAll = elementOpts.getAll
       }
 
       if (typeof selector !== 'string') {

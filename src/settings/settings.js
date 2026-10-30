@@ -1,1 +1,1 @@
-export default from '@content/environment/settings'
+export { default } from '@content/environment/settings'

@@ -49,6 +49,7 @@ function verifyStorageKeyFormat(key) {
 
 const storage = {
   install() {
+    storageAreas.initialize()
     registerHandlers()
   },
 

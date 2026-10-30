@@ -1,12 +1,15 @@
-import PromiseQueue from 'promise-queue'
 import { isLooseKebabCase } from '@libs/stringCases'
 import log from '@libs/log'
 
 const STORAGE_KEY = 'migrated'
-const MAX_CONCURRENT = 1
-const MAX_QUEUE = Infinity
-
-const queue = new PromiseQueue(MAX_CONCURRENT, MAX_QUEUE)
+let tail = Promise.resolve()
+const queue = {
+  add(task) {
+    const result = tail.then(task)
+    tail = result.catch(() => {})
+    return result
+  },
+}
 
 // 格式应为 "foo-bar/hello-world"
 function verifyMigrationIdFormat(migrationId) {
@@ -47,8 +50,8 @@ export default opts => queue.add(async () => {
     try {
       await executor()
     } catch (error) {
-      // 忽略错误
       log.error(error)
+      throw error
     }
 
     await storage.write(STORAGE_KEY, [ ...migrated, migrationId ], storageAreaName)

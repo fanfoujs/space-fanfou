@@ -1,4 +1,4 @@
 import parseVersionHistory from './parseVersionHistory'
-import rawVersionHistory from 'raw-loader!./versionHistory'
+import rawVersionHistory from './versionHistory?raw'
 
 export default parseVersionHistory(rawVersionHistory)

@@ -1,8 +1,9 @@
+import getExtensionOrigin from '@libs/getExtensionOrigin'
 import Tribute from 'tributejs'
 import triggerEvent from 'compat-trigger-event'
-import replaceExtensionOrigin from '@libs/replaceExtensionOrigin'
 import getLoggedInUserId from '@libs/getLoggedInUserId'
 import unknownUserAvatar_ from '@assets/images/unknown-user.jpg'
+import { menuItemTemplate, noMatchTemplate } from './templates'
 
 const STORAGE_KEY = 'friends-list'
 const STORAGE_AREA_NAME = 'session'
@@ -12,7 +13,7 @@ export default context => {
   const { requireModules, elementCollection, registerDOMEventListener } = context
   const { storage } = requireModules([ 'storage' ])
 
-  const unknownUserAvatar = replaceExtensionOrigin(unknownUserAvatar_)
+  const unknownUserAvatar = new URL(unknownUserAvatar_, getExtensionOrigin()).href
   let tribute
 
   elementCollection.add({
@@ -71,14 +72,8 @@ export default context => {
         values: await readFriendsListFromCache() || await fetchFriendsList(),
         lookup: 'label',
         fillAttr: 'realname',
-        menuItemTemplate(item) {
-          const { photo_url } = item.original
-          const [ nickname, userid ] = item.string.split(' ')
-
-          // eslint-disable-next-line camelcase
-          return `<img src="${photo_url}" />${nickname} <small>(${userid})</small>`
-        },
-        noMatchTemplate: () => `<li class="no-match"><img src="${unknownUserAvatar}">没有匹配的用户</li>`,
+        menuItemTemplate,
+        noMatchTemplate: () => noMatchTemplate(unknownUserAvatar),
         searchOpts: {
           pre: '<strong>',
           post: '</strong>',

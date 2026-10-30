@@ -12,7 +12,7 @@ export default ({ storage, proxiedFetch }) => {
 
     const { error, responseJSON } = await proxiedFetch.get({
       url: `https://setq.me/url_expand.json`,
-      query: { url_short: shortUrl }, // eslint-disable-line camelcase
+      query: { url_short: shortUrl },
       responseType: 'json',
     })
     const { url_long: longUrl } = responseJSON || {}
