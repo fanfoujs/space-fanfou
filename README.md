@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/fanfoujs/space-fanfou/master/static/icons/icon-256.png" alt="太空饭否 logo" align="right" width="82px" />
+<img src="https://raw.githubusercontent.com/fanfoujs/space-fanfou/master/static/icons/icon-256.png" alt="太空饭否 logo" align="right" height="60" />
 
 # 太空饭否
 
@@ -20,6 +20,12 @@
 
 | **[@太空小孩](https://fanfou.com/anegie)** | **[@锐风](https://fanfou.com/ruif)** | **[@饭小默](https://fanfou.com/lito)** | **[@Xidorn](https://fanfou.com/xidorn)** | **[@.rex](https://fanfou.com/zhasm)** |
 | :----------------------------------------: | :----------------------------------: | :------------------------------------: | :--------------------------------------: | :-----------------------------------: |
+
+### 下载安装
+
+<a href="https://chrome.google.com/webstore/detail/mfofmcdbaeajgdeihmcjjohmhepcdcol"><img alt="Get Chrome extension" src="https://img.shields.io/badge/Google%20Chrome-4285F4?logo=googlechrome&logoColor=fff&logoSize=auto&style=flat-square"></a>
+<a href="https://addons.mozilla.org/en-US/firefox/addon/spacefanfou/"><img alt="Get Firefox add-on" src="https://img.shields.io/badge/Firefox%20Browser-FF7139?logo=firefoxbrowser&logoColor=fff&logoSize=auto&style=flat-square" /></a>
+<a href="https://testflight.apple.com/join/wkbH7uDG"><img alt="Get Safari extension" src="https://img.shields.io/badge/Safari-006CFF?logo=safari&logoColor=fff&logoSize=auto&style=flat-square" /></a>
 
 ### 参阅
 
