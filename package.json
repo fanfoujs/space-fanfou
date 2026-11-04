@@ -111,7 +111,7 @@
     "autoprefixer": "^10.0.0",
     "@babel/core": "^7.28.0",
     "@webext-core/fake-browser": "^2.0.1",
-    "web-ext": "^9.2.0",
+    "web-ext": "^10.8.0",
     "prettier": "^3.0.0"
   },
   "type": "module",
