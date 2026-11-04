@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 // 保留console用于表单提交和AJAX错误调试
 import select from 'select-dom'
 import triggerEvent from 'compat-trigger-event'
@@ -135,11 +134,11 @@ export default context => {
       // 含图片时的消息内容
       desc: form.elements.desc?.value || form.elements.status?.value,
       // 通过拖放添加的图片
-      photo_base64: form.elements.photo_base64?.value, // eslint-disable-line camelcase
+      photo_base64: form.elements.photo_base64?.value,
       // 通过选择文件对话框添加的图片
       picture: domAttachment,
-      in_reply_to_status_id: form.elements.in_reply_to_status_id?.value, // eslint-disable-line camelcase
-      repost_status_id: form.elements.repost_status_id?.value, // eslint-disable-line camelcase
+      in_reply_to_status_id: form.elements.in_reply_to_status_id?.value,
+      repost_status_id: form.elements.repost_status_id?.value,
       location: form.elements.location?.value,
     }
 
@@ -194,7 +193,6 @@ export default context => {
 
       xhr.open('POST', url, true)
       xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
-      // eslint-disable-next-line unicorn/prefer-add-event-listener
       xhr.onload = () => safeJSONParse(xhr.responseText, (error, json) => {
         if (error) {
           reject(new Error('饭否服务器返回格式异常'))
@@ -202,9 +200,7 @@ export default context => {
           resolve(json)
         }
       })
-      // eslint-disable-next-line unicorn/prefer-add-event-listener
       xhr.onerror = () => reject(new Error('网络请求失败'))
-      // eslint-disable-next-line unicorn/prefer-add-event-listener
       isImageAttached && (xhr.upload.onprogress = onUploadProgress)
       xhr.send(formData)
     })
@@ -386,15 +382,23 @@ export default context => {
     const sendButton = findSendButton(form)
     if (!sendButton) return false
 
-    // Create the upload HTML mimicking the native #phupdate UI but avoiding ID conflicts
-    // Instead of id="upload-button", we use class="sf-upload-button"
+    // Match the native #phupdate UI without introducing duplicate IDs.
     const uploadWrapper = document.createElement('span')
     uploadWrapper.className = 'upload-button-wrapper sf-popup-upload-wrapper'
-    uploadWrapper.innerHTML = `
-      <span class="sf-upload-button" data-form-source="popup" title="上传照片…"></span>
-      <input type="file" name="picture" class="upload-file" accept="image/jpeg,image/gif,image/png,image/x-ms-bmp">
-      <input type="hidden" name="photo_base64" value="">
-    `
+    const uploadButton = document.createElement('span')
+    uploadButton.className = 'sf-upload-button'
+    uploadButton.dataset.formSource = 'popup'
+    uploadButton.title = '上传照片…'
+    const fileInput = document.createElement('input')
+    fileInput.type = 'file'
+    fileInput.name = 'picture'
+    fileInput.className = 'upload-file'
+    fileInput.accept = 'image/jpeg,image/gif,image/png,image/x-ms-bmp'
+    const photoInput = document.createElement('input')
+    photoInput.type = 'hidden'
+    photoInput.name = 'photo_base64'
+    photoInput.value = ''
+    uploadWrapper.append(uploadButton, fileInput, photoInput)
     // Ensure form has an explicit 'action' field, required by extractFormData
     if (!form.elements.action) {
       const actionInput = document.createElement('input')

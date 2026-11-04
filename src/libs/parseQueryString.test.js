@@ -1,4 +1,3 @@
-import 'object.fromentries/auto'
 import parseQueryString from './parseQueryString'
 
 test('parseQueryString', () => {

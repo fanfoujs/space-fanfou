@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 // 保留console用于页面检测调试
 import select from 'select-dom'
 import simpleMemoize from 'just-once'

@@ -1,28 +1,45 @@
-name: Node CI
+name: Extension CI
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
-  build:
-
+  check:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 13.x]
-
+        node: [22, 24]
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
-      run: |
-        node --version
-        npm --version
-        npm install
-        npm run build --if-present
-        npm test
-      env:
-        CI: true
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - run: npm test
+      - run: npm run build:all
+      - run: npm run verify:build
+      - run: npm run lint:firefox
+  chrome:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npm run test:e2e
+  safari:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - run: npm run build:safari
+      - run: npm run safari:project
+      - run: xcodebuild -project '.output/safari-project/Space Fanfou/Space Fanfou.xcodeproj' -scheme 'Space Fanfou' -configuration Debug -derivedDataPath /tmp/space-fanfou-derived CODE_SIGNING_ALLOWED=NO build

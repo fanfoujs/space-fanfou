@@ -3,7 +3,7 @@ import wrapper from '@libs/wrapper'
 import { BRIDGE_EVENT_TYPE, BROADCASTING_MESSAGE } from '@constants'
 
 async function eventHandler(event) {
-  const { from, senderId, message } = event.detail
+  const { from, senderId, message } = JSON.parse(event.detail)
 
   if (from === 'page') {
     let respondedMessage
@@ -22,10 +22,10 @@ async function eventHandler(event) {
 
 function handleBroadcastMessage(message) {
   const event = new CustomEvent(BRIDGE_EVENT_TYPE, {
-    detail: {
+    detail: JSON.stringify({
       type: BROADCASTING_MESSAGE,
       message,
-    },
+    }),
   })
 
   window.dispatchEvent(event)
@@ -50,11 +50,11 @@ const bridge = wrapper({
 
   postMessageToInjected({ senderId, message }) {
     const event = new CustomEvent(BRIDGE_EVENT_TYPE, {
-      detail: {
+      detail: JSON.stringify({
         from: 'background',
         senderId,
         message,
-      },
+      }),
     })
 
     window.dispatchEvent(event)

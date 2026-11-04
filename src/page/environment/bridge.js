@@ -10,7 +10,7 @@ const deferreds = {}
 const broadcastListeners = []
 
 function eventHandler(event) {
-  const { type, from, senderId, message } = event.detail
+  const { type, from, senderId, message } = JSON.parse(event.detail)
 
   if (type === BROADCASTING_MESSAGE) {
     bridge.broadcast(message)
@@ -55,11 +55,11 @@ const bridge = wrapper({
     const senderId = id++
     const d = deferreds[senderId] = new Deferred()
     const event = new CustomEvent(BRIDGE_EVENT_TYPE, {
-      detail: {
+      detail: JSON.stringify({
         from: 'page',
         senderId,
         message,
-      },
+      }),
     })
 
     window.dispatchEvent(event)

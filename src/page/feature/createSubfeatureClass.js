@@ -1,1 +1,1 @@
-export default from '@content/feature/createSubfeatureClass'
+export { default } from '@content/feature/createSubfeatureClass'

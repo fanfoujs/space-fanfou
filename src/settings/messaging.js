@@ -1,1 +1,1 @@
-export default from '@content/environment/messaging'
+export { default } from '@content/environment/messaging'

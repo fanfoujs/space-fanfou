@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 // 保留console用于图片上传和压缩调试
 import { clearAttachment } from './attachmentStore'
 import truncateFilename from '@libs/truncateFilename'

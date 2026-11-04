@@ -1,0 +1,35 @@
+{
+  "silhouette_source_mask_iou": 0.9999391772533506,
+  "white_character_source_mask_iou": 0.999432928742067,
+  "stl_watertight": true,
+  "stl_consistent_winding": true,
+  "stl_connected_bodies": 1,
+  "stl_nonmanifold_edges": 0,
+  "dimensions_mm": [
+    50.0,
+    50.0,
+    4.0
+  ],
+  "volume_mm3": 7934.618671004641,
+  "stl_triangles": 8374,
+  "3mf_closed_material_parts": 2,
+  "3mf_exporter": "three-3mf-exporter 45.2.0",
+  "3mf_printer_profile": "Bambu Lab A1 mini 0.4 nozzle",
+  "3mf_filament_colors": [
+    "#2f85ff",
+    "#ffffff"
+  ],
+  "3mf_layer_height_mm": 0.2,
+  "estimated_pla_mass_g_at_1.24_g_cm3": 9.838927152045756,
+  "source": "public/icons/icon-640.png",
+  "source_sha256": "1e72557bd48b80763de9d197f5922a109f19ccfaeb750efb7a38eb5dd3aae467",
+  "base_color": "#2F85FF",
+  "relief_color": "#FFFFFF",
+  "base_thickness_mm": 3.0,
+  "relief_height_mm": 1.0,
+  "white_stroke_components": 3,
+  "gradient": "Flattened to single blue for two-color printing",
+  "back": "Flat for adhesive magnetic sheet; no recess",
+  "application_loading_verified": false,
+  "physical_print_verified": false
+}

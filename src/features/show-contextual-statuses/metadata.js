@@ -17,7 +17,7 @@ export const options = {
   },
 
   autoFetch: {
-    defaultValue: true,
+    defaultValue: false,
     label: '消息载入后自动展开 1 条消息',
   },
 }

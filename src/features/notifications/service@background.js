@@ -1,3 +1,6 @@
+import asyncSingleton from '@libs/asyncSingleton'
+import { events } from '@platform/events'
+import { browser } from 'wxt/browser'
 import wretch from 'wretch'
 import mapValues from 'just-map-values'
 import timestamp from '@libs/timestamp'
@@ -90,7 +93,7 @@ export default context => {
 
   async function fetchFanfouMobileDOM() {
     try {
-      const html = await wretch(URL_FANFOU_M_HOME).get().setTimeout(AJAX_TIMEOUT).text()
+      const html = await wretch(URL_FANFOU_M_HOME).options({ credentials: 'include' }).get().setTimeout(AJAX_TIMEOUT).text()
       // Service Worker 环境：直接返回 HTML 字符串
       return html
     } catch (error) {
@@ -108,8 +111,7 @@ export default context => {
     // Service Worker 环境：用正则从 HTML 提取用户 ID
     // 查找 <a accesskey="1" href="/用户ID"> 格式的链接
     // 正则表达式中的\转义是为了可读性，保留以提高代码可读性
-    // eslint-disable-next-line no-useless-escape
-    const match = html.match(/accesskey=["']1["'][^>]*href=["']\/([^"'\/]+)["']|href=["']\/([^"'\/]+)["'][^>]*accesskey=["']1["']/)
+    const match = html.match(/accesskey=["']1["'][^>]*href=["']\/([^"'/]+)["']|href=["']\/([^"'/]+)["'][^>]*accesskey=["']1["']/)
     const userId = match?.[1] || match?.[2]
     return userId ? unescape(userId) : null
   }
@@ -125,7 +127,7 @@ export default context => {
     // 🔧 从storage恢复历史记录（防止Service Worker重启后丢失）
     const storageKey = STORAGE_KEY_PREFIX + userId
     try {
-      const result = await chrome.storage.local.get(storageKey)
+      const result = await browser.storage.local.get(storageKey)
       if (result[storageKey]) {
         collector.previousCounts = result[storageKey].previousCounts || collector.createEmptyCounts()
         collector.currentCounts = result[storageKey].currentCounts || collector.createEmptyCounts()
@@ -152,7 +154,7 @@ export default context => {
     // 🔧 保存到storage（防止Service Worker重启后丢失）
     const storageKey = STORAGE_KEY_PREFIX + countCollector.userId
     try {
-      await chrome.storage.local.set({
+      await browser.storage.local.set({
         [storageKey]: {
           previousCounts: countCollector.previousCounts,
           currentCounts: countCollector.currentCounts,
@@ -182,26 +184,27 @@ export default context => {
   }
 
   function createNotification(name, opts, message) {
-    const onClick = () => {
+    const onClick = async () => {
       const { targetUrl: url, reuseExistingTabs } = opts
 
-      chrome.tabs.query({ url }, matchedTabs => {
+      const matchedTabs = await browser.tabs.query({ url })
         if (reuseExistingTabs && matchedTabs.length) {
           const { id, windowId } = matchedTabs[0]
 
-          chrome.tabs.update(id, { active: true })
-          chrome.windows.update(windowId, { focused: true })
-          chrome.tabs.reload(id)
+          browser.tabs.update(id, { active: true })
+          browser.windows.update(windowId, { focused: true })
+          browser.tabs.reload(id)
         } else {
-          chrome.tabs.create({ url, active: true })
+          browser.tabs.create({ url, active: true })
         }
-      })
     }
 
     notification.create({
       id: name,
       message,
       onClick,
+      targetUrl: opts.targetUrl,
+      reuseExistingTabs: opts.reuseExistingTabs,
       buttonDefs: [ {
         title: '查看',
         onClick,
@@ -212,50 +215,50 @@ export default context => {
     })
   }
 
-  async function check() {
-    cancelTimer()
-
+  const check = asyncSingleton(async () => {
     const html = await fetchFanfouMobileDOM()
 
     if (html && checkIfLoggedIn(html)) {
       const currentlyLoggedInUserId = extractUserId(html)
+      if (!currentlyLoggedInUserId) return
       const countCollector = await getCountCollectorForUser(currentlyLoggedInUserId)
 
       await extract(html, countCollector)
       notify(countCollector)
     }
 
-    // 不需要再次调用 setTimer，chrome.alarms 会自动重复
-  }
+    // 重复 alarm 在本次检查结束后仍然保留。
+  })
 
   function setTimer() {
-    // 使用 chrome.alarms API 替代 setTimeout（Service Worker 兼容）
-    chrome.alarms.create(ALARM_NAME, {
+    // 使用 browser.alarms API 替代 setTimeout（Service Worker 兼容）
+    browser.alarms.create(ALARM_NAME, {
       delayInMinutes: CHECK_INTERVAL_MINUTES,
       periodInMinutes: CHECK_INTERVAL_MINUTES,
     })
   }
 
   function cancelTimer() {
-    chrome.alarms.clear(ALARM_NAME)
+    browser.alarms.clear(ALARM_NAME)
   }
 
   function onAlarm(alarm) {
     if (alarm.name === ALARM_NAME) {
-      check()
+      return check()
     }
   }
 
-  function onActivated(activeInfo) {
-    chrome.tabs.get(activeInfo.tabId, tab => {
-      if (isVisitingFanfou = isFanfouUrl(tab.url)) {
+  async function onActivated(activeInfo) {
+    try {
+      const tab = await browser.tabs.get(activeInfo.tabId)
+      if ((isVisitingFanfou = isFanfouUrl(tab.url))) {
         hideRelativeNotificationIfMatched(tab.url)
       }
-    })
+    } catch (error) { log.info('标签页已关闭', error) }
   }
 
   function onUpdated(tabId, changeInfo, tab) {
-    if (tab.selected && (isVisitingFanfou = isFanfouUrl(tab.url))) {
+    if (tab.active && (isVisitingFanfou = isFanfouUrl(tab.url))) {
       hideRelativeNotificationIfMatched(tab.url)
     }
   }
@@ -271,18 +274,19 @@ export default context => {
 
   return {
     onLoad() {
-      check()
-      chrome.tabs.onActivated.addListener(onActivated)
-      chrome.tabs.onUpdated.addListener(onUpdated)
-      chrome.alarms.onAlarm.addListener(onAlarm)
+      browser.tabs.query({ active: true, lastFocusedWindow: true }).then(tabs => { isVisitingFanfou = isFanfouUrl(tabs[0]?.url || '') }).catch(log.info)
+      check().catch(log.info)
+      events.tabActivated.addListener(onActivated)
+      events.tabUpdated.addListener(onUpdated)
+      events.alarm.addListener(onAlarm)
       setTimer()
     },
 
     onUnload() {
       cancelTimer()
-      chrome.tabs.onActivated.removeListener(onActivated)
-      chrome.tabs.onUpdated.removeListener(onUpdated)
-      chrome.alarms.onAlarm.removeListener(onAlarm)
+      events.tabActivated.removeListener(onActivated)
+      events.tabUpdated.removeListener(onUpdated)
+      events.alarm.removeListener(onAlarm)
     },
   }
 }

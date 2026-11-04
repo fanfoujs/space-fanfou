@@ -1,4 +1,3 @@
-/* eslint no-console: 0 */
 
 let outputLevel = 1
 
@@ -19,6 +18,10 @@ export default {
 
   info(...message) {
     log(1, console.log, ...message)
+  },
+
+  warn(...message) {
+    log(2, console.warn, ...message)
   },
 
   error(...message) {

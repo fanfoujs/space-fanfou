@@ -1,4 +1,3 @@
-import 'object.fromentries/auto'
 import parseUrl from './parseUrl'
 
 test('parseUrl', () => {

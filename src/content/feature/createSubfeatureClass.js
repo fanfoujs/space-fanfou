@@ -186,7 +186,6 @@ export default ({ messaging, bridge, modules }) => class Subfeature {
   }
 
   handleSettingsChange() {
-    // eslint-disable-next-line no-unused-expressions
     this.script.onSettingsChange?.()
   }
 }

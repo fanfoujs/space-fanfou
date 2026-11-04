@@ -5,7 +5,7 @@ import os from 'os';
 
 test('dump settings page DOM', async () => {
   test.setTimeout(20_000);
-  const extensionPath = path.resolve(__dirname, '../../dist');
+  const extensionPath = path.resolve(__dirname, '../../.output/chrome-mv3');
   const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pw-'));
 
   const context = await chromium.launchPersistentContext(userDataDir, {

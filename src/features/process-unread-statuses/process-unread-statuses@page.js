@@ -1,3 +1,4 @@
+import audioUrl from '@assets/sounds/dingdong.mp3'
 import createActivityDetector from 'activity-detector'
 import select from 'select-dom'
 import elementReady from 'element-ready'
@@ -50,7 +51,6 @@ export default context => {
   function playSound() {
     if (!readOptionValue('playSound')) return
 
-    const audioUrl = require('@assets/sounds/dingdong.mp3')
 
     proxiedAudio.play(audioUrl)
   }

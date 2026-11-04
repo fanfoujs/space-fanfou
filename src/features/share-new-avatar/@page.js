@@ -34,8 +34,6 @@ export default context => {
   async function uploadCachedAvatar() {
     const cachedAvatarBase64 = await storage.read(STORAGE_KEY, STORAGE_AREA_NAME)
     if (!cachedAvatarBase64) return
-
-    // eslint-disable-next-line no-alert
     if (window.confirm(MESSAGE_CONFIRMING)) {
       notification.create(notification.INFO, MESSAGE_POSTING)
 
@@ -44,7 +42,7 @@ export default context => {
         action: 'photo.upload',
         token: elementCollection.get('form').token.value,
         desc: '我刚刚上传了新头像',
-        photo_base64: cachedAvatarBase64, // eslint-disable-line camelcase
+        photo_base64: cachedAvatarBase64,
       }
       let ajaxError
 

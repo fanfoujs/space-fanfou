@@ -1,0 +1,9 @@
+numpy==2.5.4
+pillow==13.0.0
+shapely==2.2.0
+trimesh==5.1.1
+manifold3d==3.5.4
+mapbox-earcut==2.1.0
+matplotlib==3.11.2
+scikit-image==0.26.0
+lxml==6.1.3

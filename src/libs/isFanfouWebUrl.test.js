@@ -1,4 +1,3 @@
-import 'object.fromentries/auto'
 import isFanfouWebUrl from './isFanfouWebUrl'
 
 test('isFanfouWebUrl', () => {

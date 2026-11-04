@@ -102,3 +102,14 @@ At a high level, this fork aims to be:
 - compatible with modern Chrome extension requirements
 - testable with current lint/build/test workflows
 - closer to a maintained continuation than a frozen historical snapshot
+
+## WXT Cross-browser Continuation
+
+The 2.0.0 continuation replaces the legacy build with WXT and introduces typed
+entrypoints, feature registration, storage and browser adapters. Chrome,
+Firefox and Safari each receive a Manifest V3 build. It also restores the
+saved-topic service and fixes recurring notification checks and worker cold
+starts. The original user feature metadata and storage keys are retained.
+
+See [migration.md](migration.md) for the inventory, platform differences and
+validation limits, including Safari notification and OAuth fallbacks.

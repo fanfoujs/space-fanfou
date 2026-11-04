@@ -1,0 +1,212 @@
+{
+  "sourceCommit": "47471f9f09e84f9b204dcf7cc56db94b0a1e4fa8",
+  "features": {
+    "auto-pager": {
+      "components": ["@page.js"],
+      "metadataSha256": "0471597c6265fa95f4fc806322c0644739e3cd1bd480cc694166b6a39805a7f9"
+    },
+    "avatar-wallpaper": {
+      "components": ["avatar-wallpaper@page.js", "avatar-wallpaper@page.less"],
+      "metadataSha256": "593389382fcf4b5d39554ceb95807904a0529149e28c0fba655f883c549a3989",
+      "approvedMetadataSha256": "1df625930e5e2fbe1c650dddb2bbdd4ec042b019d69489d6475a4b8240fe9b98",
+      "approvedChange": "按用户要求移除头像壁纸小游戏选项，保留壁纸功能。"
+    },
+    "batch-manage-relationships": {
+      "components": [
+        "friend-requests@page.js",
+        "friend-requests@page.less",
+        "friends-and-followers@page.js",
+        "friends-and-followers@page.less"
+      ],
+      "metadataSha256": "b1b7f0ebd0d3c474baab159057a3f77d1f711b6212c2905013ff9c8457a0d3bf"
+    },
+    "batch-remove-private-messages": {
+      "components": ["@page.js", "@page.less"],
+      "metadataSha256": "19a9d66e3acd185b4dc34c8a211570702e167b18772a32a98bc277d40b5dd464"
+    },
+    "batch-remove-statuses": {
+      "components": ["@page.js", "@page.less"],
+      "metadataSha256": "bb745746fd0f29d9866a990875cdec2e3d2928854a14ac41c22e3eeae8386c79"
+    },
+    "better-at-autocomplete": {
+      "components": [
+        "disable-old-one@page.js",
+        "enable-new-one@page.js",
+        "enable-new-one@page.less"
+      ],
+      "metadataSha256": "2a7899d6f5b2574ef62193a55d3d7291042f832811d66769abd55dbfe328061b"
+    },
+    "box-shadows": {
+      "components": ["@content.less"],
+      "metadataSha256": "49d72baf5b1032a387ac6ab09e6aa2e272c5b9ad3cd9a1b969424f616b70b8e7",
+      "approvedMetadataSha256": "d4876cf3ef2a128e2e194c001c7f2218b94392e8ee946d8f4cc30d7780e9ff1d",
+      "approvedChange": "按用户要求恢复为 7156b90 之前的历史默认值。"
+    },
+    "check-friendship": {
+      "components": ["@page.js"],
+      "metadataSha256": "a2bba53e3618fce91849b329a9e587c4b25942776f115dbc70966b40585c8f04",
+      "approvedMetadataSha256": "bb6bc9a03be47a3140089b6cee212270c1395159574392c9f1f45acd00d35ae8",
+      "approvedChange": "按用户要求恢复为 7156b90 之前的历史默认值。"
+    },
+    "check-saved-searches": {
+      "metadataSha256": "4eed6c9ce0672b7637afea6483e2e66d1ed8ac86daa90676219cf7ffc3aad5f4",
+      "components": [
+        "service@background.js",
+        "sidebar-indicators@page.js",
+        "sidebar-indicators@page.less"
+      ],
+      "approvedMetadataSha256": "f255690d6723cc34330d103027d21c683de6d36d6e8e512d8ad2b23cab35fd8f",
+      "approvedChange": "按用户要求恢复为 7156b90 之前的历史默认值。"
+    },
+    "enrich-statuses": {
+      "components": ["@page.js", "@page.less"],
+      "metadataSha256": "e58b8d048b42811f4f1e07dcc043f6390b2a1990729cb45c1bc99779bc8bef64"
+    },
+    "fanfou-oauth": {
+      "metadataSha256": "b25e6ff52aa87bbe666059eb23c724bc38e523ef7e6b841e3d98cb9c9ee3d365",
+      "components": [],
+      "approvedMetadataSha256": "21868bad5c334cdda8f2a44d8257d011f7ab2d0c5619b0974cf15449b2443cd6",
+      "approvedChange": "按用户要求移除自定义 Consumer Key / Secret 配置，统一使用内置凭据。"
+    },
+    "favorite-fanfouers": {
+      "components": [
+        "home@page.js",
+        "home@page.less",
+        "user-profile@page.js",
+        "user-profile@page.less"
+      ],
+      "metadataSha256": "49fb518b8bb8f3fcfd9da4991e0d1959c1362a6da1857bf73e60d23773ec23e0",
+      "approvedMetadataSha256": "22fe8ab5805918d6382632f876362dc36c562b0b5139dc10ffb12bf48f2c45c7",
+      "approvedChange": "按用户要求恢复为 7156b90 之前的历史默认值。"
+    },
+    "fix-photo-zoom": {
+      "components": ["@page.js"],
+      "metadataSha256": "2a7899d6f5b2574ef62193a55d3d7291042f832811d66769abd55dbfe328061b"
+    },
+    "floating-status-form": {
+      "components": [
+        "floating-status-form@page.js",
+        "floating-status-form@page.less",
+        "replay-and-repost@page.js",
+        "replay-and-repost@page.less"
+      ],
+      "metadataSha256": "5c322f410a5d0c6c71c40feec84ed01f4cee7fd58d68507c487825a320b765fb",
+      "approvedMetadataSha256": "96261de3f5e02f8684c5c0847fa8c3ddaf6c3079ee543f1d47ec53353e86e65a",
+      "approvedChange": "按用户要求恢复为 7156b90 之前的历史默认值。"
+    },
+    "go-top-button": {
+      "components": ["@page.js", "@page.less"],
+      "metadataSha256": "2a7899d6f5b2574ef62193a55d3d7291042f832811d66769abd55dbfe328061b"
+    },
+    "google-analytics": {
+      "components": ["@content.js"],
+      "metadataSha256": "2a7899d6f5b2574ef62193a55d3d7291042f832811d66769abd55dbfe328061b"
+    },
+    "keyboard-shortcuts": {
+      "components": ["@page.js"],
+      "metadataSha256": "2a7899d6f5b2574ef62193a55d3d7291042f832811d66769abd55dbfe328061b"
+    },
+    "notifications": {
+      "metadataSha256": "ef6b95c27b53f02d794bbd5cfc2515b6d9d3ea86e09542b9f832f28844f9c8f3",
+      "components": ["service@background.js", "update-details@background.js"]
+    },
+    "process-unread-statuses": {
+      "metadataSha256": "0586c34d59264cb5b894de9b23fbf0bbfee3d0def25dadfbeb660e8e8ec6b27b",
+      "components": [
+        "process-unread-statuses@page.js",
+        "scroll-to-show@page.js",
+        "scroll-to-show@page.less"
+      ],
+      "approvedMetadataSha256": "aea55b6205aa447d35d310d6edbbccd60bfba212c5a187dc5b0949550bde1169",
+      "approvedChange": "按用户要求恢复为 7156b90 之前的历史默认值。"
+    },
+    "remove-app-recommendations": {
+      "components": ["@content.less"],
+      "metadataSha256": "2477c71b127c4d5d04930e2aced1c8eaa3d837424e1fdaa0627c9aca828d65fc",
+      "approvedMetadataSha256": "2cd06b4b8098fc805fbec699d97f269b1715996608ca0dd8b1d0c63295bdd575",
+      "approvedChange": "按用户要求恢复为 7156b90 之前的历史默认值。"
+    },
+    "remove-brackets": {
+      "components": ["@content.js"],
+      "metadataSha256": "2a7899d6f5b2574ef62193a55d3d7291042f832811d66769abd55dbfe328061b"
+    },
+    "remove-logo-beta": {
+      "components": ["@content.js", "@content.less"],
+      "metadataSha256": "f427e2c4f527c29b0174517df9757f8bba7ea79b368dd4ff68a9a6f0c2c70232"
+    },
+    "remove-personalized-theme": {
+      "components": ["@content.js", "@content.less"],
+      "metadataSha256": "1e7ae10392edd0ed70f14297a92f8ca579a6e1a2d092930f62e36095c27919b8",
+      "approvedMetadataSha256": "f863aadfeeeb155538b8a349d2d9e4c98a2f300d5c361ecd8756f5facb55bba5",
+      "approvedChange": "按用户要求恢复为 7156b90 之前的历史默认值。"
+    },
+    "retinafy-photos": {
+      "metadataSha256": "2a7899d6f5b2574ef62193a55d3d7291042f832811d66769abd55dbfe328061b",
+      "components": [
+        "photo-album@page.js",
+        "photo-entry@page.js",
+        "status@page.js",
+        "timeline@page.js"
+      ]
+    },
+    "share-new-avatar": {
+      "components": ["@page.js"],
+      "metadataSha256": "2a7899d6f5b2574ef62193a55d3d7291042f832811d66769abd55dbfe328061b"
+    },
+    "share-to-fanfou": {
+      "components": [
+        "@background.js",
+        "fix-style@content.js",
+        "fix-style@content.less"
+      ],
+      "metadataSha256": "eaad53fcff98b370911aa223b99148dee39ccf3f1320ba73cabfde9536d7e97e",
+      "approvedMetadataSha256": "6511823d45825411db823e7b4b6cbb78bde6208f739b9c28eba04405ef51aa7d",
+      "approvedChange": "按用户要求恢复为 7156b90 之前的历史默认值。"
+    },
+    "show-contextual-statuses": {
+      "components": ["@page.js", "@page.less", "fix-reply-and-repost@page.js"],
+      "metadataSha256": "b16bce2d7ccc5347ee82d68e633c8ee9793da4fd9403fd12656ea635018e79a7",
+      "approvedMetadataSha256": "279061bc2e901fa48ae17e1ffc016fedece79edb25ee931f1bac9f45ab4dcfec",
+      "approvedChange": "按用户要求恢复为 7156b90 之前的历史默认值。"
+    },
+    "sidebar-statistics": {
+      "components": ["@page.js", "@page.less"],
+      "metadataSha256": "2a7899d6f5b2574ef62193a55d3d7291042f832811d66769abd55dbfe328061b"
+    },
+    "status-form-enhancements": {
+      "components": [
+        "ajax-form@page.js",
+        "autofocus-textarea@page.js",
+        "draft-save@page.js",
+        "fix-dnd-upload@page.js",
+        "fix-dnd-upload@page.less",
+        "fix-upload-images@page.js",
+        "misc@page.less",
+        "paste-image-from-clipboard@page.js",
+        "refresh-status-count@page.js",
+        "revoke-event-listeners@page.js",
+        "textarea-state@page.js"
+      ],
+      "metadataSha256": "2a7899d6f5b2574ef62193a55d3d7291042f832811d66769abd55dbfe328061b"
+    },
+    "translucent-sidebar": {
+      "components": ["@content.less"],
+      "metadataSha256": "1d93435a4d4de89c8b883c2d8021b47bfd07c06bf4c464accd7230fe7ae765f6"
+    },
+    "update-timestamps": {
+      "components": ["@page.js"],
+      "metadataSha256": "2a7899d6f5b2574ef62193a55d3d7291042f832811d66769abd55dbfe328061b"
+    },
+    "user-switcher": {
+      "components": [
+        "login-form@page.js",
+        "user-switcher@page.js",
+        "user-switcher@page.less"
+      ],
+      "metadataSha256": "2a7899d6f5b2574ef62193a55d3d7291042f832811d66769abd55dbfe328061b"
+    }
+  },
+  "retired": {
+    "google-analytics": "旧版 Universal Analytics 远程脚本停止使用；移除统计，不影响饭否功能。"
+  }
+}

@@ -4,7 +4,7 @@ import path from 'node:path'
 import { chromium, expect, test } from '@playwright/test'
 
 test('load extension and verify service worker and script injection', async () => {
-  const extensionPath = path.resolve(__dirname, '..', '..', 'dist')
+  const extensionPath = path.resolve(__dirname, '..', '..', '.output/chrome-mv3')
   const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'space-fanfou-pw-'))
 
   const context = await chromium.launchPersistentContext(userDataDir, {
@@ -40,7 +40,7 @@ test('load extension and verify service worker and script injection', async () =
 
       return {
         hasInjectedPageScript: scripts.some(src => src.includes('/page.js')),
-        hasInjectedPageStyle: styles.some(href => href.includes('/page.css')),
+        hasInjectedPageStyle: styles.some(href => href.includes('/assets/page-style.css')),
         url: window.location.href,
       }
     })

@@ -1,19 +1,9 @@
 import contentModules from '@content/modules'
+import checkMyNewStatus from './checkMyNewStatus'
+import fanfouOAuth from './fanfouOAuth'
+import proxiedAudio from './proxiedAudio'
+import proxiedCreateTab from './proxiedCreateTab'
+import proxiedFetch from './proxiedFetch'
+import storage from './storage'
 
-function loadModules() {
-  const modules = {}
-  const context = require.context('./', false, /\.js$/)
-
-  for (const key of context.keys()) {
-    if (key.endsWith(__filename)) continue
-
-    const moduleName = key.replace(/^\.\/|\.js$/g, '')
-    const module = context(key).default
-
-    modules[moduleName] = module
-  }
-
-  return modules
-}
-
-export default { ...contentModules, ...loadModules() }
+export default { ...contentModules, 'checkMyNewStatus': checkMyNewStatus, 'fanfouOAuth': fanfouOAuth, 'proxiedAudio': proxiedAudio, 'proxiedCreateTab': proxiedCreateTab, 'proxiedFetch': proxiedFetch, 'storage': storage }

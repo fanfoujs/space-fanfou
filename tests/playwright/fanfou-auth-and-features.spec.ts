@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { chromium, expect, test } from '@playwright/test'
-import type { BrowserContext, SetCookieParam } from '@playwright/test'
+import type { SetCookieParam } from '@playwright/test'
 
 const username = (process.env.FANFOU_USERNAME || '').trim()
 const password = (process.env.FANFOU_PASSWORD || '').trim()
@@ -87,7 +87,7 @@ test.skip(
 )
 
 test('login fanfou and probe extension features', async () => {
-  const extensionPath = path.resolve(__dirname, '..', '..', 'dist')
+  const extensionPath = path.resolve(__dirname, '..', '..', '.output/chrome-mv3')
   const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'space-fanfou-auth-pw-'))
 
   const context = await chromium.launchPersistentContext(userDataDir, {

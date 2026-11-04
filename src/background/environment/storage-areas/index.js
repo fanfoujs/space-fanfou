@@ -23,12 +23,18 @@ function initStorageAreas() {
   }
 
   // sessionStorage 不需要监听改动
-  for (const storageAreaName of [ 'local', 'sync' ]) {
-    storageAreas[storageAreaName].listen(createListener(storageAreaName))
+  let initialized = false
+  function initialize() {
+    if (initialized) return
+    initialized = true
+    for (const storageAreaName of ['local', 'sync']) {
+      storageAreas[storageAreaName].listen(createListener(storageAreaName))
+    }
   }
 
   return {
     ...storageAreas,
+    initialize,
     listen: fn => arrayUniquePush(listeners, fn),
     unlisten: fn => arrayRemove(listeners, fn),
   }
