@@ -13,20 +13,17 @@ test('two parameters', () => {
 })
 
 test('memoize', () => {
-  const generateTimestamp = type => {
-    switch (type) {
-    case 'now':
-      return +new Date()
-    default:
-      return 0
-    }
-  }
-  const memoizedGenerateTimestamp = memoize(generateTimestamp)
-  const expected = memoizedGenerateTimestamp('now')
-  expect(memoizedGenerateTimestamp('now')).toBe(expected)
+  let calls = 0
+  const generateValue = _key => ++calls
+  const memoizedGenerateValue = memoize(generateValue)
 
-  memoizedGenerateTimestamp.delete('now')
-  setTimeout(() => {
-    expect(memoizedGenerateTimestamp('now')).not.toBe(expected)
-  }, 1)
+  expect(memoizedGenerateValue('first')).toBe(1)
+  expect(memoizedGenerateValue('first')).toBe(1)
+  expect(memoizedGenerateValue('second')).toBe(2)
+
+  memoizedGenerateValue.delete('first')
+  expect(memoizedGenerateValue('first')).toBe(3)
+  expect(memoizedGenerateValue('first')).toBe(3)
+  expect(memoizedGenerateValue('second')).toBe(2)
+  expect(calls).toBe(3)
 })
