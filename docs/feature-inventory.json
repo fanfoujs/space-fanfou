@@ -1,5 +1,8 @@
 {
   "sourceCommit": "47471f9f09e84f9b204dcf7cc56db94b0a1e4fa8",
+  "settingsPages": {
+    "support-author": "按用户要求新增「支持作者」页，以左侧带小红书标识的高容错二维码、右侧小店说明与链接的紧凑布局，方便支持后续开发与维护。"
+  },
   "features": {
     "auto-pager": {
       "components": ["@page.js"],

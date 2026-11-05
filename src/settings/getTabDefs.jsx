@@ -3,6 +3,7 @@ import arrayRemove from 'just-remove'
 import messaging from './messaging'
 import VersionHistory from './components/VersionHistory'
 import HelpAndSupport from './components/HelpAndSupport'
+import SupportAuthor from './components/SupportAuthor'
 import OAuthPanel from './components/OAuthPanel'
 import { GET_OPTION_DEFS } from '@constants'
 
@@ -76,10 +77,14 @@ const tabDefs = [ {
   } ],
 }, {
   title: '更新历史',
+  startsGroup: true,
   children: <VersionHistory />,
 }, {
   title: '帮助与支持',
   children: <HelpAndSupport />,
+}, {
+  title: '支持作者',
+  children: <SupportAuthor />,
 } ]
 
 export default async () => {

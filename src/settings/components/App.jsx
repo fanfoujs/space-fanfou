@@ -83,8 +83,11 @@ export default class App extends Component {
 
   renderNavagationItem = (tabDef, tabId) => {
     const { currentTabId } = this.state
-    const { title } = tabDef
-    const classNames = cx({ current: currentTabId === tabId })
+    const { title, startsGroup } = tabDef
+    const classNames = cx({
+      current: currentTabId === tabId,
+      'sf-nav-group-start': startsGroup,
+    })
     const onClick = () => this.setState({ currentTabId: tabId })
 
     return (

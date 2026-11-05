@@ -104,7 +104,7 @@ nav ul li {
     border-left-color: rgb(78, 87, 100);
   }
 
-  &:nth-last-of-type(2) {
+  &.sf-nav-group-start {
     margin-top: 26px;
   }
 
@@ -331,6 +331,31 @@ input[type="checkbox"] {
     margin-top: 10px;
     color: #c0392b;
   }
+}
+
+.sf-support-author-shop {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.sf-support-author-qr {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.sf-support-author-info {
+  min-width: 0;
+
+  p {
+    margin: 0 0 8px;
+    color: #777;
+  }
+}
+
+#tabs .sf-support-author-info h3 {
+  margin: 0 0 6px;
 }
 
 @media (max-width: 775px) {
