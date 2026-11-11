@@ -16,11 +16,7 @@
 | 打印总厚度   | 4 mm，不含背面的磁片         |
 | 背面         | 平整，无磁铁凹槽             |
 
-## 直接购买
-
-[![](https://img.shields.io/badge/-LitoMore%20的小店-gray?logo=xiaohongshu&labelColor=FF2442&logoColor=fff&logoSize=auto&style=flat-square)](https://xhslink.com/m/894w257QBwb)
-
-## 自己打印
+## 打印文件
 
 - `space-fanfou-magnet-50mm.3mf`：已配置的拓竹工程，蓝色底座使用耗材 1，
   白色角色使用耗材 2。请以工程方式打开，以加载颜色配置。导出器和打印配置与小饭冰箱贴相同：
@@ -37,6 +33,12 @@
 将蓝色耗材换成白色；0.20 mm 的层高恰好与这一分界对齐。打印完成后，在背面贴上
 自带背胶的柔性磁片；居中放置的 40 × 40 mm 磁片可完全容纳在外轮廓内。
 磁片和背胶会增加成品总厚度。吸附力尚未测量。
+
+## 直接购买
+
+[![](https://img.shields.io/badge/-LitoMore%20的小店-gray?logo=xiaohongshu&labelColor=FF2442&logoColor=fff&logoSize=auto&style=flat-square)](https://xhslink.com/m/894w257QBwb)
+
+<a href="https://xhslink.com/m/894w257QBwb"><img src="../../assets/images/xiaohongshu-shop-qr.svg" alt="扫码进入 LitoMore 的小红书小店" width="164" height="164" /></a>
 
 ## 重新生成
 
