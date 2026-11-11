@@ -38,17 +38,20 @@ npm run verify:build
 
 ## Firefox 审核构建说明
 
-提交审核的 Firefox 扩展包使用 WXT 和 Vite 构建。发布构建环境为 macOS 27.2（ARM64）、Node.js 26.12.1 和 npm 12.2.1。
-从 [Node.js 官网](https://nodejs.org/)安装上述版本的 Node.js（包含 npm）。解压源码包后，在其根目录打开终端并运行：
+提交审核的 Firefox 扩展包使用 WXT 和 Vite 构建。发布构建环境为 macOS 27.2（ARM64）、Node.js 26.13.0 和 npm 12.2.1。
+
+从 [Node.js 官方下载目录](https://nodejs.org/dist/v26.13.0/)下载适用于当前操作系统的安装程序或压缩包，安装上述版本的 Node.js（包含 npm）。如需调整 npm 版本，运行 `npm install --global npm@12.2.1`。
+
+解压源码包后，在包含 `package.json` 的目录中打开终端，运行 `node --version` 和 `npm --version` 确认上述版本，然后执行：
 
 ```sh
 npm ci --legacy-peer-deps
 npm run pack:firefox
 ```
 
-请保持 `package-lock.json` 不变。旧 React 组件通过 Preact 兼容别名运行，因此安装时需要 `--legacy-peer-deps`。安装脚本会自动执行 `wxt prepare`。构建无需凭据或环境变量。
+请保持 `package-lock.json` 不变。旧 React 组件通过 Preact 兼容别名运行，因此安装时需要 `--legacy-peer-deps`。`npm ci` 会安装锁定版本的构建依赖，并自动执行 `wxt prepare`；`pack:firefox` 脚本会完成编译、合并、压缩和打包步骤。下载依赖需要联网，Firefox 构建无需安装 Xcode 或浏览器，也不需要凭据或环境变量。
 
-扩展文件生成在 `.output/firefox-mv3/`，可安装的压缩包为 `.output/space-fanfou-2.0.0-firefox.zip`。审核时可将其解压后的内容与提交的扩展进行比较。配套的 `*-sources.zip` 包含构建所需的源文件，包括 `.postcssrc.js` 和 `.browserslistrc`。
+扩展文件生成在 `.output/firefox-mv3/`，可安装的压缩包为 `.output/space-fanfou-<version>-firefox.zip`（`<version>` 为 `package.json` 中的版本）。审核时可将其解压后的内容与提交的扩展进行比较。配套的 `*-sources.zip` 包含构建所需的源文件，包括 `.postcssrc.js` 和 `.browserslistrc`，应上传至审核页面的 Source code 栏。
 
 ## 约定
 
