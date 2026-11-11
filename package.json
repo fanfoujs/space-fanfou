@@ -15,7 +15,7 @@
     "build:beta": "wxt build -b chrome --mv3 --mode beta",
     "build:firefox": "wxt build -b firefox --mv3",
     "build:safari": "wxt build -b safari --mv3",
-    "build:all": "npm run build && npm run build:firefox && npm run build:safari",
+    "build:all": "npm run build && npm run build:firefox && npm run build:safari && npm run build:beta",
     "postinstall": "wxt prepare",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
