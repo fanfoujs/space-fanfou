@@ -21,7 +21,7 @@ npm run verify:build
 
 - Chrome：在扩展管理页面开启开发者模式，加载 `.output/chrome-mv3`。
 - Firefox：在 `about:debugging` 中临时加载 `.output/firefox-mv3/manifest.json`；正式安装需要 Mozilla 签名。
-- Safari：macOS 安装 Xcode 后运行 `npm run safari:project`，打开 `.output/safari-project/Space Fanfou/Space Fanfou.xcodeproj`，选择签名团队后运行，并在 Safari 设置中启用扩展、授予饭否站点访问权限。
+- Safari：macOS 安装 Xcode 后运行 `npm run safari:project`，打开 `.output/safari-project/Space Fanfou/Space Fanfou.xcodeproj`，在 `Space Fanfou` 和 `Space Fanfou Extension` 两个 target 的 Signing & Capabilities 中开启自动签名、选择同一个团队后运行，并在 Safari 设置中启用扩展、授予饭否站点访问权限。仅给主应用选择团队会导致扩展使用临时签名，构建时报 `Embedded binary is not signed with the same certificate as the parent app`。
 
 已有解压版升级时请先阅读 [迁移说明](docs/migration.md)，保持原来的扩展 ID 以保留设置。
 

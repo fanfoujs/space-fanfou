@@ -10,10 +10,13 @@ import path from 'node:path'
 
 const source = path.resolve('.output/safari-mv3')
 const projectRoot = path.resolve('.output/safari-project/Space Fanfou')
-const project = path.join(projectRoot, 'Space Fanfou.xcodeproj/project.pbxproj')
+const projectFiles = ['project.pbxproj', 'project.xcproj'].map((name) =>
+  path.join(projectRoot, 'Space Fanfou.xcodeproj', name),
+)
+let project = projectFiles.find((file) => existsSync(file))
 if (!existsSync(path.join(source, 'manifest.json')))
   throw new Error('请先运行 npm run build:safari')
-if (existsSync(project)) {
+if (project) {
   // 重建扩展资源时保留用户在 Xcode 中选择的签名团队与原生代码。
   const resources = path.join(projectRoot, 'Space Fanfou Extension/Resources')
   rmSync(resources, { recursive: true, force: true })
@@ -47,20 +50,32 @@ if (existsSync(project)) {
   )
   if (result.error) throw result.error
   if (result.status !== 0) process.exit(result.status ?? 1)
+  project = projectFiles.find((file) => existsSync(file))
 }
+if (!project) throw new Error('未找到生成的 Safari Xcode 工程文件')
 // 当前 Xcode 模板可能用显示名称重新生成主应用 ID；保证扩展仍属于主应用。
 const version = JSON.parse(
   readFileSync(path.join(source, 'manifest.json'), 'utf8'),
 ).version
-const contents = readFileSync(project, 'utf8')
-  .replace(/MARKETING_VERSION = [^;]+;/g, `MARKETING_VERSION = ${version};`)
-  .replace(
-    /MACOSX_DEPLOYMENT_TARGET = [^;]+;/g,
-    'MACOSX_DEPLOYMENT_TARGET = 12.0;',
+// 新版工程使用带尾逗号的 JSON 语法，旧版则使用 OpenStep plist。
+const modernProject = project.endsWith('.xcproj')
+const settingPattern = (name) =>
+  modernProject
+    ? new RegExp(`("${name}"\\s*:\\s*)"([^"]*)"`, 'g')
+    : new RegExp(`(${name}\\s*=\\s*)([^;]+);`, 'g')
+const replaceSetting = (contents, name, value) =>
+  contents.replace(settingPattern(name), (_match, prefix) =>
+    modernProject ? `${prefix}"${value}"` : `${prefix}${value};`,
   )
+let contents = replaceSetting(
+  readFileSync(project, 'utf8'),
+  'MARKETING_VERSION',
+  version,
+)
+contents = replaceSetting(contents, 'MACOSX_DEPLOYMENT_TARGET', '12.0')
 const identifiers = [
-  ...contents.matchAll(/PRODUCT_BUNDLE_IDENTIFIER = ([^;]+);/g),
-].map((match) => match[1].replaceAll('"', ''))
+  ...contents.matchAll(settingPattern('PRODUCT_BUNDLE_IDENTIFIER')),
+].map((match) => match[2].trim().replaceAll('"', ''))
 const extension = identifiers.find((identifier) =>
   identifier.endsWith('.Extension'),
 )
@@ -69,8 +84,11 @@ const parent = extension.slice(0, -'.Extension'.length)
 writeFileSync(
   project,
   contents.replace(
-    /PRODUCT_BUNDLE_IDENTIFIER = ([^;]+);/g,
-    (_match, identifier) =>
-      `PRODUCT_BUNDLE_IDENTIFIER = ${identifier.includes('.Extension') ? extension : parent};`,
+    settingPattern('PRODUCT_BUNDLE_IDENTIFIER'),
+    (_match, prefix, identifier) => {
+      const value = identifier.includes('.Extension') ? extension : parent
+      return modernProject ? `${prefix}"${value}"` : `${prefix}${value};`
+    },
   ),
 )
+console.log(`Safari Xcode 工程：${path.dirname(project)}`)
