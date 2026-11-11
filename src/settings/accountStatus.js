@@ -3,6 +3,8 @@ import messaging from './messaging.js';
 import {
 	FANFOU_OAUTH_GET_STATUS,
 	FANFOU_ACCOUNT_CACHE_KEY,
+	FANFOU_OAUTH_PENDING_KEY,
+	FANFOU_OAUTH_ERROR_KEY,
 	FANFOU_WEBSITE_ACCOUNTS_KEY,
 } from '@constants';
 
@@ -82,9 +84,19 @@ function loadCachedStatus(force = false) {
 }
 
 function handleStorageChange(changes, area) {
+	const authorizationChanged = [
+		FANFOU_OAUTH_PENDING_KEY,
+		FANFOU_OAUTH_ERROR_KEY,
+	].some((key) =>
+		area === 'session'
+			? changes[key]
+			: area === 'local' && changes[`__sf_session__/${key}`],
+	);
 	if (
-		area === 'local' &&
-		(changes[FANFOU_ACCOUNT_CACHE_KEY] || changes[FANFOU_WEBSITE_ACCOUNTS_KEY])
+		authorizationChanged ||
+		(area === 'local' &&
+			(changes[FANFOU_ACCOUNT_CACHE_KEY] ||
+				changes[FANFOU_WEBSITE_ACCOUNTS_KEY]))
 	) {
 		loadCachedStatus(true);
 	}
@@ -105,9 +117,13 @@ export function subscribeAccountStatus(listener) {
 	};
 }
 
-export function refreshAccountStatus() {
+export function refreshAccountStatus({clearAuthorizationError = false} = {}) {
 	if (refreshRequest) {
-		return refreshRequest;
+		return clearAuthorizationError
+			? refreshRequest.then(() =>
+					refreshAccountStatus({clearAuthorizationError: true}),
+				)
+			: refreshRequest;
 	}
 
 	const version = revision;
@@ -121,7 +137,7 @@ export function refreshAccountStatus() {
 		try {
 			const response = await messaging.postMessage({
 				action: FANFOU_OAUTH_GET_STATUS,
-				payload: {refreshAccount: true},
+				payload: {refreshAccount: true, clearAuthorizationError},
 			});
 			const status = readResponse(response);
 			if (version !== revision) {

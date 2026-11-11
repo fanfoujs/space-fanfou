@@ -53,17 +53,17 @@ export default class App extends Component {
 		const restoredTabId = tabDefs.some((tab) => tab.id === lastTabId)
 			? lastTabId
 			: 'page-features';
-		const currentTabId =
-			location.hash === '#version-history' ? 'version-history' : restoredTabId;
+		const currentTabId = ['#version-history', '#tools'].includes(location.hash)
+			? location.hash.slice(1)
+			: restoredTabId;
 		const lastMode =
 			saved[LAST_POPUP_MODE_KEY] ?? legacy[DEFAULT_POPUP_MODE_KEY];
-		const mode =
-			location.hash === '#version-history'
-				? 'settings'
-				: parameters.get('mode') === 'compose' ||
-					  (this.isPopup && lastMode === 'compose')
-					? 'compose'
-					: 'settings';
+		const mode = ['#version-history', '#tools'].includes(location.hash)
+			? 'settings'
+			: parameters.get('mode') === 'compose' ||
+				  (this.isPopup && lastMode === 'compose')
+				? 'compose'
+				: 'settings';
 
 		this.setState({
 			isReady: true,
@@ -87,8 +87,8 @@ export default class App extends Component {
 	}
 
 	handleHashChange = () => {
-		if (location.hash === '#version-history') {
-			this.setState({mode: 'settings', currentTabId: 'version-history'});
+		if (['#version-history', '#tools'].includes(location.hash)) {
+			this.setState({mode: 'settings', currentTabId: location.hash.slice(1)});
 		}
 	};
 

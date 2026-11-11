@@ -21,10 +21,9 @@ export default class OAuthPanel extends Component {
 		workingUserId: null,
 		status: null,
 		error: '',
-		verifier: '',
 		needsReload: false,
 		setup: null,
-		allowManual: false,
+		allowTab: false,
 		accountQuery: '',
 	};
 	setupVersion = 0;
@@ -34,6 +33,7 @@ export default class OAuthPanel extends Component {
 		this.unsubscribeAccount = subscribeAccountStatus((snapshot) =>
 			this.setState(snapshot),
 		);
+		browser.storage.onChanged.addListener(this.handleSetupChange);
 		browser.storage.local
 			.get(SETUP_KEY)
 			.then((values) => {
@@ -55,15 +55,30 @@ export default class OAuthPanel extends Component {
 	componentWillUnmount() {
 		this.mounted = false;
 		this.unsubscribeAccount();
+		browser.storage.onChanged.removeListener(this.handleSetupChange);
 		window.removeEventListener('focus', this.handleFocus);
 	}
 
+	handleSetupChange = (changes, area) => {
+		if (
+			area === 'local' &&
+			changes[SETUP_KEY] &&
+			!changes[SETUP_KEY].newValue
+		) {
+			this.setupVersion++;
+			this.setState({setup: null});
+		}
+	};
 	handleFocus = () => {
 		if (!this.state.working) {
 			this.refreshStatus();
 		}
 	};
 	refreshStatus = () => refreshAccountStatus();
+	recheckAuthorization = () => {
+		this.setState({error: '', allowTab: false});
+		return refreshAccountStatus({clearAuthorizationError: true});
+	};
 	handleSearch = (event) => {
 		this.setState({accountQuery: event.currentTarget.value}, () =>
 			this.accountList?.scrollTo(0, 0),
@@ -81,7 +96,7 @@ export default class OAuthPanel extends Component {
 			startedAt: Date.now(),
 		};
 		this.setupVersion++;
-		this.setState({setup, error: '', allowManual: false});
+		this.setState({setup, error: '', allowTab: false});
 		try {
 			await browser.storage.local.set({[SETUP_KEY]: setup});
 		} catch {
@@ -93,7 +108,7 @@ export default class OAuthPanel extends Component {
 	finishSetup = async () => {
 		this.setupVersion++;
 		if (this.mounted) {
-			this.setState({setup: null, verifier: ''});
+			this.setState({setup: null});
 		}
 
 		await browser.storage.local.remove(SETUP_KEY);
@@ -119,15 +134,13 @@ export default class OAuthPanel extends Component {
 			working: true,
 			workingUserId: userId || this.state.status?.userId,
 			error: '',
-			allowManual: false,
+			allowTab: false,
 		});
 		try {
 			const response = await messaging.postMessage({
 				action: FANFOU_OAUTH_AUTHORIZE,
 				payload: {
-					manual: Boolean(options.manual),
-					complete: Boolean(options.complete),
-					verifier: this.state.verifier,
+					useTab: Boolean(options.useTab),
 					userId,
 					addAccount,
 				},
@@ -168,7 +181,7 @@ export default class OAuthPanel extends Component {
 			}
 
 			if (this.mounted) {
-				this.setState({working: false, workingUserId: null, verifier: ''});
+				this.setState({working: false, workingUserId: null});
 			}
 		} catch (error) {
 			if (this.mounted) {
@@ -176,7 +189,7 @@ export default class OAuthPanel extends Component {
 					working: false,
 					workingUserId: null,
 					error: error.message || '登录失败，请重试。',
-					allowManual: !error.accountMismatch && !options.manual,
+					allowTab: !error.accountMismatch && !options.useTab,
 				});
 			}
 
@@ -191,7 +204,7 @@ export default class OAuthPanel extends Component {
 			working: true,
 			workingUserId: account.userId,
 			error: '',
-			allowManual: false,
+			allowTab: false,
 		});
 		try {
 			const response = await messaging.postMessage({
@@ -228,7 +241,7 @@ export default class OAuthPanel extends Component {
 		}
 	};
 	cancelSetup = async () => {
-		this.setState({working: true, error: '', allowManual: false});
+		this.setState({working: true, error: '', allowTab: false});
 		try {
 			if (this.state.status?.pendingAuthorization) {
 				invalidateAccountCheck();
@@ -262,15 +275,15 @@ export default class OAuthPanel extends Component {
 	render() {
 		const {
 			loading,
+			checking,
 			checkError,
 			working,
 			workingUserId,
 			status,
 			error,
-			verifier,
 			needsReload,
 			setup,
-			allowManual,
+			allowTab,
 			accountQuery,
 		} = this.state;
 		const busy = loading || working;
@@ -437,14 +450,14 @@ export default class OAuthPanel extends Component {
 					</button>
 				) : isPending ? (
 					<div className="sf-oauth-panel__setup">
-						<p>在饭否确认后，返回这里完成登录。</p>
+						<p>请在饭否确认授权，登录将自动完成。</p>
 						<div className="sf-oauth-panel__actions">
 							<button
 								type="button"
-								disabled={busy}
-								onClick={() => this.handleAuthorize({complete: true})}
+								disabled={busy || checking}
+								onClick={this.recheckAuthorization}
 							>
-								完成登录
+								{checking ? '正在检查…' : '重新检查'}
 							</button>
 							<button
 								className="custom-appearance sf-oauth-link-button"
@@ -455,16 +468,6 @@ export default class OAuthPanel extends Component {
 								取消
 							</button>
 						</div>
-						<details>
-							<summary>饭否显示了验证码？</summary>
-							<input
-								aria-label="登录验证码"
-								value={verifier}
-								onInput={(event) =>
-									this.setState({verifier: event.currentTarget.value})
-								}
-							/>
-						</details>
 					</div>
 				) : setup ? (
 					<div
@@ -521,20 +524,31 @@ export default class OAuthPanel extends Component {
 						</button>
 					</div>
 				)}
-				{error && (
-					<p role="alert" className="sf-oauth-panel__error">
-						{error}
-					</p>
+				{(error || status?.authorizationError) && (
+					<div>
+						<p role="alert" className="sf-oauth-panel__error">
+							{error || status?.authorizationError}
+						</p>
+						{!isPending && (
+							<button
+								type="button"
+								disabled={busy || checking}
+								onClick={this.recheckAuthorization}
+							>
+								{checking ? '正在检查…' : '重新检查'}
+							</button>
+						)}
+					</div>
 				)}
-				{error && allowManual && !status?.manualAuthorization && !isPending && (
+				{error && allowTab && !isPending && (
 					<button
 						type="button"
 						disabled={busy}
 						onClick={() =>
-							this.handleAuthorize({...this.lastAuthorization, manual: true})
+							this.handleAuthorize({...this.lastAuthorization, useTab: true})
 						}
 					>
-						改用手动登录
+						改用标签页授权
 					</button>
 				)}
 			</div>

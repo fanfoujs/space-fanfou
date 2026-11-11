@@ -4,6 +4,7 @@ import CryptoJS from 'crypto-js';
 import storage from './storage.js';
 import messaging from './messaging.js';
 import log from '@libs/log';
+import {events} from '@platform/events';
 import {readFanfouSession} from '@platform/fanfou-session';
 import {
 	createFanfouClient,
@@ -28,6 +29,8 @@ import {
 	FANFOU_OAUTH_API_REQUEST,
 	FANFOU_COMPOSE_SEND,
 	FANFOU_ACCOUNT_CACHE_KEY,
+	FANFOU_OAUTH_PENDING_KEY as PENDING_STORAGE_KEY,
+	FANFOU_OAUTH_ERROR_KEY as AUTHORIZATION_ERROR_KEY,
 	FANFOU_WEBSITE_ACCOUNTS_KEY,
 } from '@constants';
 
@@ -39,10 +42,14 @@ const ACCESS_TOKEN_URL = 'https://fanfou.com/oauth/access_token';
 const AUTHORIZE_URL = 'https://fanfou.com/oauth/authorize';
 const TOKEN_STORAGE_KEY = 'fanfou-oauth/tokens';
 const ACCOUNTS_STORAGE_KEY = 'fanfou-oauth/accounts';
+const TAB_CALLBACK_URL = 'https://fanfou.com/home';
+const AUTHORIZATION_TIMEOUT = 10 * 60_000;
 
 let tokenCache;
 let authorizationRequest;
 let authorizationRequestKey;
+let callbackRequest;
+let recoveryRequest;
 let accountRequest;
 let tokenRevision = 0;
 let accountsWrite = Promise.resolve();
@@ -343,7 +350,205 @@ function launchAuthWindow(authUrl) {
 function getRedirectUrl() {
 	return browser.identity?.getRedirectURL
 		? browser.identity.getRedirectURL('fanfou-oauth')
-		: 'oob';
+		: TAB_CALLBACK_URL;
+}
+
+async function readAuthorizationState() {
+	const pending = await storage.read(PENDING_STORAGE_KEY, 'session');
+	const savedError = await storage.read(AUTHORIZATION_ERROR_KEY, 'session');
+	let error =
+		savedError?.createdAt > Date.now() - AUTHORIZATION_TIMEOUT
+			? savedError.message
+			: '';
+	// 清理上一版没有时间戳的错误，以及已经过期的提示。
+	if (savedError && !error) {
+		await storage.delete(AUTHORIZATION_ERROR_KEY, 'session');
+	}
+
+	if (pending) {
+		if (
+			!callbackRequest &&
+			(!pending.redirectUrl ||
+				Date.now() - pending.createdAt > AUTHORIZATION_TIMEOUT)
+		) {
+			error = '授权已过期，请重新开始授权。';
+			await storage.delete(PENDING_STORAGE_KEY, 'session');
+			await setAuthorizationError(error);
+		} else {
+			return {pendingAuthorization: true, authorizationError: ''};
+		}
+	}
+
+	return {pendingAuthorization: false, authorizationError: error || ''};
+}
+
+function setAuthorizationError(message) {
+	return storage.write(
+		AUTHORIZATION_ERROR_KEY,
+		{message, createdAt: Date.now()},
+		'session',
+	);
+}
+
+function matchesAuthorizationCallback(pending, url) {
+	if (!pending?.redirectUrl) {
+		return false;
+	}
+
+	const expected = new URL(pending.redirectUrl);
+	return (
+		url.origin === expected.origin &&
+		url.pathname === expected.pathname &&
+		Boolean(expected.searchParams.get('space_fanfou_oauth')) &&
+		url.searchParams.get('space_fanfou_oauth') ===
+			expected.searchParams.get('space_fanfou_oauth') &&
+		(url.searchParams.has('oauth_token') || url.searchParams.has('denied'))
+	);
+}
+
+function recoverAuthorizationCallback() {
+	// 授权开始和完成时自身也会刷新状态，不能反过来等待自己。
+	if (authorizationRequest || callbackRequest) {
+		return Promise.resolve();
+	}
+
+	recoveryRequest ||= (async () => {
+		const pending = await storage.read(PENDING_STORAGE_KEY, 'session');
+		if (!pending?.redirectUrl) {
+			return;
+		}
+
+		const tabs = await browser.tabs.query({url: `${TAB_CALLBACK_URL}*`});
+		for (const tab of tabs) {
+			if (
+				tab.id != null &&
+				tab.url &&
+				matchesAuthorizationCallback(pending, new URL(tab.url))
+			) {
+				await handleAuthorizationTab(tab.id, {url: tab.url});
+				break;
+			}
+		}
+	})()
+		.catch((error) =>
+			log.warn('[SpaceFanfou] 检查授权回调失败:', error.message),
+		)
+		.finally(() => {
+			recoveryRequest = null;
+		});
+	return recoveryRequest;
+}
+
+async function launchAuthTab(consumer, temporaryToken, accountContext) {
+	const callback = new URL(TAB_CALLBACK_URL);
+	callback.searchParams.set('space_fanfou_oauth', crypto.randomUUID());
+	const authorizeUrl = new URL(AUTHORIZE_URL);
+	authorizeUrl.searchParams.set('oauth_token', temporaryToken.oauth_token);
+	authorizeUrl.searchParams.set('oauth_callback', callback.href);
+	// 先保存 tab ID 再开始导航，避免快速回调早于 pending 写入。
+	const tab = await browser.tabs.create({url: 'about:blank', active: true});
+	try {
+		await storage.write(
+			PENDING_STORAGE_KEY,
+			{
+				tempToken: temporaryToken,
+				consumerKey: consumer.consumerKey,
+				accountContext,
+				createdAt: Date.now(),
+				tabId: tab.id,
+				redirectUrl: callback.href,
+			},
+			'session',
+		);
+		await browser.tabs.update(tab.id, {url: authorizeUrl.href});
+	} catch (error) {
+		await storage.delete(PENDING_STORAGE_KEY, 'session');
+		await browser.tabs.remove(tab.id).catch(() => {});
+		throw error;
+	}
+}
+
+function handleAuthorizationTab(tabId, changeInfo, tab) {
+	const callbackUrl = changeInfo.url || tab?.url;
+	if (!callbackUrl || callbackRequest) {
+		return;
+	}
+
+	const url = new URL(callbackUrl);
+	if (
+		url.origin !== new URL(TAB_CALLBACK_URL).origin ||
+		url.pathname !== '/home' ||
+		!url.searchParams.has('space_fanfou_oauth')
+	) {
+		return;
+	}
+
+	callbackRequest = completeTabAuthorization(tabId, url)
+		.catch((error) => log.error('[SpaceFanfou] OAuth 回调失败:', error))
+		.finally(() => {
+			callbackRequest = null;
+		});
+	return callbackRequest;
+}
+
+async function completeTabAuthorization(tabId, url) {
+	// 开始授权的消息可能尚在刷新账号状态；等待它结束后再消费临时 token。
+	await authorizationRequest;
+	const pending = await storage.read(PENDING_STORAGE_KEY, 'session');
+	// Safari 可以在新标签页返回；用随机回调标识和临时 token 关联授权。
+	if (!matchesAuthorizationCallback(pending, url)) {
+		return;
+	}
+
+	try {
+		// 尽早离开带有临时 token 的回调页，返回扩展的账号设置。
+		await browser.tabs.update(tabId, {
+			url: browser.runtime.getURL('settings.html#tools'),
+		});
+		if (Date.now() - pending.createdAt > AUTHORIZATION_TIMEOUT) {
+			throw new Error('授权已过期，请重新开始授权');
+		}
+
+		const consumer = readConsumerConfig();
+		if (pending.consumerKey !== consumer.consumerKey) {
+			throw new Error('应用密钥已变更，请重新开始授权');
+		}
+
+		if (url.searchParams.has('denied')) {
+			throw new Error('授权被拒绝');
+		}
+
+		if (url.searchParams.get('oauth_token') !== pending.tempToken.oauth_token) {
+			throw new Error('OAuth 回调 token 不匹配');
+		}
+
+		await saveAccessTokens(
+			consumer,
+			pending.tempToken,
+			url.searchParams.get('oauth_verifier') || '',
+			pending.accountContext,
+		);
+		if (
+			pending.accountContext?.requestedUserId &&
+			!matchesAccount(
+				await readTokens(),
+				pending.accountContext.requestedUserId,
+			)
+		) {
+			throw new Error('刚才授权的账号与所选账号不同，请切换到所选账号后重试。');
+		}
+
+		await browser.storage.local.remove('fanfou-oauth/accountSetup');
+	} catch (error) {
+		await setAuthorizationError(error.message || '授权失败，请重试。');
+	} finally {
+		await storage.delete(PENDING_STORAGE_KEY, 'session');
+		// 即使饭否暂时无法访问，也让已打开的设置页更新授权结果。
+		await storage.delete(FANFOU_ACCOUNT_CACHE_KEY, 'local');
+		await handleGetStatus().catch((error) =>
+			log.warn('[SpaceFanfou] 授权后刷新账号状态失败:', error.message),
+		);
+	}
 }
 
 async function saveAccessTokens(
@@ -380,6 +585,8 @@ async function saveAccessTokens(
 	if (!tokens.screenName || !tokens.userId) {
 		await refreshAccountProfile(consumer, saved);
 	}
+
+	await storage.delete(AUTHORIZATION_ERROR_KEY, 'session');
 }
 
 function refreshAccountProfile(consumer, tokens) {
@@ -461,15 +668,29 @@ function buildStatus(tokens, redirectUrl) {
 			userId: tokens?.userId || null,
 			profileError: tokens?.profileError || null,
 			redirectUrl,
-			manualAuthorization: !browser.identity?.launchWebAuthFlow,
 		},
 	};
 }
 
 async function handleGetStatus(payload = {}) {
+	if (payload.clearAuthorizationError) {
+		await storage.delete(AUTHORIZATION_ERROR_KEY, 'session');
+		const pending = await storage.read(PENDING_STORAGE_KEY, 'session');
+		if (
+			pending &&
+			(!pending.redirectUrl ||
+				Date.now() - pending.createdAt > AUTHORIZATION_TIMEOUT) &&
+			!callbackRequest
+		) {
+			await storage.delete(PENDING_STORAGE_KEY, 'session');
+		}
+	}
+
 	if (payload.cached) {
 		return handleGetCachedStatus();
 	}
+
+	await recoverAuthorizationCallback();
 
 	const consumer = await readConsumerConfig();
 	// A failed network check must not replace a cached login with "logged out".
@@ -485,9 +706,7 @@ async function handleGetStatus(payload = {}) {
 	result.status.currentUserId = session?.userId || null;
 	result.status.currentScreenName = session?.screenName || null;
 	result.status.sending = postingAccounts.has(tokens?.userId);
-	result.status.pendingAuthorization = Boolean(
-		await storage.read('fanfou-oauth/pending', 'session'),
-	);
+	Object.assign(result.status, await readAuthorizationState());
 	result.status.accounts = await composerAccounts(
 		consumer,
 		result.status.currentUserId,
@@ -501,6 +720,7 @@ async function handleGetStatus(payload = {}) {
 }
 
 async function handleGetCachedStatus() {
+	await recoverAuthorizationCallback();
 	const saved = await storage.read(FANFOU_ACCOUNT_CACHE_KEY, 'local');
 	const cached =
 		saved?.consumerKey === BUILTIN_CONSUMER_KEY ? saved.status : null;
@@ -517,9 +737,7 @@ async function handleGetCachedStatus() {
 	result.status.currentUserId ??= result.status.userId || null;
 	result.status.currentScreenName ??= result.status.screenName || null;
 	result.status.sending = postingAccounts.has(result.status.userId);
-	result.status.pendingAuthorization = Boolean(
-		await storage.read('fanfou-oauth/pending', 'session'),
-	);
+	Object.assign(result.status, await readAuthorizationState());
 	result.status.accounts = await composerAccounts(
 		readConsumerConfig(),
 		result.status.currentUserId,
@@ -529,9 +747,7 @@ async function handleGetCachedStatus() {
 
 function handleAuthorize(payload = {}) {
 	const key = JSON.stringify([
-		Boolean(payload.manual),
-		Boolean(payload.complete),
-		(payload.verifier || '').trim(),
+		Boolean(payload.useTab),
 		payload.userId || null,
 		Boolean(payload.addAccount),
 		Boolean(payload.cancel),
@@ -553,32 +769,24 @@ function handleAuthorize(payload = {}) {
 async function authorize(payload) {
 	try {
 		if (payload.cancel) {
-			await storage.delete('fanfou-oauth/pending', 'session');
+			if (callbackRequest) {
+				return {error: '正在完成授权，请稍后再试。'};
+			}
+
+			await storage.delete(PENDING_STORAGE_KEY, 'session');
+			await storage.delete(AUTHORIZATION_ERROR_KEY, 'session');
 			return handleGetCachedStatus();
 		}
 
 		const consumer = await readConsumerConfig();
-		const redirectUrl = payload.manual ? 'oob' : getRedirectUrl();
-
-		if (payload.complete) {
-			const pending = await storage.read('fanfou-oauth/pending', 'session');
-			if (!pending || Date.now() - pending.createdAt > 10 * 60_000) {
-				throw new Error('授权已过期，请重新开始授权');
-			}
-
-			if (pending.consumerKey !== consumer.consumerKey) {
-				throw new Error('应用密钥已变更，请重新开始授权');
-			}
-
-			await saveAccessTokens(
-				consumer,
-				pending.tempToken,
-				(payload.verifier || '').trim(),
-				pending.accountContext,
-			);
-			await storage.delete('fanfou-oauth/pending', 'session');
-			return handleGetStatus();
+		if (
+			callbackRequest ||
+			(await readAuthorizationState()).pendingAuthorization
+		) {
+			return {error: '授权正在处理中，请先完成或取消当前授权。'};
 		}
+
+		await storage.delete(AUTHORIZATION_ERROR_KEY, 'session');
 
 		const session = await currentSession();
 		const accounts = await composerAccountTokens(consumer);
@@ -621,31 +829,25 @@ async function authorize(payload) {
 			};
 		}
 
-		const accountContext = {userId: session?.userId || null};
+		const accountContext = {
+			userId: session?.userId || null,
+			requestedUserId: payload.userId || null,
+		};
 		const temporaryToken = await requestTemporaryToken(consumer);
 
 		if (!temporaryToken.oauth_token || !temporaryToken.oauth_token_secret) {
 			return {error: '获取 Request Token 失败，请稍后重试'};
 		}
 
+		if (payload.useTab || !browser.identity?.launchWebAuthFlow) {
+			await launchAuthTab(consumer, temporaryToken, accountContext);
+			return handleGetStatus();
+		}
+
 		// 和 fanfou-export 一样，将 callback 放在授权页 URL 中，SDK 负责 token 交换。
 		const authorizeUrl = new URL(AUTHORIZE_URL);
 		authorizeUrl.searchParams.set('oauth_token', temporaryToken.oauth_token);
-		authorizeUrl.searchParams.set('oauth_callback', redirectUrl);
-		if (redirectUrl === 'oob') {
-			await storage.write(
-				'fanfou-oauth/pending',
-				{
-					tempToken: temporaryToken,
-					consumerKey: consumer.consumerKey,
-					accountContext,
-					createdAt: Date.now(),
-				},
-				'session',
-			);
-			await browser.tabs.create({url: authorizeUrl.href, active: true});
-			return handleGetStatus();
-		}
+		authorizeUrl.searchParams.set('oauth_callback', getRedirectUrl());
 
 		const responseUrl = await launchAuthWindow(authorizeUrl.href);
 		const parsedUrl = new URL(responseUrl);
@@ -934,5 +1136,6 @@ async function handleComposeSend(payload, sender) {
 export default {
 	install() {
 		registerHandlers();
+		events.tabUpdated.addListener(handleAuthorizationTab);
 	},
 };
