@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/fanfoujs/space-fanfou/master/static/icons/icon-256.png" alt="太空饭否 logo" align="right" height="60" />
+<img src="public/icons/icon-256.png" alt="太空饭否 logo" align="right" height="60" />
 
 # 太空饭否
 
