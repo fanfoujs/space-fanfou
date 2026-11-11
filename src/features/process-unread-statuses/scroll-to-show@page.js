@@ -1,15 +1,8 @@
 import isVisible from 'is-visible';
-import isHotkey from '@libs/isHotkey';
 import Timeout from '@libs/Timeout';
 import noop from '@libs/noop';
 
 const RELEASE_COUNT = 3;
-const TEST_HOTKEY = {
-	ctrl: true,
-	alt: true,
-	shift: true,
-	key: 'p',
-};
 
 export default (context) => {
 	const {requireModules, elementCollection, registerDOMEventListener} = context;
@@ -33,7 +26,6 @@ export default (context) => {
 	});
 
 	registerDOMEventListener(globalThis, 'mousewheel', onMouseWheel);
-	registerDOMEventListener(globalThis, 'keyup', onKeyUpTest);
 
 	function setCount(next) {
 		scrollCount = next;
@@ -107,18 +99,6 @@ export default (context) => {
 			waiting.setup();
 			timeout.setup();
 		}
-	}
-
-	function onKeyUpTest(event) {
-		if (
-			process.env.NODE_ENV !== 'development' ||
-			!isHotkey(event, TEST_HOTKEY)
-		) {
-			return;
-		}
-
-		elementCollection.get('timelineNotification').style.display = '';
-		elementCollection.get('timelineCount').textContent = 3;
 	}
 
 	return {

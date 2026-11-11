@@ -9,7 +9,7 @@
 		"strict": true,
 		"jsx": "react-jsx",
 		"jsxImportSource": "preact",
-		"types": ["node", "vite/client", "vitest/globals"]
+		"types": ["node", "vite/client"]
 	},
-	"exclude": ["node_modules", ".output", "dist", "tests/playwright"]
+	"exclude": ["node_modules", ".output", "dist"]
 }

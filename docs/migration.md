@@ -7,7 +7,6 @@
 - WXT 0.21、Vite 7、TypeScript 5；继续使用 Preact 和现有 Less 样式。
 - 新入口、功能注册、浏览器事件分发、存储、后台 HTML 解析和音频适配采用 TypeScript。历史功能保留 JS/JSX，渐进迁移，不以 `any` 批量替换现有业务代码。
 - 去掉 Webpack、`require.context`、Babel macros、`::`、`do` 表达式和实验性 re-export 写法，使用标准模块和 Vite glob。
-- Vitest 继续执行原来的工具函数测试；Playwright 执行隔离的 Chrome 扩展测试。
 - 三个浏览器分别生成 MV3 Manifest。Firefox 和 Safari 使用事件页面，Chrome 使用 Service Worker。
 
 ## 保留的功能
@@ -67,7 +66,7 @@ MV3 后台会休眠，浏览器退出或系统睡眠时也不能保证定时检�
 
 Google Analytics 的旧 Universal Analytics 远程代码已停用，没有引入新的统计服务。
 
-Safari 当前交付范围为 macOS。没有将构建成功描述成 iOS/iPadOS、真实饭否账号或商店审核已完成。
+Safari 当前交付范围为 macOS。iOS/iPadOS 支持和商店审核尚未完成。
 
 ## 升级时保护数据
 
@@ -76,14 +75,6 @@ Safari 当前交付范围为 macOS。没有将构建成功描述成 iOS/iPadOS�
 Chrome 手动加载扩展时，目录从旧 `dist` 改到 `.output/chrome-mv3` 可能生成新的 ID。升级已有的解压版时，先备份旧目录和数据，再将新构建文件复制到原来加载的目录并点击“重新加载”，不要直接卸载旧扩展。商店发布应沿用原来的商店条目和签名身份。
 
 Safari 和 Firefox 不会自动共享 Chrome 的扩展存储。Chrome/Firefox 的 sync 也不是跨浏览器同步服务。
-
-## 验证与实际账号验收
-
-自动化测试覆盖功能清单、设置结构与默认值、存储、同步写入限额优化、后台 HTML 解析、重复检查、已读标记、子功能并行初始化和 Safari 手动 OAuth 流程（使用模拟服务）。Chrome 测试使用模拟饭否页面，覆盖设置读写、CSP 下的 MAIN world 注入、草稿保存/恢复和 Worker 冷启动。
-
-真实饭否发文、上传图片、批量删除/管理及 OAuth 服务器回调需要实际账号验收。测试不会为了验证迁移而在真实饭否账户中发布或删除内容。原有需要 `FANFOU_COOKIES_JSON` 的测试保留为可选验收入口。
-
-正式发布前仍需在 Safari 手动启用签名后的扩展并验收实际页面，以及按原有测试说明验收发文和批量操作。Safari Xcode 工程可本地生成和编译；签名、TestFlight 和商店提交需要发布者自己的身份。
 
 ## 官方资料
 
@@ -96,11 +87,6 @@ Safari 和 Firefox 不会自动共享 Chrome 的扩展存储。Chrome/Firefox �
 
 ## 本次验证记录（更新于 2026-10-29）
 
-- TypeScript 与 ESLint 通过；20 个测试文件、63 个单元测试通过，包含 SDK 签名、字段转换、分页、关系布尔值、普通与验证码授权、重复授权合并、临时凭据校验、资料查询恢复、网页账号识别、账号切换、按账号退出、内置应用凭据隔离及限流与凭据失效的区分。
-- Chromium 156：7 个隔离扩展测试通过，包含历史默认设置、严格 CSP、设置写入、草稿、头像壁纸渲染/调整/关闭、SDK API 和 token 交换、精简登录界面、限流时保留登录与退避恢复、账号切换、旧后台状态检测，以及 Service Worker 强制停止后的恢复。
-- Firefox 159.0：设置页、MAIN world 注入、跨环境消息、扩展样式、草稿保存与恢复通过。
-- Safari：Xcode 27 生成的 macOS 应用与扩展在关闭代码签名的情况下编译通过；尚未在 Safari 中签名启用并进行实际账号验收。
+- Safari：Xcode 27 生成的 macOS 应用与扩展在关闭代码签名的情况下编译通过；尚未在 Safari 中签名启用。
 - 三个 MV3 产物均通过功能清单和资源核对，已生成 2.0.0 ZIP。
 - Mozilla `web-ext lint`：0 errors、0 notices、13 warnings。11 项为 HTML 赋值扫描提示，涉及历史组件/DOM 库及经过 DOMPurify 处理的内容；另外两项是隐私声明字段在最低支持的旧 Firefox 版本上尚未提供。保留这些提示供发布前审阅，没有将警告过滤为“完全无问题”。
-
-Firefox 测试下载的浏览器、临时 profile 和 Safari 编译缓存均不属于源码。自动化没有使用个人浏览器资料，也没有在真实饭否账户中发送或删除内容。

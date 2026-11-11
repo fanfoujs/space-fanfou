@@ -18,7 +18,6 @@ export default defineConfig({
 			'public/**',
 			'scripts/**',
 			'docs/**',
-			'tests/**',
 			'*.json',
 			'*.ts',
 			'*.mjs',

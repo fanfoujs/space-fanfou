@@ -98,7 +98,7 @@ export default [
 			'unicorn/no-undeclared-class-members': 'off',
 			'unicorn/prefer-number-coercion': 'off',
 			'unicorn/prefer-number-is-safe-integer': 'off',
-			// 饭否 OAuth 签名和本地代理测试需要保留显式的 HTTP 地址。
+			// 饭否 OAuth 签名需要保留显式的 HTTP 地址。
 			'unicorn/prefer-https': 'off',
 			// 交给 XO 内置的格式化器处理运算符和括号，避免修复循环。
 			'@stylistic/no-mixed-operators': 'off',
@@ -133,29 +133,6 @@ export default [
 		rules: {
 			'react/jsx-uses-react': 'error',
 			'react/jsx-uses-vars': 'error',
-		},
-	},
-	{
-		files: ['**/*.test.{js,ts}', 'tests/**'],
-		languageOptions: {globals: globals.vitest},
-		rules: {
-			// 测试通过可控的 mock 和浏览器跨上下文数据验证运行行为。
-			'@typescript-eslint/no-unsafe-assignment': 'off',
-			'@typescript-eslint/no-unsafe-member-access': 'off',
-			'@typescript-eslint/no-unsafe-call': 'off',
-			'@typescript-eslint/no-unsafe-return': 'off',
-			'@typescript-eslint/no-unsafe-argument': 'off',
-			'@typescript-eslint/no-base-to-string': 'off',
-			'@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
-			'@typescript-eslint/no-empty-function': 'off',
-			// Vi.hoisted 工厂需要显式断言保留可变 mock 的类型范围。
-			'@typescript-eslint/no-unnecessary-type-assertion': 'off',
-			'@typescript-eslint/consistent-type-assertions': [
-				'error',
-				{assertionStyle: 'as', objectLiteralTypeAssertions: 'allow'},
-			],
-			'no-script-url': 'off',
-			complexity: 'off',
 		},
 	},
 	{
@@ -236,18 +213,7 @@ export default [
 		rules: {'@typescript-eslint/strict-void-return': 'off'},
 	},
 	{
-		files: ['tests/unit/parse-html.test.ts'],
-		// 此处验证服务端 HTML 解析适配器，并非浏览器原生 Element。
-		rules: {
-			'unicorn/prefer-scoped-selector': 'off',
-			'unicorn/better-dom-traversing': 'off',
-		},
-	},
-	{
-		files: [
-			'src/features/status-form-enhancements/textarea-state@page.js',
-			'tests/playwright/composer.spec.ts',
-		],
+		files: ['src/features/status-form-enhancements/textarea-state@page.js'],
 		// 保留已有选择器的查询范围，避免把格式迁移变成 DOM 行为修改。
 		rules: {'unicorn/prefer-scoped-selector': 'off'},
 	},

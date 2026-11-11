@@ -100,7 +100,7 @@ are:
 At a high level, this fork aims to be:
 
 - compatible with modern Chrome extension requirements
-- testable with current lint/build/test workflows
+- checked with current typecheck, lint, and build workflows
 - closer to a maintained continuation than a frozen historical snapshot
 
 ## WXT Cross-browser Continuation
