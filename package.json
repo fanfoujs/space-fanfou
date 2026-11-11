@@ -62,7 +62,7 @@
     "is-number": "^7.0.0",
     "is-promise": "^2.1.0",
     "is-visible": "^2.2.0",
-    "js-cookie": "^2.2.0",
+    "js-cookie": "^3.0.7",
     "just-clamp": "^3.1.0",
     "just-debounce-it": "^1.1.0",
     "just-flush": "^1.1.0",
@@ -111,7 +111,7 @@
     "autoprefixer": "^10.0.0",
     "@babel/core": "^7.28.0",
     "@webext-core/fake-browser": "^2.0.1",
-    "web-ext": "^9.2.0",
+    "web-ext": "^10.8.0",
     "prettier": "^3.0.0"
   },
   "type": "module",
