@@ -1,6 +1,6 @@
 # WXT 与 Manifest V3 迁移
 
-本次迁移以 `47471f9` 为功能基线，保留 31 项用户功能。按用户要求，将 2026-02-28 改为默认开启的 12 项既有设置恢复为之前的关闭状态，并移除头像壁纸小游戏的选项、逻辑与样式；其余设置键保留，已保存的用户偏好不会被默认值强制覆盖。逐项基线见 [feature-inventory.json](feature-inventory.json)。唯一移除的是旧版 Google Analytics 统计，不影响饭否功能；发布包不再加载远程统计脚本。
+本次迁移以 `47471f9` 为功能基线，目前保留 30 项用户功能。按用户要求，将 2026-02-28 改为默认开启的 12 项既有设置恢复为之前的关闭状态，并完整移除头像壁纸功能及相关设置、逻辑与样式；其余设置键保留，已保存的用户偏好不会被默认值强制覆盖。逐项基线及已移除功能见 [feature-inventory.json](feature-inventory.json)。旧版 Google Analytics 统计也已移除；发布包不再加载远程统计脚本。
 
 ## 工程
 
@@ -18,7 +18,7 @@
 | 发文 | 浮动输入框、回复与转发后保留内容、草稿保存、字数提示、Ajax 发文、上传图片、拖放与粘贴图片、@ 自动补全 |
 | 用户与管理 | 多用户切换、喜爱饭友、好友关系检查、统计侧栏、批量管理消息、私信和关注关系 |
 | 提醒与分享 | 关注话题检查和已读标记、@/私信/关注者提醒、更新通知、右键分享 |
-| 外观 | 头像墙纸、阴影、半透明侧栏、移除个性主题、应用推荐和 beta 标记、去除计数括号、高清图片和图片缩放修复 |
+| 外观 | 阴影、半透明侧栏、移除个性主题、应用推荐和 beta 标记、去除计数括号、高清图片和图片缩放修复 |
 | 其他 | OAuth 授权、头像分享、快捷键 |
 
 构建核对 `npm run verify:build` 会读取三个浏览器的实际 JS 包，检查每个历史功能的 metadata、每个子功能脚本与样式都被注册，并检查 Manifest、HTML 资源和禁止的动态代码执行。
@@ -37,9 +37,9 @@
 
 ## 饭否 API SDK
 
-- API 请求统一使用 `fanfou-sdk@7.0.0-beta.3`，固定 beta 版本；好友关系、侧栏统计和头像壁纸分别调用 SDK 的 `getUser`、`checkFriendshipDetail` 和 `getFollowings`。
+- API 请求统一使用 `fanfou-sdk@7.0.0-beta.3`，固定 beta 版本；好友关系调用 SDK 的 `getUser` 和 `checkFriendshipDetail`，侧栏统计调用 `getUser`。
 - SDK 仅在扩展后台运行，页面通过明确允许的方法通信，不能指定任意请求地址。沿用原有 OAuth token，无需因 SDK 迁移重新授权。
-- 页面适配 SDK 的 camelCase 响应字段和关系布尔值，保留头像分页、统计数据和未授权时的回退行为。
+- 页面适配 SDK 的 camelCase 响应字段和关系布尔值，保留统计数据和未授权时的回退行为。
 - 网络请求使用 HTTPS，通过 SDK 的 `baseString` hook 保留饭否所需的 HTTP OAuth 签名基串。
 - 普通 OAuth 授权使用 SDK 的 `getRequestToken` / `getAccessToken`，将 `oauth_callback` 放在饭否授权页 URL 中；Chrome/Firefox 回调及 Safari 无验证码的手动授权均使用 SDK 交换 token。
 - beta 的 `getAccessToken` 尚不能提交 `oauth_verifier`，仅在回调携带或用户填写验证码时保留签名 POST 兼容请求。沿用临时凭据的 session 格式、十分钟有效期和回调 token 校验；同一授权的重复请求复用进行中的任务，避免多次交换一次性 token。

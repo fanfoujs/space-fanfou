@@ -8,7 +8,7 @@ const metadata = import.meta.glob('../../src/features/*/metadata.js', {
   eager: true,
 })
 
-test('every original user feature and option definition is retained', () => {
+test('every active user feature and option definition is retained', () => {
   const active = Object.keys(inventory.features)
     .filter((name) => !(name in inventory.retired))
     .sort()
@@ -59,6 +59,8 @@ test('metadata registry retains falsy defaults and the storage location of each 
     registry.example!.metadata.optionStorageAreaMap['example/disabled'],
   ).toBe('local')
   expect(Object.keys(metadata)).toHaveLength(
-    Object.keys(inventory.features).length - 1,
+    Object.keys(inventory.features).filter(
+      (name) => !(name in inventory.retired),
+    ).length,
   )
 })

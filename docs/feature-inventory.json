@@ -210,6 +210,7 @@
     }
   },
   "retired": {
+    "avatar-wallpaper": "按用户要求移除关注用户头像壁纸功能及全部设置、脚本与样式。",
     "google-analytics": "旧版 Universal Analytics 远程脚本停止使用；移除统计，不影响饭否功能。"
   }
 }

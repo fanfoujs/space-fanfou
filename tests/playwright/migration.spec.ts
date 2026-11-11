@@ -61,7 +61,7 @@ test.afterAll(async () => {
   if (profile) fs.rmSync(profile, { force: true, recursive: true })
 })
 
-test('settings loads every original option and saves disabled values', async () => {
+test('settings loads active options and saves disabled values', async () => {
   const page = await context.newPage()
   await page.goto(`chrome-extension://${extensionId}/settings.html`)
   await expect(page.locator('.wrapper')).toBeVisible()
@@ -72,7 +72,9 @@ test('settings loads every original option and saves disabled values', async () 
   expect(Object.keys(values).length).toBeGreaterThan(30)
   expect(values['check-saved-searches']).toBe(true)
   expect(values['auto-pager']).toBe(true)
-  expect(values['avatar-wallpaper']).toBeDefined()
+  expect(
+    Object.keys(values).some((key) => key.startsWith('avatar-wallpaper')),
+  ).toBe(false)
   for (const key of [
     'show-contextual-statuses/autoFetch',
     'box-shadows',
@@ -88,7 +90,13 @@ test('settings loads every original option and saves disabled values', async () 
     'share-to-fanfou',
   ])
     expect(values[key], key).toBe(false)
-  expect(values).not.toHaveProperty('avatar-wallpaper/match3Mode')
+  await page
+    .getByRole('navigation')
+    .getByText('页面外观', { exact: true })
+    .click()
+  await expect(
+    page.getByText('显示关注者头像壁纸', { exact: true }),
+  ).toHaveCount(0)
   await page.evaluate(async () => {
     const api = (globalThis as any).chrome
     const values = (await api.storage.local.get('settings')).settings
@@ -167,97 +175,6 @@ test('content and main-world scripts load, styles resolve and draft saving still
     .toBe(null)
   expect(failedAssets).toEqual([])
   await page.close()
-})
-
-test('avatar wallpaper retains its layout, favorites, settings and cleanup', async () => {
-  const settingsPage = await context.newPage()
-  await settingsPage.goto(`chrome-extension://${extensionId}/settings.html`)
-  await expect(settingsPage.locator('.wrapper')).toBeVisible()
-  await settingsPage
-    .getByRole('navigation')
-    .getByText('页面外观', { exact: true })
-    .click()
-  await expect(
-    settingsPage.getByText('羊了个羊模式（实验）', { exact: true }),
-  ).toHaveCount(0)
-  await settingsPage.evaluate(async () => {
-    const api = (globalThis as any).chrome
-    const avatars = ['red', 'green', 'blue', 'gold'].map(
-      (color) =>
-        'data:image/svg+xml,' +
-        encodeURIComponent(
-          `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="64" height="64" fill="${color}"/></svg>`,
-        ),
-    )
-    await api.storage.local.set({
-      'avatar-wallpaper/cache': { version: 1, updatedAt: Date.now(), avatars },
-    })
-    await api.storage.sync.set({
-      'favorite-fanfouers/friendsData': [{ avatarUrl: avatars[0] }],
-    })
-    const values = (await api.storage.local.get('settings')).settings
-    values['avatar-wallpaper'] = true
-    const response = await api.runtime.sendMessage({
-      target: 'space-fanfou-background',
-      message: {
-        action: 'SETTINGS_WRITE_ALL',
-        payload: { optionValues: values },
-      },
-    })
-    if (response?.__isError) throw new Error(response.message)
-  })
-  const page = await context.newPage()
-  await page.goto('https://fanfou.com/home')
-  const wallpaper = page.locator('#sf-avatar-wallpaper')
-  await expect(wallpaper).toBeVisible()
-  await expect(wallpaper.locator('.sf-avatar-wallpaper-tile')).toHaveCount(4)
-  await expect(wallpaper.locator('.sf-avatar-frame-gold')).toHaveCount(1)
-  await expect(wallpaper).toHaveCSS('pointer-events', 'none')
-  await page.setViewportSize({ width: 1600, height: 900 })
-  await expect(wallpaper.locator('.sf-avatar-wallpaper-tile')).toHaveCount(4)
-  await settingsPage.evaluate(async () => {
-    const api = (globalThis as any).chrome
-    const values = (await api.storage.local.get('settings')).settings
-    values['avatar-wallpaper/opacity'] = 0.4
-    await api.runtime.sendMessage({
-      target: 'space-fanfou-background',
-      message: {
-        action: 'SETTINGS_WRITE_ALL',
-        payload: { optionValues: values },
-      },
-    })
-  })
-  await expect
-    .poll(() =>
-      wallpaper.evaluate((element) =>
-        (element as HTMLElement).style.getPropertyValue(
-          '--sf-avatar-wallpaper-pane-bg-opacity',
-        ),
-      ),
-    )
-    .toBe('0.4')
-  await page.screenshot({
-    path: 'test-results/avatar-wallpaper.png',
-    fullPage: true,
-  })
-  await settingsPage.evaluate(async () => {
-    const api = (globalThis as any).chrome
-    const values = (await api.storage.local.get('settings')).settings
-    values['avatar-wallpaper'] = false
-    await api.runtime.sendMessage({
-      target: 'space-fanfou-background',
-      message: {
-        action: 'SETTINGS_WRITE_ALL',
-        payload: { optionValues: values },
-      },
-    })
-  })
-  await expect(wallpaper).toHaveCount(0)
-  await expect(page.locator('body')).not.toHaveClass(
-    /sf-avatar-wallpaper-enabled/,
-  )
-  await page.close()
-  await settingsPage.close()
 })
 
 test('SDK API and token exchange run in the service worker with existing tokens and camelCase results', async () => {
