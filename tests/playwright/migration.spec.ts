@@ -400,9 +400,13 @@ test('SDK API and token exchange run in the service worker with existing tokens 
       .getByRole('navigation')
       .getByText('工具', { exact: true })
       .click()
-    await expect(page.getByRole('status')).toHaveText('已登录')
+    const accounts = page.getByRole('list', { name: '饭否账号列表' })
+    const authorizedAccount = accounts.getByRole('listitem').filter({
+      has: page.getByText('SDK 测试（~sdk-tester）', { exact: true }),
+    })
+    await expect(authorizedAccount.getByText('已授权', { exact: true })).toBeVisible()
     await expect(
-      page.getByRole('button', { name: '退出登录', exact: true }),
+      authorizedAccount.getByRole('button', { name: '移除 SDK 测试 的授权', exact: true }),
     ).toBeVisible()
     await expect(
       page.getByRole('button', { name: '重新检测', exact: true }),
@@ -418,21 +422,27 @@ test('SDK API and token exchange run in the service worker with existing tokens 
       Date.now = () => state.__sfOriginalNow() + 6 * 60_000
     })
     await page.evaluate(() => window.dispatchEvent(new Event('focus')))
-    await expect(page.getByRole('status')).toHaveText('已登录')
+    await expect(authorizedAccount.getByText('已授权', { exact: true })).toBeVisible()
     await expect(
-      page.getByRole('button', { name: '退出登录', exact: true }),
+      authorizedAccount.getByRole('button', { name: '移除 SDK 测试 的授权', exact: true }),
     ).toBeVisible()
     await expect(page.getByRole('alert')).toHaveCount(0)
     await worker.evaluate(() => {
       ;(globalThis as any).__sfCurrentWebUser = 'another-user'
     })
     await page.evaluate(() => window.dispatchEvent(new Event('focus')))
-    await expect(page.getByRole('status')).toHaveText('未登录')
+    const currentAccount = accounts.getByRole('listitem').filter({
+      has: page.getByText('当前网页', { exact: true }),
+    })
+    await expect(currentAccount).toContainText('another-user')
+    await expect(currentAccount.getByText('未授权', { exact: true })).toBeVisible()
+    await expect(authorizedAccount.getByText('已授权', { exact: true })).toBeVisible()
     await worker.evaluate(() => {
       ;(globalThis as any).__sfCurrentWebUser = '~sdk-tester'
     })
     await page.evaluate(() => window.dispatchEvent(new Event('focus')))
-    await expect(page.getByRole('status')).toHaveText('已登录')
+    await expect(authorizedAccount.getByText('当前网页', { exact: true })).toBeVisible()
+    await expect(authorizedAccount.getByText('已授权', { exact: true })).toBeVisible()
     await page
       .locator('section')
       .filter({ has: page.locator('.sf-oauth-panel') })
@@ -473,7 +483,7 @@ test('settings asks to reload an old background instead of reporting a false log
   })
   await page.goto(`chrome-extension://${extensionId}/settings.html`)
   await page.getByRole('navigation').getByText('工具', { exact: true }).click()
-  await expect(page.getByRole('status')).toContainText('请重新加载')
+  await expect(page.getByLabel('扩展已更新，请重新加载。', { exact: true })).toBeVisible()
   await expect(
     page.getByRole('button', { name: '重新加载扩展', exact: true }),
   ).toBeVisible()

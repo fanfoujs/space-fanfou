@@ -685,9 +685,11 @@ test('photo-only sending clears the matching saved image and keeps failures retr
   await authorize({ complete: true })
   state.storage.set('local:' + COMPOSER_DRAFT_KEY, '')
   state.storage.set('local:' + COMPOSER_IMAGE_KEY, composerImageFixture)
-  fetchMock.mockImplementationOnce(async () =>
-    Response.json({ error: '图片发送失败' }, { status: 503 }),
-  )
+  fetchMock.mockImplementationOnce(async (input, init) => {
+    // Consume the multipart body before Ky cancels its request streams.
+    await new Request(input, init).arrayBuffer()
+    return Response.json({ error: '图片发送失败' }, { status: 503 })
+  })
   expect(
     (await compose({ status: '', userId: '42', image: composerImageFixture }))
       .error,
@@ -695,9 +697,10 @@ test('photo-only sending clears the matching saved image and keeps failures retr
   expect(state.storage.get('local:' + COMPOSER_IMAGE_KEY)).toEqual(
     composerImageFixture,
   )
-  fetchMock.mockImplementationOnce(async () =>
-    Response.json({ id: 'uploaded' }),
-  )
+  fetchMock.mockImplementationOnce(async (input, init) => {
+    await new Request(input, init).arrayBuffer()
+    return Response.json({ id: 'uploaded' })
+  })
   expect(
     (await compose({ status: '', userId: '42', image: composerImageFixture }))
       .ok,
@@ -714,7 +717,8 @@ test('a delayed photo upload cannot clear a replacement image even when its capt
   const pending = new Promise<void>((resolve) => {
     started = resolve
   })
-  fetchMock.mockImplementationOnce(async () => {
+  fetchMock.mockImplementationOnce(async (input, init) => {
+    await new Request(input, init).arrayBuffer()
     started()
     return new Promise<Response>((resolve) => {
       finish = resolve
