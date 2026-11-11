@@ -35,9 +35,15 @@ describe('Safari 工程更新', () => {
           projectRoot,
           'Space Fanfou Extension/Resources',
         )
+        const appInfo = path.join(projectRoot, 'Space Fanfou/Info.plist')
         mkdirSync(source, { recursive: true })
         mkdirSync(path.dirname(project), { recursive: true })
         mkdirSync(resources, { recursive: true })
+        mkdirSync(path.dirname(appInfo), { recursive: true })
+        writeFileSync(
+          appInfo,
+          '<?xml version="1.0" encoding="UTF-8"?>\n<plist version="1.0">\n<dict>\n<key>SFSafariWebExtensionConverterVersion</key>\n<string>27.2</string>\n</dict>\n</plist>\n',
+        )
         const manifest = JSON.stringify({ version: '2.0.1' })
         writeFileSync(path.join(source, 'manifest.json'), manifest)
         writeFileSync(path.join(resources, 'stale.js'), 'old')
@@ -91,8 +97,23 @@ describe('Safari 工程更新', () => {
           readFileSync(path.join(resources, 'manifest.json'), 'utf8'),
         ).toBe(manifest)
         expect(() => readFileSync(path.join(resources, 'stale.js'))).toThrow()
+        const updatedPlist = readFileSync(appInfo, 'utf8')
+        expect(updatedPlist).toContain(
+          '<key>LSApplicationCategoryType</key>\n\t<string>public.app-category.social-networking</string>',
+        )
+        expect(updatedPlist).toContain(
+          '<key>SFSafariWebExtensionConverterVersion</key>\n<string>27.2</string>',
+        )
         expect(run().status).toBe(0)
         expect(readFileSync(project, 'utf8')).toBe(contents)
+        expect(readFileSync(appInfo, 'utf8')).toBe(updatedPlist)
+        const customCategory = updatedPlist.replace(
+          'public.app-category.social-networking',
+          'public.app-category.utilities',
+        )
+        writeFileSync(appInfo, customCategory)
+        expect(run().status).toBe(0)
+        expect(readFileSync(appInfo, 'utf8')).toBe(customCategory)
       } finally {
         rmSync(root, { recursive: true, force: true })
       }

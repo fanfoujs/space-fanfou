@@ -53,6 +53,20 @@ if (project) {
   project = projectFiles.find((file) => existsSync(file))
 }
 if (!project) throw new Error('未找到生成的 Safari Xcode 工程文件')
+// App Store 归档要求主应用声明分类；保留已有的自定义分类。
+const appInfo = path.join(projectRoot, 'Space Fanfou/Info.plist')
+const plist = readFileSync(appInfo, 'utf8')
+if (!/<key>\s*LSApplicationCategoryType\s*<\/key>/.test(plist)) {
+  const rootEnd = /<\/dict>\s*<\/plist>\s*$/
+  if (!rootEnd.test(plist)) throw new Error('无法识别 Safari 主应用 Info.plist')
+  writeFileSync(
+    appInfo,
+    plist.replace(
+      rootEnd,
+      '\t<key>LSApplicationCategoryType</key>\n\t<string>public.app-category.social-networking</string>\n</dict>\n</plist>\n',
+    ),
+  )
+}
 // 当前 Xcode 模板可能用显示名称重新生成主应用 ID；保证扩展仍属于主应用。
 const version = JSON.parse(
   readFileSync(path.join(source, 'manifest.json'), 'utf8'),
