@@ -358,11 +358,15 @@ input[type="checkbox"] {
   margin: 0 0 6px;
 }
 
-@media (max-width: 775px) {
+// Firefox measures popups at up to 800px and sizes them from the body.
+@media (max-width: 800px) {
   html {
-    width: 560px;
     height: 600px;
     overflow-y: hidden;
+  }
+
+  body {
+    width: 560px;
   }
 
   .wrapper {

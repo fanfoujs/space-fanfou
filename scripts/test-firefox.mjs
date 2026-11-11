@@ -172,6 +172,29 @@ try {
   assert.ok(
     await evaluate('return document.body.textContent.includes("太空饭否")'),
   )
+  const settingsTabWidth = await evaluate(
+    'return document.querySelector("#tabs").getBoundingClientRect().width',
+  )
+  assert.equal(
+    settingsTabWidth,
+    718,
+    'Full-page settings keep their content width',
+  )
+  await evaluate(
+    'window.wrappedJSObject.browser.action.openPopup(); return true;',
+  )
+  await command('Marionette:SetContext', { value: 'chrome' })
+  await until(
+    () =>
+      evaluate(
+        'return document.querySelector("browser.webextension-popup-browser")?.getBoundingClientRect().width === 560',
+      ),
+    'settings popup width is 560px',
+  )
+  const settingsPopupWidth = await evaluate(
+    'const popup = document.querySelector("browser.webextension-popup-browser"); const width = popup.getBoundingClientRect().width; popup.closest("panel").hidePopup(); return width;',
+  )
+  await command('Marionette:SetContext', { value: 'content' })
   await command('WebDriver:Navigate', { url: 'http://fanfou.com/home' })
   await until(
     () =>
@@ -203,6 +226,8 @@ try {
   const report = {
     browserVersion: session.capabilities.browserVersion,
     settings: true,
+    settingsTabWidth,
+    settingsPopupWidth,
     mainWorldInjection: true,
     messaging: true,
     draftSaveAndRestore: true,
