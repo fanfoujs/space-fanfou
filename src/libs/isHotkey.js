@@ -1,11 +1,8 @@
-import defined from 'defined'
+import defined from 'defined';
 
-export default (event, opts) => {
-  if (event.ctrlKey !== Boolean(opts.ctrl)) return false
-  if (event.altKey !== Boolean(defined(opts.alt, opts.option))) return false
-  if (event.shiftKey !== Boolean(opts.shift)) return false
-  if (event.metaKey !== Boolean(defined(opts.command, opts.win))) return false
-  if (event.key.toLowerCase() !== opts.key.toLowerCase()) return false
-
-  return true
-}
+export default (event, options) =>
+	event.ctrlKey === Boolean(options.ctrl) &&
+	event.altKey === Boolean(defined(options.alt, options.option)) &&
+	event.shiftKey === Boolean(options.shift) &&
+	event.metaKey === Boolean(defined(options.command, options.win)) &&
+	event.key.toLowerCase() === options.key.toLowerCase();

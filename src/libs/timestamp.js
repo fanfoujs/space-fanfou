@@ -1,3 +1,3 @@
-import tinydate from 'tinydate'
+import tinydate from 'tinydate';
 
-export default tinydate('{YYYY}-{MM}-{DD} {HH}:{mm}:{ss}')
+export default tinydate('{YYYY}-{MM}-{DD} {HH}:{mm}:{ss}');

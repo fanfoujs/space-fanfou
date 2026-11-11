@@ -1,2 +1,3 @@
-import { createStorageArea } from '@platform/storage'
-export default createStorageArea('sync')
+import {createStorageArea} from '@platform/storage';
+
+export default createStorageArea('sync');

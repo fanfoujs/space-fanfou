@@ -1,82 +1,85 @@
-import splitLines from 'split-lines'
-import stringWidth from 'string-width'
+import splitLines from 'split-lines';
+import stringWidth from 'string-width';
 
-const MAX_CONTINOUS_BLANK_LINE_NUMBER = 1
-const MAX_SUMMARY_LENGTH = 120
+const MAX_CONTINOUS_BLANK_LINE_NUMBER = 1;
+const MAX_SUMMARY_LENGTH = 120;
 
-export default rawVersionHistory => {
-  const lines = splitLines(rawVersionHistory)
-  const parsed = []
-  let currentLine
-  let continousBlankLineNumber = 0
-  let currentVersionItem
+export default (rawVersionHistory) => {
+	const lines = splitLines(rawVersionHistory);
+	const parsed = [];
+	let currentLine;
+	let continousBlankLineNumber = 0;
+	let currentVersionItem;
 
-  while (lines.length) {
-    currentLine = lines.shift().trim()
+	while (lines.length > 0) {
+		currentLine = lines.shift().trim();
 
-    // 跳过空行
-    if (!currentLine) {
-      if (++continousBlankLineNumber > MAX_CONTINOUS_BLANK_LINE_NUMBER) {
-        throw new Error(`连续空行不该超过 ${MAX_CONTINOUS_BLANK_LINE_NUMBER} 行`)
-      } else {
-        continue
-      }
-    }
-    continousBlankLineNumber = 0
+		// 跳过空行
+		if (!currentLine) {
+			if (++continousBlankLineNumber > MAX_CONTINOUS_BLANK_LINE_NUMBER) {
+				throw new Error(
+					`连续空行不该超过 ${MAX_CONTINOUS_BLANK_LINE_NUMBER} 行`,
+				);
+			}
 
-    // 注释
-    if (currentLine.startsWith('#')) {
-      continue
-    }
+			continue;
+		}
 
-    // 版本号（必选）
-    if (currentLine.startsWith('v')) {
-      const versionTag = currentLine.slice(1)
+		continousBlankLineNumber = 0;
 
-      currentVersionItem = {
-        version: versionTag,
-        releaseDate: '0000-00-00',
-        summary: '',
-        updateDetails: [],
-      }
-      parsed.push(currentVersionItem)
+		// 注释
+		if (currentLine.startsWith('#')) {
+			continue;
+		}
 
-      continue
-    }
+		// 版本号（必选）
+		if (currentLine.startsWith('v')) {
+			const versionTag = currentLine.slice(1);
 
-    // 发布日期（必选）
-    if (currentLine.startsWith('@')) {
-      const releaseDate = currentLine.slice(1)
+			currentVersionItem = {
+				version: versionTag,
+				releaseDate: '0000-00-00',
+				summary: '',
+				updateDetails: [],
+			};
+			parsed.push(currentVersionItem);
 
-      currentVersionItem.releaseDate = releaseDate
+			continue;
+		}
 
-      continue
-    }
+		// 发布日期（必选）
+		if (currentLine.startsWith('@')) {
+			const releaseDate = currentLine.slice(1);
 
-    // 版本更新内容概要（可选）
-    if (currentLine.startsWith('~ ')) {
-      const summary = currentLine.slice(2)
+			currentVersionItem.releaseDate = releaseDate;
 
-      if (stringWidth(summary) > MAX_SUMMARY_LENGTH) {
-        throw new Error(`摘要不该长于 ${MAX_SUMMARY_LENGTH} 字`)
-      }
+			continue;
+		}
 
-      currentVersionItem.summary = summary
+		// 版本更新内容概要（可选）
+		if (currentLine.startsWith('~ ')) {
+			const summary = currentLine.slice(2);
 
-      continue
-    }
+			if (stringWidth(summary) > MAX_SUMMARY_LENGTH) {
+				throw new Error(`摘要不该长于 ${MAX_SUMMARY_LENGTH} 字`);
+			}
 
-    // 版本更新细节项目（必选）
-    if (currentLine.startsWith('- ')) {
-      const updateDetail = currentLine.slice(2)
+			currentVersionItem.summary = summary;
 
-      currentVersionItem.updateDetails.push(updateDetail)
+			continue;
+		}
 
-      continue
-    }
+		// 版本更新细节项目（必选）
+		if (currentLine.startsWith('- ')) {
+			const updateDetail = currentLine.slice(2);
 
-    throw new Error(`无法识别：${currentLine}`)
-  }
+			currentVersionItem.updateDetails.push(updateDetail);
 
-  return parsed
-}
+			continue;
+		}
+
+		throw new Error(`无法识别：${currentLine}`);
+	}
+
+	return parsed;
+};

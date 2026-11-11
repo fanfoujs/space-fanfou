@@ -1,284 +1,302 @@
 /** @jsxRuntime classic */
 /** @jsx h */
-import { h } from 'dom-chef'
-import select from 'select-dom'
-import elementReady from 'element-ready'
-import wretch from 'wretch'
-import { isLoggedInUserProfilePage } from '@libs/pageDetect'
-import collapseSelection from '@libs/collapseSelection'
-import noop from '@libs/noop'
+import {h} from 'dom-chef';
+import select from 'select-dom';
+import elementReady from 'element-ready';
+import wretch from 'wretch';
+import {isLoggedInUserProfilePage} from '@libs/pageDetect';
+import collapseSelection from '@libs/collapseSelection';
+import noop from '@libs/noop';
 
-const CLASSNAME_CHECKBOX = 'sf-status-checkbox'
-const MESSAGE_CONFIRMING = '确定要删除选定的 %n 条消息吗？'
-const CLASSNAME_MULTIPLE_SELECTION_ACTIVE = 'sf-multiple-selection-active'
-const CLASSNAME_MULTIPLE_SELECTION_IN_RANGE = 'sf-multiple-selection-in-range'
+const CLASSNAME_CHECKBOX = 'sf-status-checkbox';
+const MESSAGE_CONFIRMING = '确定要删除选定的 %n 条消息吗？';
+const CLASSNAME_MULTIPLE_SELECTION_ACTIVE = 'sf-multiple-selection-active';
+const CLASSNAME_MULTIPLE_SELECTION_IN_RANGE = 'sf-multiple-selection-in-range';
 
-export default context => {
-  const { requireModules, elementCollection, registerDOMEventListener } = context
-  const { notification } = requireModules([ 'notification' ])
+export default (context) => {
+	const {requireModules, elementCollection, registerDOMEventListener} = context;
+	const {notification} = requireModules(['notification']);
 
-  let container
+	let container;
 
-  const options = [ {
-    label: '批量处理……',
-  }, {
-    label: '全选',
-    handler: () => modifyCheckedStates(() => true),
-  }, {
-    label: '反选',
-    handler: () => modifyCheckedStates((li, currentState) => !currentState),
-  }, {
-    label: '选中回复',
-    handler() {
-      modifyCheckedStates((li, currentState) => (
-        getStatusType(li) === 'reply' || currentState
-      ))
-    },
-  }, {
-    label: '选中转发',
-    handler() {
-      modifyCheckedStates((li, currentState) => (
-        getStatusType(li) === 'repost' || currentState
-      ))
-    },
-  }, {
-    label: '选中回复和转发',
-    handler() {
-      modifyCheckedStates((li, currentState) => (
-        getStatusType(li) !== 'normal' || currentState
-      ))
-    },
-  }, {
-    label: '取消选择',
-    handler: () => modifyCheckedStates(() => false),
-  } ]
+	const options = [
+		{
+			label: '批量处理……',
+		},
+		{
+			label: '全选',
+			handler: () => modifyCheckedStates(() => true),
+		},
+		{
+			label: '反选',
+			handler: () => modifyCheckedStates((li, currentState) => !currentState),
+		},
+		{
+			label: '选中回复',
+			handler() {
+				modifyCheckedStates(
+					(li, currentState) => getStatusType(li) === 'reply' || currentState,
+				);
+			},
+		},
+		{
+			label: '选中转发',
+			handler() {
+				modifyCheckedStates(
+					(li, currentState) => getStatusType(li) === 'repost' || currentState,
+				);
+			},
+		},
+		{
+			label: '选中回复和转发',
+			handler() {
+				modifyCheckedStates(
+					(li, currentState) => getStatusType(li) !== 'normal' || currentState,
+				);
+			},
+		},
+		{
+			label: '取消选择',
+			handler: () => modifyCheckedStates(() => false),
+		},
+	];
 
-  const multipleSelectionInitialState = {
-    isActive: false,
-    startingLi: null,
-    previousSelected: [],
-  }
-  const multipleSelectionState = { ...multipleSelectionInitialState }
+	const multipleSelectionInitialState = {
+		isActive: false,
+		startingLi: null,
+		previousSelected: [],
+	};
+	const multipleSelectionState = {...multipleSelectionInitialState};
 
-  elementCollection.add({
-    stream: '#stream',
-    statuses: { selector: '#stream > ol > li', getAll: true },
-  })
+	elementCollection.add({
+		stream: '#stream',
+		statuses: {selector: '#stream > ol > li', getAll: true},
+	});
 
-  registerDOMEventListener('stream', 'click', onClick)
-  registerDOMEventListener('statuses', 'mouseenter', onMouseEnter)
-  registerDOMEventListener(window, 'keyup', onKeyUp)
+	registerDOMEventListener('stream', 'click', onClick);
+	registerDOMEventListener('statuses', 'mouseenter', onMouseEnter);
+	registerDOMEventListener(globalThis, 'keyup', onKeyUp);
 
-  function createContainer() {
-    container = (
-      <div id="sf-batch-remove-statuses">
-        <select onChange={onSelectChanged}>
-          { options.map((option, index) => (
-            <option key={index}>{ option.label }</option>
-          )) }
-        </select>
-        <a className="bl" onClick={onRemoveSelectedClicked}>删除选定</a>
-      </div>
-    )
-  }
+	function createContainer() {
+		container = (
+			<div id="sf-batch-remove-statuses">
+				<select onChange={onSelectChanged}>
+					{options.map((option, index) => (
+						<option key={index}>{option.label}</option>
+					))}
+				</select>
+				<a className="bl" onClick={onRemoveSelectedClicked}>
+					删除选定
+				</a>
+			</div>
+		);
+	}
 
-  function addCheckbox(li) {
-    const checkbox = (
-      <input type="checkbox" className={CLASSNAME_CHECKBOX} />
-    )
+	function addCheckbox(li) {
+		const checkbox = <input type="checkbox" className={CLASSNAME_CHECKBOX} />;
 
-    li.append(checkbox)
-  }
+		li.append(checkbox);
+	}
 
-  function getAllCheckboxes() {
-    return select.all(`.${CLASSNAME_CHECKBOX}`)
-  }
+	function getAllCheckboxes() {
+		return select.all(`.${CLASSNAME_CHECKBOX}`);
+	}
 
-  function onSelectChanged(event) {
-    const selectElement = event.target
-    const selectedOption = options[selectElement.selectedIndex]
-    const handler = selectedOption.handler || noop
+	function onSelectChanged(event) {
+		const selectElement = event.target;
+		const selectedOption = options[selectElement.selectedIndex];
+		const handler = selectedOption.handler || noop;
 
-    handler()
-    selectElement.selectedIndex = 0
-  }
+		handler();
+		selectElement.selectedIndex = 0;
+	}
 
-  function modifyCheckedStates(fn) {
-    for (const checkbox of getAllCheckboxes()) {
-      const li = checkbox.parentElement
-      const currentState = checkbox.checked
+	function modifyCheckedStates(fn) {
+		for (const checkbox of getAllCheckboxes()) {
+			const li = checkbox.parentElement;
+			const currentState = checkbox.checked;
 
-      checkbox.checked = fn(li, currentState)
-    }
-  }
+			checkbox.checked = fn(li, currentState);
+		}
+	}
 
-  function getStatusType(li) {
-    const reply = select(':scope > .stamp > .reply', li)
-    const text = reply?.textContent || ''
-    let type = 'normal'
+	function getStatusType(li) {
+		const reply = select(':scope > .stamp > .reply', li);
+		const text = reply?.textContent || '';
+		let type = 'normal';
 
-    if (/^给.+的回复/.test(text)) {
-      type = 'reply'
-    } else if (text.startsWith('转自')) {
-      type = 'repost'
-    }
+		if (/^给.+的回复/.test(text)) {
+			type = 'reply';
+		} else if (text.startsWith('转自')) {
+			type = 'repost';
+		}
 
-    return type
-  }
+		return type;
+	}
 
-  function getSelectedStatuses() {
-    return getAllCheckboxes()
-      .filter(checkbox => checkbox.checked)
-      .map(checkbox => checkbox.parentElement)
-  }
+	function getSelectedStatuses() {
+		return getAllCheckboxes()
+			.filter((checkbox) => checkbox.checked)
+			.map((checkbox) => checkbox.parentElement);
+	}
 
-  async function onRemoveSelectedClicked() {
-    const statusesToRemove = getSelectedStatuses()
-    const count = statusesToRemove.length
-    if (count && window.confirm(MESSAGE_CONFIRMING.replace('%n', count))) {
-      await Promise.all(statusesToRemove.map(removeStatus))
-      window.location.reload()
-    }
-  }
+	async function onRemoveSelectedClicked() {
+		const statusesToRemove = getSelectedStatuses();
+		const count = statusesToRemove.length;
+		if (!(
+			count && globalThis.confirm(MESSAGE_CONFIRMING.replace('%n', () => count))
+		)) {
+			return;
+		}
 
-  async function removeStatus(li) {
-    const button = select(':scope > .op > .delete', li)
-    // 删除普通消息时 `actionType` 为 "msg.del"，删除图片消息时为 "photo.del"
-    // 相应的 `fieldName` 分别应为 "msg" 和 "photo"
-    const [ id, actionType ] = button.href.split('/').reverse()
-    const fieldName = actionType.split('.')[0]
-    const url = window.location.href
-    const data = {
-      ajax: 'yes',
-      action: actionType,
-      [fieldName]: id,
-      token: button.getAttribute('token'),
-    }
-    const response = await wretch(url).formUrl(data).post().json()
+		await Promise.all(statusesToRemove.map(removeStatus));
+		location.reload();
+	}
 
-    if (response.status) {
-      window.FF.util.yFadeRemove(button, 'li')
-    } else {
-      notification.create(notification.ERROR, response.msg)
-    }
-  }
+	async function removeStatus(li) {
+		const button = select(':scope > .op > .delete', li);
+		// 删除普通消息时 `actionType` 为 "msg.del"，删除图片消息时为 "photo.del"
+		// 相应的 `fieldName` 分别应为 "msg" 和 "photo"
+		const [id, actionType] = button.href.split('/').reverse();
+		const fieldName = actionType.split('.', 1)[0];
+		const url = location.href;
+		const data = {
+			ajax: 'yes',
+			action: actionType,
+			[fieldName]: id,
+			token: button.getAttribute('token'),
+		};
+		const response = await wretch(url).formUrl(data).post().json();
 
-  function resetMultipleSelectionState() {
-    Object.assign(multipleSelectionState, multipleSelectionInitialState)
-  }
+		if (response.status) {
+			FF.util.yFadeRemove(button, 'li');
+		} else {
+			notification.create(notification.ERROR, response.msg);
+		}
+	}
 
-  function getRelatedLiFromEventObject(event) {
-    // 使用标准API composedPath()，降级到非标准event.path（向后兼容）
-    const path = event.composedPath?.() || event.path || []
-    return path.find(element => element.matches?.('#stream > ol > li'))
-  }
+	function resetMultipleSelectionState() {
+		Object.assign(multipleSelectionState, multipleSelectionInitialState);
+	}
 
-  function onClick(event) {
-    const clickedLi = getRelatedLiFromEventObject(event)
+	function getRelatedLiFromEventObject(event) {
+		// 使用标准API composedPath()，降级到非标准event.path（向后兼容）
+		const path = event.composedPath?.() || event.path || [];
+		return path.find((element) => element.matches?.('#stream > ol > li'));
+	}
 
-    if (!event.shiftKey || !clickedLi) {
-      return
-    }
+	function onClick(event) {
+		const clickedLi = getRelatedLiFromEventObject(event);
 
-    if (multipleSelectionState.isActive) {
-      stopMultipleSelection()
-    } else {
-      startMultipleSelection(clickedLi)
-    }
+		if (!event.shiftKey || !clickedLi) {
+			return;
+		}
 
-    // 因为按住了 Shift 键，可能会选中文本。手工取消选中。
-    collapseSelection()
-  }
+		if (multipleSelectionState.isActive) {
+			stopMultipleSelection();
+		} else {
+			startMultipleSelection(clickedLi);
+		}
 
-  function onMouseEnter(event) {
-    const relatedLi = getRelatedLiFromEventObject(event)
+		// 因为按住了 Shift 键，可能会选中文本。手工取消选中。
+		collapseSelection();
+	}
 
-    if (event.shiftKey && multipleSelectionState.isActive && relatedLi) {
-      handleMultipleSelection(relatedLi)
-    }
-  }
+	function onMouseEnter(event) {
+		const relatedLi = getRelatedLiFromEventObject(event);
 
-  function onKeyUp(event) {
-    if (event.key === 'Shift' && multipleSelectionState.isActive) {
-      cancelMultipleSelection()
-    }
-  }
+		if (event.shiftKey && multipleSelectionState.isActive && relatedLi) {
+			handleMultipleSelection(relatedLi);
+		}
+	}
 
-  function startMultipleSelection(startingLi) {
-    resetMultipleSelectionState()
+	function onKeyUp(event) {
+		if (event.key === 'Shift' && multipleSelectionState.isActive) {
+			cancelMultipleSelection();
+		}
+	}
 
-    Object.assign(multipleSelectionState, {
-      isActive: true,
-      startingLi,
-      previousSelected: getSelectedStatuses(),
-    })
-    elementCollection.get('stream').classList.add(CLASSNAME_MULTIPLE_SELECTION_ACTIVE)
+	function startMultipleSelection(startingLi) {
+		resetMultipleSelectionState();
 
-    handleMultipleSelection(startingLi)
-  }
+		Object.assign(multipleSelectionState, {
+			isActive: true,
+			startingLi,
+			previousSelected: getSelectedStatuses(),
+		});
+		elementCollection
+			.get('stream')
+			.classList.add(CLASSNAME_MULTIPLE_SELECTION_ACTIVE);
 
-  function handleMultipleSelection(currentLi) {
-    const { startingLi, previousSelected } = multipleSelectionState
-    const allStatuses = elementCollection.get('statuses')
-    const startingIndex = allStatuses.indexOf(startingLi)
-    const currentIndex = allStatuses.indexOf(currentLi)
-    const littleIndex = Math.min(startingIndex, currentIndex)
-    const bigIndex = Math.max(startingIndex, currentIndex)
+		handleMultipleSelection(startingLi);
+	}
 
-    allStatuses.forEach((li, index) => {
-      const isInRange = littleIndex <= index && index <= bigIndex
-      const isPreviousSelected = previousSelected.includes(li)
-      const checkbox = select(`.${CLASSNAME_CHECKBOX}`, li)
+	function handleMultipleSelection(currentLi) {
+		const {startingLi, previousSelected} = multipleSelectionState;
+		const allStatuses = elementCollection.get('statuses');
+		const startingIndex = allStatuses.indexOf(startingLi);
+		const currentIndex = allStatuses.indexOf(currentLi);
+		const littleIndex = Math.min(startingIndex, currentIndex);
+		const bigIndex = Math.max(startingIndex, currentIndex);
 
-      li.classList.toggle(CLASSNAME_MULTIPLE_SELECTION_IN_RANGE, isInRange)
-      checkbox.checked = isInRange || isPreviousSelected
-    })
-  }
+		for (const [index, li] of allStatuses.entries()) {
+			const isInRange = littleIndex <= index && index <= bigIndex;
+			const isPreviousSelected = previousSelected.includes(li);
+			const checkbox = select(`.${CLASSNAME_CHECKBOX}`, li);
 
-  function stopMultipleSelection() {
-    for (const li of elementCollection.get('statuses')) {
-      li.classList.remove(CLASSNAME_MULTIPLE_SELECTION_IN_RANGE)
-    }
+			li.classList.toggle(CLASSNAME_MULTIPLE_SELECTION_IN_RANGE, isInRange);
+			checkbox.checked = isInRange || isPreviousSelected;
+		}
+	}
 
-    elementCollection.get('stream').classList.remove(CLASSNAME_MULTIPLE_SELECTION_ACTIVE)
-    resetMultipleSelectionState()
-  }
+	function stopMultipleSelection() {
+		for (const li of elementCollection.get('statuses')) {
+			li.classList.remove(CLASSNAME_MULTIPLE_SELECTION_IN_RANGE);
+		}
 
-  function cancelMultipleSelection() {
-    const { previousSelected } = multipleSelectionState
+		elementCollection
+			.get('stream')
+			.classList.remove(CLASSNAME_MULTIPLE_SELECTION_ACTIVE);
+		resetMultipleSelectionState();
+	}
 
-    for (const li of elementCollection.get('statuses')) {
-      li.classList.remove(CLASSNAME_MULTIPLE_SELECTION_IN_RANGE)
-    }
+	function cancelMultipleSelection() {
+		const {previousSelected} = multipleSelectionState;
 
-    modifyCheckedStates(li => previousSelected.includes(li))
+		for (const li of elementCollection.get('statuses')) {
+			li.classList.remove(CLASSNAME_MULTIPLE_SELECTION_IN_RANGE);
+		}
 
-    elementCollection.get('stream').classList.remove(CLASSNAME_MULTIPLE_SELECTION_ACTIVE)
-    resetMultipleSelectionState()
-  }
+		modifyCheckedStates((li) => previousSelected.includes(li));
 
-  return {
-    applyWhen: () => isLoggedInUserProfilePage(),
+		elementCollection
+			.get('stream')
+			.classList.remove(CLASSNAME_MULTIPLE_SELECTION_ACTIVE);
+		resetMultipleSelectionState();
+	}
 
-    waitReady: () => elementReady('#footer'),
+	return {
+		applyWhen: () => isLoggedInUserProfilePage(),
 
-    onLoad() {
-      createContainer()
+		waitReady: () => elementReady('#footer'),
 
-      for (const li of elementCollection.get('statuses')) {
-        addCheckbox(li)
-      }
+		onLoad() {
+			createContainer();
 
-      select('#info').append(container)
-    },
+			for (const li of elementCollection.get('statuses')) {
+				addCheckbox(li);
+			}
 
-    onUnload() {
-      container.remove()
-      container = null
+			select('#info').append(container);
+		},
 
-      for (const checkbox of getAllCheckboxes()) {
-        checkbox.remove()
-      }
-    },
-  }
-}
+		onUnload() {
+			container.remove();
+			container = null;
+
+			for (const checkbox of getAllCheckboxes()) {
+				checkbox.remove();
+			}
+		},
+	};
+};

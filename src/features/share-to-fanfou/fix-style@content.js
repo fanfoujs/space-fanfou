@@ -1,5 +1,5 @@
-import { isSharePage } from '@libs/pageDetect'
+import {isSharePage} from '@libs/pageDetect';
 
 export default () => ({
-  applyWhen: () => isSharePage(),
-})
+	applyWhen: () => isSharePage(),
+});

@@ -1,71 +1,74 @@
-import safelyInvokeFns from '@libs/safelyInvokeFns'
-import wrapper from '@libs/wrapper'
-import Deferred from '@libs/Deferred'
-import arrayUniquePush from '@libs/arrayUniquePush'
-import arrayRemove from '@libs/arrayRemove'
-import { BRIDGE_EVENT_TYPE, BROADCASTING_MESSAGE } from '@constants'
+import safelyInvokeFns from '@libs/safelyInvokeFns';
+import wrapper from '@libs/wrapper';
+import Deferred from '@libs/Deferred';
+import arrayUniquePush from '@libs/arrayUniquePush';
+import arrayRemove from '@libs/arrayRemove';
+import {BRIDGE_EVENT_TYPE, BROADCASTING_MESSAGE} from '@constants';
 
-let id = 0
-const deferreds = {}
-const broadcastListeners = []
+let id = 0;
+const deferreds = {};
+const broadcastListeners = [];
 
 function eventHandler(event) {
-  const { type, from, senderId, message } = JSON.parse(event.detail)
+	const {type, from, senderId, message} = JSON.parse(event.detail);
 
-  if (type === BROADCASTING_MESSAGE) {
-    bridge.broadcast(message)
-  } else if (from === 'background') {
-    const d = deferreds[senderId]
+	if (type === BROADCASTING_MESSAGE) {
+		bridge.broadcast(message);
+	} else if (from === 'background') {
+		const d = deferreds[senderId];
 
-    if (!d) {
-      console.warn('[SpaceFanfou] bridge: missing deferred for sender', senderId)
-      return
-    }
+		if (!d) {
+			console.warn(
+				'[SpaceFanfou] bridge: missing deferred for sender',
+				senderId,
+			);
+			return;
+		}
 
-    d.resolve(message)
-    delete deferreds[senderId]
-  }
+		d.resolve(message);
+		delete deferreds[senderId];
+	}
 }
 
 const bridge = wrapper({
-  install() {
-    window.addEventListener(BRIDGE_EVENT_TYPE, eventHandler)
-  },
+	install() {
+		globalThis.addEventListener(BRIDGE_EVENT_TYPE, eventHandler);
+	},
 
-  uninstall() {
-    window.removeEventListener(BRIDGE_EVENT_TYPE, eventHandler)
-  },
+	uninstall() {
+		globalThis.removeEventListener(BRIDGE_EVENT_TYPE, eventHandler);
+	},
 
-  registerBroadcastListener(fn) {
-    arrayUniquePush(broadcastListeners, fn)
-  },
+	registerBroadcastListener(fn) {
+		arrayUniquePush(broadcastListeners, fn);
+	},
 
-  unregisterBroadcastListener(fn) {
-    arrayRemove(broadcastListeners, fn)
-  },
+	unregisterBroadcastListener(fn) {
+		arrayRemove(broadcastListeners, fn);
+	},
 
-  broadcast(message) {
-    safelyInvokeFns({
-      fns: broadcastListeners,
-      args: [ message ],
-    })
-  },
+	broadcast(message) {
+		safelyInvokeFns({
+			fns: broadcastListeners,
+			args: [message],
+		});
+	},
 
-  postMessage(message) {
-    const senderId = id++
-    const d = deferreds[senderId] = new Deferred()
-    const event = new CustomEvent(BRIDGE_EVENT_TYPE, {
-      detail: JSON.stringify({
-        from: 'page',
-        senderId,
-        message,
-      }),
-    })
+	postMessage(message) {
+		const senderId = id++;
+		const d = (deferreds[senderId] = new Deferred());
+		const event = new CustomEvent(BRIDGE_EVENT_TYPE, {
+			detail: JSON.stringify({
+				from: 'page',
+				senderId,
+				message,
+			}),
+		});
 
-    window.dispatchEvent(event)
+		globalThis.dispatchEvent(event);
 
-    return d.promise
-  },
-})
+		return d.promise;
+	},
+});
 
-export default bridge
+export default bridge;

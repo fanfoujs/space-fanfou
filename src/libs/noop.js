@@ -1,1 +1,5 @@
-export default () => { /* empty */ }
+export default () => {
+	/*
+	Empty
+	*/
+};

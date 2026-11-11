@@ -1,19 +1,25 @@
-import { EXTENSION_UNLOADED_EVENT_TYPE } from '@constants'
+import {EXTENSION_UNLOADED_EVENT_TYPE} from '@constants';
 
 // Service Worker 兼容：检测 window 对象是否存在
-const hasWindow = typeof window !== 'undefined'
+const hasWindow = globalThis.window !== undefined;
 
 export default {
-  trigger() {
-    if (!hasWindow) return
+	trigger() {
+		if (!hasWindow) {
+			return;
+		}
 
-    const event = new CustomEvent(EXTENSION_UNLOADED_EVENT_TYPE)
-    window.dispatchEvent(event)
-  },
+		const event = new CustomEvent(EXTENSION_UNLOADED_EVENT_TYPE);
+		globalThis.dispatchEvent(event);
+	},
 
-  addListener(fn) {
-    if (!hasWindow) return
+	addListener(fn) {
+		if (!hasWindow) {
+			return;
+		}
 
-    window.addEventListener(EXTENSION_UNLOADED_EVENT_TYPE, fn, { once: true })
-  },
-}
+		globalThis.addEventListener(EXTENSION_UNLOADED_EVENT_TYPE, fn, {
+			once: true,
+		});
+	},
+};

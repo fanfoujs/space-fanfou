@@ -1,263 +1,288 @@
-import { h, Component } from 'preact'
-import select from 'select-dom'
-import Cookies from 'js-cookie'
-import pick from 'just-pick'
-import preactRender from '@libs/preactRender'
-import { readJSONFromLocalStorage } from '@libs/localStorageWrappers'
-import getLoggedInUserId, { getUserIdFromProfileLink } from '@libs/getLoggedInUserId'
-import findElementWithSpecifiedContentInArray from '@libs/findElementWithSpecifiedContentInArray'
-import arrayRemove from '@libs/arrayRemove'
-import omitBy from '@libs/omitBy'
-import { FANFOU_WEBSITE_ACCOUNTS_KEY } from '@constants'
+import {h, Component} from 'preact';
+import select from 'select-dom';
+import Cookies from 'js-cookie';
+import pick from 'just-pick';
+import preactRender from '@libs/preactRender';
+import {readJSONFromLocalStorage} from '@libs/localStorageWrappers';
+import getLoggedInUserId, {
+	getUserIdFromProfileLink,
+} from '@libs/getLoggedInUserId';
+import findElementWithSpecifiedContentInArray from '@libs/findElementWithSpecifiedContentInArray';
+import arrayRemove from '@libs/arrayRemove';
+import omitBy from '@libs/omitBy';
+import {FANFOU_WEBSITE_ACCOUNTS_KEY} from '@constants';
 
-const STORAGE_KEY = FANFOU_WEBSITE_ACCOUNTS_KEY
-const STORAGE_AREA_NAME = 'local'
-const CLASSNAME_IS_READY = 'sf-is-ready'
+const STORAGE_KEY = FANFOU_WEBSITE_ACCOUNTS_KEY;
+const STORAGE_AREA_NAME = 'local';
+const CLASSNAME_IS_READY = 'sf-is-ready';
 
-export default context => {
-  const { requireModules, elementCollection } = context
-  const { storage } = requireModules([ 'storage' ])
+export default (context) => {
+	const {requireModules, elementCollection} = context;
+	const {storage} = requireModules(['storage']);
 
-  let unmountUserSwitcher
+	let unmountUserSwitcher;
 
-  elementCollection.add({
-    usertop: '#user_top',
-  })
+	elementCollection.add({
+		usertop: '#user_top',
+	});
 
-  class UserSwitcher extends Component {
-    constructor(...args) {
-      super(...args)
+	class UserSwitcher extends Component {
+		constructor(...args) {
+			super(...args);
 
-      this.state = {
-        allUserData: [],
-      }
+			this.state = {
+				allUserData: [],
+			};
 
-      this.loadData()
-    }
+			this.loadData();
+		}
 
-    loadData = async () => {
-      this.setState({
-        allUserData: await readAllUserData(),
-      })
+		loadData = async () => {
+			this.setState({
+				allUserData: await readAllUserData(),
+			});
 
-      elementCollection.get('usertop').classList.add(CLASSNAME_IS_READY)
-    }
+			elementCollection.get('usertop').classList.add(CLASSNAME_IS_READY);
+		};
 
-    componentWillUnmount() {
-      elementCollection.get('usertop').classList.remove(CLASSNAME_IS_READY)
-    }
+		componentWillUnmount() {
+			elementCollection.get('usertop').classList.remove(CLASSNAME_IS_READY);
+		}
 
-    async switchToUser(userId) {
-      await writeUserCookies(userId)
-      redirectToHomePage()
-    }
+		async switchToUser(userId) {
+			await writeUserCookies(userId);
+			redirectToHomePage();
+		}
 
-    async removeUser(userId) {
-      const userData = await getUserData(userId)
-      const tip = `确定要从用户列表中删除 @${userData.nickname}（${userId}）吗？`
-      if (window.confirm(tip)) {
-        await removeUser(userId)
-        await this.loadData()
-      }
-    }
+		async removeUser(userId) {
+			const userData = await getUserData(userId);
+			const tip = `确定要从用户列表中删除 @${userData.nickname}（${userId}）吗？`;
+			if (!globalThis.confirm(tip)) {
+				return;
+			}
 
-    renderItem(userData) {
-      const currentUserId = getLoggedInUserId()
-      const { userId, avatarUrl, nickname } = userData
+			await removeUser(userId);
+			await this.loadData();
+		}
 
-      if (userId === currentUserId) return null
+		renderItem(userData) {
+			const currentUserId = getLoggedInUserId();
+			const {userId, avatarUrl, nickname} = userData;
 
-      return (
-        <li key={`user-${userId}`} className="sf-user-item">
-          <a class="sf-user-info" onClick={() => this.switchToUser(userId)}>
-            <img src={avatarUrl} alt={nickname} />
-            { nickname }
-          </a>
-          <span class="sf-del-icon" onClick={() => this.removeUser(userId)}>×</span>
-        </li>
-      )
-    }
+			if (userId === currentUserId) {
+				return null;
+			}
 
-    renderAddNew() {
-      return (
-        <li key="add-new" class="sf-add-new-user">
-          <input type="button" className="formbutton" onClick={addNewUser} value="登入另一个……" />
-        </li>
-      )
-    }
+			return (
+				<li key={`user-${userId}`} className="sf-user-item">
+					<a class="sf-user-info" onClick={() => this.switchToUser(userId)}>
+						<img src={avatarUrl} alt={nickname} />
+						{nickname}
+					</a>
+					<span class="sf-del-icon" onClick={() => this.removeUser(userId)}>
+						×
+					</span>
+				</li>
+			);
+		}
 
-    render() {
-      const { allUserData } = this.state
+		renderAddNew() {
+			return (
+				<li key="add-new" class="sf-add-new-user">
+					<input
+						type="button"
+						className="formbutton"
+						onClick={addNewUser}
+						value="登入另一个……"
+					/>
+				</li>
+			);
+		}
 
-      return (
-        <ul id="sf-user-switcher">
-          { allUserData.map(this.renderItem, this) }
-          { this.renderAddNew() }
-        </ul>
-      )
-    }
-  }
+		render() {
+			const {allUserData} = this.state;
 
-  async function readAllUserData() {
-    return await storage.read(STORAGE_KEY, STORAGE_AREA_NAME) || []
-  }
+			return (
+				<ul id="sf-user-switcher">
+					{allUserData.map(this.renderItem, this)}
+					{this.renderAddNew()}
+				</ul>
+			);
+		}
+	}
 
-  async function writeAllUserData(data) {
-    await storage.write(STORAGE_KEY, data, STORAGE_AREA_NAME)
-  }
+	async function readAllUserData() {
+		return (await storage.read(STORAGE_KEY, STORAGE_AREA_NAME)) || [];
+	}
 
-  async function getUserData(userId, allUserData_) {
-    const allUserData = allUserData_ || await readAllUserData()
-    const userData = allUserData.find(item => item.userId === userId)
+	async function writeAllUserData(data) {
+		await storage.write(STORAGE_KEY, data, STORAGE_AREA_NAME);
+	}
 
-    return userData
-  }
+	async function getUserData(userId, allUserData_) {
+		const allUserData = allUserData_ || (await readAllUserData());
+		const userData = allUserData.find((item) => item.userId === userId);
 
-  async function writeUserCookies(userId) {
-    const userData = await getUserData(userId)
+		return userData;
+	}
 
-    for (const [ key, value ] of Object.entries(userData.cookies)) {
-      Cookies.set(key, value, {
-        domain: '.fanfou.com',
-        expires: 30, // 因为拿不到服务端给的 cookies 过期时间，直接写死为 30 天
-      })
-    }
-  }
+	async function writeUserCookies(userId) {
+		const userData = await getUserData(userId);
 
-  // 把当前登录用户的信息保存到切换列表里，或者更新用户信息
-  async function addOrUpdateCurrentUser() {
-    const loggedInUserId = getLoggedInUserId()
-    const allCookies = Cookies.get()
-    const userData = {
-      userId: loggedInUserId,
-      accountIds: [...new Set([loggedInUserId, getUserIdFromProfileLink()].filter(Boolean))],
-      nickname: select('#user_top h3').textContent,
-      avatarUrl: select('#user_top img').src,
-      cookies: omitBy(allCookies, (_, key) => (
-        key.startsWith('_') || // 跳过键名以「_」开头的 cookie
-        key === 'uuid' // 跳过键名为「uuid」的 cookie
-      )),
-    }
+		for (const [key, value] of Object.entries(userData.cookies)) {
+			Cookies.set(key, value, {
+				domain: '.fanfou.com',
+				expires: 30, // 因为拿不到服务端给的 cookies 过期时间，直接写死为 30 天
+			});
+		}
+	}
 
-    await updateUserData(loggedInUserId, userData)
-  }
+	// 把当前登录用户的信息保存到切换列表里，或者更新用户信息
+	async function addOrUpdateCurrentUser() {
+		const loggedInUserId = getLoggedInUserId();
+		const allCookies = Cookies.get();
+		const userData = {
+			userId: loggedInUserId,
+			accountIds: [
+				...new Set(
+					[loggedInUserId, getUserIdFromProfileLink()].filter(Boolean),
+				),
+			],
+			nickname: select('#user_top h3').textContent,
+			avatarUrl: select('#user_top img').src,
+			cookies: omitBy(
+				allCookies,
+				(_, key) =>
+					key.startsWith('_') || // 跳过键名以「_」开头的 cookie
+					key === 'uuid', // 跳过键名为「uuid」的 cookie
+			),
+		};
 
-  async function removeUser(userId) {
-    await updateUserData(userId, null)
-  }
+		await updateUserData(loggedInUserId, userData);
+	}
 
-  async function removeCurrentUser() {
-    await removeUser(getLoggedInUserId())
-  }
+	async function removeUser(userId) {
+		await updateUserData(userId, null);
+	}
 
-  async function updateUserData(userId, userData) {
-    const allUserData = await readAllUserData()
-    // 这里必须把 allUserData 传给 getUserData()，否则指针必然不相等
-    const oldUserData = await getUserData(userId, allUserData)
+	async function removeCurrentUser() {
+		await removeUser(getLoggedInUserId());
+	}
 
-    if (oldUserData) {
-      arrayRemove(allUserData, oldUserData)
-    }
+	async function updateUserData(userId, userData) {
+		const allUserData = await readAllUserData();
+		// 这里必须把 allUserData 传给 getUserData()，否则指针必然不相等
+		const oldUserData = await getUserData(userId, allUserData);
 
-    // 把当前登录的用户放置到列表头部
-    if (userData) {
-      allUserData.unshift(userData)
-    }
+		if (oldUserData) {
+			arrayRemove(allUserData, oldUserData);
+		}
 
-    await writeAllUserData(allUserData)
-  }
+		// 把当前登录的用户放置到列表头部
+		if (userData) {
+			allUserData.unshift(userData);
+		}
 
-  function addNewUser() {
-    removeSessionCookies()
-    redirectToLoginPage()
-  }
+		await writeAllUserData(allUserData);
+	}
 
-  // 不等于退出登录，因为不会注销服务器端的 session
-  function removeSessionCookies() {
-    [ 'u', 'm', 'al', 'PHPSESSID' ].forEach(key => {
-      Cookies.remove(key, {
-        domain: '.fanfou.com',
-      })
-    })
-  }
+	function addNewUser() {
+		removeSessionCookies();
+		redirectToLoginPage();
+	}
 
-  function redirectToLoginPage() {
-    window.location.href = '/login'
-  }
+	// 不等于退出登录，因为不会注销服务器端的 session
+	function removeSessionCookies() {
+		for (const key of ['u', 'm', 'al', 'PHPSESSID']) {
+			Cookies.remove(key, {
+				domain: '.fanfou.com',
+			});
+		}
+	}
 
-  function redirectToHomePage() {
-    window.location.href = '/home'
-  }
+	function redirectToLoginPage() {
+		location.assign('/login');
+	}
 
-  function renderUserSwitcher() {
-    unmountUserSwitcher = preactRender(<UserSwitcher />, rendered => {
-      elementCollection.get('usertop').append(rendered)
-    })
-  }
+	function redirectToHomePage() {
+		location.assign('/home');
+	}
 
-  function getLogoutLink() {
-    const navigationLinks = select.all('#navigation a')
-    const logoutLink = findElementWithSpecifiedContentInArray(navigationLinks, '退出')
+	function renderUserSwitcher() {
+		unmountUserSwitcher = preactRender(<UserSwitcher />, (rendered) => {
+			elementCollection.get('usertop').append(rendered);
+		});
+	}
 
-    return logoutLink
-  }
+	function getLogoutLink() {
+		const navigationLinks = select.all('#navigation a');
+		const logoutLink = findElementWithSpecifiedContentInArray(
+			navigationLinks,
+			'退出',
+		);
 
-  async function onLogoutClick() {
-    const currentUserId = getLoggedInUserId()
+		return logoutLink;
+	}
 
-    await removeUser(currentUserId)
-  }
+	async function onLogoutClick() {
+		const currentUserId = getLoggedInUserId();
 
-  function listenOnLogout() {
-    const logoutLink = getLogoutLink()
+		await removeUser(currentUserId);
+	}
 
-    logoutLink.addEventListener('click', onLogoutClick)
-  }
+	function listenOnLogout() {
+		const logoutLink = getLogoutLink();
 
-  function unlistenOnLogout() {
-    const logoutLink = getLogoutLink()
+		logoutLink.addEventListener('click', onLogoutClick);
+	}
 
-    logoutLink.removeEventListener('click', onLogoutClick)
-  }
+	function unlistenOnLogout() {
+		const logoutLink = getLogoutLink();
 
-  return {
-    migrations: [ {
-      migrationId: 'user-switcher/ls-to-chrome-storage-api-and-object-to-array',
-      storageAreaName: 'local',
-      async executor() {
-        const oldData = readJSONFromLocalStorage('switcher')
-        if (!oldData) return
+		logoutLink.removeEventListener('click', onLogoutClick);
+	}
 
-        const newData = []
-        for (const [ userId, userData ] of Object.entries(oldData)) {
-          newData.push({
-            userId,
-            avatarUrl: userData.image,
-            ...pick(userData, [ 'nickname', 'cookies' ]),
-          })
-        }
+	return {
+		migrations: [
+			{
+				migrationId:
+					'user-switcher/ls-to-chrome-storage-api-and-object-to-array',
+				storageAreaName: 'local',
+				async executor() {
+					const oldData = readJSONFromLocalStorage('switcher');
+					if (!oldData) {
+						return;
+					}
 
-        await writeAllUserData(newData)
-      },
-    } ],
+					const newData = [];
+					for (const [userId, userData] of Object.entries(oldData)) {
+						newData.push({
+							userId,
+							avatarUrl: userData.image,
+							...pick(userData, ['nickname', 'cookies']),
+						});
+					}
 
-    applyWhen: () => elementCollection.ready('usertop'),
+					await writeAllUserData(newData);
+				},
+			},
+		],
 
-    async onLoad() {
-      // 登录时若勾选了「保存到切换列表」（即原本的「自动登录」），则存在这个 cookie
-      if (Cookies.get('al')) {
-        await addOrUpdateCurrentUser()
-      } else {
-        await removeCurrentUser()
-      }
+		applyWhen: () => elementCollection.ready('usertop'),
 
-      renderUserSwitcher()
-      listenOnLogout()
-    },
+		async onLoad() {
+			// 登录时若勾选了「保存到切换列表」（即原本的「自动登录」），则存在这个 cookie
+			await (Cookies.get('al')
+				? addOrUpdateCurrentUser()
+				: removeCurrentUser());
 
-    onUnload() {
-      unmountUserSwitcher()
-      unlistenOnLogout()
-    },
-  }
-}
+			renderUserSwitcher();
+			listenOnLogout();
+		},
+
+		onUnload() {
+			unmountUserSwitcher();
+			unlistenOnLogout();
+		},
+	};
+};

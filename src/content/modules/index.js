@@ -1,7 +1,13 @@
-import notification from './notification'
-import scrollManager from './scrollManager'
-import statusFormIntersectionObserver from './statusFormIntersectionObserver'
-import storage from './storage'
-import timelineElementObserver from './timelineElementObserver'
+import notification from './notification';
+import scrollManager from './scrollManager.js';
+import statusFormIntersectionObserver from './statusFormIntersectionObserver.js';
+import storage from './storage.js';
+import timelineElementObserver from './timelineElementObserver.js';
 
-export default { 'notification': notification, 'scrollManager': scrollManager, 'statusFormIntersectionObserver': statusFormIntersectionObserver, 'storage': storage, 'timelineElementObserver': timelineElementObserver }
+export default {
+	notification,
+	scrollManager,
+	statusFormIntersectionObserver,
+	storage,
+	timelineElementObserver,
+};

@@ -1,3 +1,2 @@
-export default queryString => {
-  return Object.fromEntries(new URLSearchParams(queryString).entries())
-}
+export default (queryString) =>
+	Object.fromEntries(new URLSearchParams(queryString));

@@ -1,13 +1,11 @@
-export default fn => {
-  let promise
+export default (fn) => {
+	let promise;
 
-  return (...args) => {
-    if (!promise) {
-      promise = fn(...args).finally(() => {
-        promise = null
-      })
-    }
+	return (...args) => {
+		promise ||= fn(...args).finally(() => {
+			promise = null;
+		});
 
-    return promise
-  }
-}
+		return promise;
+	};
+};

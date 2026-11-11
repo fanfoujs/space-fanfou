@@ -1,9 +1,12 @@
 {
-  "name": "space-fanfou-magnet-export",
-  "private": true,
-  "type": "module",
-  "dependencies": {
-    "three": "0.185.1",
-    "three-3mf-exporter": "45.2.0"
-  }
+	"name": "space-fanfou-magnet-export",
+	"private": true,
+	"type": "module",
+	"engines": {
+		"node": ">=22.12.0"
+	},
+	"dependencies": {
+		"three": "0.185.1",
+		"three-3mf-exporter": "45.2.0"
+	}
 }

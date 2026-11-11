@@ -1,9 +1,17 @@
-import contentModules from '@content/modules'
-import checkMyNewStatus from './checkMyNewStatus'
-import fanfouOAuth from './fanfouOAuth'
-import proxiedAudio from './proxiedAudio'
-import proxiedCreateTab from './proxiedCreateTab'
-import proxiedFetch from './proxiedFetch'
-import storage from './storage'
+import checkMyNewStatus from './checkMyNewStatus.js';
+import fanfouOAuth from './fanfouOAuth.js';
+import proxiedAudio from './proxiedAudio.js';
+import proxiedCreateTab from './proxiedCreateTab.js';
+import proxiedFetch from './proxiedFetch.js';
+import storage from './storage.js';
+import contentModules from '@content/modules';
 
-export default { ...contentModules, 'checkMyNewStatus': checkMyNewStatus, 'fanfouOAuth': fanfouOAuth, 'proxiedAudio': proxiedAudio, 'proxiedCreateTab': proxiedCreateTab, 'proxiedFetch': proxiedFetch, 'storage': storage }
+export default {
+	...contentModules,
+	checkMyNewStatus,
+	fanfouOAuth,
+	proxiedAudio,
+	proxiedCreateTab,
+	proxiedFetch,
+	storage,
+};

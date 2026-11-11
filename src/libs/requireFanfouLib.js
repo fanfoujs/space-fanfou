@@ -1,56 +1,64 @@
-import { getProperty } from 'dot-prop'
-import Deferred from '@libs/Deferred'
+import {getProperty} from 'dot-prop';
+import Deferred from '@libs/Deferred';
 
-const CHECKING_INTERVAL = 16
+const CHECKING_INTERVAL = 16;
 
-const libs = new Map()
-const pending = new Set()
-let timer
+const libs = new Map();
+const pending = new Set();
+let timer;
 
 function hasRequested(libName) {
-  return libs.has(libName)
+	return libs.has(libName);
 }
 
 function request(libName) {
-  libs.set(libName, new Deferred())
-  pending.add(libName)
-  setTimer()
+	libs.set(libName, new Deferred());
+	pending.add(libName);
+	setTimer();
 }
 
 function setTimer() {
-  if (timer) return
+	if (timer) {
+		return;
+	}
 
-  timer = setInterval(check, CHECKING_INTERVAL)
+	timer = setInterval(check, CHECKING_INTERVAL);
 }
 
 function clearTimer() {
-  if (!timer) return
+	if (!timer) {
+		return;
+	}
 
-  clearInterval(timer)
-  timer = null
+	clearInterval(timer);
+	timer = null;
 }
 
 function check() {
-  for (const libName of pending) {
-    const lib = getProperty(window, libName)
+	for (const libName of pending) {
+		const lib = getProperty(globalThis, libName);
 
-    if (typeof lib !== 'undefined') {
-      pending.delete(libName)
-      libs.get(libName).resolve(lib)
-    }
-  }
+		if (lib === undefined) {
+			continue;
+		}
 
-  if (!pending.size) clearTimer()
+		pending.delete(libName);
+		libs.get(libName).resolve(lib);
+	}
+
+	if (pending.size === 0) {
+		clearTimer();
+	}
 }
 
 function resolve(libName) {
-  return libs.get(libName).promise
+	return libs.get(libName).promise;
 }
 
-export default libName => {
-  if (!hasRequested(libName)) {
-    request(libName)
-  }
+export default (libName) => {
+	if (!hasRequested(libName)) {
+		request(libName);
+	}
 
-  return resolve(libName)
-}
+	return resolve(libName);
+};

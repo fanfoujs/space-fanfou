@@ -1,178 +1,183 @@
-import { h, render, Component } from 'preact'
-import select from 'select-dom'
-import cx from 'classnames'
-import { createFriendsListReader, createFriendsListWriter, createStorageChangeHandler } from './shared'
-import { isUserProfilePage } from '@libs/pageDetect'
-import preactRender from '@libs/preactRender'
+import {h, render, Component} from 'preact';
+import select from 'select-dom';
+import cx from 'classnames';
+import {
+	createFriendsListReader,
+	createFriendsListWriter,
+	createStorageChangeHandler,
+} from './shared.js';
+import {isUserProfilePage} from '@libs/pageDetect';
+import preactRender from '@libs/preactRender';
 
-const FAVED_TIP = '从有爱饭友列表去除'
-const UNFAVED_TIP = '加入有爱饭友列表'
+const FAVED_TIP = '从有爱饭友列表去除';
+const UNFAVED_TIP = '加入有爱饭友列表';
 
-export default context => {
-  const {
-    requireModules,
-    registerBroadcastListener,
-    unregisterBroadcastListener,
-    elementCollection,
-  } = context
-  const { storage } = requireModules([ 'storage' ])
+export default (context) => {
+	const {
+		requireModules,
+		registerBroadcastListener,
+		unregisterBroadcastListener,
+		elementCollection,
+	} = context;
+	const {storage} = requireModules(['storage']);
 
-  let unmount
-  const readFriendsList = createFriendsListReader(storage)
-  const writeFriendsList = createFriendsListWriter(storage)
+	let unmount;
+	const readFriendsList = createFriendsListReader(storage);
+	const writeFriendsList = createFriendsListWriter(storage);
 
-  elementCollection.add({
-    info: '#info',
-  })
+	elementCollection.add({
+		info: '#info',
+	});
 
-  function getUserId() {
-    return decodeURIComponent(window.location.pathname.split('/')[1])
-  }
+	function getUserId() {
+		return decodeURIComponent(location.pathname.split('/', 2)[1]);
+	}
 
-  function findByUserId(userId) {
-    return friendData => friendData.userId === userId
-  }
+	function findByUserId(userId) {
+		return (friendData) => friendData.userId === userId;
+	}
 
-  async function isFavorited() {
-    const userId = getUserId()
-    const friendsList = await readFriendsList()
+	async function isFavorited() {
+		const userId = getUserId();
+		const friendsList = await readFriendsList();
 
-    return friendsList.some(findByUserId(userId))
-  }
+		return friendsList.some(findByUserId(userId));
+	}
 
-  async function addToOrUpdateFriendsList() {
-    const userId = getUserId()
-    const friendsList = await readFriendsList()
-    const existingIndex = friendsList.findIndex(findByUserId(userId))
-    const friendData = {
-      userId,
-      nickname: select('#panel h1').textContent,
-      avatarUrl: select('#avatar img').src.replace(/^https?:/, ''),
-    }
+	async function addToOrUpdateFriendsList() {
+		const userId = getUserId();
+		const friendsList = await readFriendsList();
+		const existingIndex = friendsList.findIndex(findByUserId(userId));
+		const friendData = {
+			userId,
+			nickname: select('#panel h1').textContent,
+			avatarUrl: select('#avatar img').src.replace(/^https?:/, ''),
+		};
 
-    if (existingIndex === -1) {
-      friendsList.push(friendData)
-    } else {
-      friendsList[existingIndex] = friendData
-    }
+		if (existingIndex === -1) {
+			friendsList.push(friendData);
+		} else {
+			friendsList[existingIndex] = friendData;
+		}
 
-    await writeFriendsList(friendsList)
-  }
+		await writeFriendsList(friendsList);
+	}
 
-  async function removeFromFriendsList() {
-    const userId = getUserId()
-    const friendsList = await readFriendsList()
-    const index = friendsList.findIndex(findByUserId(userId))
+	async function removeFromFriendsList() {
+		const userId = getUserId();
+		const friendsList = await readFriendsList();
+		const index = friendsList.findIndex(findByUserId(userId));
 
-    friendsList.splice(index, 1)
-    await writeFriendsList(friendsList)
-  }
+		friendsList.splice(index, 1);
+		await writeFriendsList(friendsList);
+	}
 
-  class FavoriteFriend extends Component {
-    constructor(...args) {
-      super(...args)
+	class FavoriteFriend extends Component {
+		constructor(...args) {
+			super(...args);
 
-      this.state = {
-        isFavorited: false,
-      }
+			this.state = {
+				isFavorited: false,
+			};
 
-      this.refreshState()
-    }
+			this.refreshState();
+		}
 
-    onStorageChange = createStorageChangeHandler(() => {
-      this.refreshState()
-    })
+		onStorageChange = createStorageChangeHandler(() => {
+			this.refreshState();
+		});
 
-    async refreshState() {
-      this.setState({
-        isFavorited: await isFavorited(),
-      })
-    }
+		async refreshState() {
+			this.setState({
+				isFavorited: await isFavorited(),
+			});
+		}
 
-    toggleFavoritedStatus = async () => {
-      // 操作时可能存储的状态相比于读取时已经发生变化，所以重新读取
-      if (await isFavorited()) {
-        await removeFromFriendsList()
-      } else {
-        await addToOrUpdateFriendsList()
-      }
+		toggleFavoritedStatus = async () => {
+			// 操作时可能存储的状态相比于读取时已经发生变化，所以重新读取
+			await ((await isFavorited())
+				? removeFromFriendsList()
+				: addToOrUpdateFriendsList());
 
-      await this.refreshState()
-    }
+			await this.refreshState();
+		};
 
-    renderFavoritedStatusIndicator() {
-      const id = 'sf-favorited-status-indicator'
-      const className = cx({
-        'sf-is-favorited': this.state.isFavorited,
-      })
+		renderFavoritedStatusIndicator() {
+			const id = 'sf-favorited-status-indicator';
+			const className = cx({
+				'sf-is-favorited': this.state.isFavorited,
+			});
 
-      render(
-        <span id={id} className={className} />,
-        this.favoritedStatusIndicator.parentElement,
-        this.favoritedStatusIndicator,
-      )
-    }
+			render(
+				<span id={id} className={className} />,
+				this.favoritedStatusIndicator.parentElement,
+				this.favoritedStatusIndicator,
+			);
+		}
 
-    renderFavoritedStatusToggler() {
-      const id = 'sf-favorited-status-toggler'
-      const title = this.state.isFavorited
-        ? FAVED_TIP
-        : UNFAVED_TIP
-      const className = cx({
-        'sf-is-favorited': this.state.isFavorited,
-      })
+		renderFavoritedStatusToggler() {
+			const id = 'sf-favorited-status-toggler';
+			const title = this.state.isFavorited ? FAVED_TIP : UNFAVED_TIP;
+			const className = cx({
+				'sf-is-favorited': this.state.isFavorited,
+			});
 
-      render(
-        <a id={id} className={className} title={title} onClick={this.toggleFavoritedStatus} />,
-        this.favoritedStatusToggler.parentElement,
-        this.favoritedStatusToggler,
-      )
-    }
+			render(
+				<a
+					id={id}
+					className={className}
+					title={title}
+					onClick={this.toggleFavoritedStatus}
+				/>,
+				this.favoritedStatusToggler.parentElement,
+				this.favoritedStatusToggler,
+			);
+		}
 
-    render() {
-      this.renderFavoritedStatusIndicator()
-      this.renderFavoritedStatusToggler()
+		render() {
+			this.renderFavoritedStatusIndicator();
+			this.renderFavoritedStatusToggler();
 
-      return null
-    }
+			return null;
+		}
 
-    // TODO: 迁移到UNSAFE_componentWillMount或componentDidMount
-    componentWillMount() {
-      this.favoritedStatusIndicator = document.createElement('span')
-      this.favoritedStatusToggler = document.createElement('a')
+		// TODO: 迁移到UNSAFE_componentWillMount或componentDidMount
+		componentWillMount() {
+			this.favoritedStatusIndicator = document.createElement('span');
+			this.favoritedStatusToggler = document.createElement('a');
 
-      select('#avatar').append(this.favoritedStatusIndicator)
-      select('#panel h1').append(this.favoritedStatusToggler)
+			select('#avatar').append(this.favoritedStatusIndicator);
+			select('#panel h1').append(this.favoritedStatusToggler);
 
-      registerBroadcastListener(this.onStorageChange)
-    }
+			registerBroadcastListener(this.onStorageChange);
+		}
 
-    componentWillUnmount() {
-      this.favoritedStatusIndicator.remove()
-      this.favoritedStatusToggler.remove()
+		componentWillUnmount() {
+			this.favoritedStatusIndicator.remove();
+			this.favoritedStatusToggler.remove();
 
-      this.favoritedStatusIndicator = this.favoritedStatusToggler = null
+			this.favoritedStatusIndicator = this.favoritedStatusToggler = null;
 
-      unregisterBroadcastListener(this.onStorageChange)
-    }
-  }
+			unregisterBroadcastListener(this.onStorageChange);
+		}
+	}
 
-  return {
-    applyWhen: () => isUserProfilePage(),
+	return {
+		applyWhen: () => isUserProfilePage(),
 
-    waitReady: () => elementCollection.ready('info'),
+		waitReady: () => elementCollection.ready('info'),
 
-    async onLoad() {
-      unmount = preactRender(<FavoriteFriend />)
+		async onLoad() {
+			unmount = preactRender(<FavoriteFriend />);
 
-      if (await isFavorited()) {
-        addToOrUpdateFriendsList()
-      }
-    },
+			if (await isFavorited()) {
+				addToOrUpdateFriendsList();
+			}
+		},
 
-    onUnload() {
-      unmount()
-      unmount = null
-    },
-  }
-}
+		onUnload() {
+			unmount();
+			unmount = null;
+		},
+	};
+};

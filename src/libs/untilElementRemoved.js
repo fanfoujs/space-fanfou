@@ -1,13 +1,13 @@
-import keepRetry from '@libs/keepRetry'
-import isElementInDocument from '@libs/isElementInDocument'
+import keepRetry from '@libs/keepRetry';
+import isElementInDocument from '@libs/isElementInDocument';
 
-const TIMEOUT_MS = 5 * 1000
+const TIMEOUT_MS = 5 * 1000;
 
-export default element => {
-  const start = Date.now()
+export default (element) => {
+	const start = Date.now();
 
-  return keepRetry({
-    checker: () => !isElementInDocument(element),
-    until: () => Date.now() - start > TIMEOUT_MS,
-  })
-}
+	return keepRetry({
+		checker: () => !isElementInDocument(element),
+		until: () => Date.now() - start > TIMEOUT_MS,
+	});
+};

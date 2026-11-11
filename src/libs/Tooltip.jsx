@@ -1,31 +1,30 @@
-import { createElement as h } from 'preact/compat'
-import Tooltip from 'react-tooltip-lite'
-import positionModule from 'react-tooltip-lite/dist/position'
+import {createElement as h} from 'preact/compat';
+import Tooltip from 'react-tooltip-lite';
+import positionModule from 'react-tooltip-lite/dist/position';
 
 function patch() {
-  const originalPositionFn = positionModule.default
+	const originalPositionFn = positionModule.default;
 
-  positionModule.default = (...args) => {
-    const result = originalPositionFn(...args)
+	positionModule.default = (...args) => {
+		const result = originalPositionFn(...args);
 
-    // 解决显示状态 transform 属性没有去除掉的 bug
-    if (typeof result.tip.transform === 'undefined') {
-      result.tip.transform = null
-    }
+		// 解决显示状态 transform 属性没有去除掉的 bug
+		if (result.tip.transform === undefined) {
+			result.tip.transform = null;
+		}
 
-    return result
-  }
+		return result;
+	};
 }
-patch()
+
+patch();
 
 const defaultProps = {
-  arrowSize: 5,
-  padding: '8px',
-  distance: 10,
-}
+	arrowSize: 5,
+	padding: '8px',
+	distance: 10,
+};
 
 export default function TooltipWithDefaultProps(props) {
-  return (
-    <Tooltip {...defaultProps} {...props} />
-  )
+	return <Tooltip {...defaultProps} {...props} />;
 }

@@ -9,13 +9,13 @@ and the icon's outer silhouette retain their source proportions.
 
 ![Model geometry preview](preview.png)
 
-| Parameter | Value |
-| --- | --- |
-| Footprint | 50 × 50 mm, traced icon silhouette |
-| Blue base | 3 mm |
-| White relief | 1 mm |
-| Total printed thickness | 4 mm, excluding magnetic backing |
-| Back | Flat, no magnet recess |
+| Parameter               | Value                              |
+| ----------------------- | ---------------------------------- |
+| Footprint               | 50 × 50 mm, traced icon silhouette |
+| Blue base               | 3 mm                               |
+| White relief            | 1 mm                               |
+| Total printed thickness | 4 mm, excluding magnetic backing   |
+| Back                    | Flat, no magnet recess             |
 
 ## Print files
 

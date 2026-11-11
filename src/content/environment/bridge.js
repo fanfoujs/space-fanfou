@@ -1,64 +1,64 @@
-import messaging from './messaging'
-import wrapper from '@libs/wrapper'
-import { BRIDGE_EVENT_TYPE, BROADCASTING_MESSAGE } from '@constants'
+import messaging from './messaging.js';
+import wrapper from '@libs/wrapper';
+import {BRIDGE_EVENT_TYPE, BROADCASTING_MESSAGE} from '@constants';
 
 async function eventHandler(event) {
-  const { from, senderId, message } = JSON.parse(event.detail)
+	const {from, senderId, message} = JSON.parse(event.detail);
 
-  if (from === 'page') {
-    let respondedMessage
-    try {
-      respondedMessage = await bridge.postMessageToBackground(message)
-    } catch (error) {
-      respondedMessage = { error: error.message || 'Background unavailable' }
-    }
+	if (from === 'page') {
+		let respondedMessage;
+		try {
+			respondedMessage = await bridge.postMessageToBackground(message);
+		} catch (error) {
+			respondedMessage = {error: error.message || 'Background unavailable'};
+		}
 
-    bridge.postMessageToInjected({
-      senderId,
-      message: respondedMessage,
-    })
-  }
+		bridge.postMessageToInjected({
+			senderId,
+			message: respondedMessage,
+		});
+	}
 }
 
 function handleBroadcastMessage(message) {
-  const event = new CustomEvent(BRIDGE_EVENT_TYPE, {
-    detail: JSON.stringify({
-      type: BROADCASTING_MESSAGE,
-      message,
-    }),
-  })
+	const event = new CustomEvent(BRIDGE_EVENT_TYPE, {
+		detail: JSON.stringify({
+			type: BROADCASTING_MESSAGE,
+			message,
+		}),
+	});
 
-  window.dispatchEvent(event)
+	globalThis.dispatchEvent(event);
 }
 
 const bridge = wrapper({
-  async install() {
-    await messaging.ready()
-    messaging.registerBroadcastListener(handleBroadcastMessage)
-    window.addEventListener(BRIDGE_EVENT_TYPE, eventHandler)
-  },
+	async install() {
+		await messaging.ready();
+		messaging.registerBroadcastListener(handleBroadcastMessage);
+		globalThis.addEventListener(BRIDGE_EVENT_TYPE, eventHandler);
+	},
 
-  uninstall() {
-    window.removeEventListener(BRIDGE_EVENT_TYPE, eventHandler)
-  },
+	uninstall() {
+		globalThis.removeEventListener(BRIDGE_EVENT_TYPE, eventHandler);
+	},
 
-  async postMessageToBackground(message) {
-    const respondedMessage = await messaging.postMessage(message)
+	async postMessageToBackground(message) {
+		const respondedMessage = await messaging.postMessage(message);
 
-    return respondedMessage
-  },
+		return respondedMessage;
+	},
 
-  postMessageToInjected({ senderId, message }) {
-    const event = new CustomEvent(BRIDGE_EVENT_TYPE, {
-      detail: JSON.stringify({
-        from: 'background',
-        senderId,
-        message,
-      }),
-    })
+	postMessageToInjected({senderId, message}) {
+		const event = new CustomEvent(BRIDGE_EVENT_TYPE, {
+			detail: JSON.stringify({
+				from: 'background',
+				senderId,
+				message,
+			}),
+		});
 
-    window.dispatchEvent(event)
-  },
-})
+		globalThis.dispatchEvent(event);
+	},
+});
 
-export default bridge
+export default bridge;

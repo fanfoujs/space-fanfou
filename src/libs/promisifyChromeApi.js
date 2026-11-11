@@ -1,3 +1,3 @@
-import pify from 'pify'
+import pify from 'pify';
 
-export default fn => pify(fn, { errorFirst: false })
+export default (fn) => pify(fn, {errorFirst: false});

@@ -1,64 +1,63 @@
-import pick from 'just-pick'
-import every from '@libs/promiseEvery'
+import pick from 'just-pick';
+import every from '@libs/promiseEvery';
 
-export default ({ modules }) => class Subfeature {
-  constructor({ featureName, subfeatureName, script, parent }) {
-    this.featureName = featureName
-    this.subfeatureName = subfeatureName
-    this.parent = parent
-    this.initContext()
+export default ({modules}) =>
+	class Subfeature {
+		constructor({featureName, subfeatureName, script, parent}) {
+			this.featureName = featureName;
+			this.subfeatureName = subfeatureName;
+			this.parent = parent;
+			this.initContext();
 
-    const featureScriptObj = script(this.context)
+			const featureScriptObject = script(this.context);
 
-    this.migrations = featureScriptObj.migrations
-    this.script = pick(featureScriptObj, [
-      'onLoad',
-      'onSettingsChange',
-      'onUnload',
-    ])
-  }
+			this.migrations = featureScriptObject.migrations;
+			this.script = pick(featureScriptObject, [
+				'onLoad',
+				'onSettingsChange',
+				'onUnload',
+			]);
+		}
 
-  initContext() {
-    this.waitReadyFns = []
+		initContext() {
+			this.waitReadyFns = [];
 
-    this.context = pick(this, [
-      'requireModules',
-      'readOptionValue',
-    ])
-  }
+			this.context = pick(this, ['requireModules', 'readOptionValue']);
+		}
 
-  requireModules = moduleNames => {
-    const requiredModules = {}
+		requireModules = (moduleNames) => {
+			const requiredModules = {};
 
-    for (const moduleName of moduleNames) {
-      const module = modules[moduleName]
+			for (const moduleName of moduleNames) {
+				const module = modules[moduleName];
 
-      if (!module) throw new Error(`未知 module：${moduleName}`)
+				if (!module) {
+					throw new Error(`未知 module：${moduleName}`);
+				}
 
-      this.waitReadyFns.push(module.ready)
-      requiredModules[moduleName] = module
-    }
+				this.waitReadyFns.push(module.ready);
+				requiredModules[moduleName] = module;
+			}
 
-    return requiredModules
-  }
+			return requiredModules;
+		};
+		readOptionValue = (key) => {
+			const optionName = `${this.featureName}/${key}`;
+			const optionValue = this.parent.optionValuesCache[optionName];
 
-  readOptionValue = key => {
-    const optionName = `${this.featureName}/${key}`
-    const optionValue = this.parent.optionValuesCache[optionName]
+			return optionValue;
+		};
 
-    return optionValue
-  }
+		async load() {
+			await every(this.waitReadyFns.map((fn) => fn()));
+			await this.script.onLoad?.();
+		}
 
-  async load() {
-    await every(this.waitReadyFns.map(fn => fn()))
-    await this.script.onLoad?.()
-  }
+		async unload() {
+			await this.script.onUnload?.();
+		}
 
-  async unload() {
-    await this.script.onUnload?.()
-  }
-
-  handleSettingsChange() {
-    this.script.onSettingsChange?.()
-  }
-}
+		handleSettingsChange() {
+			this.script.onSettingsChange?.();
+		}
+	};

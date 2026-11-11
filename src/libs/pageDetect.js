@@ -1,177 +1,195 @@
 // 保留console用于页面检测调试
-import select from 'select-dom'
-import simpleMemoize from 'just-once'
-import elementReady from 'element-ready'
-import getLoggedInUserId from '@libs/getLoggedInUserId'
-import getLoggedInUserProfilePageUrl from '@libs/getLoggedInUserProfilePageUrl'
-import any from '@libs/promiseAny'
-import every from '@libs/promiseEvery'
-import neg from '@libs/neg'
+import select from 'select-dom';
+import simpleMemoize from 'just-once';
+import elementReady from 'element-ready';
+import getLoggedInUserId from '@libs/getLoggedInUserId';
+import getLoggedInUserProfilePageUrl from '@libs/getLoggedInUserProfilePageUrl';
+import any from '@libs/promiseAny';
+import every from '@libs/promiseEvery';
+import neg from '@libs/neg';
 
 // 这些函数可以是异步的，但是应该尽早返回结果，避免调用函数等待过久
 
 // 是否为主 timeline 页面
 export function isHomePage() {
-  return window.location.pathname === '/home'
+	return location.pathname === '/home';
 }
 
 // 是否为登录页面
 export function isLoginPage() {
-  return (
-    window.location.pathname === '/' ||
-    window.location.pathname === '/login'
-  )
+	return location.pathname === '/' || location.pathname === '/login';
 }
 
 // 是否为当前登录用户的个人页面（消息页面，不含收藏、相册等）
 export function isLoggedInUserProfilePage() {
-  const userId = getLoggedInUserId()
+	const userId = getLoggedInUserId();
 
-  return (
-    userId &&
-    window.location.pathname.split('/')[1] === userId
-  )
+	return userId && location.pathname.split('/', 2)[1] === userId;
 }
 
 // 是否为当前登录用户用户好友页面
 export const isLoggedInUserFriendsListPage = simpleMemoize(async () => {
-  if (!isFriendsListPage()) return false
+	if (!isFriendsListPage()) {
+		return false;
+	}
 
-  await elementReady('#stream')
+	await elementReady('#stream');
 
-  const urlA = select('.tabs .crumb').href
-  const urlB = getLoggedInUserProfilePageUrl()
+	const urlA = select('.tabs .crumb').href;
+	const urlB = getLoggedInUserProfilePageUrl();
 
-  return urlA === urlB
-})
+	return urlA === urlB;
+});
 
 // 是否为当前登录用户用户粉丝页面
 export const isLoggedInUserFollowersListPage = simpleMemoize(async () => {
-  if (!isFollowersListPage()) return false
+	if (!isFollowersListPage()) {
+		return false;
+	}
 
-  await elementReady('#stream')
+	await elementReady('#stream');
 
-  const urlA = select('.tabs .crumb').href
-  const urlB = getLoggedInUserProfilePageUrl()
+	const urlA = select('.tabs .crumb').href;
+	const urlB = getLoggedInUserProfilePageUrl();
 
-  return urlA === urlB
-})
+	return urlA === urlB;
+});
 
 // 是否为用户 timeline 页面
 export const isUserProfilePage = simpleMemoize(async () => {
-  console.log('[SpaceFanfou] pageDetect: isUserProfilePage 开始检查')
-  console.log('[SpaceFanfou] pageDetect: 当前路径 =', window.location.pathname)
+	console.log('[SpaceFanfou] pageDetect: isUserProfilePage 开始检查');
+	console.log('[SpaceFanfou] pageDetect: 当前路径 =', location.pathname);
 
-  // 检查当前登录用户的个人页面
-  const isLoggedInUser = isLoggedInUserProfilePage()
-  console.log('[SpaceFanfou] pageDetect: isLoggedInUserProfilePage =', isLoggedInUser)
+	// 检查当前登录用户的个人页面
+	const isLoggedInUser = isLoggedInUserProfilePage();
+	console.log(
+		'[SpaceFanfou] pageDetect: isLoggedInUserProfilePage =',
+		isLoggedInUser,
+	);
 
-  if (isLoggedInUser) {
-    console.log('[SpaceFanfou] pageDetect: 确认为当前登录用户资料页')
-    return true
-  }
+	if (isLoggedInUser) {
+		console.log('[SpaceFanfou] pageDetect: 确认为当前登录用户资料页');
+		return true;
+	}
 
-  // 检查是否存在投诉对话框（其他用户的资料页）
-  console.log('[SpaceFanfou] pageDetect: 等待 #overlay-report 元素（超时10秒）')
-  const overlayReport = await elementReady('#overlay-report', { timeout: 10000 })
-  console.log('[SpaceFanfou] pageDetect: #overlay-report =', !!overlayReport)
+	// 检查是否存在投诉对话框（其他用户的资料页）
+	console.log(
+		'[SpaceFanfou] pageDetect: 等待 #overlay-report 元素（超时10秒）',
+	);
+	const overlayReport = await elementReady('#overlay-report', {
+		timeout: 10_000,
+	});
+	console.log(
+		'[SpaceFanfou] pageDetect: #overlay-report =',
+		Boolean(overlayReport),
+	);
 
-  if (overlayReport) {
-    console.log('[SpaceFanfou] pageDetect: 确认为其他用户资料页（存在投诉对话框）')
-    return true
-  }
+	if (overlayReport) {
+		console.log(
+			'[SpaceFanfou] pageDetect: 确认为其他用户资料页（存在投诉对话框）',
+		);
+		return true;
+	}
 
-  // 备用检测：检查 URL 模式
-  const pathSegments = window.location.pathname.split('/').filter(Boolean)
-  console.log('[SpaceFanfou] pageDetect: 路径片段 =', pathSegments)
+	// 备用检测：检查 URL 模式
+	const pathSegments = location.pathname.split('/').filter(Boolean);
+	console.log('[SpaceFanfou] pageDetect: 路径片段 =', pathSegments);
 
-  // 用户资料页通常是 /username 格式
-  if (pathSegments.length === 1 && pathSegments[0] !== 'home' && pathSegments[0] !== 'login') {
-    console.log('[SpaceFanfou] pageDetect: 根据 URL 模式确认为用户资料页')
-    return true
-  }
+	// 用户资料页通常是 /username 格式
+	if (
+		pathSegments.length === 1 &&
+		pathSegments[0] !== 'home' &&
+		pathSegments[0] !== 'login'
+	) {
+		console.log('[SpaceFanfou] pageDetect: 根据 URL 模式确认为用户资料页');
+		return true;
+	}
 
-  console.log('[SpaceFanfou] pageDetect: 不是用户资料页')
-  return false
-})
+	console.log('[SpaceFanfou] pageDetect: 不是用户资料页');
+	return false;
+});
 
 // 是否为用户相册页面
 export function isPhotoAlbumPage() {
-  return window.location.pathname.startsWith('/album/')
+	return location.pathname.startsWith('/album/');
 }
 
 // 是否为照片大图页面
 export function isPhotoEntryPage() {
-  return window.location.pathname.startsWith('/photo/')
+	return location.pathname.startsWith('/photo/');
 }
 
 // 是否为用户单消息页面
 export function isStatusPage() {
-  return window.location.pathname.startsWith('/statuses/')
+	return location.pathname.startsWith('/statuses/');
 }
 
 // 是否为用户收藏页面
 export function isFavoritesPage() {
-  return window.location.pathname.startsWith('/favorites/')
+	return location.pathname.startsWith('/favorites/');
 }
 
 // 是否为用户好友页面
 export function isFriendsListPage() {
-  return window.location.pathname.split('/')[1] === 'friends'
+	return location.pathname.split('/', 2)[1] === 'friends';
 }
 
 // 是否为用户粉丝页面
 export function isFollowersListPage() {
-  return window.location.pathname.split('/')[1] === 'followers'
+	return location.pathname.split('/', 2)[1] === 'followers';
 }
 
 // 是否为用户页面
-export const isUserPage = simpleMemoize(() => any([
-  isUserProfilePage(),
-  isPhotoAlbumPage(),
-  isPhotoEntryPage(),
-  isFavoritesPage(),
-  isFriendsListPage(),
-  isFollowersListPage(),
-]))
+export const isUserPage = simpleMemoize(() =>
+	any([
+		isUserProfilePage(),
+		isPhotoAlbumPage(),
+		isPhotoEntryPage(),
+		isFavoritesPage(),
+		isFriendsListPage(),
+		isFollowersListPage(),
+	]),
+);
 
 // 是否为当前登录用户页面
 export const isLoggedInUserPage = simpleMemoize(() => {
-  const userId = getLoggedInUserId()
+	const userId = getLoggedInUserId();
 
-  return any([
-    isLoggedInUserProfilePage(),
-    every([
-      isUserPage(),
-      // TODO: 照片大图页面判断有问题
-      window.location.pathname.split('/')[2] === userId,
-    ]),
-  ])
-})
+	return any([
+		isLoggedInUserProfilePage(),
+		every([
+			isUserPage(),
+			// TODO: 照片大图页面判断有问题
+			location.pathname.split('/', 3)[2] === userId,
+		]),
+	]);
+});
 
 // 是否为私信页面
 export function isPrivateMessagePage() {
-  return window.location.pathname.split('/')[1] === 'privatemsg'
+	return location.pathname.split('/', 2)[1] === 'privatemsg';
 }
 
 // 是否为随便看看页面
 export function isPublicTimelinePage() {
-  return window.location.pathname === '/browse'
+	return location.pathname === '/browse';
 }
 
 // 是否为管理关注请求页面（加锁时）
 export function isFriendRequestPage() {
-  return window.location.pathname === '/friend.request'
+	return location.pathname === '/friend.request';
 }
 
 // 判断是否为 timeline 页面，例如首页、用户个人页面、随便看看页面等
-export const isTimelinePage = simpleMemoize(() => every([
-  // timeline 的页面都有 #stream 元素
-  elementReady('#stream'),
-  // 管理关注请求页面也有 #stream 元素，而且 DOM 结构和一般 timeline 页面难以区分，排除之
-  neg(isFriendRequestPage()),
-]))
+export const isTimelinePage = simpleMemoize(() =>
+	every([
+		// Timeline 的页面都有 #stream 元素
+		elementReady('#stream'),
+		// 管理关注请求页面也有 #stream 元素，而且 DOM 结构和一般 timeline 页面难以区分，排除之
+		neg(isFriendRequestPage()),
+	]),
+);
 
 export function isSharePage() {
-  return [ '/sharer', '/sharer/image' ].includes(window.location.pathname)
+	return ['/sharer', '/sharer/image'].includes(location.pathname);
 }

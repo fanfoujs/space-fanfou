@@ -1,3 +1,3 @@
 export default () => {
-  getSelection().removeAllRanges()
-}
+	getSelection().removeAllRanges();
+};

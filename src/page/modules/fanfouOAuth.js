@@ -1,28 +1,28 @@
-import bridge from '../environment/bridge'
-import wrapper from '@libs/wrapper'
-import { FANFOU_OAUTH_API_REQUEST } from '@constants'
+import bridge from '../environment/bridge.js';
+import wrapper from '@libs/wrapper';
+import {FANFOU_OAUTH_API_REQUEST} from '@constants';
 
-function request(method, params) {
-  return bridge.postMessage({
-    action: FANFOU_OAUTH_API_REQUEST,
-    payload: { method, params },
-  })
+function request(method, parameters) {
+	return bridge.postMessage({
+		action: FANFOU_OAUTH_API_REQUEST,
+		payload: {method, params: parameters},
+	});
 }
 
 export default wrapper({
-  install() {
-    return bridge.ready()
-  },
+	install() {
+		return bridge.ready();
+	},
 
-  getUser(params) {
-    return request('getUser', params)
-  },
+	getUser(parameters) {
+		return request('getUser', parameters);
+	},
 
-  getFollowings(params) {
-    return request('getFollowings', params)
-  },
+	getFollowings(parameters) {
+		return request('getFollowings', parameters);
+	},
 
-  checkFriendshipDetail(params) {
-    return request('checkFriendshipDetail', params)
-  },
-})
+	checkFriendshipDetail(parameters) {
+		return request('checkFriendshipDetail', parameters);
+	},
+});

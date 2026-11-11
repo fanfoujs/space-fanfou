@@ -1,9 +1,11 @@
 export default (object, predicate) => {
-  const ret = {}
+	const returnValue = {};
 
-  for (const [ k, v ] of Object.entries(object)) {
-    if (!predicate(v, k)) ret[k] = v
-  }
+	for (const [k, v] of Object.entries(object)) {
+		if (!predicate(v, k)) {
+			returnValue[k] = v;
+		}
+	}
 
-  return ret
-}
+	return returnValue;
+};

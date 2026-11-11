@@ -1,28 +1,31 @@
-import { isPhotoAlbumPage } from '@libs/pageDetect'
+import {isPhotoAlbumPage} from '@libs/pageDetect';
 
-export default context => {
-  const { elementCollection } = context
+export default (context) => {
+	const {elementCollection} = context;
 
-  elementCollection.add({
-    album: '#album',
-    images: { selector: '.photo>img', parent: 'album', getAll: true },
-  })
+	elementCollection.add({
+		album: '#album',
+		images: {selector: '.photo>img', parent: 'album', getAll: true},
+	});
 
-  return {
-    applyWhen: () => isPhotoAlbumPage(),
+	return {
+		applyWhen: () => isPhotoAlbumPage(),
 
-    waitReady: () => elementCollection.ready('album'),
+		waitReady: () => elementCollection.ready('album'),
 
-    onLoad() {
-      for (const photo of elementCollection.get('images')) {
-        photo.src = photo.src.replace(/@120w_120h_1l\.jpg$/, '@240w_240h_1l.jpg')
-        photo.style.maxWidth = photo.style.maxHeight = '120px'
-        photo.style.boxSizing = 'content-box'
-      }
-    },
+		onLoad() {
+			for (const photo of elementCollection.get('images')) {
+				photo.src = photo.src.replace(
+					/@120w_120h_1l\.jpg$/,
+					'@240w_240h_1l.jpg',
+				);
+				photo.style.maxWidth = photo.style.maxHeight = '120px';
+				photo.style.boxSizing = 'content-box';
+			}
+		},
 
-    onUnload() {
-      // 不需要卸载
-    },
-  }
-}
+		onUnload() {
+			// 不需要卸载
+		},
+	};
+};

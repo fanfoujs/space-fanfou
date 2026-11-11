@@ -1,98 +1,108 @@
 /** @jsxRuntime classic */
 /** @jsx h */
-import select from 'select-dom'
-import elementReady from 'element-ready'
-import { h } from 'dom-chef'
-import debounce from 'just-debounce-it'
-import animatedScrollTop from '@libs/animatedScrollTop'
-import any from '@libs/promiseAny'
+import select from 'select-dom';
+import elementReady from 'element-ready';
+import {h} from 'dom-chef';
+import debounce from 'just-debounce-it';
+import animatedScrollTop from '@libs/animatedScrollTop';
+import any from '@libs/promiseAny';
 
 // #main 最顶部的纵坐标。硬编码不太好，但是逻辑简单许多。
-const MAIN_TOP = 66
-const SCROLL_DEBOUNCE_WAIT = 500
+const MAIN_TOP = 66;
+const SCROLL_DEBOUNCE_WAIT = 500;
 
-export default context => {
-  const { requireModules } = context
-  const { scrollManager } = requireModules([ 'scrollManager' ])
+export default (context) => {
+	const {requireModules} = context;
+	const {scrollManager} = requireModules(['scrollManager']);
 
-  let toTopButton
-  let isHidden = false
+	let toTopButton;
+	let isHidden = false;
 
-  function createButton() {
-    const existingButton = select('#pagination-totop')
-    const container = (
-      (select('#stream') && select('#stream').parentElement) ||
-      select('.inner-content')
-    )
-    toTopButton = (
-      <a id="pagination-totop" onClick={clickHandler}>返回顶部</a>
-    )
+	function createButton() {
+		const existingButton = select('#pagination-totop');
+		const container =
+			(select('#stream') && select('#stream').parentElement) ||
+			select('.inner-content');
+		toTopButton = (
+			<a id="pagination-totop" onClick={clickHandler}>
+				返回顶部
+			</a>
+		);
 
-    if (existingButton) existingButton.remove()
-    container.append(toTopButton)
-    hideButton()
+		if (existingButton) {
+			existingButton.remove();
+		}
 
-    return toTopButton
-  }
+		container.append(toTopButton);
+		hideButton();
 
-  function clickHandler(event) {
-    event.preventDefault()
+		return toTopButton;
+	}
 
-    hideButton()
-    animatedScrollTop()
-  }
+	function clickHandler(event) {
+		event.preventDefault();
 
-  const debouncedScrollHandler = debounce(() => {
-    if (scrollManager.getScrollTop() > MAIN_TOP) {
-      showButton()
-    } else {
-      hideButton()
-    }
-  }, SCROLL_DEBOUNCE_WAIT)
+		hideButton();
+		animatedScrollTop();
+	}
 
-  function scrollHandler() {
-    hideButton()
-    debouncedScrollHandler()
-  }
+	const debouncedScrollHandler = debounce(() => {
+		if (scrollManager.getScrollTop() > MAIN_TOP) {
+			showButton();
+		} else {
+			hideButton();
+		}
+	}, SCROLL_DEBOUNCE_WAIT);
 
-  function showButton() {
-    if (!isHidden) return
-    isHidden = false
+	function scrollHandler() {
+		hideButton();
+		debouncedScrollHandler();
+	}
 
-    toTopButton.style.display = ''
-    requestAnimationFrame(() => Object.assign(toTopButton.style, {
-      opacity: 0.5,
-      cursor: 'pointer',
-      transition: 'opacity .4s ease-in-out',
-    }))
-  }
+	function showButton() {
+		if (!isHidden) {
+			return;
+		}
 
-  function hideButton() {
-    if (isHidden) return
-    isHidden = true
+		isHidden = false;
 
-    Object.assign(toTopButton.style, {
-      display: 'none',
-      opacity: 0,
-      transition: '',
-    })
-  }
+		toTopButton.style.display = '';
+		requestAnimationFrame(() =>
+			Object.assign(toTopButton.style, {
+				opacity: 0.5,
+				cursor: 'pointer',
+				transition: 'opacity .4s ease-in-out',
+			}),
+		);
+	}
 
-  return {
-    applyWhen: () => any([
-      elementReady('#stream'),
-      elementReady('.inner-content'),
-    ]),
+	function hideButton() {
+		if (isHidden) {
+			return;
+		}
 
-    onLoad() {
-      toTopButton = createButton()
-      scrollManager.addListener(scrollHandler)
-    },
+		isHidden = true;
 
-    onUnload() {
-      toTopButton.remove()
-      toTopButton = null
-      scrollManager.removeListener(scrollHandler)
-    },
-  }
-}
+		Object.assign(toTopButton.style, {
+			display: 'none',
+			opacity: 0,
+			transition: '',
+		});
+	}
+
+	return {
+		applyWhen: () =>
+			any([elementReady('#stream'), elementReady('.inner-content')]),
+
+		onLoad() {
+			toTopButton = createButton();
+			scrollManager.addListener(scrollHandler);
+		},
+
+		onUnload() {
+			toTopButton.remove();
+			toTopButton = null;
+			scrollManager.removeListener(scrollHandler);
+		},
+	};
+};

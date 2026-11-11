@@ -1,146 +1,160 @@
 /** @jsxRuntime classic */
 /** @jsx h */
-import { h } from 'dom-chef'
-import select from 'select-dom'
-import elementReady from 'element-ready'
-import wretch from 'wretch'
-import { isLoggedInUserFriendsListPage, isLoggedInUserFollowersListPage, isFriendsListPage } from '@libs/pageDetect'
-import untilElementRemoved from '@libs/untilElementRemoved'
-import promiseAny from '@libs/promiseAny'
+import {h} from 'dom-chef';
+import select from 'select-dom';
+import elementReady from 'element-ready';
+import wretch from 'wretch';
+import {
+	isLoggedInUserFriendsListPage,
+	isLoggedInUserFollowersListPage,
+	isFriendsListPage,
+} from '@libs/pageDetect';
+import untilElementRemoved from '@libs/untilElementRemoved';
+import promiseAny from '@libs/promiseAny';
 
-const CLASSNAME_CHECKBOX = 'sf-friend-or-follower-checkbox'
-const MESSAGE_CONFIRMING_FRIENDS = '确定要取消关注选定的 %n 个用户吗？'
-const MESSAGE_CONFIRMING_FOLLOWERS = '确定要删除选定的 %n 个用户吗？'
+const CLASSNAME_CHECKBOX = 'sf-friend-or-follower-checkbox';
+const MESSAGE_CONFIRMING_FRIENDS = '确定要取消关注选定的 %n 个用户吗？';
+const MESSAGE_CONFIRMING_FOLLOWERS = '确定要删除选定的 %n 个用户吗？';
 
-export default context => {
-  const { requireModules, elementCollection } = context
-  const { notification } = requireModules([ 'notification' ])
+export default (context) => {
+	const {requireModules, elementCollection} = context;
+	const {notification} = requireModules(['notification']);
 
-  let container
-  let masterCheckbox
+	let container;
+	let mainCheckbox;
 
-  elementCollection.add({
-    countTip: '#friends h2',
-  })
+	elementCollection.add({
+		countTip: '#friends h2',
+	});
 
-  function createMasterCheckbox() {
-    masterCheckbox = (
-      <input type="checkbox" onChange={onMasterCheckboxChanged} />
-    )
-  }
+	function createMainCheckbox() {
+		mainCheckbox = <input type="checkbox" onChange={onMainCheckboxChanged} />;
+	}
 
-  function createContainer() {
-    const label = isFriendsListPage() ? '取消关注选定' : '删除选定用户'
+	function createContainer() {
+		const label = isFriendsListPage() ? '取消关注选定' : '删除选定用户';
 
-    container = (
-      <div id="sf-friends-and-followers-manager">
-        <a className="bl" onClick={onRemoveSelectedClicked}>{ label }</a>
-        { masterCheckbox }
-      </div>
-    )
-  }
+		container = (
+			<div id="sf-friends-and-followers-manager">
+				<a className="bl" onClick={onRemoveSelectedClicked}>
+					{label}
+				</a>
+				{mainCheckbox}
+			</div>
+		);
+	}
 
-  function addCheckbox(li) {
-    const checkbox = (
-      <input type="checkbox" className={CLASSNAME_CHECKBOX} onChange={onCheckboxChanged} />
-    )
+	function addCheckbox(li) {
+		const checkbox = (
+			<input
+				type="checkbox"
+				className={CLASSNAME_CHECKBOX}
+				onChange={onCheckboxChanged}
+			/>
+		);
 
-    li.append(checkbox)
-  }
+		li.append(checkbox);
+	}
 
-  function getAllCheckboxes() {
-    return select.all(`.${CLASSNAME_CHECKBOX}`)
-  }
+	function getAllCheckboxes() {
+		return select.all(`.${CLASSNAME_CHECKBOX}`);
+	}
 
-  function onMasterCheckboxChanged() {
-    for (const checkbox of getAllCheckboxes()) {
-      checkbox.checked = masterCheckbox.checked
-    }
-  }
+	function onMainCheckboxChanged() {
+		for (const checkbox of getAllCheckboxes()) {
+			checkbox.checked = mainCheckbox.checked;
+		}
+	}
 
-  function onCheckboxChanged() {
-    const allCheckboxes = getAllCheckboxes()
-    const checkedCheckboxes = allCheckboxes.filter(checkbox => checkbox.checked)
+	function onCheckboxChanged() {
+		const allCheckboxes = getAllCheckboxes();
+		const checkedCheckboxes = allCheckboxes.filter(
+			(checkbox) => checkbox.checked,
+		);
 
-    if (checkedCheckboxes.length === 0) {
-      masterCheckbox.checked = false
-      masterCheckbox.indeterminate = false
-    } else if (checkedCheckboxes.length === allCheckboxes.length) {
-      masterCheckbox.checked = true
-      masterCheckbox.indeterminate = false
-    } else {
-      masterCheckbox.checked = false
-      masterCheckbox.indeterminate = true
-    }
-  }
+		if (checkedCheckboxes.length === 0) {
+			mainCheckbox.checked = false;
+			mainCheckbox.indeterminate = false;
+		} else if (checkedCheckboxes.length === allCheckboxes.length) {
+			mainCheckbox.checked = true;
+			mainCheckbox.indeterminate = false;
+		} else {
+			mainCheckbox.checked = false;
+			mainCheckbox.indeterminate = true;
+		}
+	}
 
-  function onRemoveSelectedClicked() {
-    const usersToRemove = getAllCheckboxes()
-      .filter(checkbox => checkbox.checked)
-      .map(checkbox => checkbox.parentElement)
-    const count = usersToRemove.length
-    const confirmingMessage = isFriendsListPage()
-      ? MESSAGE_CONFIRMING_FRIENDS
-      : MESSAGE_CONFIRMING_FOLLOWERS
-    if (count && window.confirm(confirmingMessage.replace('%n', count))) {
-      usersToRemove.forEach(removeUser)
-    }
-  }
+	function onRemoveSelectedClicked() {
+		const usersToRemove = getAllCheckboxes()
+			.filter((checkbox) => checkbox.checked)
+			.map((checkbox) => checkbox.parentElement);
+		const count = usersToRemove.length;
+		const confirmingMessage = isFriendsListPage()
+			? MESSAGE_CONFIRMING_FRIENDS
+			: MESSAGE_CONFIRMING_FOLLOWERS;
+		if (
+			count &&
+			globalThis.confirm(confirmingMessage.replace('%n', () => count))
+		) {
+			usersToRemove.forEach(removeUser);
+		}
+	}
 
-  async function removeUser(li) {
-    const button = select('[token]', li)
-    const url = window.location.href
-    const data = {
-      ajax: 'yes',
-      token: button.getAttribute('token'),
-    }
-    const userId = select('.name', li).getAttribute('href').split('/').pop()
+	async function removeUser(li) {
+		const button = select('[token]', li);
+		const url = location.href;
+		const data = {
+			ajax: 'yes',
+			token: button.getAttribute('token'),
+		};
+		const userId = select('.name', li).getAttribute('href').split('/').pop();
 
-    if (isFriendsListPage()) {
-      data.action = 'friend.remove'
-      data.friend = userId
-    } else {
-      data.action = 'follower.remove'
-      data.follower = userId
-    }
+		if (isFriendsListPage()) {
+			data.action = 'friend.remove';
+			data.friend = userId;
+		} else {
+			data.action = 'follower.remove';
+			data.follower = userId;
+		}
 
-    const response = await wretch(url).formUrl(data).post().json()
+		const response = await wretch(url).formUrl(data).post().json();
 
-    if (response.status) {
-      window.FF.util.yFadeRemove(button, 'li')
-      await untilElementRemoved(li)
-      onCheckboxChanged()
-    } else {
-      notification.create(notification.ERROR, response.msg)
-    }
-  }
+		if (response.status) {
+			FF.util.yFadeRemove(button, 'li');
+			await untilElementRemoved(li);
+			onCheckboxChanged();
+		} else {
+			notification.create(notification.ERROR, response.msg);
+		}
+	}
 
-  return {
-    applyWhen: () => promiseAny([
-      isLoggedInUserFriendsListPage(),
-      isLoggedInUserFollowersListPage(),
-    ]),
+	return {
+		applyWhen: () =>
+			promiseAny([
+				isLoggedInUserFriendsListPage(),
+				isLoggedInUserFollowersListPage(),
+			]),
 
-    waitReady: () => elementReady('#footer'),
+		waitReady: () => elementReady('#footer'),
 
-    onLoad() {
-      createMasterCheckbox()
-      createContainer()
+		onLoad() {
+			createMainCheckbox();
+			createContainer();
 
-      for (const li of select.all('#stream > ol > li')) {
-        addCheckbox(li)
-      }
+			for (const li of select.all('#stream > ol > li')) {
+				addCheckbox(li);
+			}
 
-      elementCollection.get('countTip').after(container)
-    },
+			elementCollection.get('countTip').after(container);
+		},
 
-    onUnload() {
-      container.remove()
-      container = masterCheckbox = null
+		onUnload() {
+			container.remove();
+			container = mainCheckbox = null;
 
-      for (const checkbox of getAllCheckboxes()) {
-        checkbox.remove()
-      }
-    },
-  }
-}
+			for (const checkbox of getAllCheckboxes()) {
+				checkbox.remove();
+			}
+		},
+	};
+};

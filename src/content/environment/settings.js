@@ -1,17 +1,17 @@
-import messaging from './messaging'
-import wrapper from '@libs/wrapper'
-import { SETTINGS_READ_ALL } from '@constants'
+import messaging from './messaging.js';
+import wrapper from '@libs/wrapper';
+import {SETTINGS_READ_ALL} from '@constants';
 
 const settings = wrapper({
-  async install() {
-    await messaging.ready()
-  },
+	async install() {
+		await messaging.ready();
+	},
 
-  readAll() {
-    return messaging.postMessage({
-      action: SETTINGS_READ_ALL,
-    })
-  },
-})
+	readAll() {
+		return messaging.postMessage({
+			action: SETTINGS_READ_ALL,
+		});
+	},
+});
 
-export default settings
+export default settings;

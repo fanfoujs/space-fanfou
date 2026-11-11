@@ -3,9 +3,9 @@
 // 并且会请求其中的图片等资源
 // 但是我们想做的往往只是调用 querySelector 查找特定的信息罢了
 // 下面这个办法完美规避了上述问题
-export default html => {
-  const parser = new DOMParser()
-  const document = parser.parseFromString(html, 'text/html')
+export default (html) => {
+	const parser = new DOMParser();
+	const document = parser.parseFromString(html, 'text/html');
 
-  return document
-}
+	return document;
+};

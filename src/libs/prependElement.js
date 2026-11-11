@@ -1,1 +1,1 @@
-export default (parent, child) => parent.insertBefore(child, parent.firstChild)
+export default (parent, child) => parent.insertBefore(child, parent.firstChild);

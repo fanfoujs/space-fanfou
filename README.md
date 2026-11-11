@@ -2,7 +2,7 @@
 
 # 太空饭否
 
-[![](https://github.com/fanfoujs/space-fanfou/workflows/Node%20CI/badge.svg)](https://github.com/fanfoujs/space-fanfou/actions)
+[![](https://img.shields.io/github/actions/workflow/status/fanfoujs/space-fanfou/nodejs.yml?branch=main&label=CI&logo=github)](https://github.com/fanfoujs/space-fanfou/actions/workflows/nodejs.yml)
 [![](https://img.shields.io/github/release/fanfoujs/space-fanfou.svg)](https://github.com/fanfoujs/space-fanfou/releases)
 [![](https://img.shields.io/github/license/fanfoujs/space-fanfou.svg)](https://github.com/fanfoujs/space-fanfou/blob/master/LICENSE)
 
@@ -29,10 +29,12 @@
 
 ### 参阅
 
-- [太空饭否 3D 打印冰箱贴](Artifacts/SpaceFanfouMagnet/README.md)：50 mm 蓝底白字模型、STL、3MF 和描摹 SVG。
-
 | **→ [官方饭否](https://fanfou.com/spacefanfou)** | **→ [入门手册](https://spacekid.me/spacefanfou/)** |
 | :----------------------------------------------: | :------------------------------------------------: |
+
+### 周边
+
+- [太空饭否 3D 打印冰箱贴](Artifacts/SpaceFanfouMagnet/README.md)：50 mm 蓝底白字模型、STL、3MF 和描摹 SVG。
 
 ### 协议
 

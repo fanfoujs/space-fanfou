@@ -1,12 +1,15 @@
 {
-  "extends": "./.wxt/tsconfig.json",
-  "compilerOptions": {
-    "allowJs": true,
-    "checkJs": false,
-    "strict": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "preact",
-    "types": ["node", "vite/client", "vitest/globals"]
-  },
-  "exclude": ["node_modules", ".output", "dist", "tests/playwright"]
+	"extends": ["@sindresorhus/tsconfig", "./.wxt/tsconfig.json"],
+	"compilerOptions": {
+		"declaration": false,
+		"rootDir": ".",
+		"resolveJsonModule": true,
+		"allowJs": true,
+		"checkJs": false,
+		"strict": true,
+		"jsx": "react-jsx",
+		"jsxImportSource": "preact",
+		"types": ["node", "vite/client", "vitest/globals"]
+	},
+	"exclude": ["node_modules", ".output", "dist", "tests/playwright"]
 }

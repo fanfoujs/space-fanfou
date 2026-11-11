@@ -1,6 +1,6 @@
 export const options = {
-  _: {
-    defaultValue: true,
-    label: '批量管理私信',
-  },
-}
+	_: {
+		defaultValue: true,
+		label: '批量管理私信',
+	},
+};

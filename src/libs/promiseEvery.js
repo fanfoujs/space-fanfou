@@ -1,42 +1,45 @@
-import isPromise from 'is-promise'
+import isPromise from 'is-promise';
 
 // 类似于 Array#every，总是 resolve 返回布尔值
-export default iterable => {
-  return new Promise(resolve => {
-    const total = iterable.length
-    let count = 0
-    let done = false
+export default (iterable) =>
+	new Promise((resolve) => {
+		const total = iterable.length;
+		if (total === 0) {
+			resolve(true);
+			return;
+		}
 
-    if (total === 0) {
-      return resolve(true)
-    }
+		let count = 0;
 
-    function check(value) {
-      if (!value) {
-        return fail()
-      }
+		let isDone = false;
 
-      if (++count === total) {
-        done = true
-        resolve(true)
-      }
-    }
+		function check(value) {
+			if (!value) {
+				return fail();
+			}
 
-    function fail() {
-      done = true
-      resolve(false)
-    }
+			if (++count !== total) {
+				return;
+			}
 
-    for (const item of iterable) {
-      if (done) {
-        return
-      }
+			isDone = true;
+			resolve(true);
+		}
 
-      if (isPromise(item)) {
-        item.then(check, fail)
-      } else {
-        check(item)
-      }
-    }
-  })
-}
+		function fail() {
+			isDone = true;
+			resolve(false);
+		}
+
+		for (const item of iterable) {
+			if (isDone) {
+				return;
+			}
+
+			if (isPromise(item)) {
+				item.catch(fail).then(check);
+			} else {
+				check(item);
+			}
+		}
+	});

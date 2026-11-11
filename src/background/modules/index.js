@@ -1,4 +1,4 @@
-import notification from './notification'
-import storage from './storage'
+import notification from './notification.js';
+import storage from './storage.js';
 
-export default { 'notification': notification, 'storage': storage }
+export default {notification, storage};

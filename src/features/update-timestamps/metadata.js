@@ -1,1 +1,1 @@
-export const isSoldered = true
+export const isSoldered = true;

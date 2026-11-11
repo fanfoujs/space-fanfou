@@ -1,2 +1,1 @@
-
-export const CLASSNAME_CONTAINER = 'sf-contextual-statuses-container'
+export const CLASSNAME_CONTAINER = 'sf-contextual-statuses-container';

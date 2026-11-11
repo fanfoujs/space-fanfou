@@ -1,32 +1,32 @@
-import log from '@libs/log'
-import safelyInvokeFn from '@libs/safelyInvokeFn'
+import log from '@libs/log';
+import safelyInvokeFn from '@libs/safelyInvokeFn';
 
 function isLocalStorageAvailable() {
-  return typeof localStorage !== 'undefined'
+	return typeof localStorage !== 'undefined';
 }
 
 export function readJSONFromLocalStorage(key) {
-  if (!isLocalStorageAvailable()) {
-    log.info('[SpaceFanfou] localStorage unavailable, skip read for key', key)
-    return null
-  }
+	if (!isLocalStorageAvailable()) {
+		log.info('[SpaceFanfou] localStorage unavailable, skip read for key', key);
+		return null;
+	}
 
-  let value = null
+	let value = null;
 
-  safelyInvokeFn(() => {
-    value = JSON.parse(localStorage.getItem(key))
-  })
+	safelyInvokeFn(() => {
+		value = JSON.parse(localStorage.getItem(key));
+	});
 
-  return value
+	return value;
 }
 
 export function writeJSONToLocalStorage(key, value) {
-  if (!isLocalStorageAvailable()) {
-    log.info('[SpaceFanfou] localStorage unavailable, skip write for key', key)
-    return
-  }
+	if (!isLocalStorageAvailable()) {
+		log.info('[SpaceFanfou] localStorage unavailable, skip write for key', key);
+		return;
+	}
 
-  safelyInvokeFn(() => {
-    localStorage.setItem(key, JSON.stringify(value))
-  })
+	safelyInvokeFn(() => {
+		localStorage.setItem(key, JSON.stringify(value));
+	});
 }

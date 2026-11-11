@@ -1,188 +1,216 @@
 /** @jsxRuntime classic */
 /** @jsx h */
-import getExtensionOrigin from '@libs/getExtensionOrigin'
+import {h} from 'dom-chef';
+import once from 'just-once';
+import {setAttachment} from './attachmentStore.js';
+import getExtensionOrigin from '@libs/getExtensionOrigin';
 // 保留console用于拖放上传调试
-import { h } from 'dom-chef'
-import once from 'just-once'
-import { setAttachment } from './attachmentStore'
-import blobToBase64 from '@libs/blobToBase64'
-
+import blobToBase64 from '@libs/blobToBase64';
 // https://www.flaticon.com/free-icon/download_24156
-import DROP_ICON_PATH from '@assets/images/download.svg'
-const CLASSNAME_SHOW_TIP = 'sf-show-dnd-upload-tip'
+import DROP_ICON_PATH from '@assets/images/download.svg';
 
-export default context => {
-  const { registerDOMEventListener, elementCollection } = context
+const CLASSNAME_SHOW_TIP = 'sf-show-dnd-upload-tip';
 
-  let tip
-  let n = 0
+export default (context) => {
+	const {registerDOMEventListener, elementCollection} = context;
 
-  elementCollection.add({
-    update: '#phupdate',
-    message: '#message',
-    textareaWrapper: { parent: 'update', selector: '.textarea-wrapper' },
-    action: { parent: 'update', selector: 'input[name=action]' },
-    textarea: { parent: 'update', selector: 'textarea' },
-    uploadFilename: '#upload-filename',
-    uploadWrapper: '#upload-wrapper',
-    updateBase64: '#upload-base64',
-    act: { parent: 'update', selector: '.act' },
-  })
+	let tip;
+	let n = 0;
 
-  registerDOMEventListener(window, 'dragenter', onDragEnter)
-  registerDOMEventListener(window, 'dragover', onDragOver)
-  registerDOMEventListener(window, 'dragleave', onDragLeave)
-  registerDOMEventListener(window, 'drop', onDrop)
+	elementCollection.add({
+		update: '#phupdate',
+		message: '#message',
+		textareaWrapper: {parent: 'update', selector: '.textarea-wrapper'},
+		action: {parent: 'update', selector: 'input[name=action]'},
+		textarea: {parent: 'update', selector: 'textarea'},
+		uploadFilename: '#upload-filename',
+		uploadWrapper: '#upload-wrapper',
+		updateBase64: '#upload-base64',
+		act: {parent: 'update', selector: '.act'},
+	});
 
-  function createTip() {
-    tip = (
-      <div id="sf-dnd-upload-tip">
-        <img src={new URL(DROP_ICON_PATH, getExtensionOrigin()).href} />
-        拖放图片到这里
-      </div>
-    )
-    elementCollection.get('textareaWrapper').append(tip)
-  }
+	registerDOMEventListener(globalThis, 'dragenter', onDragEnter);
+	registerDOMEventListener(globalThis, 'dragover', onDragOver);
+	registerDOMEventListener(globalThis, 'dragleave', onDragLeave);
+	registerDOMEventListener(globalThis, 'drop', onDrop);
 
-  function removeTip() {
-    tip.remove()
-    tip = null
-  }
+	function createTip() {
+		tip = (
+			<div id="sf-dnd-upload-tip">
+				<img src={new URL(DROP_ICON_PATH, getExtensionOrigin()).href} />
+				拖放图片到这里
+			</div>
+		);
+		elementCollection.get('textareaWrapper').append(tip);
+	}
 
-  const expandTextarea = once(() => {
-    const { act, textarea } = elementCollection.getAll()
+	function removeTip() {
+		tip.remove();
+		tip = null;
+	}
 
-    act.style.display = 'block'
-    textarea.style.height = '4.6em'
-  })
+	const expandTextarea = once(() => {
+		const {act, textarea} = elementCollection.getAll();
 
-  function isDraggingFiles(event) {
-    return Array.from(event.dataTransfer.items)
-      .some(item => item.kind === 'file')
-  }
+		act.style.display = 'block';
+		textarea.style.height = '4.6em';
+	});
 
-  function isDraggingImages(event) {
-    return Array.from(event.dataTransfer.items)
-      .some(item => item.type.startsWith('image/'))
-  }
+	function isDraggingFiles(event) {
+		return [...event.dataTransfer.items].some((item) => item.kind === 'file');
+	}
 
-  function setDropEffect(event) {
-    event.dataTransfer.dropEffect = isDraggingImages(event) ? 'copy' : 'none'
-  }
+	function isDraggingImages(event) {
+		return [...event.dataTransfer.items].some((item) =>
+			item.type.startsWith('image/'),
+		);
+	}
 
-  function onDragEnter(event) {
-    if (!isDraggingFiles(event)) return
+	function setDropEffect(event) {
+		event.dataTransfer.dropEffect = isDraggingImages(event) ? 'copy' : 'none';
+	}
 
-    event.preventDefault()
-    setDropEffect(event)
+	function onDragEnter(event) {
+		if (!isDraggingFiles(event)) {
+			return;
+		}
 
-    // https://stackoverflow.com/a/29808690/4617270
-    if (isDraggingImages(event) && n++ === 0) {
-      console.log('[SpaceFanfou DND] onDragEnter: 显示提示层, n =', n)
-      expandTextarea()
-      document.body.classList.add(CLASSNAME_SHOW_TIP)
-      elementCollection.get('textarea').blur()
-    }
-  }
+		event.preventDefault();
+		setDropEffect(event);
 
-  function onDragOver(event) {
-    if (isDraggingFiles(event)) {
-      event.preventDefault()
-      setDropEffect(event)
-    }
-  }
+		// https://stackoverflow.com/a/29808690/4617270
+		if (!(isDraggingImages(event) && n++ === 0)) {
+			return;
+		}
 
-  function onDragLeave(event) {
-    if (isDraggingImages(event) && --n === 0) {
-      console.log('[SpaceFanfou DND] onDragLeave: 隐藏提示层, n =', n)
-      document.body.classList.remove(CLASSNAME_SHOW_TIP)
-    }
-  }
+		console.log('[SpaceFanfou DND] onDragEnter: 显示提示层, n =', n);
+		expandTextarea();
+		document.body.classList.add(CLASSNAME_SHOW_TIP);
+		elementCollection.get('textarea').blur();
+	}
 
-  function onDrop(event) {
-    if (!isDraggingImages(event)) return
+	function onDragOver(event) {
+		if (!isDraggingFiles(event)) {
+			return;
+		}
 
-    console.log('[SpaceFanfou DND] onDrop: 开始处理')
-    event.preventDefault()
-    console.log('[SpaceFanfou DND] onDrop: 移除提示层')
-    document.body.classList.remove(CLASSNAME_SHOW_TIP)
-    n = 0
-    console.log('[SpaceFanfou DND] onDrop: body classes =', document.body.className)
+		event.preventDefault();
+		setDropEffect(event);
+	}
 
-    const { update } = elementCollection.getAll()
+	function onDragLeave(event) {
+		if (!(isDraggingImages(event) && --n === 0)) {
+			return;
+		}
 
-    if (update.contains(event.target)) {
-      const file = event.dataTransfer.files[0]
-      console.log('[SpaceFanfou DND] onDrop: 调用 processForm, 文件 =', file.name)
+		console.log('[SpaceFanfou DND] onDragLeave: 隐藏提示层, n =', n);
+		document.body.classList.remove(CLASSNAME_SHOW_TIP);
+	}
 
-      processForm(file)
-    } else {
-      console.log('[SpaceFanfou DND] onDrop: 目标不在 update 区域内')
-    }
-  }
+	function onDrop(event) {
+		if (!isDraggingImages(event)) {
+			return;
+		}
 
-  async function processForm(file) {
-    console.log('[SpaceFanfou DND] processForm: 开始, 文件 =', file.name, file.size, 'bytes')
-    const { message, action, textarea, uploadFilename, updateBase64 } = elementCollection.getAll()
+		console.log('[SpaceFanfou DND] onDrop: 开始处理');
+		event.preventDefault();
+		console.log('[SpaceFanfou DND] onDrop: 移除提示层');
+		document.body.classList.remove(CLASSNAME_SHOW_TIP);
+		n = 0;
+		console.log(
+			'[SpaceFanfou DND] onDrop: body classes =',
+			document.body.className,
+		);
 
-    // 防御性检查：确保所有元素存在
-    if (!message || !action || !textarea || !uploadFilename || !updateBase64) {
-      console.error('[SpaceFanfou] DND upload: Missing required elements', {
-        message: !!message,
-        action: !!action,
-        textarea: !!textarea,
-        uploadFilename: !!uploadFilename,
-        updateBase64: !!updateBase64,
-      })
-      return
-    }
+		const {update} = elementCollection.getAll();
 
-    console.log('[SpaceFanfou DND] processForm: 所有元素检查完成')
+		if (update.contains(event.target)) {
+			const file = event.dataTransfer.files[0];
+			console.log(
+				'[SpaceFanfou DND] onDrop: 调用 processForm, 文件 =',
+				file.name,
+			);
 
-    try {
-      console.log('[SpaceFanfou DND] processForm: 设置表单属性')
-      message.setAttribute('action', '/home/upload')
-      message.setAttribute('enctype', 'multipart/form-data')
-      action.value = 'photo.upload'
-      textarea.setAttribute('name', 'desc')
-      uploadFilename.textContent = file.name
+			processForm(file);
+		} else {
+			console.log('[SpaceFanfou DND] onDrop: 目标不在 update 区域内');
+		}
+	}
 
-      console.log('[SpaceFanfou DND] processForm: textarea.disabled =', textarea.disabled)
-      console.log('[SpaceFanfou DND] processForm: 调用 textarea.focus()')
-      // 立即恢复 textarea 交互（在异步操作之前）
-      textarea.focus()
+	async function processForm(file) {
+		console.log(
+			'[SpaceFanfou DND] processForm: 开始, 文件 =',
+			file.name,
+			file.size,
+			'bytes',
+		);
+		const {message, action, textarea, uploadFilename, updateBase64} =
+			elementCollection.getAll();
 
-      console.log('[SpaceFanfou DND] processForm: 开始转换 base64')
-      // 异步转换 base64，添加错误处理
-      const base64 = await blobToBase64(file)
-      console.log('[SpaceFanfou DND] processForm: base64 转换完成, 长度 =', base64.length)
-      updateBase64.value = base64
+		// 防御性检查：确保所有元素存在
+		if (!message || !action || !textarea || !uploadFilename || !updateBase64) {
+			console.error('[SpaceFanfou] DND upload: Missing required elements', {
+				message: Boolean(message),
+				action: Boolean(action),
+				textarea: Boolean(textarea),
+				uploadFilename: Boolean(uploadFilename),
+				updateBase64: Boolean(updateBase64),
+			});
+			return;
+		}
 
-      console.log('[SpaceFanfou DND] processForm: 调用 setAttachment')
-      setAttachment({
-        file,
-        filename: file.name,
-        source: 'drag-and-drop',
-      })
-      console.log('[SpaceFanfou DND] processForm: 完成')
-    } catch (error) {
-      console.error('[SpaceFanfou] DND upload failed:', error)
-      // 失败时清理状态
-      uploadFilename.textContent = ''
-      // 确保 textarea 可交互
-      textarea.focus()
-    }
-  }
+		console.log('[SpaceFanfou DND] processForm: 所有元素检查完成');
 
-  return {
-    applyWhen: () => elementCollection.ready('uploadWrapper'),
+		try {
+			console.log('[SpaceFanfou DND] processForm: 设置表单属性');
+			message.setAttribute('action', '/home/upload');
+			message.setAttribute('enctype', 'multipart/form-data');
+			action.value = 'photo.upload';
+			textarea.setAttribute('name', 'desc');
+			uploadFilename.textContent = file.name;
 
-    onLoad() {
-      createTip()
-    },
+			console.log(
+				'[SpaceFanfou DND] processForm: textarea.disabled =',
+				textarea.disabled,
+			);
+			console.log('[SpaceFanfou DND] processForm: 调用 textarea.focus()');
+			// 立即恢复 textarea 交互（在异步操作之前）
+			textarea.focus();
 
-    onUnload() {
-      removeTip()
-    },
-  }
-}
+			console.log('[SpaceFanfou DND] processForm: 开始转换 base64');
+			// 异步转换 base64，添加错误处理
+			const base64 = await blobToBase64(file);
+			console.log(
+				'[SpaceFanfou DND] processForm: base64 转换完成, 长度 =',
+				base64.length,
+			);
+			updateBase64.value = base64;
+
+			console.log('[SpaceFanfou DND] processForm: 调用 setAttachment');
+			setAttachment({
+				file,
+				filename: file.name,
+				source: 'drag-and-drop',
+			});
+			console.log('[SpaceFanfou DND] processForm: 完成');
+		} catch (error) {
+			console.error('[SpaceFanfou] DND upload failed:', error);
+			// 失败时清理状态
+			uploadFilename.textContent = '';
+			// 确保 textarea 可交互
+			textarea.focus();
+		}
+	}
+
+	return {
+		applyWhen: () => elementCollection.ready('uploadWrapper'),
+
+		onLoad() {
+			createTip();
+		},
+
+		onUnload() {
+			removeTip();
+		},
+	};
+};

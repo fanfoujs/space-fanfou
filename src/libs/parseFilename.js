@@ -1,14 +1,15 @@
-export default filename => {
-  const index = filename.lastIndexOf('.')
-  let basename, extname
+export default (filename) => {
+	const index = filename.lastIndexOf('.');
+	let basename;
+	let extname;
 
-  if (index === -1) {
-    basename = filename
-    extname = ''
-  } else {
-    basename = filename.slice(0, index)
-    extname = filename.slice(index)
-  }
+	if (index === -1) {
+		basename = filename;
+		extname = '';
+	} else {
+		basename = filename.slice(0, index);
+		extname = filename.slice(index);
+	}
 
-  return { basename, extname }
-}
+	return {basename, extname};
+};

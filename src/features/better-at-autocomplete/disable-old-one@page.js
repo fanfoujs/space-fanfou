@@ -1,31 +1,36 @@
-import elementReady from 'element-ready'
-import requireFanfouLib from '@libs/requireFanfouLib'
-import keepRetry from '@libs/keepRetry'
+import elementReady from 'element-ready';
+import requireFanfouLib from '@libs/requireFanfouLib';
+import keepRetry from '@libs/keepRetry';
 
 export default () => {
-  let $textarea
+	let $textarea;
 
-  return {
-    async applyWhen() {
-      const $ = await requireFanfouLib('jQuery')
-      const textarea = await elementReady('#phupdate textarea')
+	return {
+		async applyWhen() {
+			const $ = await requireFanfouLib('jQuery');
+			const textarea = await elementReady('#phupdate textarea');
 
-      return textarea && ($textarea = $(textarea))
-    },
+			if (!textarea) {
+				return textarea;
+			}
 
-    waitReady: () => keepRetry({
-      checker: () => (
-        $textarea?.autocomplete?.('option', 'disabled') === false
-      ),
-      until: () => document.readyState === 'complete',
-    }),
+			$textarea = $(textarea);
+			return $textarea;
+		},
 
-    onLoad() {
-      $textarea.autocomplete('disable')
-    },
+		waitReady: () =>
+			keepRetry({
+				checker: () =>
+					$textarea?.autocomplete?.('option', 'disabled') === false,
+				until: () => document.readyState === 'complete',
+			}),
 
-    onUnload() {
-      $textarea.autocomplete('enable')
-    },
-  }
-}
+		onLoad() {
+			$textarea.autocomplete('disable');
+		},
+
+		onUnload() {
+			$textarea.autocomplete('enable');
+		},
+	};
+};
