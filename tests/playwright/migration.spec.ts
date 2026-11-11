@@ -483,14 +483,15 @@ test('settings asks to reload an old background instead of reporting a false log
   })
   await page.goto(`chrome-extension://${extensionId}/settings.html`)
   await page.getByRole('navigation').getByText('工具', { exact: true }).click()
-  await expect(page.getByLabel('扩展已更新，请重新加载。', { exact: true })).toBeVisible()
+  const accountPanel = page.locator('.sf-oauth-panel')
+  await expect(accountPanel.getByLabel('扩展已更新，请重新加载。', { exact: true })).toBeVisible()
   await expect(
-    page.getByRole('button', { name: '重新加载扩展', exact: true }),
+    accountPanel.getByRole('button', { name: '重新加载扩展', exact: true }),
   ).toBeVisible()
   await expect(
-    page.getByRole('button', { name: 'OAuth 登录', exact: true }),
+    accountPanel.getByRole('button', { name: 'OAuth 登录', exact: true }),
   ).toHaveCount(0)
-  await expect(page.getByText('未登录', { exact: true })).toHaveCount(0)
+  await expect(accountPanel.getByText('未登录', { exact: true })).toHaveCount(0)
   await page.close()
 })
 
