@@ -4,12 +4,13 @@ import Cookies from 'js-cookie'
 import pick from 'just-pick'
 import preactRender from '@libs/preactRender'
 import { readJSONFromLocalStorage } from '@libs/localStorageWrappers'
-import getLoggedInUserId from '@libs/getLoggedInUserId'
+import getLoggedInUserId, { getUserIdFromProfileLink } from '@libs/getLoggedInUserId'
 import findElementWithSpecifiedContentInArray from '@libs/findElementWithSpecifiedContentInArray'
 import arrayRemove from '@libs/arrayRemove'
 import omitBy from '@libs/omitBy'
+import { FANFOU_WEBSITE_ACCOUNTS_KEY } from '@constants'
 
-const STORAGE_KEY = 'user-switcher/allUserData'
+const STORAGE_KEY = FANFOU_WEBSITE_ACCOUNTS_KEY
 const STORAGE_AREA_NAME = 'local'
 const CLASSNAME_IS_READY = 'sf-is-ready'
 
@@ -129,6 +130,7 @@ export default context => {
     const allCookies = Cookies.get()
     const userData = {
       userId: loggedInUserId,
+      accountIds: [...new Set([loggedInUserId, getUserIdFromProfileLink()].filter(Boolean))],
       nickname: select('#user_top h3').textContent,
       avatarUrl: select('#user_top img').src,
       cookies: omitBy(allCookies, (_, key) => (

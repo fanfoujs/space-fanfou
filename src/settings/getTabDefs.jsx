@@ -5,9 +5,11 @@ import VersionHistory from './components/VersionHistory'
 import HelpAndSupport from './components/HelpAndSupport'
 import SupportAuthor from './components/SupportAuthor'
 import OAuthPanel from './components/OAuthPanel'
+import PopupPreferences from './components/PopupPreferences'
 import { GET_OPTION_DEFS } from '@constants'
 
 const tabDefs = [ {
+  id: 'page-features',
   title: '页面功能',
   sections: [ {
     title: 'Timeline 时间线',
@@ -42,6 +44,7 @@ const tabDefs = [ {
     ],
   } ],
 }, {
+  id: 'appearance',
   title: '页面外观',
   sections: [ {
     title: '功能',
@@ -59,8 +62,17 @@ const tabDefs = [ {
     ],
   } ],
 }, {
+  id: 'tools',
   title: '工具',
   sections: [ {
+    title: '饭否账号',
+    options: [],
+    children: <OAuthPanel />,
+  }, {
+    title: '扩展弹窗',
+    options: [],
+    children: <PopupPreferences />,
+  }, {
     title: '桌面通知',
     options: [
       'notifications',
@@ -70,19 +82,18 @@ const tabDefs = [ {
     options: [
       'share-to-fanfou',
     ],
-  }, {
-    title: '饭否账号',
-    options: [],
-    children: <OAuthPanel />,
   } ],
 }, {
+  id: 'version-history',
   title: '更新历史',
   startsGroup: true,
   children: <VersionHistory />,
 }, {
+  id: 'help',
   title: '帮助与支持',
   children: <HelpAndSupport />,
 }, {
+  id: 'support-author',
   title: '支持作者',
   children: <SupportAuthor />,
 } ]

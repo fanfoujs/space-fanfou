@@ -108,17 +108,25 @@ nav ul li {
     margin-top: 26px;
   }
 
-  a {
+  button {
     display: block;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
     border: 0;
     color: #999;
     cursor: pointer;
+    font: inherit;
+    text-align: left;
     line-height: 20px;
     padding: 6px 0 6px 18px;
     text-decoration: none;
   }
 
-  &.current a {
+  &.current button {
     color: rgb(70, 78, 90);
   }
 }
@@ -314,7 +322,29 @@ input[type="checkbox"] {
 }
 
 .sf-oauth-panel {
-  margin: 12px 0 8px 16px;
+  margin: 0 0 8px 16px;
+
+  &__status {
+    margin-bottom: 6px;
+  }
+
+  &__search-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  &__search {
+    display: block;
+    box-sizing: border-box;
+    flex: 1;
+    min-width: 0;
+    width: 0;
+  }
+
+  &__count { color: #999; white-space: nowrap; }
+  &__empty { margin: 4px 0; color: #999; }
 
   &__actions {
     display: flex;
@@ -331,6 +361,86 @@ input[type="checkbox"] {
     margin-top: 10px;
     color: #c0392b;
   }
+
+  &__setup {
+    margin: 10px 0;
+
+    p { margin: 0 0 10px; }
+    details { margin-top: 10px; }
+  }
+}
+
+#tabs .sf-oauth-accounts {
+  max-height: 112px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    min-height: 26px;
+    box-sizing: border-box;
+    padding: 2px 0;
+  }
+}
+
+.sf-oauth-account {
+  &__identity {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  &__name { overflow-wrap: anywhere; }
+  &__id { color: #999; }
+  &__current { color: #999; font-size: 11px; }
+  &__state {
+    color: #777;
+    white-space: nowrap;
+
+    &.is-expired { color: #a76b24; }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+}
+
+.sf-oauth-link-button {
+  margin: 0;
+  padding: 2px 4px;
+  border: 0;
+  background: none;
+  color: #06c;
+  font: inherit;
+  cursor: pointer;
+
+  &:enabled:hover { color: #0057ad; text-decoration: underline; }
+  &:disabled { color: #999; cursor: default; }
+  &:focus-visible { outline: 2px solid #06c; outline-offset: 2px; }
+}
+
+@media (max-width: 420px) {
+  #tabs .sf-oauth-accounts li { grid-template-columns: minmax(0, 1fr) auto; }
+  .sf-oauth-account__actions { grid-column: 1 / -1; justify-content: flex-start; }
+}
+
+.sf-account-check-note {
+  color: #999;
+  font-size: 12px;
 }
 
 .sf-support-author-shop {
@@ -358,31 +468,359 @@ input[type="checkbox"] {
   margin: 0 0 6px;
 }
 
-// Firefox measures popups at up to 800px and sizes them from the body.
+.sf-quiet-button {
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: #777;
+  font: inherit;
+  cursor: pointer;
+
+  &:hover { color: #555; }
+  &:focus-visible { outline: 2px solid #06c; outline-offset: 2px; }
+}
+
+.sf-nav-actions {
+  margin: 18px 0 0 24px;
+  padding-top: 10px;
+  border-top: 1px solid @dividerColor;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding-left: 0;
+    text-align: left;
+    color: #999;
+
+    &:hover { color: #777; }
+
+    svg { flex: 0 0 auto; }
+  }
+}
+
+.sf-popup-preferences {
+  border: 0;
+  margin: 12px 0 16px 16px;
+  padding: 0;
+
+  legend {
+    margin-bottom: 8px;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 8px 0;
+    cursor: pointer;
+  }
+
+  &__note {
+    color: #999;
+  }
+}
+
+.sf-composer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-height: 420px;
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 32px;
+  }
+
+  &__account {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    min-width: 0;
+    min-height: 28px;
+    color: #777;
+  }
+
+  &__account-picker {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    min-width: 0;
+
+    > span:first-child { white-space: nowrap; }
+  }
+
+  &__account-select-wrap {
+    position: relative;
+    min-width: 0;
+    max-width: 220px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 4px;
+      width: 5px;
+      height: 5px;
+      margin-top: -4px;
+      border-right: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
+      transform: rotate(45deg);
+      pointer-events: none;
+    }
+  }
+
+  &__account-measure {
+    display: block;
+    padding: 0 16px 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    visibility: hidden;
+  }
+
+  select.sf-composer__account-select {
+    position: absolute;
+    inset: 0;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    appearance: none;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0 16px 0 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    text-shadow: none;
+    color: inherit;
+    font: inherit;
+    text-overflow: ellipsis;
+    cursor: pointer;
+
+    &:enabled:hover,
+    &:enabled:active {
+      background: none;
+      box-shadow: none;
+      color: #555;
+    }
+
+    &:focus,
+    &:focus-visible { outline: none; }
+  }
+
+  &__actions {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 12px;
+  }
+
+  button.sf-composer__icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 28px;
+    height: 28px;
+    padding: 6px;
+    // Keep a 28px click target while spacing the visible 16px icons by the row gap.
+    margin: 0 -6px;
+
+    svg { flex: 0 0 auto; }
+    &:disabled { opacity: 0.5; cursor: default; }
+  }
+
+  &__attachment {
+    position: relative;
+    flex: 0 0 auto;
+    width: 64px;
+    height: 64px;
+    margin-top: 8px;
+
+    img {
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      border: 1px solid @dividerColor;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+  }
+
+  button.sf-composer__remove-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    box-sizing: border-box;
+    width: 20px;
+    height: 20px;
+    padding: 3px;
+    border: 1px solid @dividerColor;
+    border-radius: 50%;
+    background: #fff;
+    color: #777;
+    cursor: pointer;
+
+    &:hover { color: #555; }
+    &:disabled { opacity: 0.5; cursor: default; }
+  }
+
+  textarea {
+    box-sizing: border-box;
+    flex: 1;
+    min-height: 160px;
+    width: 100%;
+    margin: 0;
+    padding: 8px 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: #fff;
+    color: #555;
+    font: inherit;
+    resize: none;
+    user-select: text;
+
+    &:focus {
+      outline: none;
+    }
+
+    &:disabled {
+      color: #999;
+    }
+
+    &::placeholder {
+      color: #aaa;
+    }
+  }
+
+  &__feedback {
+    padding: 12px 0;
+    color: #c0392b;
+
+    p { margin: 0; }
+  }
+
+  &__footer {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 12px;
+    border-top: 0;
+  }
+
+  &__count {
+    font-size: inherit;
+    font-variant-numeric: tabular-nums;
+    color: #777;
+    white-space: nowrap;
+
+    span { color: #999; }
+    &.is-exceeded { color: #c0392b; }
+  }
+
+  button.sf-composer__send {
+    min-width: 76px;
+    padding: 7px 18px;
+    border: 1px solid #06c;
+    border-radius: 4px;
+    background: #06c;
+    box-shadow: none;
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+
+    &:enabled:hover { background: #0057ad; }
+    &:disabled { opacity: 0.45; cursor: default; }
+  }
+}
+
+// Mark the actual toolbar popup explicitly; a narrow settings tab stays responsive.
+html.sf-popup {
+  --sf-popup-width: 560px;
+  --sf-popup-height: 600px;
+  height: var(--sf-popup-height);
+  overflow: hidden;
+}
+
+html.sf-popup--compose {
+  --sf-popup-width: 440px;
+  --sf-popup-height: 220px;
+}
+
+html.sf-popup--compose.sf-popup--image {
+  --sf-popup-height: 300px;
+}
+
+body.sf-popup {
+  width: var(--sf-popup-width);
+  height: var(--sf-popup-height);
+  min-height: 0;
+  overflow: hidden;
+
+  .sf-composer {
+    height: var(--sf-popup-height);
+    min-height: 0;
+  }
+
+  .sf-composer__form {
+    padding: 16px;
+    overflow-y: auto;
+  }
+
+  .sf-composer textarea { min-height: 96px; }
+  .sf-composer__feedback { overflow-wrap: anywhere; }
+
+  #tabs {
+    height: var(--sf-popup-height);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  #tabs header { top: 0; }
+  nav { top: 0; }
+}
+
 @media (max-width: 800px) {
-  html {
-    height: 600px;
-    overflow-y: hidden;
-  }
-
-  body {
-    width: 560px;
-  }
-
   .wrapper {
     column-gap: 0;
     padding-right: 0;
   }
 
   #tabs {
-    height: 600px;
     padding-right: 20px;
-    overflow-y: auto;
-    overflow-x: hidden;
   }
+
+  .sf-composer__form { padding: 20px; }
 
   :-webkit-any(.checkbox, .radio) label {
     padding-top: 5px;
     padding-bottom: 5px;
   }
+}
+
+@media (max-width: 420px) {
+  .wrapper { grid-template-columns: 100px minmax(0, 1fr); }
+  nav { width: 100px; }
+  nav ul li button { padding-left: 10px; }
+  .sf-nav-actions { margin-left: 16px; }
+  .sf-composer__form { padding: 16px; }
 }

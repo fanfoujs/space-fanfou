@@ -2,6 +2,7 @@ const state = vi.hoisted(() => ({
   handlers: new Map<string, (payload?: any) => Promise<any>>(),
   storage: new Map<string, any>(),
   createTab: vi.fn(),
+  readSession: vi.fn(),
   session: { userId: '42', screenName: 'tester' } as {
     userId: string
     screenName: string
@@ -20,6 +21,24 @@ vi.mock('wxt/browser', () => ({
       return state.identity
     },
     tabs: { create: state.createTab },
+    runtime: {
+      getURL: (path: string) => `chrome-extension://test-extension${path}`,
+    },
+    storage: {
+      local: {
+        get: async (key: string | string[]) =>
+          Object.fromEntries(
+            (Array.isArray(key) ? key : [key]).map((name) => [
+              name,
+              state.storage.get('local:' + name),
+            ]),
+          ),
+        set: async (values: Record<string, unknown>) => {
+          for (const [key, value] of Object.entries(values))
+            state.storage.set('local:' + key, value)
+        },
+      },
+    },
   },
 }))
 vi.mock('../../src/background/environment/messaging', () => ({
@@ -44,20 +63,40 @@ vi.mock('../../src/background/environment/storage', () => ({
   },
 }))
 vi.mock('../../src/platform/fanfou-session', () => ({
-  readFanfouSession: async () => state.session,
+  readFanfouSession: (...args: unknown[]) => state.readSession(...args),
 }))
 import oauth from '../../src/background/environment/fanfouOAuth'
 import log from '../../src/libs/log'
+import { composerImageFixture } from '../fixtures/composer-image'
+import {
+  COMPOSER_DRAFT_KEY,
+  COMPOSER_IMAGE_KEY,
+  getComposerDraftKey,
+  getComposerSendKey,
+} from '../../src/platform/composer'
 
 const authorize = (payload?: unknown) =>
   state.handlers.get('FANFOU_OAUTH_AUTHORIZE')!(payload)
 const pendingKey = 'session:fanfou-oauth/pending'
 const tokenKey = 'local:fanfou-oauth/tokens'
+const compose = (
+  payload: unknown,
+  url = 'chrome-extension://test-extension/settings.html?popup',
+) => (state.handlers.get('FANFOU_COMPOSE_SEND')! as any)(payload, { url })
+const removeAccount = (
+  userId: string,
+  url = 'chrome-extension://test-extension/settings.html?popup',
+) =>
+  (state.handlers.get('FANFOU_OAUTH_REMOVE_ACCOUNT')! as any)(
+    { userId },
+    { url },
+  )
 
 beforeEach(async () => {
   state.storage.clear()
   state.identity = undefined
   state.session = { userId: '42', screenName: 'tester' }
+  state.readSession.mockReset().mockImplementation(async () => state.session)
   state.options = { 'fanfou-oauth': true }
   state.createTab.mockReset()
   oauth.install()
@@ -451,6 +490,10 @@ test('finishing an account lookup after revocation cannot restore saved tokens',
   respond(Response.json({ id: '42', screen_name: 'tester' }))
   expect((await checking).status.hasTokens).toBe(false)
   expect(state.storage.has(tokenKey)).toBe(false)
+  expect(
+    (await state.handlers.get('FANFOU_OAUTH_GET_STATUS')!({ cached: true }))
+      .status.loggedIn,
+  ).toBe(false)
 })
 
 test('switching or signing out of the website never treats the previous account as logged in', async () => {
@@ -547,6 +590,150 @@ test('obsolete custom consumer settings cannot override the built-in app', async
   expect(state.storage.get(pendingKey).consumerKey).toBe(
     '3b8763186f221a7d1f4afa56969898b9',
   )
+})
+
+test('composer uses the current authorized account and clears the shared draft in the background', async () => {
+  const { fetchMock, requests } = mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  state.storage.set('local:' + COMPOSER_DRAFT_KEY, '写饭测试')
+  fetchMock.mockImplementationOnce(async () =>
+    Response.json({ id: 'posted', text: '写饭测试' }),
+  )
+  expect(await compose({ status: '写饭测试', userId: '42' })).toEqual({
+    ok: true,
+    statusId: 'posted',
+  })
+  expect(requests.at(-1)!.headers.get('Authorization')).toContain(
+    'oauth_token="access"',
+  )
+  expect(state.storage.get('local:' + COMPOSER_DRAFT_KEY)).toBe('')
+  expect(state.storage.get('local:' + getComposerSendKey('42'))).toEqual({
+    state: 'sent',
+  })
+})
+
+test('composer refuses calls from a website or from an account changed since opening the editor', async () => {
+  const { requests } = mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  const count = requests.length
+  expect(
+    (await compose({ status: '测试', userId: '42' }, 'https://fanfou.com/home'))
+      .error,
+  ).toContain('快捷发饭窗口')
+  expect(
+    (
+      await compose(
+        { status: '测试', userId: '42' },
+        'chrome-extension://other-extension/settings.html',
+      )
+    ).error,
+  ).toContain('快捷发饭窗口')
+  state.session = { userId: '43', screenName: 'another' }
+  expect((await compose({ status: '测试', userId: '42' })).error).toContain(
+    '账号已改变',
+  )
+  expect(requests).toHaveLength(count)
+})
+
+test('failed sends keep the draft and report the API error', async () => {
+  const { fetchMock } = mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  state.storage.set('local:' + COMPOSER_DRAFT_KEY, '保留草稿')
+  fetchMock.mockImplementationOnce(async () =>
+    Response.json({ error: '请稍后再试' }, { status: 503 }),
+  )
+  expect((await compose({ status: '保留草稿', userId: '42' })).error).toBe(
+    '请稍后再试',
+  )
+  expect(state.storage.get('local:' + COMPOSER_DRAFT_KEY)).toBe('保留草稿')
+})
+
+test('an in-flight send blocks duplicates and never clears a newer draft', async () => {
+  const { fetchMock } = mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  let finish!: (response: Response) => void
+  let markStarted!: () => void
+  const started = new Promise<void>((resolve) => {
+    markStarted = resolve
+  })
+  fetchMock.mockImplementationOnce(async () => {
+    markStarted()
+    return new Promise<Response>((resolve) => {
+      finish = resolve
+    })
+  })
+  const sending = compose({ status: '旧草稿', userId: '42' })
+  await started
+  expect((await compose({ status: '旧草稿', userId: '42' })).error).toContain(
+    '正在发送',
+  )
+  state.storage.set('local:' + COMPOSER_DRAFT_KEY, '其他窗口的新草稿')
+  finish(Response.json({ id: 'posted' }))
+  expect((await sending).ok).toBe(true)
+  expect(state.storage.get('local:' + COMPOSER_DRAFT_KEY)).toBe(
+    '其他窗口的新草稿',
+  )
+})
+
+test('photo-only sending clears the matching saved image and keeps failures retryable', async () => {
+  const { fetchMock } = mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  state.storage.set('local:' + COMPOSER_DRAFT_KEY, '')
+  state.storage.set('local:' + COMPOSER_IMAGE_KEY, composerImageFixture)
+  fetchMock.mockImplementationOnce(async () =>
+    Response.json({ error: '图片发送失败' }, { status: 503 }),
+  )
+  expect(
+    (await compose({ status: '', userId: '42', image: composerImageFixture }))
+      .error,
+  ).toBe('图片发送失败')
+  expect(state.storage.get('local:' + COMPOSER_IMAGE_KEY)).toEqual(
+    composerImageFixture,
+  )
+  fetchMock.mockImplementationOnce(async () =>
+    Response.json({ id: 'uploaded' }),
+  )
+  expect(
+    (await compose({ status: '', userId: '42', image: composerImageFixture }))
+      .ok,
+  ).toBe(true)
+  expect(state.storage.get('local:' + COMPOSER_IMAGE_KEY)).toBe(null)
+})
+
+test('a delayed photo upload cannot clear a replacement image even when its caption is unchanged', async () => {
+  const { fetchMock } = mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  let finish!: (response: Response) => void
+  let started!: () => void
+  const pending = new Promise<void>((resolve) => {
+    started = resolve
+  })
+  fetchMock.mockImplementationOnce(async () => {
+    started()
+    return new Promise<Response>((resolve) => {
+      finish = resolve
+    })
+  })
+  state.storage.set('local:' + COMPOSER_DRAFT_KEY, '相同说明')
+  state.storage.set('local:' + COMPOSER_IMAGE_KEY, composerImageFixture)
+  const sending = compose({
+    status: '相同说明',
+    userId: '42',
+    image: composerImageFixture,
+  })
+  await pending
+  const replacement = { ...composerImageFixture, id: 'new-image' }
+  state.storage.set('local:' + COMPOSER_IMAGE_KEY, replacement)
+  finish(Response.json({ id: 'uploaded' }))
+  expect((await sending).ok).toBe(true)
+  expect(state.storage.get('local:' + COMPOSER_IMAGE_KEY)).toEqual(replacement)
+  expect(state.storage.get('local:' + COMPOSER_DRAFT_KEY)).toBe('相同说明')
 })
 
 test('credentials for the previous app are not treated as a login to the new built-in app', async () => {
@@ -651,4 +838,470 @@ test('unknown historical credentials cannot acquire a website identity just beca
     ).status.loggedIn,
   ).toBe(false)
   expect(state.storage.get(tokenKey).userId).toBeFalsy()
+})
+
+test('cached status returns the saved profile without checking the website or calling an API', async () => {
+  const { fetchMock } = mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  const requests = fetchMock.mock.calls.length
+  const sessionReads = state.readSession.mock.calls.length
+  const getStatus = state.handlers.get('FANFOU_OAUTH_GET_STATUS')!
+  expect((await getStatus({ cached: true })).status).toMatchObject({
+    loggedIn: true,
+    userId: '42',
+    screenName: 'tester',
+  })
+  // Older installations have a saved token/profile but no separate display cache.
+  state.storage.delete('local:fanfou-oauth/status')
+  expect((await getStatus({ cached: true })).status).toMatchObject({
+    loggedIn: true,
+    userId: '42',
+    screenName: 'tester',
+  })
+  expect(fetchMock.mock.calls).toHaveLength(requests)
+  expect(state.readSession.mock.calls).toHaveLength(sessionReads)
+})
+
+test('failed session checks preserve the saved status instead of caching a logout', async () => {
+  mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  const getStatus = state.handlers.get('FANFOU_OAUTH_GET_STATUS')!
+  state.readSession.mockRejectedValueOnce(new Error('offline'))
+  await expect(getStatus({ refreshAccount: true })).rejects.toThrow('offline')
+  const cached = await getStatus({ cached: true })
+  expect(cached.status).toMatchObject({ loggedIn: true, screenName: 'tester' })
+  expect(JSON.stringify(cached)).not.toContain('access-secret')
+  expect(cached.status).not.toHaveProperty('oauthToken')
+  expect(cached.status).not.toHaveProperty('consumerSecret')
+})
+
+test('a confirmed website logout and explicit revocation both replace the cached login', async () => {
+  mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  const getStatus = state.handlers.get('FANFOU_OAUTH_GET_STATUS')!
+  state.session = null
+  await getStatus()
+  expect((await getStatus({ cached: true })).status.loggedIn).toBe(false)
+  state.session = { userId: '42', screenName: 'tester' }
+  await getStatus()
+  expect((await getStatus({ cached: true })).status.loggedIn).toBe(true)
+  await state.handlers.get('FANFOU_OAUTH_CLEAR_TOKENS')!()
+  expect((await getStatus({ cached: true })).status.loggedIn).toBe(false)
+})
+
+test('logout from a cached profile cannot revoke a different account after a website switch', async () => {
+  const { fetchMock } = mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  await loginSecondAccount(fetchMock)
+  const clear = state.handlers.get('FANFOU_OAUTH_CLEAR_TOKENS')!
+  expect((await clear({ userId: '42' })).error).toContain('账号已改变')
+  expect(
+    (await state.handlers.get('FANFOU_OAUTH_GET_STATUS')!()).status,
+  ).toMatchObject({ loggedIn: true, userId: '43' })
+})
+
+test('composer lists all known accounts without returning credentials or checking the network', async () => {
+  const { fetchMock } = mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  await loginSecondAccount(fetchMock)
+  const count = fetchMock.mock.calls.length
+  const checks = state.readSession.mock.calls.length
+  const result = await state.handlers.get('FANFOU_OAUTH_GET_STATUS')!({
+    cached: true,
+  })
+  expect(result.status.accounts).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        userId: '42',
+        screenName: 'tester',
+        loggedIn: true,
+      }),
+      expect.objectContaining({
+        userId: '43',
+        screenName: 'second',
+        loggedIn: true,
+      }),
+    ]),
+  )
+  expect(JSON.stringify(result.status.accounts)).not.toMatch(
+    /oauthToken|consumerSecret|access-secret|second-access/,
+  )
+  expect(fetchMock.mock.calls).toHaveLength(count)
+  expect(state.readSession.mock.calls).toHaveLength(checks)
+})
+
+test.each([false, true])(
+  'an explicitly selected account sends with its own token when website signed out = %s',
+  async (signedOut) => {
+    const { fetchMock, requests } = mockAuthorization()
+    await authorize()
+    await authorize({ complete: true })
+    await loginSecondAccount(fetchMock)
+    state.session = { userId: '42', screenName: 'tester' }
+    await state.handlers.get('FANFOU_OAUTH_GET_STATUS')!()
+    if (signedOut) state.session = null
+    state.storage.set('local:' + getComposerDraftKey('42'), '保留的旧版草稿')
+    state.storage.set('local:' + COMPOSER_DRAFT_KEY, '第二个账号发送')
+    const checks = state.readSession.mock.calls.length
+    fetchMock.mockImplementationOnce(async (input, init) => {
+      requests.push(new Request(input, init))
+      return Response.json({ id: 'second-post' })
+    })
+    expect(
+      await compose({
+        status: '第二个账号发送',
+        userId: '43',
+        accountId: '43',
+      }),
+    ).toEqual({ ok: true, statusId: 'second-post' })
+    expect(requests.at(-1)!.headers.get('Authorization')).toContain(
+      'oauth_token="second-access"',
+    )
+    expect(state.readSession.mock.calls).toHaveLength(checks)
+    expect(state.storage.get(tokenKey).oauthToken).toBe('access')
+    expect(state.storage.get('local:' + getComposerDraftKey('42'))).toBe(
+      '保留的旧版草稿',
+    )
+    expect(state.storage.get('local:' + COMPOSER_DRAFT_KEY)).toBe('')
+  },
+)
+
+test('explicit sending rejects unknown, mismatched, expired, and other-app accounts before posting', async () => {
+  const { fetchMock } = mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  await loginSecondAccount(fetchMock)
+  state.session = { userId: '42', screenName: 'tester' }
+  await state.handlers.get('FANFOU_OAUTH_GET_STATUS')!()
+  const count = fetchMock.mock.calls.length
+  expect(
+    (await compose({ status: '测试', userId: '43', accountId: '42' })).error,
+  ).toContain('不一致')
+  expect(
+    (await compose({ status: '测试', userId: 'missing', accountId: 'missing' }))
+      .error,
+  ).toContain('尚未授权')
+  const accounts = state.storage.get('local:fanfou-oauth/accounts')
+  const key = Object.keys(accounts).find(
+    (key) => accounts[key].userId === '43',
+  )!
+  accounts[key] = { ...accounts[key], authorizationInvalid: true }
+  expect(
+    (await compose({ status: '测试', userId: '43', accountId: '43' })).error,
+  ).toContain('授权已失效')
+  accounts[key] = {
+    ...accounts[key],
+    authorizationInvalid: false,
+    consumerKey: 'other-app',
+  }
+  expect(
+    (await compose({ status: '测试', userId: '43', accountId: '43' })).error,
+  ).toContain('尚未授权')
+  expect(fetchMock.mock.calls).toHaveLength(count)
+})
+
+test('an expired selected token is marked for reauthorization without logging out another account', async () => {
+  const { fetchMock } = mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  await loginSecondAccount(fetchMock)
+  state.session = { userId: '42', screenName: 'tester' }
+  await state.handlers.get('FANFOU_OAUTH_GET_STATUS')!()
+  state.storage.set('local:' + COMPOSER_DRAFT_KEY, '授权过期也保留草稿')
+  fetchMock.mockImplementationOnce(async () =>
+    Response.json({ error: 'Invalid OAuth token' }, { status: 401 }),
+  )
+  expect(
+    (
+      await compose({
+        status: '授权过期也保留草稿',
+        userId: '43',
+        accountId: '43',
+      })
+    ).error,
+  ).toBe('Invalid OAuth token')
+  const cached = await state.handlers.get('FANFOU_OAUTH_GET_STATUS')!({
+    cached: true,
+  })
+  expect(cached.status.accounts).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ userId: '42', loggedIn: true }),
+      expect.objectContaining({ userId: '43', loggedIn: false }),
+    ]),
+  )
+  expect(state.storage.get(tokenKey).oauthToken).toBe('access')
+  expect(state.storage.get('local:' + COMPOSER_DRAFT_KEY)).toBe(
+    '授权过期也保留草稿',
+  )
+})
+
+test('account manager removes another account offline, preserves drafts, and clears its saved sender selection', async () => {
+  const { fetchMock } = mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  await loginSecondAccount(fetchMock)
+  state.session = { userId: '42', screenName: 'tester' }
+  await state.handlers.get('FANFOU_OAUTH_GET_STATUS')!()
+  state.storage.set('local:' + COMPOSER_DRAFT_KEY, '移除后保留的草稿')
+  state.storage.set('local:composer/selectedAccount', '43')
+  const requests = fetchMock.mock.calls.length
+  const sessionReads = state.readSession.mock.calls.length
+  const result = await removeAccount('43')
+  expect(result.status).toMatchObject({
+    loggedIn: true,
+    userId: '42',
+    currentUserId: '42',
+  })
+  expect(result.status.accounts).toEqual([
+    expect.objectContaining({ userId: '42', isCurrent: true }),
+  ])
+  expect(state.storage.get(tokenKey).oauthToken).toBe('access')
+  expect(state.storage.get('local:' + COMPOSER_DRAFT_KEY)).toBe(
+    '移除后保留的草稿',
+  )
+  expect(state.storage.has('local:composer/selectedAccount')).toBe(false)
+  expect(fetchMock.mock.calls).toHaveLength(requests)
+  expect(state.readSession.mock.calls).toHaveLength(sessionReads)
+})
+
+test('removing the current account leaves other authorizations and the website identity intact', async () => {
+  const { fetchMock } = mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  await loginSecondAccount(fetchMock)
+  const result = await removeAccount('43')
+  expect(result.status).toMatchObject({ loggedIn: false, currentUserId: '43' })
+  expect(result.status.accounts).toEqual([
+    expect.objectContaining({ userId: '42', loggedIn: true, isCurrent: false }),
+  ])
+  expect(state.storage.has(tokenKey)).toBe(false)
+  state.session = { userId: '42', screenName: 'tester' }
+  expect(
+    (await state.handlers.get('FANFOU_OAUTH_GET_STATUS')!()).status.loggedIn,
+  ).toBe(true)
+})
+
+test('a delayed profile refresh cannot restore an account removed from the manager', async () => {
+  const { fetchMock } = mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  let respond!: (response: Response) => void
+  let begin!: () => void
+  const started = new Promise<void>((resolve) => {
+    begin = resolve
+  })
+  fetchMock.mockImplementationOnce(async () => {
+    begin()
+    return new Promise<Response>((resolve) => {
+      respond = resolve
+    })
+  })
+  const checking = state.handlers.get('FANFOU_OAUTH_GET_STATUS')!({
+    refreshAccount: true,
+  })
+  await started
+  expect((await removeAccount('42')).status.accounts).toEqual([])
+  respond(Response.json({ id: '42', screen_name: 'tester' }))
+  expect((await checking).status.accounts).toEqual([])
+  expect(
+    (await state.handlers.get('FANFOU_OAUTH_GET_STATUS')!({ cached: true }))
+      .status.accounts,
+  ).toEqual([])
+})
+
+test('account removal rejects website callers and unknown accounts without deleting credentials', async () => {
+  mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  expect(
+    (await removeAccount('42', 'https://fanfou.com/home')).error,
+  ).toContain('扩展设置')
+  expect((await removeAccount('missing')).error).toContain('已经移除')
+  expect(state.storage.get(tokenKey).oauthToken).toBe('access')
+})
+
+test('adding another account requires switching away from an already authorized website account', async () => {
+  const { fetchMock } = mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  const count = fetchMock.mock.calls.length
+  expect((await authorize({ addAccount: true })).accountMismatch).toBe(true)
+  expect(fetchMock.mock.calls).toHaveLength(count)
+  state.session = { userId: '43', screenName: 'second' }
+  expect(
+    (await authorize({ addAccount: true })).status.pendingAuthorization,
+  ).toBe(true)
+  fetchMock.mockImplementationOnce(
+    async () =>
+      new Response(
+        'oauth_token=second-access&oauth_token_secret=second-secret',
+      ),
+  )
+  fetchMock.mockImplementationOnce(async () =>
+    Response.json({ id: '43', screen_name: 'second' }),
+  )
+  const result = await authorize({ complete: true, addAccount: true })
+  expect(result.status.accounts).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        userId: '42',
+        loggedIn: true,
+        isCurrent: false,
+      }),
+      expect.objectContaining({
+        userId: '43',
+        loggedIn: true,
+        isCurrent: true,
+      }),
+    ]),
+  )
+})
+
+test('reauthorizing a particular account rejects the wrong website identity before starting OAuth', async () => {
+  const { fetchMock } = mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  await loginSecondAccount(fetchMock)
+  state.session = { userId: '42', screenName: 'tester' }
+  const count = fetchMock.mock.calls.length
+  expect((await authorize({ userId: '43' })).accountMismatch).toBe(true)
+  expect(fetchMock.mock.calls).toHaveLength(count)
+  expect(state.storage.has(pendingKey)).toBe(false)
+})
+
+test('cancelling a pending manual login keeps existing authorizations', async () => {
+  mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  await authorize()
+  expect(state.storage.has(pendingKey)).toBe(true)
+  const result = await authorize({ cancel: true })
+  expect(result.status).toMatchObject({
+    pendingAuthorization: false,
+    loggedIn: true,
+  })
+  expect(state.storage.has(pendingKey)).toBe(false)
+  expect(state.storage.get(tokenKey).oauthToken).toBe('access')
+})
+
+test('website switcher accounts are listed even when only one has OAuth authorization', async () => {
+  const { fetchMock } = mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  state.storage.set('local:user-switcher/allUserData', [
+    {
+      userId: '42',
+      nickname: '网页账号一',
+      cookies: { u: 'private-session-a' },
+    },
+    {
+      userId: 'web-only',
+      nickname: '网页账号二',
+      cookies: { u: 'private-session-b', PHPSESSID: 'private-session-id' },
+    },
+  ])
+  const count = fetchMock.mock.calls.length
+  const sessionReads = state.readSession.mock.calls.length
+  const result = await state.handlers.get('FANFOU_OAUTH_GET_STATUS')!({
+    cached: true,
+  })
+  expect(result.status.accounts).toHaveLength(2)
+  expect(result.status.accounts).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        userId: '42',
+        loggedIn: true,
+        hasAuthorization: true,
+        hasWebsiteSession: true,
+      }),
+      expect.objectContaining({
+        userId: 'web-only',
+        screenName: '网页账号二',
+        loggedIn: false,
+        hasAuthorization: false,
+        hasWebsiteSession: true,
+      }),
+    ]),
+  )
+  expect(JSON.stringify(result)).not.toMatch(
+    /cookies|private-session|PHPSESSID/,
+  )
+  expect(fetchMock.mock.calls).toHaveLength(count)
+  expect(state.readSession.mock.calls).toHaveLength(sessionReads)
+})
+
+test('website IDs and verified OAuth aliases merge into one account row', async () => {
+  const { fetchMock } = mockAuthorization()
+  await authorize()
+  await authorize({ complete: true })
+  await loginSecondAccount(fetchMock)
+  state.session = { userId: '~second', screenName: 'second' }
+  state.storage.set('local:user-switcher/allUserData', [
+    {
+      userId: 'cookie-id',
+      accountIds: ['cookie-id', '~second'],
+      nickname: '网页昵称',
+    },
+    { userId: '~second', nickname: '重复昵称' },
+    { userId: '42', nickname: 'tester' },
+  ])
+  const result = await state.handlers.get('FANFOU_OAUTH_GET_STATUS')!()
+  expect(result.status.accounts).toHaveLength(2)
+  expect(result.status.accounts).toContainEqual(
+    expect.objectContaining({
+      userId: '43',
+      isCurrent: true,
+      hasWebsiteSession: true,
+      hasAuthorization: true,
+    }),
+  )
+  expect(
+    result.status.accounts.find((account: any) => account.userId === '43')
+      .accountIds,
+  ).toContain('cookie-id')
+})
+
+test('a website account with a verified profile-link alias can start its own authorization', async () => {
+  mockAuthorization()
+  state.session = { userId: '~second', screenName: 'second' }
+  state.storage.set('local:user-switcher/allUserData', [
+    {
+      userId: 'cookie-id',
+      accountIds: ['cookie-id', '~second'],
+      nickname: 'second',
+    },
+  ])
+  expect(
+    (await authorize({ userId: 'cookie-id' })).status.pendingAuthorization,
+  ).toBe(true)
+})
+
+test('a saved website login alone cannot be used as an OAuth credential for sending', async () => {
+  const { fetchMock } = mockAuthorization()
+  state.storage.set('local:user-switcher/allUserData', [
+    {
+      userId: 'web-only',
+      nickname: '网页登录账号',
+      cookies: { u: 'private-session' },
+    },
+  ])
+  expect(
+    (await state.handlers.get('FANFOU_OAUTH_GET_STATUS')!({ cached: true }))
+      .status.accounts,
+  ).toHaveLength(1)
+  expect(
+    (
+      await compose({
+        status: '不应发送',
+        userId: 'web-only',
+        accountId: 'web-only',
+      })
+    ).error,
+  ).toContain('尚未授权')
+  expect(fetchMock).not.toHaveBeenCalled()
 })

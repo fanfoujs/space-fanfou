@@ -4,7 +4,7 @@ import findElementWithSpecifiedContentInArray from '@libs/findElementWithSpecifi
 
 let cachedUserId
 
-function getUserIdFromProfileLink() {
+export function getUserIdFromProfileLink() {
   const navLinks = select.all('#navigation li a')
   const profilePageLink = findElementWithSpecifiedContentInArray(navLinks, '我的空间')
 
@@ -14,7 +14,7 @@ function getUserIdFromProfileLink() {
     const url = new URL(profilePageLink.href, window.location.origin)
     const [ userId ] = url.pathname.replace(/^\/+/, '').split('/')
 
-    return userId || undefined
+    return userId ? decodeURIComponent(userId) : undefined
   } catch (error) {
     return undefined
   }

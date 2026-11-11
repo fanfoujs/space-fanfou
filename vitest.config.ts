@@ -18,6 +18,8 @@ export default defineConfig({
     ),
   },
   test: {
+    // Let upload tests use the same native FormData as the SDK browser build.
+    server: { deps: { inline: ['fanfou-sdk'] } },
     globals: true,
     environment: 'node',
     include: ['src/**/*.test.{js,ts}', 'tests/unit/**/*.test.ts'],

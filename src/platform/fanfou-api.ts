@@ -4,7 +4,34 @@ import Fanfou, {
   type GetUserOptions,
   type GetFollowingsOptions,
   type CheckFriendshipDetailOptions,
+  type UploadPhotoOptions,
 } from 'fanfou-sdk'
+import { MAX_STATUS_LENGTH } from './composer'
+import { parseComposerImage, type ComposerImage } from './composer-image'
+
+export async function createFanfouStatus(
+  client: Fanfou,
+  status: string,
+  image?: ComposerImage | null,
+) {
+  if (typeof status !== 'string' || (!status.trim() && !image)) {
+    throw new Error('请输入要发送的消息')
+  }
+  if (status.length > MAX_STATUS_LENGTH) {
+    throw new Error(`消息不能超过 ${MAX_STATUS_LENGTH} 字`)
+  }
+  const response = image
+    ? await client.uploadPhoto({
+        // The SDK browser build accepts native File; its published types describe Node streams only.
+        photo: parseComposerImage(
+          image,
+        ) as unknown as UploadPhotoOptions['photo'],
+        ...(status.trim() ? { status } : {}),
+      })
+    : await client.createStatus({ status })
+  if (!response?.id) throw new Error('未能确认发送结果，请到饭否查看后再重试。')
+  return response
+}
 
 export type FanfouApiRequest =
   | { method: 'getUser'; params?: GetUserOptions }

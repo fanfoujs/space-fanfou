@@ -1,8 +1,13 @@
 import { createHmac } from 'node:crypto'
 import {
+  composerImageBytes,
+  composerImageFixture,
+} from '../fixtures/composer-image'
+import {
   createFanfouClient,
   getFanfouApiError,
   requestFanfouApi,
+  createFanfouStatus,
 } from '../../src/platform/fanfou-api'
 
 const credentials = {
@@ -152,4 +157,95 @@ test('SDK errors keep the API error text for expired authorizations', async () =
   } catch (error) {
     expect(getFanfouApiError(error)).toBe('Invalid OAuth token')
   }
+})
+
+test('composer posts the exact text through the SDK and requires a confirmed status ID', async () => {
+  let request!: Request
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (input: Request) => {
+      request = input.clone()
+      return Response.json({ id: 'new-status', text: '  写饭测试\n第二行  ' })
+    }),
+  )
+  const result = await createFanfouStatus(
+    createFanfouClient(credentials),
+    '  写饭测试\n第二行  ',
+  )
+  expect(result.id).toBe('new-status')
+  expect(request.url).toBe('https://api.fanfou.com/statuses/update.json')
+  expect(request.method).toBe('POST')
+  expect(new URLSearchParams(await request.text()).get('status')).toBe(
+    '  写饭测试\n第二行  ',
+  )
+  mockResponse({ error: 'unconfirmed' })
+  await expect(
+    createFanfouStatus(createFanfouClient(credentials), '测试'),
+  ).rejects.toThrow('未能确认发送结果')
+})
+
+test.each(['', '   \n', '饭'.repeat(141)])(
+  'composer rejects invalid text before posting: %j',
+  async (text) => {
+    const fetchMock = mockResponse({ id: 'should-not-send' })
+    await expect(
+      createFanfouStatus(createFanfouClient(credentials), text),
+    ).rejects.toThrow()
+    expect(fetchMock).not.toHaveBeenCalled()
+  },
+)
+
+test.each(['', '图片说明\n保留换行'])(
+  'composer sends photo bytes and optional caption through multipart upload: %j',
+  async (caption) => {
+    let request!: Request
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: Request) => {
+        request = input.clone()
+        return Response.json({ id: 'photo-status' })
+      }),
+    )
+    expect(
+      (
+        await createFanfouStatus(
+          createFanfouClient(credentials),
+          caption,
+          composerImageFixture,
+        )
+      ).id,
+    ).toBe('photo-status')
+    expect(request.url).toBe('https://api.fanfou.com/photos/upload.json')
+    expect(request.method).toBe('POST')
+    expect(request.headers.get('content-type')).toMatch(
+      /^multipart\/form-data; boundary=/,
+    )
+    expect(request.headers.get('Authorization')).toContain(
+      'oauth_token="saved-access-token"',
+    )
+    const form = await request.formData()
+    const photo = form.get('photo') as File
+    expect(photo.name).toBe('preview.png')
+    expect(photo.type).toBe('image/png')
+    expect(Buffer.from(await photo.arrayBuffer())).toEqual(composerImageBytes)
+    expect((form.get('status') as string | null)?.replace(/\r\n/g, '\n') ?? null).toBe(caption || null)
+  },
+)
+
+test('invalid images and overlong photo captions never reach the network', async () => {
+  const fetchMock = mockResponse({ id: 'must-not-send' })
+  await expect(
+    createFanfouStatus(createFanfouClient(credentials), '', {
+      ...composerImageFixture,
+      dataUrl: 'bad-image',
+    }),
+  ).rejects.toThrow()
+  await expect(
+    createFanfouStatus(
+      createFanfouClient(credentials),
+      '饭'.repeat(141),
+      composerImageFixture,
+    ),
+  ).rejects.toThrow('140')
+  expect(fetchMock).not.toHaveBeenCalled()
 })

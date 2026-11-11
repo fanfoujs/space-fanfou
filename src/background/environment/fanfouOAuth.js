@@ -12,12 +12,18 @@ import {
   getFanfouAccount,
   isFanfouRateLimit,
   isFanfouAuthorizationInvalid,
+  createFanfouStatus,
 } from '@platform/fanfou-api'
+import { COMPOSER_ACCOUNT_KEY, COMPOSER_DRAFT_KEY, COMPOSER_IMAGE_KEY, getComposerSendKey } from '@platform/composer'
 import {
   FANFOU_OAUTH_AUTHORIZE,
   FANFOU_OAUTH_GET_STATUS,
   FANFOU_OAUTH_CLEAR_TOKENS,
+  FANFOU_OAUTH_REMOVE_ACCOUNT,
   FANFOU_OAUTH_API_REQUEST,
+  FANFOU_COMPOSE_SEND,
+  FANFOU_ACCOUNT_CACHE_KEY,
+  FANFOU_WEBSITE_ACCOUNTS_KEY,
 } from '@constants'
 
 // 统一使用内置饭否应用凭据。
@@ -35,6 +41,7 @@ let authorizationRequestKey
 let accountRequest
 let tokenRevision = 0
 let accountsWrite = Promise.resolve()
+const postingAccounts = new Set()
 
 function updateAccounts(update) {
   const request = accountsWrite.then(async () => {
@@ -62,14 +69,60 @@ async function currentSession() {
   }
 }
 
-async function selectAccountTokens(consumer, session, refresh = false) {
+async function readAccountTokens(consumer) {
   const legacy = await readTokens()
   await rememberTokens(legacy)
   await accountsWrite
   const accounts = await storage.read(ACCOUNTS_STORAGE_KEY, 'local') || {}
-  const candidates = [...new Map([legacy, ...Object.values(accounts)]
+  return [...new Map([legacy, ...Object.values(accounts)]
     .filter(tokens => tokens?.consumerKey === consumer.consumerKey && tokens.oauthToken && tokens.oauthTokenSecret)
     .map(tokens => [tokens.oauthToken, tokens])).values()]
+}
+
+async function composerAccountTokens(consumer) {
+  const accounts = new Map()
+  for (const tokens of await readAccountTokens(consumer)) {
+    if (!tokens.userId) continue
+    const previous = accounts.get(tokens.userId)
+    if (!previous || (previous.authorizationInvalid && !tokens.authorizationInvalid)) accounts.set(tokens.userId, tokens)
+  }
+  return [...accounts.values()]
+}
+
+async function composerAccounts(consumer, currentUserId) {
+  const tokens = await composerAccountTokens(consumer)
+  const accounts = tokens.map(tokens => ({
+    userId: tokens.userId,
+    screenName: tokens.screenName || tokens.userId,
+    loggedIn: !tokens.authorizationInvalid,
+    sending: postingAccounts.has(tokens.userId),
+    isCurrent: matchesAccount(tokens, currentUserId),
+    profileError: tokens.profileError || null,
+    hasAuthorization: true,
+    hasWebsiteSession: false,
+    accountIds: [...new Set([tokens.userId, ...(tokens.accountIds || [])])],
+  }))
+  const saved = await storage.read(FANFOU_WEBSITE_ACCOUNTS_KEY, 'local')
+  for (const website of Array.isArray(saved) ? saved : []) {
+    if (typeof website?.userId !== 'string' || !website.userId.trim()) continue
+    const userId = website.userId.trim()
+    const accountIds = [...new Set([userId, ...(Array.isArray(website.accountIds) ? website.accountIds.filter(id => typeof id === 'string' && id) : [])])]
+    const linked = tokens.find(token => token.userId === userId) || tokens.find(token => accountIds.includes(token.userId)) || tokens.find(token => accountIds.some(id => matchesAccount(token, id)))
+    const existing = accounts.find(account => account.userId === (linked?.userId || userId))
+    if (existing) {
+      existing.hasWebsiteSession = true
+      existing.isCurrent ||= accountIds.includes(currentUserId)
+      existing.accountIds = [...new Set([...existing.accountIds, ...accountIds])]
+    } else {
+      // Only identity metadata crosses into the settings UI; session cookies stay here.
+      accounts.push({ userId, screenName: typeof website.nickname === 'string' && website.nickname.trim() ? website.nickname.trim() : userId, loggedIn: false, sending: false, isCurrent: accountIds.includes(currentUserId), profileError: null, hasAuthorization: false, hasWebsiteSession: true, accountIds })
+    }
+  }
+  return accounts
+}
+
+async function selectAccountTokens(consumer, session, refresh = false) {
+  const candidates = await readAccountTokens(consumer)
   if (!session) return null
   let tokens = candidates.find(tokens => matchesAccount(tokens, session.userId))
   let refreshed = false
@@ -122,6 +175,7 @@ async function persistTokens(tokens) {
   } else {
     try {
       await storage.delete(TOKEN_STORAGE_KEY, 'local')
+      await storage.delete(FANFOU_ACCOUNT_CACHE_KEY, 'local')
     } catch (error) {
       log.warn('[SpaceFanfou] 删除 OAuth token 时出错（可忽略）', error)
     }
@@ -280,14 +334,37 @@ function buildStatus(tokens, redirectUrl) {
 }
 
 async function handleGetStatus(payload = {}) {
+  if (payload.cached) return handleGetCachedStatus()
   const consumer = await readConsumerConfig()
-  const session = await currentSession()
+  // A failed network check must not replace a cached login with "logged out".
+  const session = await readFanfouSession()
   const tokens = await selectAccountTokens(consumer, session, !!payload.refreshAccount)
   const redirectUrl = getRedirectUrl()
 
   const result = buildStatus(tokens, redirectUrl)
   result.status.currentUserId = session?.userId || null
+  result.status.currentScreenName = session?.screenName || null
+  result.status.sending = postingAccounts.has(tokens?.userId)
   result.status.pendingAuthorization = !!await storage.read('fanfou-oauth/pending', 'session')
+  result.status.accounts = await composerAccounts(consumer, result.status.currentUserId)
+  await storage.write(FANFOU_ACCOUNT_CACHE_KEY, { consumerKey: consumer.consumerKey, status: result.status }, 'local')
+  return result
+}
+
+async function handleGetCachedStatus() {
+  const saved = await storage.read(FANFOU_ACCOUNT_CACHE_KEY, 'local')
+  const cached = saved?.consumerKey === BUILTIN_CONSUMER_KEY ? saved.status : null
+  const tokens = await readTokens()
+  // Existing installations already have the profile next to their saved tokens.
+  // Return only display/status fields; credentials stay in the background.
+  const result = typeof cached?.loggedIn === 'boolean'
+    ? { ok: true, status: { ...cached } }
+    : buildStatus(tokens?.consumerKey === BUILTIN_CONSUMER_KEY ? tokens : null, getRedirectUrl())
+  result.status.currentUserId ??= result.status.userId || null
+  result.status.currentScreenName ??= result.status.screenName || null
+  result.status.sending = postingAccounts.has(result.status.userId)
+  result.status.pendingAuthorization = !!await storage.read('fanfou-oauth/pending', 'session')
+  result.status.accounts = await composerAccounts(readConsumerConfig(), result.status.currentUserId)
   return result
 }
 
@@ -296,6 +373,9 @@ function handleAuthorize(payload = {}) {
     !!payload.manual,
     !!payload.complete,
     (payload.verifier || '').trim(),
+    payload.userId || null,
+    !!payload.addAccount,
+    !!payload.cancel,
   ])
   if (authorizationRequest) {
     return key === authorizationRequestKey
@@ -312,6 +392,10 @@ function handleAuthorize(payload = {}) {
 
 async function authorize(payload) {
   try {
+    if (payload.cancel) {
+      await storage.delete('fanfou-oauth/pending', 'session')
+      return handleGetCachedStatus()
+    }
     const consumer = await readConsumerConfig()
     const redirectUrl = payload.manual ? 'oob' : getRedirectUrl()
 
@@ -324,7 +408,18 @@ async function authorize(payload) {
       return handleGetStatus()
     }
 
-    const accountContext = { userId: (await currentSession())?.userId || null }
+    const session = await currentSession()
+    const accounts = await composerAccountTokens(consumer)
+    const current = accounts.find(account => matchesAccount(account, session?.userId))
+    const websiteAccounts = payload.userId ? await storage.read(FANFOU_WEBSITE_ACCOUNTS_KEY, 'local') : null
+    const websiteMatch = session && Array.isArray(websiteAccounts) && websiteAccounts.some(account => account?.userId === payload.userId && Array.isArray(account.accountIds) && account.accountIds.includes(session.userId))
+    if (payload.userId && session?.userId !== payload.userId && current?.userId !== payload.userId && !websiteMatch) {
+      return { error: '请先在饭否切换到所选账号，再回来重新授权。', accountMismatch: true }
+    }
+    if (payload.addAccount && (!session || (current && !current.authorizationInvalid))) {
+      return { error: session ? '当前网页账号已经授权，请先在饭否切换到其他账号。' : '请先在饭否登录要添加的账号，再回来授权。', accountMismatch: true }
+    }
+    const accountContext = { userId: session?.userId || null }
     const tempToken = await requestTemporaryToken(consumer)
 
     if (!tempToken.oauth_token || !tempToken.oauth_token_secret) {
@@ -360,16 +455,50 @@ async function authorize(payload) {
   }
 }
 
-async function handleClearTokens() {
+async function handleClearTokens(payload = {}) {
   const consumer = await readConsumerConfig()
   const session = await currentSession()
   const tokens = await selectAccountTokens(consumer, session)
+  if (payload.userId && tokens?.userId !== payload.userId) {
+    return { error: '当前饭否账号已改变，请等待账号更新后重试。' }
+  }
   await updateAccounts(accounts => Object.fromEntries(Object.entries(accounts).filter(([, item]) =>
     item.consumerKey !== consumer.consumerKey || (!matchesAccount(item, session?.userId) && item.oauthToken !== tokens?.oauthToken),
   )))
   await persistTokens(null)
   await storage.delete('fanfou-oauth/pending', 'session')
   return handleGetStatus()
+}
+
+async function handleRemoveAccount(payload, sender) {
+  const editor = new URL(browser.runtime.getURL('/settings.html'))
+  let caller
+  try { caller = new URL(sender?.url) } catch { return { error: '请从扩展设置中管理账号' } }
+  if (caller.protocol !== editor.protocol || caller.host !== editor.host || caller.pathname !== editor.pathname) return { error: '请从扩展设置中管理账号' }
+  if (typeof payload?.userId !== 'string' || !payload.userId) return { error: '请选择要移除的账号' }
+  const consumer = readConsumerConfig()
+  const accounts = await composerAccountTokens(consumer)
+  const target = accounts.find(account => account.userId === payload.userId)
+  if (!target) return { error: '这个账号的授权已经移除，请刷新账号列表。' }
+  if (postingAccounts.has(target.userId)) return { error: '这个账号正在发送消息，请发送完成后再移除授权。' }
+  const previous = (await handleGetCachedStatus()).status
+  // Invalidate in-flight profile requests before removing any saved credentials.
+  tokenRevision++
+  if (matchesAccount(await readTokens(), target.userId)) await persistTokens(null)
+  await updateAccounts(saved => Object.fromEntries(Object.entries(saved).filter(([, tokens]) =>
+    tokens.consumerKey !== consumer.consumerKey || !matchesAccount(tokens, target.userId),
+  )))
+  if (await storage.read(COMPOSER_ACCOUNT_KEY, 'local') === target.userId) await storage.delete(COMPOSER_ACCOUNT_KEY, 'local')
+  const remaining = await composerAccountTokens(consumer)
+  const current = remaining.find(account => matchesAccount(account, previous.currentUserId))
+  const result = buildStatus(current, getRedirectUrl())
+  result.status.currentUserId = previous.currentUserId || null
+  result.status.currentScreenName = previous.currentScreenName || null
+  result.status.pendingAuthorization = previous.pendingAuthorization
+  result.status.sending = postingAccounts.has(current?.userId)
+  result.status.accounts = await composerAccounts(consumer, previous.currentUserId)
+  await storage.write(FANFOU_ACCOUNT_CACHE_KEY, { consumerKey: consumer.consumerKey, status: result.status }, 'local')
+  return result
 }
 
 async function handleApiRequest(payload) {
@@ -404,7 +533,64 @@ function registerHandlers() {
   messaging.registerHandler(FANFOU_OAUTH_GET_STATUS, handleGetStatus)
   messaging.registerHandler(FANFOU_OAUTH_AUTHORIZE, handleAuthorize)
   messaging.registerHandler(FANFOU_OAUTH_CLEAR_TOKENS, handleClearTokens)
+  messaging.registerHandler(FANFOU_OAUTH_REMOVE_ACCOUNT, handleRemoveAccount)
   messaging.registerHandler(FANFOU_OAUTH_API_REQUEST, handleApiRequest)
+  messaging.registerHandler(FANFOU_COMPOSE_SEND, handleComposeSend)
+}
+
+async function handleComposeSend(payload, sender) {
+  // 发文仅允许扩展自己的编辑器调用，饭否页面的通用 API 桥仍然只读。
+  const editorUrl = new URL(browser.runtime.getURL('/settings.html'))
+  let caller
+  try { caller = new URL(sender?.url) } catch { return { error: '请从扩展的快捷发饭窗口发送消息' } }
+  if (caller.protocol !== editorUrl.protocol || caller.host !== editorUrl.host || caller.pathname !== editorUrl.pathname) {
+    return { error: '请从扩展的快捷发饭窗口发送消息' }
+  }
+  const userId = payload?.userId
+  if (typeof userId !== 'string' || !userId) return { error: '请先登录当前饭否账号' }
+  if (payload.accountId != null && payload.accountId !== userId) return { error: '所选账号与发送账号不一致，请重新选择。' }
+  if (postingAccounts.has(userId)) return { error: '消息正在发送，请稍候' }
+  postingAccounts.add(userId)
+  const sendKey = getComposerSendKey(userId)
+  let posted = false
+  let requestTokens
+  try {
+    const consumer = readConsumerConfig()
+    const tokens = payload.accountId
+      ? (await composerAccountTokens(consumer)).find(account => account.userId === payload.accountId)
+      : await selectAccountTokens(consumer, await currentSession())
+    if (!tokens || tokens.authorizationInvalid || tokens.userId !== userId) {
+      throw new Error(payload.accountId ? '所选饭否账号尚未授权或授权已失效，请重新登录。' : '当前饭否账号已改变或尚未授权，请重新检查登录状态。')
+    }
+    requestTokens = tokens
+    await browser.storage.local.set({ [sendKey]: { state: 'sending', status: payload.status, imageId: payload.image?.id || null } })
+    const response = await createFanfouStatus(createFanfouClient({ ...consumer, ...tokens }), payload.status, payload.image)
+    posted = true
+    // 弹窗关闭后也由后台清理已发送的草稿；保留其他窗口新写的内容。
+    const draftKey = COMPOSER_DRAFT_KEY
+    const values = await browser.storage.local.get([draftKey, COMPOSER_IMAGE_KEY])
+    const updates = { [sendKey]: { state: 'sent' } }
+    if (values[draftKey] === payload.status && (values[COMPOSER_IMAGE_KEY]?.id || null) === (payload.image?.id || null)) {
+      updates[draftKey] = ''
+      updates[COMPOSER_IMAGE_KEY] = null
+    }
+    await browser.storage.local.set(updates)
+    return { ok: true, statusId: response.id }
+  } catch (error) {
+    if (!posted && requestTokens && isFanfouAuthorizationInvalid(error)) {
+      try {
+        const invalid = { ...requestTokens, authorizationInvalid: true, profileError: getFanfouApiError(error) }
+        await rememberTokens(invalid)
+        if ((await readTokens())?.oauthToken === invalid.oauthToken) await persistTokens(invalid)
+        await storage.delete(FANFOU_ACCOUNT_CACHE_KEY, 'local')
+      } catch { /* Keep the original API error if updating local account metadata fails. */ }
+    }
+    const message = posted ? '消息已发送，但草稿清理失败，请勿重复发送。' : getFanfouApiError(error)
+    await browser.storage.local.set({ [sendKey]: { state: 'error', error: message, status: payload.status, imageId: payload.image?.id || null } }).catch(() => {})
+    return { error: message }
+  } finally {
+    postingAccounts.delete(userId)
+  }
 }
 
 export default {

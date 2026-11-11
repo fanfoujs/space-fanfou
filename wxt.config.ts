@@ -56,7 +56,7 @@ export default defineConfig({
         `icons/icon-${size}.png`,
       ]),
     ),
-    action: { default_title: '太空饭否', default_popup: 'settings.html' },
+    action: { default_title: '太空饭否', default_popup: 'settings.html?popup' },
     ...(browser === 'chrome' && mode === 'beta'
       ? {
           name: '太空饭否 Beta',
@@ -66,7 +66,7 @@ export default defineConfig({
             'THIS EXTENSION IS FOR BETA TESTING. 太空饭否测试版，为饭否提供页面外观和浏览、发帖体验增强功能。',
           action: {
             default_title: '太空饭否 Beta',
-            default_popup: 'settings.html',
+            default_popup: 'settings.html?popup',
           },
         }
       : {}),
