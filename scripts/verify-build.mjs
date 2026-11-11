@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import {parseArgs} from 'node:util';
+import {getBetaBuild} from './beta-build.mjs';
 
 const inventory = JSON.parse(
 	fs.readFileSync('docs/feature-inventory.json', 'utf8'),
@@ -8,14 +10,15 @@ const inventory = JSON.parse(
 const features = Object.entries(inventory.features).filter(
 	([name]) => !(name in inventory.retired),
 );
-const beta = process.argv.includes('--beta');
+const {values} = parseArgs({
+	options: {
+		beta: {type: 'boolean', default: false},
+		build: {type: 'string'},
+	},
+});
+const {beta} = values;
 const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-if (beta) {
-	const message = 'chromeBetaBuild must be an integer between 0 and 65535';
-	assert.ok(Number.isInteger(packageJson.chromeBetaBuild), message);
-	assert.ok(packageJson.chromeBetaBuild >= 0, message);
-	assert.ok(packageJson.chromeBetaBuild <= 65_535, message);
-}
+const betaBuild = beta ? getBetaBuild(values.build) : undefined;
 
 for (const browser of beta ? ['chrome'] : ['chrome', 'firefox', 'safari']) {
 	const output = path.resolve(`.output/${browser}-mv3${beta ? '-beta' : ''}`);
@@ -25,9 +28,7 @@ for (const browser of beta ? ['chrome'] : ['chrome', 'firefox', 'safari']) {
 	assert.equal(manifest.manifest_version, 3);
 	assert.equal(
 		manifest.version,
-		beta
-			? `${packageJson.version}.${packageJson.chromeBetaBuild}`
-			: packageJson.version,
+		beta ? `${packageJson.version}.${betaBuild}` : packageJson.version,
 	);
 	assert.equal(manifest.name, beta ? '太空饭否 Beta' : '太空饭否');
 	if (beta) {

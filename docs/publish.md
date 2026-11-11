@@ -35,12 +35,19 @@
 执行 `npm run pack:beta`，生成并校验独立的 Chrome Beta 包：
 
 - 名称：`太空饭否 Beta`
-- 内部版本：`package.json` 的 `version` 加上第四位 `chromeBetaBuild`，初始为 `2.0.0.0`
-- 展示版本：`version_name` 使用 `package.json` 的 `version`，初始为 `2.0.0`
-- ZIP：`.output/space-fanfou-2.0.0.0-chrome-beta.zip`
+- 内部版本：`package.json` 的 `version` 加上第四位构建号，默认构建号为 `0`，例如 `2.0.1.0`
+- 展示版本：`version_name` 使用 `package.json` 的 `version`，例如 `2.0.1`
+- ZIP：例如 `.output/space-fanfou-2.0.1.0-chrome-beta.zip`
 - 本地加载目录：`.output/chrome-mv3-beta`
 
-后续 Beta 构建只需递增 `package.json` 的 `chromeBetaBuild`（整数 `0`～`65535`），然后重新执行 `npm run pack:beta`。只构建目录可执行 `npm run build:beta`。
+通过 `--build` 指定第四位构建号（整数 `0`～`65535`），不传时为 `0`，不会修改 `package.json`：
+
+```sh
+npm run build:beta -- --build 3
+npm run pack:beta -- --build 3
+```
+
+例如基础版本为 `2.0.1` 时，上述命令生成内部版本 `2.0.1.3`，ZIP 为 `.output/space-fanfou-2.0.1.3-chrome-beta.zip`。打包完成后会自动使用同一构建号校验；单独校验可执行 `npm run verify:build:beta -- --build 3`。后续上传同一基础版本的 Beta 包时需递增构建号。
 
 Beta 包上传至独立的 Chrome Web Store Beta 条目，商店名称使用「太空饭否 Beta」。该条目每次上传的内部版本必须递增；Chrome 将 `2.0.0.0` 与 `2.0.0` 视为同一版本。
 

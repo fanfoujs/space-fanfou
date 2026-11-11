@@ -2,6 +2,7 @@ import {fileURLToPath} from 'node:url';
 import {defineConfig} from 'wxt';
 import preact from '@preact/preset-vite';
 import packageJson from './package.json';
+import {getBetaBuild} from './scripts/beta-build.mjs';
 
 const root = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
@@ -61,7 +62,7 @@ export default defineConfig({
 		...(browser === 'chrome' &&
 			mode === 'beta' && {
 				name: '太空饭否 Beta',
-				version: `${packageJson.version}.${packageJson.chromeBetaBuild}`,
+				version: `${packageJson.version}.${getBetaBuild()}`,
 				version_name: packageJson.version,
 				description:
 					'THIS EXTENSION IS FOR BETA TESTING. 太空饭否测试版，为饭否提供页面外观和浏览、发帖体验增强功能。',

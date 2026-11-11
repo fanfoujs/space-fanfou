@@ -19,18 +19,18 @@
 		"dev": "wxt",
 		"dev:firefox": "wxt -b firefox --mv3",
 		"build": "wxt build --mv3",
-		"build:beta": "wxt build -b chrome --mv3 --mode beta",
+		"build:beta": "node scripts/build-beta.mjs build",
 		"build:firefox": "wxt build -b firefox --mv3",
 		"build:safari": "wxt build -b safari --mv3",
-		"build:all": "npm run build && npm run build:firefox && npm run build:safari && npm run build:beta",
+		"build:all": "npm run build && npm run build:firefox && npm run build:safari",
 		"postinstall": "wxt prepare",
 		"typecheck": "tsc --noEmit",
 		"lint": "xo",
 		"pack": "wxt zip --mv3",
-		"pack:beta": "wxt zip -b chrome --mv3 --mode beta && npm run verify:build:beta",
+		"pack:beta": "node scripts/build-beta.mjs zip",
 		"pack:firefox": "wxt zip -b firefox --mv3",
 		"pack:safari": "wxt zip -b safari --mv3",
-		"pack:all": "npm run pack && npm run pack:firefox && npm run pack:safari && npm run pack:beta",
+		"pack:all": "npm run pack && npm run pack:firefox && npm run pack:safari",
 		"release": "npm run typecheck && npm run lint && npm run build:all && npm run verify:build && npm run pack:all",
 		"safari:project": "node scripts/package-safari.mjs",
 		"lint:firefox": "web-ext lint --source-dir .output/firefox-mv3 --no-config-discovery",
@@ -108,6 +108,5 @@
 		"web-ext": "^10.8.0",
 		"wxt": "^0.21.5",
 		"xo": "^5.0.1"
-	},
-	"chromeBetaBuild": 0
+	}
 }
