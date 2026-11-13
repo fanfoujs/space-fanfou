@@ -2,13 +2,9 @@ import isHotkey from '@libs/isHotkey';
 
 const MAX_STATUS_LENGTH = 140;
 const WARN_WHEN_LESS_THAN = 20;
-const WARN_WHEN_GREATER_THAN_OR_EQUAL_TO = 120;
-const DANGER_WHEN_GREATER_THAN_OR_EQUAL_TO = 135;
 
 const CLASSNAME_STATUS_TEXTAREA_EMPTY = 'sf-status-form-textarea-empty';
 const CLASSNAME_STATUS_TEXTAREA_FOCUSED = 'sf-status-form-textarea-focused';
-const CLASSNAME_STATUS_WARNING = 'sf-status-warning';
-const CLASSNAME_STATUS_DANGER = 'sf-status-danger';
 const CLASSNAME_WARNING = 'sf-warning';
 const CLASSNAME_EXCEEDED = 'sf-exceeded';
 
@@ -73,16 +69,8 @@ export default () => {
 		const remaining = MAX_STATUS_LENGTH - statusLength;
 		const hasExceeded = remaining < 0;
 		const isDangerous = remaining <= WARN_WHEN_LESS_THAN && !hasExceeded;
-		const hasStatusWarning = statusLength >= WARN_WHEN_GREATER_THAN_OR_EQUAL_TO;
-		const hasStatusDanger =
-			statusLength >= DANGER_WHEN_GREATER_THAN_OR_EQUAL_TO;
 
 		wrapper.classList.toggle(CLASSNAME_STATUS_TEXTAREA_EMPTY, isEmpty);
-		wrapper.classList.toggle(
-			CLASSNAME_STATUS_WARNING,
-			hasStatusWarning && !hasStatusDanger,
-		);
-		wrapper.classList.toggle(CLASSNAME_STATUS_DANGER, hasStatusDanger);
 
 		const counter = getCounter(wrapper);
 		if (!counter) {
@@ -146,8 +134,6 @@ export default () => {
 				wrapper.classList.remove(
 					CLASSNAME_STATUS_TEXTAREA_EMPTY,
 					CLASSNAME_STATUS_TEXTAREA_FOCUSED,
-					CLASSNAME_STATUS_WARNING,
-					CLASSNAME_STATUS_DANGER,
 				);
 
 				const counter = wrapper.querySelector('#sf-counter');
