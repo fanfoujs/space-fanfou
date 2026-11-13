@@ -15,13 +15,17 @@
 
 ### 如何编写更新历史内容
 
+- 已发布版本的内容以同名 Git tag 为准，tag 之后的改动应归入下一版本
+- 日常开发时不修改更新历史，也不预先添加预计版本号或未发布条目；只有用户明确准备发布或升级版本时，才对照上一版本 Git tag 到当前提交的变化统一整理
+- 按面向用户的完整功能归纳，同一功能的开发、改进和修复合并为一条，不逐条复述 commit，也不列出功能开发过程中的修复细节
+- 准备发布时使用用户指定的版本号和实际发布日期；Git tag 由用户自行创建
 - 更新历史应该介绍该版本在功能、设计及用户体验方面新引入或修正的内容
 - 应该避免无意义的文字，如「修正了一些 bug」，尽量不打扰用户
 - 如果更新内容过多，可以在前面写一行概要，用于作为桌面通知内容显示
 
 ### 如何发布新版？
 
-1. 修改 `package.json` 中的版本号（WXT 自动写入 Manifest）
+1. 修改 `package.json` 中的版本号，并同步 `package-lock.json` 中的项目版本（WXT 自动写入 Manifest）
 1. 在 `src/version-history/versionHistory` 中添加更新说明（可选）
 1. 执行 `npm run typecheck`、`npm run lint`、`npm run build:all` 和 `npm run verify:build`
 1. 使用 `npm run pack`、`npm run pack:firefox`、`npm run pack:safari` 生成各自的 ZIP（输出在 `.output`）
