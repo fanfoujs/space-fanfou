@@ -210,7 +210,6 @@
 			"components": [
 				"ajax-form@page.js",
 				"autofocus-textarea@page.js",
-				"draft-save@page.js",
 				"fix-dnd-upload@page.js",
 				"fix-dnd-upload@page.less",
 				"fix-upload-images@page.js",

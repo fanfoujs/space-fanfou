@@ -1,6 +1,6 @@
 {
 	"name": "space-fanfou",
-	"version": "2.1.0",
+	"version": "2.1.1",
 	"private": true,
 	"description": "Cross-browser Fanfou extension for Chrome, Firefox, and Safari",
 	"license": "GPL v3",
