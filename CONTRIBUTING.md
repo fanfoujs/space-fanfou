@@ -5,14 +5,14 @@
 需要 Node.js 22.12 或更新版本。Fork 并 clone 项目后，在项目根目录运行：
 
 ```sh
-npm ci --legacy-peer-deps
+npm ci
 npm run typecheck
 npm run lint
 npm run build:all
 npm run verify:build
 ```
 
-旧 React 组件通过 Preact compat 运行，因此安装依赖时仍需 `--legacy-peer-deps` 以忽略它们过时的 peer dependency 声明。
+项目使用 Preact。`react` 和 `react-dom` 依赖通过 npm 别名指向 `@preact/compat` 的 16.x 版本，以满足旧组件的 React 16 peer dependency 声明；构建时由 `@preact/preset-vite` 将 React 导入映射到 `preact/compat`。安装依赖无需额外参数。
 
 构建输出位于 `.output/chrome-mv3`、`.output/firefox-mv3`、`.output/safari-mv3`。
 
@@ -45,11 +45,11 @@ npm run verify:build
 解压源码包后，在包含 `package.json` 的目录中打开终端，运行 `node --version` 和 `npm --version` 确认上述版本，然后执行：
 
 ```sh
-npm ci --legacy-peer-deps
+npm ci
 npm run pack:firefox
 ```
 
-请保持 `package-lock.json` 不变。旧 React 组件通过 Preact 兼容别名运行，因此安装时需要 `--legacy-peer-deps`。`npm ci` 会安装锁定版本的构建依赖，并自动执行 `wxt prepare`；`pack:firefox` 脚本会完成编译、合并、压缩和打包步骤。下载依赖需要联网，Firefox 构建无需安装 Xcode 或浏览器，也不需要凭据或环境变量。
+请保持 `package-lock.json` 不变。`npm ci` 会安装锁定版本的依赖，并自动执行 `wxt prepare`；`pack:firefox` 脚本会完成编译、合并、压缩和打包步骤。下载依赖需要联网，Firefox 构建无需安装 Xcode 或浏览器，也不需要凭据或环境变量。
 
 扩展文件生成在 `.output/firefox-mv3/`，可安装的压缩包为 `.output/space-fanfou-<version>-firefox.zip`（`<version>` 为 `package.json` 中的版本）。审核时可将其解压后的内容与提交的扩展进行比较。配套的 `*-sources.zip` 包含构建所需的源文件，包括 `.postcssrc.js` 和 `.browserslistrc`，应上传至审核页面的 Source code 栏。
 

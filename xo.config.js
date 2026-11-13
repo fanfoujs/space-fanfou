@@ -1,6 +1,4 @@
 import globals from 'globals';
-import react from 'eslint-plugin-react';
-import {fixupPluginRules} from '@eslint/compat';
 
 export default [
 	{
@@ -125,14 +123,6 @@ export default [
 				},
 				{selector: 'typeLike', format: ['PascalCase']},
 			],
-		},
-	},
-	{
-		files: ['**/*.{jsx,tsx}'],
-		plugins: {react: fixupPluginRules(react)},
-		rules: {
-			'react/jsx-uses-react': 'error',
-			'react/jsx-uses-vars': 'error',
 		},
 	},
 	{
