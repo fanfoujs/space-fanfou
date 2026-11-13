@@ -5,32 +5,9 @@ import cx from 'classnames';
 import clamp from 'just-clamp';
 import select from 'select-dom';
 import Tooltip from '@libs/Tooltip';
-import {isUserProfilePage, isLoggedInUserProfilePage} from '@libs/pageDetect';
+import {isUserProfilePage} from '@libs/pageDetect';
 import preactRender from '@libs/preactRender';
 import formatDate from '@libs/formatDate';
-
-// 从 m.fanfou.com 抓取最早消息时间（仅对自己的页面有效，他人页面受移动站限制只显示近期内容）
-async function fetchOldestStatusDate(userId, lastPage, proxiedFetch) {
-	try {
-		for (let page = lastPage; page >= Math.max(1, lastPage - 2); page--) {
-			const url = `https://m.fanfou.com/${encodeURIComponent(userId)}/p.${page}`;
-			const {error, responseText: html} = await proxiedFetch.get({url});
-			if (error || !html) {
-				continue;
-			}
-
-			// M.fanfou.com 消息时间格式：YYYY-MM-DD HH:MM
-			const dates = html.match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}/g);
-			if (dates && dates.length > 0) {
-				return dates.at(-1); // 页面最后一条 = 最早的
-			}
-		}
-	} catch (error) {
-		console.warn('[SpaceFanfou] fetchOldestStatusDate failed:', error);
-	}
-
-	return null;
-}
 
 class SidebarStatistics extends Component {
 	constructor(...args) {
@@ -57,33 +34,10 @@ class SidebarStatistics extends Component {
 
 		// 2. 异步尝试获取精确数据
 		try {
-			let finalProfile = scrapedData;
-
-			// 如果是自己页面，尝试从 m.fanfou.com 抓取注册时间
-			if (
-				isLoggedInUserProfilePage() &&
-				scrapedData.statusesCount > 0 &&
-				this.props.proxiedFetch
-			) {
-				const lastPage = Math.ceil(scrapedData.statusesCount / 30);
-				const oldestDate = await fetchOldestStatusDate(
-					this.getUserId(),
-					lastPage,
-					this.props.proxiedFetch,
-				);
-				if (oldestDate) {
-					finalProfile = {...scrapedData, createdAt: oldestDate};
-					this.processData(finalProfile);
-				}
-			}
-
 			// 尝试通过 OAuth 获取最完整资料
 			const {profile, oauthNotConfigured} = await this.fetchUserProfileData();
 			if (oauthNotConfigured) {
-				// 如果 OAuth 未配置，且还没有 createdAt，显示提示
-				if (!finalProfile.createdAt) {
-					this.setState({oauthNotConfigured: true});
-				}
+				this.setState({oauthNotConfigured: true});
 			} else if (profile && profile.createdAt) {
 				this.processData(profile);
 			}
@@ -381,10 +335,7 @@ class StatisticItem extends Component {
 
 export default (context) => {
 	const {requireModules, elementCollection} = context;
-	const {fanfouOAuth, proxiedFetch} = requireModules([
-		'fanfouOAuth',
-		'proxiedFetch',
-	]);
+	const {fanfouOAuth} = requireModules(['fanfouOAuth']);
 
 	let unmount;
 
@@ -399,10 +350,7 @@ export default (context) => {
 
 		onLoad() {
 			unmount = preactRender(
-				<SidebarStatistics
-					fanfouOAuth={fanfouOAuth}
-					proxiedFetch={proxiedFetch}
-				/>,
+				<SidebarStatistics fanfouOAuth={fanfouOAuth} />,
 				(rendered) => {
 					elementCollection.get('stabs').after(rendered);
 				},
